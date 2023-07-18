@@ -3,7 +3,7 @@
  * @Date: 2022-02-01 13:41:59
  * @Description:  
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-04 19:04:44
+ * @LastEditTime: 2023-07-18 16:30:53
 -->
 # Node截图服务
 
@@ -14,6 +14,10 @@ ts-node 直接运行，并监听文件修改自动热重启
 ### npm run build
 
 使用 webpack 打包文件
+
+### build:apidoc
+
+生成 API 文档
 
 ### npm run serve (不使用)
 

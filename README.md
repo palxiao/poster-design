@@ -1,10 +1,12 @@
-[在线体验](https://design.palxp.com/) | [文档网站](https://xp.palxp.com/) | [项目架构及目录讲解](https://xp.palxp.com/#/articles/1689321259854)
+[在线体验](https://design.palxp.com/) | [文档网站](https://xp.palxp.com/) | [项目架构及目录](https://xp.palxp.com/#/articles/1689321259854)
 
 ## 迅排设计
 
-一款漂亮且功能强大的在线海报图片设计器，仿稿定设计。适用于海报图片生成、电商分享图、文章长图、视频/公众号封面等多种场景。
+一款漂亮且功能强大的在线海报图片设计器，仿稿定设计。
 
-![](https://xp.palxp.com/images/2023-7-17-1689558055663.png)
+适用于海报图片生成、电商分享图、文章长图、视频/公众号封面等多种场景。
+
+![](https://xp.palxp.com/images/2023-7-16-1689500112694.gif)
 
 - 丝滑的操作体验，丰富的交互细节，基础功能完善
 - 采用服务端生成图片，确保多端出图统一性，支持各种 CSS 特性
@@ -12,13 +14,15 @@
 
 ### 技术栈概括
 
-前端：Vue3 、Vite2 、Vuex 、ElementPlus
+- Vue3 、Vite2 、Vuex 、ElementPlus
 
-图片生成：Puppeteer、Express
+- 图片生成：Puppeteer、Express
 
-一些可独立的功能会被抽取出来作为单独的库引入使用，仓库地址：[front-end-arsenal](https://github.com/palxiao/front-end-arsenal)，[组件文档网站](https://fe-doc.palxp.com/#/)
+一些可独立的功能会被抽取出来作为单独的库引入使用，仓库地址：[front-end-arsenal](https://github.com/palxiao/front-end-arsenal)（[组件文档网站](https://fe-doc.palxp.com/#/)）
 
 > 环境需求：**Node.js v16** 以上版本
+
+## 快速开始
 
 ### 拉取源码
 
@@ -43,28 +47,22 @@ npm run serve
 >
 > ![](https://xp.palxp.com/images/2023-7-16-1689498291322.png)
 
-### 运行结果
-
-![](https://xp.palxp.com/images/2023-7-16-1689500112694.gif)
-
 合成图片时本地会启动一个 Chrome 浏览器实例。
 
-### 打包前端页面
+### 打包
 
 ```
-npm run v-build
-```
-
-### 打包图片生成服务
-
-```
-cd sreenshot
-npm run build
+npm run v-build   <-  前端页面
+npm run build     <-  图片生成服务（ sreenshot 目录下）
 ```
 
 ### 服务端
 
-可参考接口 API 文档自行实现服务端。
+可参考[接口 API 文档](https://xp.palxp.com/apidoc/index.html)自行实现服务端。
+
+### 图片生成服务
+
+代码位于 `screenshots` 目录下，[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
 
 ### 服务器配置
 
