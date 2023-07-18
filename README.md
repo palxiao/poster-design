@@ -1,18 +1,22 @@
-<!--
- * @Author: ShawnPhang
- * @Date: 2023-07-14 10:44:31
- * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-18 15:06:36
--->
-
-[在线体验](https://design.palxp.com/) | [中文文档](https://xp.palxp.com/)
+[在线体验](https://design.palxp.com/) | [文档网站](https://xp.palxp.com/) | [项目架构及目录讲解](https://xp.palxp.com/#/articles/1689321259854)
 
 ## 迅排设计
 
-一款漂亮且功能强大的在线海报图片设计器，仿稿定设计。
+一款漂亮且功能强大的在线海报图片设计器，仿稿定设计。适用于海报图片生成、电商分享图、文章长图、视频/公众号封面等多种场景。
 
-让你轻松实现创意，迅速进行排版，感受云上设计带来的乐趣！
+![](https://xp.palxp.com/images/2023-7-17-1689558055663.png)
+
+- 丝滑的操作体验，丰富的交互细节，基础功能完善
+- 采用服务端生成图片，确保多端出图统一性，支持各种 CSS 特性
+- 支持将上传的 PSD 文件解析成模板，方便导入已有设计图
+
+### 技术栈概括
+
+前端：Vue3 、Vite2 、Vuex 、ElementPlus
+
+图片生成：Puppeteer、Express
+
+一些可独立的功能会被抽取出来作为单独的库引入使用，仓库地址：[front-end-arsenal](https://github.com/palxiao/front-end-arsenal)，[组件文档网站](https://fe-doc.palxp.com/#/)
 
 > 环境需求：**Node.js v16** 以上版本
 
@@ -109,11 +113,34 @@ docker run -itd -u root -v ~/data/tmp/screenshot:/cache -p 9001:9001 --name scre
 
 这种方式只需要一个镜像以及一个启动命令即可部署，重新跑一遍命令也就相当于重启整个容器。
 
-## 感谢
+### 支持功能
 
-本项目使用或参考了以下优秀开源项目：
+- 导入 PSD 设计稿，导出图片下载
+- 元素拖拽、组合、缩放、层级调整、对齐等操作。
+- 图片素材插入、替换、裁剪，图片容器等功能。
+- SVG 素材颜色、透明度编辑，文字花字组合。
+- 画布自定义尺寸、滚轮缩放、自适应画布
+- 吸附对齐、辅助引导线、标尺功能。
+- 键盘快捷键、右键菜单快捷操作，复制删除等常用操作。
+- 风格二维码编辑，支持单色、渐变、自定义 logo 等。
+- 图层操作，支持拖拽变更层级。
+- 颜色调色板，原生级取色器颜色吸管（Chrome）。
+
+### 感谢
+
+本项目使用或参考了一些优秀开源项目，包括但不限于：
 
 - [moveable](https://github.com/daybrush/moveable): 提供了画布中选择、拖动缩放等能力
 - [html2canvas](https://github.com/niklasvh/html2canvas): 前端生成图片兜底方案
 - [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
 - [sky](https://github.com/cfour-hi/sky): 参考了其 PSD 解析的实现
+
+### Q&A
+
+Q：**我想二次开发，但是不会编写代码，可以付费开发吗？**
+
+A：抱歉，本人时间精力有限，无法提供私有化部署或二次开发的服务，不接受定制化开发的需求。如果您对项目有任何建议或意见，非常欢迎与我交流。
+
+Q：**服务端源码不开源吗？**
+
+A：考虑到服务端的开发语言、数据库类型都可能不尽相同，且分离代码出来有一定成本，所以暂时不考虑直接开源，只提供接口 API 文档供参考。目前服务端仅是一些简单的增删改查，自行实现的技术难度并不高。
