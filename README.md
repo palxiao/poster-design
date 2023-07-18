@@ -11,18 +11,12 @@
 - 丝滑的操作体验，丰富的交互细节，基础功能完善
 - 采用服务端生成图片，确保多端出图统一性，支持各种 CSS 特性
 - 支持将上传的 PSD 文件解析成模板，方便导入已有设计图
-
-### 技术栈概括
-
-- Vue3 、Vite2 、Vuex 、ElementPlus
-
+- 技术栈：Vue3 、Vite2 、Vuex 、ElementPlus
 - 图片生成：Puppeteer、Express
 
 一些可独立的功能会被抽取出来作为单独的库引入使用，仓库地址：[front-end-arsenal](https://github.com/palxiao/front-end-arsenal)（[组件文档网站](https://fe-doc.palxp.com/#/)）
 
 > 环境需求：**Node.js v16** 以上版本
-
-## 快速开始
 
 ### 拉取源码
 
@@ -62,7 +56,7 @@ npm run build     <-  图片生成服务（ sreenshot 目录下）
 
 ### 图片生成服务
 
-代码位于 `screenshots` 目录下，[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
+代码位于 `screenshots` 目录下，查看[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
 
 ### 服务器配置
 
