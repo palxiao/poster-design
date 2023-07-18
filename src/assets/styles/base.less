@@ -1,0 +1,125 @@
+// element UI fix
+.el-collapse-item__header {
+  padding: 0px 10px;
+  user-select: none;
+}
+.el-collapse-item__wrap {
+  padding: 0px 10px;
+}
+.el-collapse {
+  border: 0px;
+  border-top: none !important;
+}
+
+.el-pagination {
+  padding: 0;
+  .btn-prev {
+    border-radius: 5px;
+    border: 1px solid #e5e5e5;
+    height: 30px;
+    margin-right: 10px;
+    width: 30px;
+  }
+  .btn-next {
+    border-radius: 5px;
+    border: 1px solid #e5e5e5;
+    height: 30px;
+    margin-right: 10px;
+    width: 30px;
+  }
+  .el-pager > li {
+    border-radius: 5px;
+    border: 1px solid #e5e5e5;
+    border: none;
+    color: #a5a5a5;
+    font-size: 14px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  .el-pager {
+    .active {
+      background: #24b9ff;
+      border: none;
+      color: #ffffff;
+    }
+  }
+  .el-icon-arrow-left {
+    color: #a5a5a5;
+    font-size: 14px;
+  }
+  .el-icon-arrow-right {
+    color: #a5a5a5;
+    font-size: 14px;
+  }
+  .el-select {
+    .el-input {
+      input {
+        border-radius: 5px;
+        color: #262c33;
+        font-size: 14px;
+        height: 30px;
+      }
+    }
+  }
+}
+.el-select {
+  .el-tag {
+    line-height: 23px !important;
+  }
+}
+.el-pagination__jump {
+  font-size: 14px !important;
+  .el-pagination__editor {
+    border-radius: 5px;
+    color: #262c33;
+    font-size: 14px;
+    height: 30px;
+  }
+}
+
+// other
+
+.clearfix {
+  &:after {
+    clear: both;
+    content: ' ';
+    display: table;
+  }
+  &:before {
+    content: ' ';
+    display: table;
+  }
+}
+.line-break {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+// 点击选择框样式
+.layer {
+  &:hover {
+    outline: 2px dashed @main-color !important;
+  }
+}
+.layer-no-hover {
+  &:hover {
+    cursor: move;
+    outline: 0px !important;
+  }
+}
+// .layer-active {
+//   outline: 1px dashed #000000 !important;
+//   &:hover {
+//     outline: 1px dashed #000000 !important;
+//   }
+// }
+.layer-hover {
+  outline: 2px dashed @main-color !important;
+  &:hover {
+    outline: 2px dashed @main-color !important;
+  }
+}
+// 锁定不可选中
+.layer-lock {
+  pointer-events: none;
+}

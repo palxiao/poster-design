@@ -1,0 +1,111 @@
+<!--
+ * @Author: ShawnPhang
+ * @Date: 2021-08-09 11:44:29
+ * @Description: 数值滑块组件
+ * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditTime: 2023-06-29 15:41:38
+-->
+<template>
+  <div id="number-slider">
+    <span :style="{ width: labelWidth }" class="label">{{ label }}</span>
+    <el-slider v-model="innerValue" :min="minValue" :max="maxValue" :step="step" input-size="small" show-input :show-tooltip="false" :show-input-controls="false" @change="changeValue"> </el-slider>
+  </div>
+</template>
+
+<script>
+const NAME = 'number-slider'
+import { mapGetters, mapActions } from 'vuex'
+
+export default {
+  name: NAME,
+  props: {
+    label: {
+      default: '',
+    },
+    labelWidth: {
+      default: '71px',
+    },
+    modelValue: {
+      default: 0,
+    },
+    minValue: {
+      default: 0,
+    },
+    maxValue: {
+      default: 100,
+    },
+    step: {
+      default: 1,
+    },
+  },
+  emits: ['update:modelValue', 'finish'],
+  data() {
+    return {
+      innerValue: 0,
+      // first: true,
+    }
+  },
+  computed: {
+    ...mapGetters([]),
+  },
+  watch: {
+    innerValue(value) {
+      if (this.modelValue !== value) {
+        this.$emit('update:modelValue', value)
+      }
+    },
+    modelValue(val) {
+      this.innerValue = this.modelValue
+    },
+  },
+  created() {
+    this.innerValue = this.modelValue
+  },
+  methods: {
+    ...mapActions([]),
+    changeValue(value) {
+      this.$emit('finish', value)
+    },
+  },
+}
+</script>
+
+<style lang="less">
+// style fix
+.el-slider {
+  width: 100%;
+  .show-input {
+    margin-right: 15px !important;
+  }
+  .el-slider__input {
+    width: 50px !important;
+    // .el-input-number__decrease {
+    //   width: 16px !important;
+    // }
+    // .el-input-number__increase {
+    //   width: 16px !important;
+    // }
+    .el-input--small {
+      .el-input__wrapper {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+    }
+  }
+}
+</style>
+
+<style lang="less" scoped>
+#number-slider {
+  align-items: center;
+  display: flex;
+  .label {
+    user-select: none;
+    margin-right: 4px;
+  }
+}
+.slider-demo-block .el-slider {
+  margin-top: 0;
+  margin-left: 12px;
+}
+</style>

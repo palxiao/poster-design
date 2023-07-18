@@ -1,0 +1,108 @@
+@font-face {
+  font-family: TitleFont;
+  src: url(../fonts/xpsj.subset.woff2) format('woff2');
+}
+body {
+  --el-color-primary: #2254f4;
+  cursor: -webkit-image-set(
+        url(data:image/png;base64,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)
+          2x
+      )
+      6 2,
+    default;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  color: #333333;
+  font-family: Hiragino Sans GB, Hiragino Sans GB W3, Arial, Microsoft Yahei, STHeiti, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  // font-size: 14px;
+  scrollbar-width: none; /* 火狐滚动条无法自定义宽度，只能通过此属性使滚动条宽度变细 */
+  -ms-overflow-style: none; /* 隐藏滚动条（在IE和Edge两个浏览器中很难更改样式，固采取隐藏方式） */
+}
+// html ::-webkit-scrollbar {
+//   display: none; /* Chrome Safari */
+// }
+
+&::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 5px;
+  height: 5px;
+}
+&::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: #ccd4de;
+  /*box-shadow: 0 0 1px hsl(0deg 0% 100% / 50%);*/
+}
+&::-webkit-scrollbar-track {
+  //background-color: #f0f1f3;
+  background-color: transparent;
+  border-radius: 3px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  //取消浏览器记住密码的样式
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+a {
+  text-decoration: none;
+}
+ul,
+ol,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+}
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+input {
+  outline: 0;
+  &:-moz-focusring {
+    outline: 0;
+  }
+}
+button {
+  outline: 0;
+  &:-moz-focusring {
+    outline: 0;
+  }
+}
+textarea {
+  outline: 0;
+}
+p {
+  max-height: 100%;
+}
+
+.drag_active {
+  cursor: grabbing;
+}
+.flutter {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: none;
+}
+.hide {
+  opacity: 0;
+}

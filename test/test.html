@@ -1,0 +1,73 @@
+<!--
+ * @Author: ShawnPhang
+ * @Date: 2022-03-14 15:41:17
+ * @Description:  
+ * @LastEditors: ShawnPhang
+ * @LastEditTime: 2022-03-14 15:54:24
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: #999999;
+      }
+
+      .out {
+        background: #ffffff;
+      }
+
+      .page-design-index-wrap {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .page-design-wrap {
+        flex: 1;
+      }
+
+      #page-design {
+        height: 100%;
+        overflow: auto;
+        position: relative;
+        width: 100%;
+      }
+
+      .out-page {
+        margin: 0 auto;
+        padding: 60px;
+        position: relative;
+      }
+
+      .design-canvas {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        box-shadow: 1px 1px 10px 3px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page-design-index-wrap">
+      <div class="page-design-wrap out">
+        <div id="page-design" ref="page-design">
+          <div id="out-page" class="out-page">
+            <div class="edit-text" spellcheck="false" contenteditable="plaintext-only">asd</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

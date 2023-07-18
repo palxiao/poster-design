@@ -1,0 +1,27 @@
+.editable-text {
+  outline: none;
+  word-break: break-word;
+  white-space: pre;
+  margin: 0;
+}
+
+.line-clamp-2 {
+  // display: -webkit-box !important;
+  // -webkit-box-orient: vertical !important;
+  // overflow: hidden !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; //作为弹性伸缩盒子模型显示。
+  -webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式--从上到下垂直排列
+}
+
+.line-clamp-1 {
+  // -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  -webkit-line-clamp: 2;
+}

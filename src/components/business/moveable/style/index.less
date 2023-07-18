@@ -1,0 +1,70 @@
+// 2层 .zk-moveable-style 增加css权重层级，避免太多 important
+.zk-moveable-style.zk-moveable-style {
+  --moveable-color: #6ccfff;
+
+  // 缩放圆点
+  .moveable-control {
+    background: #fff;
+    box-sizing: border-box;
+    display: block;
+    border: 1px solid #c0c5cf;
+    box-shadow: 0 0 2px 0 rgb(86, 90, 98, 0.2);
+    width: 12px;
+    height: 12px;
+    margin-top: -6px;
+    margin-left: -6px;
+
+    // &.moveable-n,
+    // &.moveable-s,
+    // &.moveable-e,
+    // &.moveable-w {
+    //   display: none;
+    // }
+
+    // 上下缩放点
+    &.moveable-n,
+    &.moveable-s {
+      width: 16px;
+      height: 8px;
+      margin-top: -4px;
+      margin-left: -8px;
+      border-radius: 6px;
+    }
+    // 左右缩放点
+    &.moveable-e,
+    &.moveable-w {
+      width: 8px;
+      height: 16px;
+      margin-left: -4px;
+      margin-top: -8px;
+      border-radius: 6px;
+    }
+  }
+
+  // 旋转按钮
+  .moveable-rotation {
+    height: 35px;
+    display: block;
+    .moveable-rotation-control {
+      border: none;
+      background-image: url('./rotation-icon.svg');
+      width: 24px;
+      height: 24px;
+      background-size: 100% 100%;
+      display: block;
+      margin-left: -11px;
+      // margin-top: -11px;
+    }
+
+    // 旋转的操作条
+    .moveable-rotation-line {
+      display: none;
+    }
+  }
+}
+
+.moveable__remove-item {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}
