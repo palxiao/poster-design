@@ -1,10 +1,3 @@
-/*
- * @Author: ShawnPhang
- * @Date: 2021-07-13 18:46:45
- * @Description:
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2021-07-30 14:11:34
- */
 module.exports = {
   extends: [
     'alloy',
@@ -13,19 +6,9 @@ module.exports = {
     '@vue/typescript',
   ],
   env: {
-    // 你的环境变量（包含多个预定义的全局变量）
-    //
-    // browser: true,
-    // node: true,
-    // mocha: true,
-    // jest: true,
-    // jquery: true
+    // 你的环境变量
   },
-  globals: {
-    // 你的全局变量（设置为 false 表示它不允许被重新赋值）
-    //
-    // myGlobal: false
-  },
+  globals: {},
   rules: {
     // 自定义你的规则
     'vue/component-tags-order': ['off'],
