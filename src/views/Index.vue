@@ -32,7 +32,7 @@
     <!-- 旋转缩放组件 -->
     <Moveable />
     <!-- 遮罩百分比进度条 -->
-    <ProgressLoading :percent="downloadPercent" :text="downloadText" @cancel="downloadCancel" @done="downloadPercent = 0" />
+    <ProgressLoading :percent="downloadPercent" :text="downloadText" cancelText="取消" @cancel="downloadCancel" @done="downloadPercent = 0" />
   </div>
 </template>
 
