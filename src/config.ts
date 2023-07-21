@@ -1,11 +1,3 @@
-/*
- * @Author: ShawnPhang
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @Description: Setting
- * @Date: 2021-07-13 02:48:38
- * @LastEditTime: 2023-07-14 01:03:01
- */
-
 // const prefix = import.meta.env
 const prefix = process.env
 
@@ -17,8 +9,8 @@ export default {
   VERSION: '1.1.0',
   APP_NAME: '迅排设计',
   COPYRIGHT: 'ShawnPhang - Palxp.com',
-  // API_URL: isDev ? 'http://localhost:9998' : '${API}',
-  API_URL: 'https://app.palxp.com:8887',
+  API_URL: isDev ? 'http://localhost:9998' : '${API}',
+  // API_URL: 'https://app.palxp.com:8887',
   SCREEN_URL: isDev ? 'http://localhost:7001' : '${SCREEN_URL}',
   IMG_URL: 'https://store.palxp.com/',
   // ICONFONT_URL: '//at.alicdn.com/t/font_3223711_74mlzj4jdue.css',

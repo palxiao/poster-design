@@ -70,10 +70,10 @@ export default {
     fontSize: 24,
     zoom: 1,
     fontClass: {
-      alias: '阿里巴巴普惠体 特粗',
-      id: 206825,
-      value: 'AlibabaPuHuiTi-Heavy',
-      url: 'https://gd-filems.dancf.com/gaoding/editor/20221222-201834-fjfkh.woff',
+      alias: '思源黑体 常规',
+      id: 206607,
+      value: 'SourceHanSansSC-Regular',
+      url: 'https://font.palxp.com/SourceHanSansSC-Regular.woff',
     },
     fontFamily: 'SourceHanSansSC-Regular',
     fontWeight: 'normal',
@@ -117,33 +117,6 @@ export default {
         }
         let font = nval.fontClass
         const isDone = font.value === this.loadFontDone
-
-        // let localFonts = localStorage.getItem('FONTS') ? JSON.parse(localStorage.getItem('FONTS') || '') : []
-        // let gdFont = localFonts.find((font) => font.alias === '思源黑体 常规')
-        // console.log(111, gdFont)
-
-        // if (!font.url && nval.fontFamily) {
-        //   this.loading = true
-        //   let localFonts = localStorage.getItem('FONTS') ? JSON.parse(localStorage.getItem('FONTS') || '') : []
-        //   let gdFont = localFonts.find((font) => font.name === nval.fontFamily)
-        //   if (!gdFont) {
-        //     const searchFallback = await api.gaoding.searchFonts(nval.fontFamily)
-        //     for (let i = 0; i < searchFallback.length; i++) {
-        //       const { dest } = searchFallback[i]
-        //       gdFont = localFonts.find((font) => font.name === dest)
-        //       if (gdFont) {
-        //         break
-        //       }
-        //     }
-        //   }
-        //   if (gdFont) {
-        //     font.id = gdFont.id
-        //     font.value = gdFont.name
-        //     font.url = gdFont.url
-        //     font.alias = gdFont.alias
-        //   }
-        //   delete nval.fontFamily
-        // }
 
         if (font.url && !isDone) {
           if (font.id && this.isDraw) {

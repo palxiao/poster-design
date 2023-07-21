@@ -93,24 +93,24 @@ export default defineComponent({
             item.url = list.find((x: any) => x.oid == item.id).ttf
           })
           await this.font2style(fontContent, fontData)
-          console.log('1. base64 yes')
+          // console.log('1. base64 yes')
           const preload = new Preload(imgsData)
           await preload.doms()
-          console.log('2. image yes')
+          // console.log('2. image yes')
           const preload2 = new Preload(svgsData)
           await preload2.svgs()
-          console.log('3. svg yes')
+          // console.log('3. svg yes')
         } catch (e) {
           console.log(e)
         }
         try {
           await Promise.all(fontLoaders)
-          console.log('4. font yes')
+          // console.log('4. font yes')
         } catch (e) {
           // console.log(e)
         }
         loadFlag = true
-        console.log('--> now u can start screenshot!')
+        // console.log('--> now u can start screenshot!')
         setTimeout(() => {
           try {
             ;(window as any).loadFinishToInject('done')
@@ -125,19 +125,17 @@ export default defineComponent({
     async font2style(fontContent: any, fontData: any = []) {
       return new Promise((resolve: Function) => {
         Promise.all(
-          // TODO: 临时。拿到所有文字所对应字体子集 base64
+          // 拿到字体子集，只有ttf这种原始字体支持提取，如没有则只能加载整个字体文件
           Object.keys(fontContent).map(async (key) => {
             const font = fontData.find((font: any) => font.value === key) as any
             if (font.id) {
               try {
-                const blob = await api.gaoding.getSubsetFont({
+                const base64 = await api.material.getFontSub({
                   font_id: font.id,
                   url: font.url,
                   content: 'Aa' + fontContent[key],
                 })
-                const base64 = await blob2Base64(blob as unknown as Blob)
                 fontContent[key] = base64
-                console.log('获取稿定字体: ' + font.id)
               } catch (e) {
                 console.log('字体获取失败', e)
               }

@@ -2,11 +2,9 @@
  * @Author: ShawnPhang
  * @Date: 2022-01-08 09:43:37
  * @Description: 字体处理
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-03-30 14:13:26
+ * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditTime: 2023-07-21 13:07:08
  */
-
-// import { getFonts } from '@/api/gaoding'
 // import { isSupportFontFamily, blob2Base64 } from './utils'
 import { getFonts } from '@/api/material'
 // import store from '@/store'

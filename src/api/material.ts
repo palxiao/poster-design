@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 14:42:15
  * @Description:
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-12 09:50:00
+ * @LastEditTime: 2023-07-21 11:19:04
  */
 import fetch from '@/utils/axios'
 
@@ -15,6 +15,7 @@ export const getList = (params: Type.Object = {}) => fetch('design/material', pa
 
 // 获取字体
 export const getFonts = (params: Type.Object = {}) => fetch('design/fonts', params)
+export const getFontSub = (params: Type.Object = {}) => fetch('design/font_sub', params)
 
 // 图库列表
 export const getImagesList = (params: Type.Object = {}) => fetch('design/imgs', params, 'get')
