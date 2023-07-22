@@ -31,7 +31,7 @@ const putPic = async (file: any) => {
     path,
   }
   await fetch(imageUrl, body, 'put', {
-    Authorization: 'token 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',
+    Authorization: 'token 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',
     'Content-Type': 'application/json; charset=utf-8',
   })
   return `https://fastly.jsdelivr.net/gh/shawnphang/files@main/${path}`
