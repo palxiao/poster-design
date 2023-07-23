@@ -36,8 +36,6 @@
 import { defineComponent, reactive, toRefs, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { UploadFilled } from '@element-plus/icons-vue'
-// import { client } from '@gradio/client'
-// import * as api from '@/api/ai'
 import uploader from '@/components/common/Uploader/index.vue'
 import _dl from '@/common/methods/download'
 
@@ -73,11 +71,7 @@ export default defineComponent({
       state.rawImage = URL.createObjectURL(file)
       fileName = file.name
       // 返回抠图
-      const result = await app.predict('/predict', [
-        file, // blob in 'Input' Image component
-        'u2netp', // string (Option from: ['isnet-anime', 'isnet-general-use', 'sam', 'silueta', 'u2net', 'u2net_cloth_seg', 'u2net_custom', 'u2net_human_seg', 'u2netp']) in 'Models' Dropdown component
-        '',
-      ])
+      const result = await app.predict('/predict', [file, 'u2netp', ''])
       state.rawImage && (state.cutImage = result?.data[0])
       requestAnimationFrame(run)
     }

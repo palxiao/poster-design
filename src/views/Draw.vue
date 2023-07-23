@@ -49,7 +49,6 @@ export default defineComponent({
         const content = JSON.parse(data)
 
         content.page.backgroundImage && content.page.backgroundImage.split('.')[1] === 'palxp' && (content.page.backgroundImage += '@small')
-        this.compressImages(content.widgets)
         this.$store.commit('setDPage', content.page)
         id ? this.$store.commit('setDWidgets', content.widgets) : this.setTemplate(content.widgets)
         await this.$nextTick()
@@ -148,14 +147,6 @@ export default defineComponent({
           resolve()
         })
       })
-    },
-    compressImages(widgets: any) {
-      // 自用
-      for (const item of widgets) {
-        if (item.imgUrl && item.imgUrl.split('.')[item.imgUrl.split('.').length - 1] === 'png') {
-          item.imgUrl.split('.')[1] === 'palxp' && (item.imgUrl += '@small')
-        }
-      }
     },
   },
 })

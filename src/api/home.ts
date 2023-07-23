@@ -35,3 +35,5 @@ export const getWorks = (params: Type.Object = {}) => fetch('design/poster', par
 
 // 作品列表
 export const getMyDesign = (params: Type.Object = {}) => fetch('design/my', params, 'get')
+
+export const test = (params: Type.Object = {}) => fetch('https://res.palxp.com/api/upload', params, 'post')

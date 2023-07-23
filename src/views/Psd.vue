@@ -10,9 +10,9 @@
     <div class="top-nav">
       <div class="top-nav-wrap">
         <div class="top-left">
-          <div class="name" style="font-size: 15px">迅排在线PSD解析</div>
+          <div class="name" style="font-size: 15px">在线PSD解析</div>
         </div>
-        <div style="flex: 1"><el-button plain type="primary" @click="jump2word">查看模板规范文档</el-button></div>
+        <div style="flex: 1"><el-button plain type="primary" @click="jump2word">说明及PSD规范文档</el-button></div>
         <el-button v-show="isDone" @click="clear">清空模板内容</el-button>
         <div class="v-tips">
           <HeaderOptions :isDone="isDone" @change="optionsChange" />
@@ -81,7 +81,7 @@ export default defineComponent({
 
     function loadJS() {
       const link_element = document.createElement('script')
-      link_element.setAttribute('src', '/psd.js') // 'https://design.palxp.com/psd.js.gz'
+      link_element.setAttribute('src', '/psd.js')
       document.head.appendChild(link_element)
     }
     async function selectFile(file: any) {
@@ -166,7 +166,8 @@ export default defineComponent({
       }, 100)
     },
     jump2word() {
-      window.open('https://kdocs.cn/l/clmBsIkhve8d')
+      window.open('https://xp.palxp.com/#/articles/1687855172725')
+      // window.open('https://kdocs.cn/l/clmBsIkhve8d')
     },
   },
 })
