@@ -92,7 +92,7 @@ export default defineComponent({
         try {
           const { list } = await api.material.getFonts({ ids: fontData.map((x: any) => x.id) })
           fontData.forEach((item: any) => {
-            item.url = list.find((x: any) => x.oid == item.id).ttf
+            item.url = list.find((x: any) => x.oid == item.id)?.ttf
           })
           await this.font2style(fontContent, fontData)
           // console.log('1. base64 yes')
