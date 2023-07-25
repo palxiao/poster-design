@@ -52,7 +52,7 @@ import HeaderOptions from './components/HeaderOptions.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 
 const beforeUnload = function (e: any) {
-  const confirmationMessage = '系统可能不会保存您修改的内容'
+  const confirmationMessage = '系统不会自动保存您未修改的内容'
   ;(e || window.event).returnValue = confirmationMessage // Gecko and Trident
   return confirmationMessage // Gecko and WebKit
 }

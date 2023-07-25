@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-14 00:51:19
+ * @LastEditTime: 2023-07-25 15:56:22
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -12,8 +12,8 @@
         <div class="top-left">
           <div class="name" style="font-size: 15px">在线PSD解析</div>
         </div>
-        <div style="flex: 1"><el-button plain type="primary" @click="jump2word">说明及PSD规范文档</el-button></div>
-        <el-button v-show="isDone" @click="clear">清空模板内容</el-button>
+        <div style="flex: 1"><el-button plain type="primary" @click="jump2word">说明文档及PSD规范</el-button></div>
+        <el-button v-show="isDone" @click="clear">清空模板</el-button>
         <div class="v-tips">
           <HeaderOptions :isDone="isDone" @change="optionsChange" />
         </div>

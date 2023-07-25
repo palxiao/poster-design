@@ -84,7 +84,7 @@ export default defineComponent({
             }
           } catch (e) {}
         })
-        // TODO: 背景图无法检测是否加载完毕，考虑应该将设置背景作为独立事件
+        // TODO优化: 背景图无法检测是否加载完毕，考虑应该将设置背景作为独立事件
         if (content.page.backgroundImage) {
           const preloadBg = new Preload([content.page.backgroundImage])
           await preloadBg.imgs()
@@ -127,7 +127,7 @@ export default defineComponent({
     async font2style(fontContent: any, fontData: any = []) {
       return new Promise((resolve: Function) => {
         Promise.all(
-          // 拿到字体子集，只有ttf/otf这种原始字体支持提取，如没有则不能实现此步，只能加载整个字体文件
+          // 拿到字体子集。只有ttf/otf这种原始字体支持提取，如服务端不具备该功能则没有此步骤，在页面加载整个字体。
           Object.keys(fontContent).map(async (key) => {
             const font = fontData.find((font: any) => font.value === key) as any
             if (font.id) {

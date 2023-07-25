@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 10:45:09
+ * @LastEditTime: 2023-07-25 16:02:13
 -->
 <template>
   <div class="top-title"><el-input v-model="title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -74,36 +74,6 @@ export default defineComponent({
       const { stat } = await api.home.saveTemp({ id: tempid, title: proxy.title || '未命名模板', content: JSON.stringify({ page: proxy.dPage, widgets: proxy.dWidgets }), width: proxy.dPage.width, height: proxy.dPage.height })
       stat != 0 && useNotification('保存成功', '模板内容已变更')
     }
-    // 保存前处理数据校正
-    // function reviseData() {
-    //   const data = JSON.parse(JSON.stringify(proxy.dWidgets))
-    //   for (let i = 0; i < data.length; i++) {
-    //     if (!data[i].cache) {
-    //       continue
-    //     }
-    //     const valueLeft = data[i].cache.left
-    //     const valueTop = data[i].cache.top
-    //     const widget = data[i]
-    //     if (widget.isContainer) {
-    //       let dL = widget.left - valueLeft
-    //       let dT = widget.top - valueTop
-    //       const len = data.length
-    //       for (let i = 0; i < len; ++i) {
-    //         const child = data[i]
-    //         if (child.parent === widget.uuid) {
-    //           const t = child['left']
-    //           child.left -= dL
-    //           child.top -= dT
-    //           console.log(child.left, t, dL)
-    //         }
-    //       }
-    //     }
-    //     data[i].left = valueLeft
-    //     data[i].top = valueTop
-    //     delete data[i].cache
-    //   }
-    //   return data
-    // }
     // 停用启用
     async function stateChange(e: any) {
       const { tempid } = route.query
@@ -161,11 +131,6 @@ export default defineComponent({
   computed: {
     ...mapGetters(['dPage', 'dWidgets', 'tempEditing', 'dHistory', 'dPageHistory']),
   },
-  // watch: {
-  //   tempEditing(val) {
-  //     console.log(val)
-  //   },
-  // },
   methods: {
     ...mapActions(['pushHistory']),
     async load(id: any, tempId: any, cb: Function) {
@@ -202,9 +167,6 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-// .wrap {
-//   padding: 0 1rem;
-// }
 .top-icon-wrap {
   display: flex;
   align-items: center;

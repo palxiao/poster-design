@@ -74,24 +74,5 @@ export const rndNum = (n: number, m: number) => {
   const random = Math.floor(Math.random() * (m - n + 1) + n)
   return random
 }
-/** 检测苹果手机 */
-// export const isIOS = () => {
-//   const u = navigator.userAgent
-//   // var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; // android终端
-//   const isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
-//   return isiOS
-// }
-/**
- * 判断是否微信客户端
- */
-// export const isWX = () => {
-//   const ua = window.navigator.userAgent.toLowerCase()
-//   const match = String(ua.match(/MicroMessenger/i)) || ''
-//   if (match === 'micromessenger') {
-//     return true
-//   } else {
-//     return false
-//   }
-// }
 
 export default {}
