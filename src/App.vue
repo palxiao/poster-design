@@ -15,16 +15,16 @@
     min-width: 1170px;
   }
 }
-.fade-enter-active {
-  transition: opacity 0.3s;
-}
-.fade-leave-active {
-  transition: opacity 0.3s;
-}
-.fade-enter {
-  opacity: 0;
-}
-.fade-leave-to {
-  opacity: 0;
-}
+// .fade-enter-active {
+//   transition: opacity 0.3s;
+// }
+// .fade-leave-active {
+//   transition: opacity 0.3s;
+// }
+// .fade-enter {
+//   opacity: 0;
+// }
+// .fade-leave-to {
+//   opacity: 0;
+// }
 </style>
