@@ -3,7 +3,7 @@
  * @Date: 2022-01-08 09:43:37
  * @Description: 字体处理
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-21 13:07:08
+ * @LastEditTime: 2023-07-25 11:13:01
  */
 // import { isSupportFontFamily, blob2Base64 } from './utils'
 import { getFonts } from '@/api/material'
@@ -16,6 +16,7 @@ export const useFontStore = {
   // download,
   async init() {
     this.list = []
+    localStorage.getItem('FONTS_VERSION') !== '1' && localStorage.removeItem('FONTS')
     const localFonts: any = localStorage.getItem('FONTS') ? JSON.parse(localStorage.getItem('FONTS') || '') : []
     if (localFonts.length > 0) {
       this.list.push(...localFonts)
@@ -30,6 +31,7 @@ export const useFontStore = {
         }),
       )
       localStorage.setItem('FONTS', JSON.stringify(this.list))
+      localStorage.setItem('FONTS_VERSION', '1')
     }
     // store.dispatch('setFonts', this.list)
   },

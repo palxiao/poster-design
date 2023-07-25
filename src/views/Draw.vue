@@ -48,8 +48,6 @@ export default defineComponent({
         const { data } = await api.home[id ? 'getWorks' : 'getTempDetail']({ id: id || tempid })
         const content = JSON.parse(data)
 
-        content.page.backgroundImage && content.page.backgroundImage.split('.')[1] === 'palxp' && (content.page.backgroundImage += '@small')
-        this.compressImages(content.widgets)
         this.$store.commit('setDPage', content.page)
         id ? this.$store.commit('setDWidgets', content.widgets) : this.setTemplate(content.widgets)
         await this.$nextTick()
@@ -76,7 +74,7 @@ export default defineComponent({
             if (item.imgUrl && !item.isNinePatch) {
               const cNodes: any = (window as any).document.getElementById(item.uuid).childNodes
               for (const el of cNodes) {
-                if (el.className === 'img__box') {
+                if (el.className && el.className.includes('img__box')) {
                   imgsData.push(el.firstChild)
                 }
               }
@@ -86,11 +84,15 @@ export default defineComponent({
             }
           } catch (e) {}
         })
-
+        // TODO: 背景图无法检测是否加载完毕，考虑应该将设置背景作为独立事件
+        if (content.page.backgroundImage) {
+          const preloadBg = new Preload([content.page.backgroundImage])
+          await preloadBg.imgs()
+        }
         try {
           const { list } = await api.material.getFonts({ ids: fontData.map((x: any) => x.id) })
           fontData.forEach((item: any) => {
-            item.url = list.find((x: any) => x.oid == item.id).ttf
+            item.url = list.find((x: any) => x.oid == item.id)?.ttf
           })
           await this.font2style(fontContent, fontData)
           // console.log('1. base64 yes')
@@ -125,7 +127,7 @@ export default defineComponent({
     async font2style(fontContent: any, fontData: any = []) {
       return new Promise((resolve: Function) => {
         Promise.all(
-          // 拿到字体子集，只有ttf这种原始字体支持提取，如没有则只能加载整个字体文件
+          // 拿到字体子集，只有ttf/otf这种原始字体支持提取，如没有则不能实现此步，只能加载整个字体文件
           Object.keys(fontContent).map(async (key) => {
             const font = fontData.find((font: any) => font.value === key) as any
             if (font.id) {
@@ -148,14 +150,6 @@ export default defineComponent({
           resolve()
         })
       })
-    },
-    compressImages(widgets: any) {
-      // 自用
-      for (const item of widgets) {
-        if (item.imgUrl && item.imgUrl.split('.')[item.imgUrl.split('.').length - 1] === 'png') {
-          item.imgUrl.split('.')[1] === 'palxp' && (item.imgUrl += '@small')
-        }
-      }
     },
   },
 })
