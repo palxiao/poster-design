@@ -57,8 +57,8 @@ export default defineComponent({
       setTimeout(async () => {
         html2canvas(document.getElementById('page-design-canvas'), opts).then((canvas: any) => {
           canvas.toBlob(
-            async function (blobObj: Blob) {
-              const result: any = await Qiniu.upload(blobObj, { bucket: 'cloud-design', prePath: 'cover/user' })
+            async (blobObj: Blob) => {
+              const result: any = await Qiniu.upload(blobObj, { bucket: 'xp-design', prePath: 'cover/user' })
               cb(result)
             },
             'image/jpeg',

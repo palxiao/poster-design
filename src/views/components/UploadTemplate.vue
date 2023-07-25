@@ -97,7 +97,7 @@ export default defineComponent({
       context.emit('change', { downloadPercent: 95, downloadText: '正在处理封面', downloadMsg: '即将结束...' })
       const cover = await draw()
       const { id, stat, msg } = await api.home.saveWorks({ cover, title: '自设计模板', data: JSON.stringify({ page, widgets }), width: page.width, height: page.height })
-      stat !== 0 ? useNotification('保存成功', '可在"我的模板"中查看') : useNotification('保存失败', msg, 'error')
+      stat !== 0 ? useNotification('保存成功', '可在"我的模板"中查看') : useNotification('保存失败', msg, { type: 'error' })
       router.push({ path: '/psd', query: { id }, replace: true })
       context.emit('change', { downloadPercent: 99.99, downloadText: '上传完成', cancelText: '查看我的作品' }) // 关闭弹窗
     }
