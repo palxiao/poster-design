@@ -1,4 +1,6 @@
-** [在线体验](https://design.palxp.com/) | [文档网站](https://xp.palxp.com/) | [项目架构及目录](https://xp.palxp.com/#/articles/1689321259854) **
+**[在线体验](https://design.palxp.com/)** | **[中文文档网站](https://xp.palxp.com/)** | [架构及目录说明](https://xp.palxp.com/#/articles/1689321259854)
+
+---
 
 ## 迅排设计
 
