@@ -19,6 +19,7 @@ import { ElUpload } from 'element-plus'
 import Qiniu from '@/common/methods/QiNiu'
 import { getImage } from '@/common/methods/getImgDetail'
 import _config from '@/config'
+import useNotification from '@/common/methods/notification'
 
 export default defineComponent({
   components: { ElUpload },
@@ -26,7 +27,7 @@ export default defineComponent({
     modelValue: {},
     options: {
       default: () => {
-        return { bucket: 'cloud-design', prePath: 'user' }
+        return { bucket: 'xp-design', prePath: 'user' }
       },
     },
     hold: {
@@ -69,10 +70,14 @@ export default defineComponent({
     const uploadQueue = async () => {
       if (!uploading) {
         uploading = true
-        if (uploadList[0]) {
-          tempSimpleRes = await qiNiuUpload(uploadList[0]) // 队列有文件，执行上传
-          const { width, height }: any = await getImage(uploadList[0])
-          context.emit('done', { width, height, url: _config.IMG_URL + tempSimpleRes.key }) // 单个文件进行响应
+        const file = uploadList[0]
+        if (file) {
+          if (file.size <= 1024 * 1024) {
+            tempSimpleRes = await qiNiuUpload(file) // 队列有文件，执行上传
+            const { width, height }: any = await getImage(file)
+            useNotification('上传成功', '目前没有用户系统，请注意别上传隐私照片哦!', { position: 'bottom-left' })
+            context.emit('done', { width, height, url: _config.IMG_URL + tempSimpleRes.key }) // 单个文件进行响应
+          } else useNotification('爱护小水管', '请上传小于 1M 的图片哦!', { type: 'error', position: 'bottom-left' })
           uploading = false
           handleRemove() // 移除已上传文件
           index++
@@ -110,10 +115,7 @@ export default defineComponent({
       context.emit('update:modelValue', percent)
     }
     const handleRemove = () => {
-      if (uploadList.length <= 0) {
-        return
-      }
-      uploadList.splice(0, 1)
+      uploadList.length > 0 && uploadList.splice(0, 1)
     }
 
     return {

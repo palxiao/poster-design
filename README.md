@@ -1,4 +1,4 @@
-[在线体验](https://design.palxp.com/) | [文档网站](https://xp.palxp.com/) | [项目架构及目录](https://xp.palxp.com/#/articles/1689321259854)
+** [在线体验](https://design.palxp.com/) | [文档网站](https://xp.palxp.com/) | [项目架构及目录](https://xp.palxp.com/#/articles/1689321259854) **
 
 ## 迅排设计
 
@@ -29,7 +29,7 @@
 
 ### 拉取源码
 
-> 环境需求：**Node.js v16** 以上版本
+> 环境需求：**Node.js v16.18** 以上版本
 
 ```
 git clone https://github.com/palxiao/poster-design.git

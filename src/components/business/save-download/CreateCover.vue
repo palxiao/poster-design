@@ -1,9 +1,9 @@
 <!--
  * @Author: ShawnPhang
  * @Date: 2021-08-01 11:12:17
- * @Description: 前端出图 - 生成封面
+ * @Description: 前端出图 - 用于封面
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-11 19:47:24
+ * @LastEditTime: 2023-07-26 10:22:17
 -->
 <template>
   <div id="cover-wrap">
@@ -24,21 +24,6 @@ export default defineComponent({
   setup(props, context) {
     let gridSizeIndex: number = 0
 
-    // function fileOrBlobToDataURL(obj: any, cb: Function) {
-    //   let a = new FileReader()
-    //   a.readAsDataURL(obj)
-    //   a.onload = (e: any) => {
-    //     cb(e.target.result)
-    //   }
-    // }
-    // function blobToImage(blob: any) {
-    //   return new Promise((resolve) => {
-    //     fileOrBlobToDataURL(blob, (dataurl: string) => {
-    //       resolve(dataurl)
-    //     })
-    //   })
-    // }
-
     const { proxy }: any = getCurrentInstance() as ComponentInternalInstance
 
     async function createCover(cb: any) {
@@ -57,8 +42,8 @@ export default defineComponent({
       setTimeout(async () => {
         html2canvas(document.getElementById('page-design-canvas'), opts).then((canvas: any) => {
           canvas.toBlob(
-            async function (blobObj: Blob) {
-              const result: any = await Qiniu.upload(blobObj, { bucket: 'cloud-design', prePath: 'cover/user' })
+            async (blobObj: Blob) => {
+              const result: any = await Qiniu.upload(blobObj, { bucket: 'xp-design', prePath: 'cover/user' })
               cb(result)
             },
             'image/jpeg',
