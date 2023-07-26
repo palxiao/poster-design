@@ -69,62 +69,21 @@ npm run build     <-  图片生成服务（ sreenshot 目录下）
 
 ### 服务端
 
-可参考[接口 API 文档](https://xp.palxp.com/apidoc/index.html)自行实现服务端。
+根据你的具体场景自行实现，目前本项目中的所有服务端接口可参考：[接口 API 文档](https://xp.palxp.com/apidoc/index.html)。
 
 ### 图片生成服务
 
 代码位于 `screenshots` 目录下，查看[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
 
-目录结构比较简单，主要就实现了三个接口，其中 api/screenshots 即是项目中所使用到的图片生成接口，在真实生产项目中可以把该服务单独部署，于内网调用，这样利于做一些鉴权之类的处理。
+> 打包注意事项与服务器配置相关请进入该目录下查看 README 文件说明。
 
-另外 api/printscreen 这个接口实现的是网页截图的 API，该接口可以传入一个 URL 对整个网页进行截图，本项目中不依赖此接口。
+目录结构比较简单，主要就实现了三个接口，其中 `api/screenshots` 即是项目中所使用到的图片生成接口，在真实生产项目中可以把该服务单独部署，于内网调用，这样利于做一些鉴权之类的处理。
 
-### 服务器配置
-
-在 Linux 环境下，npm 自动安装的 Chrome 浏览器有可能会出错，所以推荐从外部安装好浏览器，再给项目中的配置文件 `config.js` 设置好路径，例如：
-
-```js
-exports.executablePath = '/opt/google/chrome-unstable/chrome'
-```
-
-一些可能用到的 linux 命令参考：
-
-```shell
-google-chrome --version # 查看浏览器版本号
-apt-get update
-apt-get install -y google-chrome-stable // 安装最新稳定版谷歌浏览器
-```
+另外 `api/printscreen` 这个接口实现的是网页截图的 API，该接口可以传入一个 URL 对整个网页进行截图，本项目中不依赖此接口。
 
 ### Docker 容器部署
 
-可以通过 Docker 运行一个带 Linux 浏览器的容器，然后暴露一个截图服务以供使用，我所使用的基础镜像为：
-
-```
-docker pull howard86/puppeteer_node:12
-```
-
-运行容器命令参考（其中映射了 `/cache` 为临时目录，放生成图片用）：
-
-```
-docker run -itd -v /data/docker-home:/home -v /data/cache:/cache -p 7001:7001 --name screenshot howard86/puppeteer_node:12
-```
-
-运行后可以手动进入容器中查看谷歌浏览器版本，看需不需要升级，然后安装 pm2 作为服务管理工具，服务启动/重部署相关脚本命令可参考：
-
-```shell
-docker exec screenshot /bin/bash -c 'pm2 delete screenshot-service'
-docker exec screenshot /bin/bash -c 'cd /home/ && yarn'
-docker exec screenshot /bin/bash -c 'pm2 start /home/screenshot-service.js'
-docker exec screenshot /bin/bash -c 'pm2 flush'
-```
-
-如果不想像上面这样直接操作容器，可以在本地/服务器先运行镜像，进入容器中照例配置好 pm2，然后把该容器导出为新的镜像，例如：new-design/screenshot，命令运行参考：
-
-```
-docker run -itd -u root -v ~/data/tmp/screenshot:/cache -p 9001:9001 --name screenshot2 new-design/screenshot /bin/sh  -c "/usr/local/bin/pm2 start /home/dist/server.js && /usr/local/bin/pm2 flush"
-```
-
-这种方式只需要一个镜像以及一个启动命令即可部署，重新跑一遍命令也就相当于重启整个容器。
+可以通过 Docker 运行一个带 Linux 浏览器的容器，[参考说明](https://xp.palxp.com/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
 
 ### 感谢
 
@@ -133,7 +92,7 @@ docker run -itd -u root -v ~/data/tmp/screenshot:/cache -p 9001:9001 --name scre
 - [moveable](https://github.com/daybrush/moveable): 提供了画布中选择、拖动缩放等能力
 - [html2canvas](https://github.com/niklasvh/html2canvas): 前端生成图片兜底方案
 - [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
-- [sky](https://github.com/cfour-hi/sky): 参考了其 PSD 解析的实现
+- [sky](https://github.com/cfour-hi/sky): 参考了其 PSD 解析的代码实现
 
 ### Q&A
 
