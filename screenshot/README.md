@@ -1,17 +1,21 @@
 
-# Node截图服务
+## Node截图服务
 
-### npm install 或 yarn
+目录结构比较简单，主要就实现了三个接口，其中 `api/screenshots` 即是项目中所使用到的图片生成接口，在真实生产项目中可以把该服务单独部署，于内网调用，这样利于做一些鉴权之类的处理。
 
-安装依赖
+另外 `api/printscreen` 这个接口实现的是网页截图的 API，该接口可以传入一个 URL 对整个网页进行截图，本项目中没有使用到此接口。
 
-### npm run dev
+### 安装依赖
 
-运行 ts-node，并监听文件修改自动热更新
+`npm install` 或 `yarn`
 
-### npm run build
+### 启动项目并热更新
 
-使用 webpack 打包文件
+`npm run dev`
+
+### 打包
+
+`npm run build`
 
 #### 打包说明
 
@@ -38,6 +42,6 @@ apt-get update
 apt-get install -y google-chrome-stable // 安装最新稳定版谷歌浏览器
 ```
 
-### build:apidoc
+### 生成 API 文档
 
-生成 API 文档
+`build:apidoc`
