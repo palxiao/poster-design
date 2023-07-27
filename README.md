@@ -72,7 +72,7 @@ npm run serve
 
 ### 图片生成服务
 
-代码位于 `screenshots` 目录下，查看[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
+代码位于 [screenshots/](https://github.com/palxiao/poster-design/tree/main/screenshot) 目录下，查看[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
 
 > 打包注意事项与服务器配置相关请进入该目录下查看 README 文件说明。
 
