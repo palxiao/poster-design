@@ -3,8 +3,8 @@
     <el-collapse v-model="activeNames">
       <el-collapse-item title="画布尺寸" name="1">
         <div class="position-size">
-          <number-input v-model="innerElement.width" label="宽" @finish="(value) => finish('width', value)" />
-          <number-input v-model="innerElement.height" label="高" @finish="(value) => finish('height', value)" />
+          <number-input v-model="innerElement.width" label="宽" :maxValue="5000" @finish="(value) => finish('width', value)" />
+          <number-input v-model="innerElement.height" label="高" :maxValue="5000" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
       <el-collapse-item title="背景设置" name="2">
