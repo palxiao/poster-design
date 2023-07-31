@@ -25,10 +25,6 @@
       <!-- <el-collapse-item title="其他设置" name="3">
         <el-input v-model="innerElement.name" label="名称" @finish="(value) => finish('name', value)" />
       </el-collapse-item> -->
-      <!-- <el-collapse-item title="客户端配置(设置客户端是否允许修改)" name="4">
-        <setting-switch v-for="item in dActiveElement.setting" :key="item.key" v-model="item.value" :label="item.label" />
-      </el-collapse-item> -->
-      <!-- <el-button v-loading="canvasRunning" size="small" @click="pickColor">取色器测试</el-button> -->
     </el-collapse>
   </div>
 </template>

@@ -3,7 +3,7 @@
  * @Date: 2021-07-13 02:48:38
  * @Description: 接口规则：只有正确code为200时返回result结果对象，错误返回整个结果对象
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-12 10:43:34
+ * @LastEditTime: 2023-07-31 09:34:34
  */
 import axios from 'axios'
 import store from '@/store'
@@ -11,8 +11,6 @@ import app_config from '@/config'
 
 axios.defaults.timeout = 30000
 // axios.defaults.headers.Authorization = 'Bearer ';
-// axios.defaults.headers.AppKey = '9e8nbMCqDkMhSRkTo8nYb7VF3qUa43EI'
-
 // const version = app_config.VERSION;
 const baseUrl = app_config.API_URL
 
