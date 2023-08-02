@@ -14,7 +14,7 @@ export default {
   SCREEN_URL: isDev ? 'http://localhost:7001' : '${SCREEN_URL}',
   IMG_URL: 'https://store.palxp.com/',
   // ICONFONT_URL: '//at.alicdn.com/t/font_3223711_74mlzj4jdue.css',
-  ICONFONT_URL: '//at.alicdn.com/t/font_2717063_ypy8vprc3b.css',
-  ICONFONT_EXTRA: '//at.alicdn.com/t/c/font_3228074_6qsac4kteu7.css',
+  ICONFONT_URL: '//at.alicdn.com/t/font_2717063_ypy8vprc3b.css?display=swap',
+  ICONFONT_EXTRA: '//at.alicdn.com/t/c/font_3228074_6qsac4kteu7.css?&display=swap',
   QINIUYUN_PLUGIN: 'https://cdn.jsdelivr.net/npm/qiniu-js@2.5.5/dist/qiniu.min.js',
 }
