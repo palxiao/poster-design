@@ -7,6 +7,7 @@
           <p>{{ item.name }}</p>
         </li>
       </ul>
+      <a href="https://github.com/palxiao/poster-design" target="_blank" class="github"><img src="https://fe-doc.palxp.com/images/github.svg" alt="Github" title="Github" /> 源码</a>
     </div>
     <div v-show="active" class="widget-wrap">
       <temp-list-wrap :style="getStyle(0)" />
@@ -109,6 +110,7 @@ export default {
   position: relative;
   // width: 360px;
   .widget-classify {
+    position: relative;
     border-right: 1px solid rgba(0, 0, 0, 0.07);
     background-color: #ffffff;
     height: 100%;
@@ -210,6 +212,22 @@ export default {
       color: rgba(0, 0, 0, 0.9);
       opacity: 0.9;
     }
+  }
+}
+
+.github {
+  cursor: pointer;
+  position: absolute;
+  bottom: 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  img {
+    width: 21px;
+    height: 21px;
+    margin: 0 2px;
   }
 }
 </style>
