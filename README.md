@@ -76,7 +76,7 @@ npm run serve
 
 可以通过 Docker 运行一个带 Linux 浏览器的容器，[参考说明](https://xp.palxp.com/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
 
-### 后端
+### 服务端
 
 根据你的具体场景自行实现，目前本项目中的所有后端接口可参考：[接口 API 文档](https://xp.palxp.com/apidoc/index.html)。
 
