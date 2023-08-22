@@ -45,6 +45,7 @@ export default {
     step: {
       default: 1,
     },
+    maxValue: {},
   },
   emits: ['finish', 'update:modelValue'],
   data() {
@@ -66,10 +67,16 @@ export default {
   methods: {
     fixedNum() {
       // 小数点过长时
-      const num = String(this.modelValue).split('.')[1]
-      if (num && num.length > 2) {
+      const decimal = String(this.modelValue).split('.')[1]
+      if (decimal && decimal.length > 2) {
         setTimeout(() => {
           this.updateValue(Number(this.modelValue).toFixed(2))
+        }, 10)
+      }
+      // 超过阈值时
+      if (this.maxValue && this.modelValue > this.maxValue) {
+        setTimeout(() => {
+          this.updateValue(Number(this.maxValue))
         }, 10)
       }
     },

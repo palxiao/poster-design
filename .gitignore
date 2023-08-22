@@ -2,6 +2,7 @@
 node_modules
 /dist
 config.json
+package-lock.json
 
 screenshot/node_modules/
 screenshot/dist/

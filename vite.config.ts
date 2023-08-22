@@ -3,7 +3,7 @@
  * @Date: 2021-08-19 18:30:38
  * @Description: Vite配置文件
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-20 18:48:25
+ * @LastEditTime: 2023-08-01 10:46:59
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'

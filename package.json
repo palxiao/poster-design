@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@gradio/client": "^0.1.4",
-    "@palxp/color-picker": "^1.2.5",
+    "@palxp/color-picker": "^1.3.1",
     "@scena/guides": "^0.18.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",

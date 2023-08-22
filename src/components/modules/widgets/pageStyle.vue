@@ -3,8 +3,8 @@
     <el-collapse v-model="activeNames">
       <el-collapse-item title="画布尺寸" name="1">
         <div class="position-size">
-          <number-input v-model="innerElement.width" label="宽" @finish="(value) => finish('width', value)" />
-          <number-input v-model="innerElement.height" label="高" @finish="(value) => finish('height', value)" />
+          <number-input v-model="innerElement.width" label="宽" :maxValue="5000" @finish="(value) => finish('width', value)" />
+          <number-input v-model="innerElement.height" label="高" :maxValue="5000" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
       <el-collapse-item title="背景设置" name="2">
@@ -25,10 +25,6 @@
       <!-- <el-collapse-item title="其他设置" name="3">
         <el-input v-model="innerElement.name" label="名称" @finish="(value) => finish('name', value)" />
       </el-collapse-item> -->
-      <!-- <el-collapse-item title="客户端配置(设置客户端是否允许修改)" name="4">
-        <setting-switch v-for="item in dActiveElement.setting" :key="item.key" v-model="item.value" :label="item.label" />
-      </el-collapse-item> -->
-      <!-- <el-button v-loading="canvasRunning" size="small" @click="pickColor">取色器测试</el-button> -->
     </el-collapse>
   </div>
 </template>
