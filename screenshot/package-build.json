@@ -10,9 +10,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "puppeteer": "^10.4.0",
-    "images": "3.2.3",
-    "png-js": "^1.0.0",
-    "gif-encoder-2": "^1.0.5"
+    "images": "3.2.3"
   },
   "devDependencies": {}
 }

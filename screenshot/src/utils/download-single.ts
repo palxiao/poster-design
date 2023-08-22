@@ -3,7 +3,7 @@
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（单浏览器版，适用于低配置服务器）
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 18:03:57
+ * @LastEditTime: 2023-07-27 18:38:33
  */
 const isDev = process.env.NODE_ENV === 'development'
 const puppeteer = require('puppeteer')
@@ -25,10 +25,17 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
     // 打开页面
     const page = await browser.newPage()
     // 设置浏览器视窗
+    // 4K规格，总计约830万像素 3840 * 2160 2K规格，总计约830万像素 2048 * 1080
+    // const maxPXs = 8294400 
+    const maxPXs = 4211840
+    function limiter(w: number, h: number) {
+      // 限制器，超出规格会降低dpr输出，节省服务器资源
+      return w*h < maxPXs ? 1 : +(1/(w*h) * maxPXs).toFixed(2)
+    }
     page.setViewport({
       width: Number(width),
       height: Number(height),
-      deviceScaleFactor: !isNaN(scale) ? (+scale > 4 ? 4 : +scale) : 1,
+      deviceScaleFactor: !isNaN(scale) ? (+scale > 4 ? 4 : +scale) : limiter(Number(width), Number(height)),
     })
     ua && page.setUserAgent(ua)
     if (devices) {

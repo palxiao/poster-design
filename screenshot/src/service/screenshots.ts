@@ -59,7 +59,7 @@ module.exports = {
     let { id, tempid, width, height, screenshot_url, type = 'file', size, quality } = req.query
     const defaultUrl = isDev ? 'http://localhost:3000/draw' : 'https://design.palxp.com/draw'
     const url = (screenshot_url || defaultUrl) + `${id ? '?id=' : '?tempid='}`
-    id = id || '_' + tempid
+    id = id || tempid
     const path = filePath + `${id}-screenshot.png`
     const thumbPath = type === 'cover' ? filePath + `${id}-cover.jpg` : null
 
