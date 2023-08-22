@@ -22,8 +22,7 @@ import { useStore } from 'vuex'
 // import { debounce } from 'throttle-debounce'
 // import { toolTip } from '@/common/methods/helper'
 // import colorPicker from '@/utils/plugins/color-picker/index.vue'
-// import colorPicker from '@palxp/color-picker'
-import colorPicker from '@palxp/color-picker/index.vue'
+import colorPicker from '@palxp/color-picker'
 
 export default defineComponent({
   name: NAME,

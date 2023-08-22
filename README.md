@@ -12,13 +12,13 @@
 
 - 丝滑的操作体验，丰富的交互细节，基础功能完善
 - 采用服务端生成图片，确保多端出图统一性，支持各种 CSS 特性
-- 简易 AI 抠图工具，上传图片一键去除背景
+- 支持将上传的 PSD 文件解析成模板，方便导入已有设计图
 - 技术栈：Vue3 、Vite2 、Vuex 、ElementPlus
 - 图片生成：Puppeteer、Express
 
 ### 支持功能
 
-- 导入 PSD 文件解析成模板、在线导出图片下载
+- 导入 PSD 设计稿，导出图片下载
 - 元素拖拽、组合、缩放、层级调整、对齐等操作。
 - 图片素材插入、替换、裁剪，图片容器等功能。
 - SVG 素材颜色、透明度编辑，文字花字组合。
@@ -62,29 +62,23 @@ npm run serve
 
 ### 打包
 
-| 前端页面          | 截图服务                              |
+| 前端页面          | 图片生成服务                          |
 | ----------------- | ------------------------------------- |
 | `npm run v-build` | `cd sreenshot` <br /> `npm run build` |
 
-### 截图服务
+### 后端
+
+根据你的具体场景自行实现，目前本项目中的所有服务端接口可参考：[接口 API 文档](https://xp.palxp.com/apidoc/index.html)。
+
+### 图片生成服务
 
 代码位于 [screenshots/](https://github.com/palxiao/poster-design/tree/main/screenshot) 目录下，查看[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
 
 > 打包注意事项与服务器配置相关请进入该目录下查看 README 文件说明。
 
-### 截图服务 Docker 部署
+### Docker 容器部署
 
 可以通过 Docker 运行一个带 Linux 浏览器的容器，[参考说明](https://xp.palxp.com/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
-
-### 后端
-
-根据你的具体场景自行实现，目前本项目中的所有后端接口可参考：[接口 API 文档](https://xp.palxp.com/apidoc/index.html)。
-
-### 抠图服务部署
-
-```
-docker run -d -p 5000:5000 --restart always danielgatis/rembg s
-```
 
 ### 感谢
 
@@ -110,7 +104,7 @@ A：考虑到服务端的开发语言、数据库类型都可能不尽相同，�
 
 项目最早使用 Vue2 开发，后改用 Vue3 重构，所以有部分代码混合了 Options 写法。
 
-或许你在工作中有类似的研发需求，或者对开发编辑器感兴趣，希望这个项目能给到你一些微薄帮助！
+或许你在工作中有这类需求，这个项目能给到你一些微薄帮助的话，那就再好不过了！
 
 目前本项目也还在不断迭代中，有很多的不足之处，我也是一边学习一边成长。开源不易，希望看到这里的你可以给本项目点个 **Star** 支持一下~ 感谢！
 
