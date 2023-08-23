@@ -1,0 +1,28 @@
+{
+	"Print to console": {
+		"prefix": "api-graphql",
+		"body": [
+			"/**",
+			"* @api {get} graphql ${1:__接口说明__}",
+			"* @apiName ${2: __方法名称__}",
+			"* @apiVersion 1.0.0",
+			"* @apiGroup ${3:__分组_gql__}",
+			"* @apiDescription ${4:__详细描述__}",
+			"* @apiSampleRequest off",
+			"* ",
+			"* @apiParam {String} token 用户验签",
+			"* @apiParam {__类型__} __字段名__=__默认值__ __请求字段说明__",
+			"* ",
+			"* @apiSuccess (__组__) {__类型__} __字段名__ __返回字段说明__",
+			"* ", 
+			"* @apiUse __定义的可选参数模块名MODEL__",
+			"*/",
+			"/**",
+			"* ----copy---- ",
+			"* @apiDefine __定义的模块名MODEL__",
+			"* @apiParam (可选返回参数) {__类型__} __参数__ __说明__",
+			"*/",
+		],
+		"description": "Graphql-GET请求 - apidoc文档模板"
+	}
+}

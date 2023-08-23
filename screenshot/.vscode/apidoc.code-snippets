@@ -1,0 +1,13 @@
+{
+	// ${1:label}, ${2:another}
+	"Print to console": {
+		"prefix": "apidoc",
+		"body": [
+			"/**",
+			"* @api {get} /user/getUserById/:id ${3:__apiname__}",
+			"* @apiGroup ${1:label}",
+			"*/"
+		],
+		"description": "my ts-vue template"
+	}
+}

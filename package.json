@@ -4,7 +4,7 @@
   "private": true,
   "author": "ShawnPhang",
   "scripts": {
-    "prepared": "npm i --force && cd screenshot && npm i",
+    "prepared": "npm i && cd screenshot && npm i",
     "serve": "npm run dev & cd screenshot && npm run dev",
     "dev": "cross-env NODE_ENV=development vite",
     "v-build": "cross-env NODE_ENV=production && vite build",
@@ -54,7 +54,7 @@
     "cross-env": "^7.0.3",
     "esbuild-loader": "^2.13.1",
     "eslint": "^7.29.0",
-    "eslint-config-alloy": "^4.1.0",
+    "eslint-config-alloy": "~4.1.0",
     "eslint-plugin-vue": "^7.12.1",
     "less": "^4.1.1",
     "sass": "^1.63.6",

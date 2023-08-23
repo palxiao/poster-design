@@ -1,0 +1,23 @@
+{
+	"Print to console": {
+		"prefix": "api-post",
+		"body": [
+			"/**",
+			"* @api {post} ${0:__接口url__} ${1:__接口说明__}",
+			"* @apiVersion 1.0.0",
+			"* @apiGroup ${2:__分组__}",
+			"* @apiDescription ${3:__详细描述__}",
+			"* ",
+			"* @apiUse needToken",
+			"* @apiHeader {__类型__} __字段名__ __头字段说明__",
+			"* ",
+			"* @apiParam {__类型__} __字段名__=__默认值__ __请求字段说明__",
+			"* ",
+			"* @apiSuccess (__组__) {__类型__} __字段名__ __返回字段说明__",
+			"* ", 
+			"* @apiUse __SuccessName定义的成功返回块__",
+			"*/"
+		],
+		"description": "POST请求 - apidoc文档模板"
+	}
+}
