@@ -15,7 +15,7 @@ import api from '@/api'
 import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
-import { blob2Base64, generateFontStyle } from '@/common/methods/fonts/utils'
+import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
 import designBoard from '@/components/modules/layout/designBoard.vue'
 import zoomControl from '@/components/modules/layout/zoomControl.vue'
 
@@ -94,7 +94,7 @@ export default defineComponent({
           fontData.forEach((item: any) => {
             item.url = list.find((x: any) => x.oid == item.id)?.ttf
           })
-          await this.font2style(fontContent, fontData)
+          fontWithDraw && (await font2style(fontContent, fontData))
           // console.log('1. base64 yes')
           const preload = new Preload(imgsData)
           await preload.doms()
@@ -112,7 +112,7 @@ export default defineComponent({
           // console.log(e)
         }
         loadFlag = true
-        // console.log('--> now u can start screenshot!')
+        console.log('--> now u can start screenshot!')
         setTimeout(() => {
           try {
             ;(window as any).loadFinishToInject('done')
@@ -123,33 +123,6 @@ export default defineComponent({
       setTimeout(() => {
         !loadFlag && (window as any).loadFinishToInject('done')
       }, 60000)
-    },
-    async font2style(fontContent: any, fontData: any = []) {
-      return new Promise((resolve: Function) => {
-        Promise.all(
-          // 拿到字体子集。只有ttf/otf这种原始字体支持提取，如服务端不具备该功能则没有此步骤，在页面加载整个字体。
-          Object.keys(fontContent).map(async (key) => {
-            const font = fontData.find((font: any) => font.value === key) as any
-            if (font.id) {
-              try {
-                const base64 = await api.material.getFontSub({
-                  font_id: font.id,
-                  url: font.url,
-                  content: 'Aa' + fontContent[key],
-                })
-                fontContent[key] = base64
-              } catch (e) {
-                console.log('字体获取失败', e)
-              }
-            }
-          }),
-        ).then(() => {
-          const fontStyles = Object.keys(fontContent).reduce((pre, cur) => pre + generateFontStyle(cur, fontContent[cur]).outerHTML, '')
-          document.head.innerHTML += fontStyles
-          // document.head.appendChild(fontStyles)
-          resolve()
-        })
-      })
     },
   },
 })

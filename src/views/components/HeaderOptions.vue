@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-25 16:02:13
+ * @LastEditTime: 2023-08-23 17:33:12
 -->
 <template>
   <div class="top-title"><el-input v-model="title" placeholder="未命名的设计" class="input-wrap" /></div>

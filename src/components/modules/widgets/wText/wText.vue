@@ -53,7 +53,7 @@
 const NAME = 'w-text'
 
 import { mapGetters, mapActions } from 'vuex'
-// import api from '@/api'
+import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 
 export default {
   name: NAME,
@@ -105,7 +105,7 @@ export default {
   computed: {
     ...mapGetters(['dActiveElement']),
     isDraw() {
-      return this.$route.name === 'Draw'
+      return this.$route.name === 'Draw' && fontWithDraw
     },
   },
   watch: {
