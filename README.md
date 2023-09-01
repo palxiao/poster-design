@@ -114,6 +114,8 @@ A：考虑到服务端的开发语言、数据库类型都可能不尽相同，�
 
 目前本项目也还在不断迭代中，有很多的不足之处，我也是一边学习一边成长。开源不易，希望看到这里的你可以给本项目点个 **Star** 支持一下~ 感谢！
 
+[后续部分迭代计划记录](https://xp.palxp.com/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
+
 ### LICENSE
 
 [MIT License](https://github.com/palxiao/poster-design/blob/main/LICENSE)
