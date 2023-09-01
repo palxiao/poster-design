@@ -38,21 +38,15 @@ export default {
     const route = useRoute()
     const state = reactive({
       widgetClassifyList: widgetClassifyListData,
-      activeWidgetClassify: -1,
+      activeWidgetClassify: 0,
       active: true,
     })
     const clickClassify = (index: number) => {
       state.activeWidgetClassify = index
       state.active = true
     }
-    const getStyle = (index: number) => {
-      return {
-        display: state.activeWidgetClassify === index ? '' : 'none',
-      }
-    }
 
     onMounted(async () => {
-      state.activeWidgetClassify = 0
       await nextTick()
       const { koutu } = route.query
       koutu && (state.activeWidgetClassify = 5)
@@ -82,7 +76,6 @@ export default {
 
     return {
       clickClassify,
-      getStyle,
       ...toRefs(state),
     }
   },
