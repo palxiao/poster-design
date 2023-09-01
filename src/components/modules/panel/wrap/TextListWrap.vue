@@ -17,7 +17,7 @@
       </div>
     </ul>
     <div class="other-text-wrap">
-      <comp-list-wrap :active="active" />
+      <comp-list-wrap />
     </div>
   </div>
 </template>
@@ -32,7 +32,6 @@ import { getCurrentInstance, ComponentInternalInstance } from 'vue'
 
 export default {
   name: NAME,
-  props: ['active'],
   setup() {
     const store: any = useStore()
     const { proxy } = getCurrentInstance() as ComponentInternalInstance

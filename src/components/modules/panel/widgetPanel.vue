@@ -10,13 +10,9 @@
       <a href="https://github.com/palxiao/poster-design" target="_blank" class="github"><img src="https://fe-doc.palxp.com/images/github.svg" alt="Github" title="Github" /> 源码</a>
     </div>
     <div v-show="active" class="widget-wrap">
-      <temp-list-wrap :style="getStyle(0)" />
-      <graph-list-wrap v-show="+activeWidgetClassify === 1" :active="+activeWidgetClassify === 1" />
-      <text-list-wrap v-show="+activeWidgetClassify === 2" :active="+activeWidgetClassify === 2" />
-      <photo-list-wrap v-show="+activeWidgetClassify === 3" :active="+activeWidgetClassify === 3" />
-      <bg-img-list-wrap v-show="+activeWidgetClassify === 4" :active="+activeWidgetClassify === 4" />
-      <tools-list-wrap v-show="+activeWidgetClassify === 5" :active="+activeWidgetClassify === 5" />
-      <user-wrap v-show="+activeWidgetClassify === 6" :active="+activeWidgetClassify === 6" />
+      <keep-alive>
+        <component :is="widgetClassifyList[activeWidgetClassify].component" />
+      </keep-alive>
     </div>
     <!-- <div v-show="active" class="side-wrap"><div class="pack__up" @click="active = false">&lt;</div></div> -->
     <div v-show="active" class="side-wrap">

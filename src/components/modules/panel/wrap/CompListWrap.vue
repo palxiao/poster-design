@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-11 11:21:05
+ * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
+ * @LastEditTime: 2023-09-01 14:14:27
 -->
 <template>
   <div class="wrap">
@@ -60,7 +60,6 @@ let tempDetail: any = null
 
 export default defineComponent({
   // components: { ElDivider },
-  props: ['active'],
   setup(props) {
     const state = reactive({
       loading: false,
@@ -73,29 +72,21 @@ export default defineComponent({
     })
     const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
-    watch(
-      () => props.active,
-      async (active) => {
-        if (active) {
-          if (!props.active || state.types.length > 0) {
-            return
-          }
-          const types = await api.material.getKinds({ type: 3 })
-          types.shift()
-          state.types = types
-          for (const iterator of types) {
-            const { list } = await api.home.getCompList({
-              cate: iterator.id,
-              type: 1,
-              pageSize: 3,
-            })
-            state.showList.push(list)
-          }
+    onMounted(async () => {
+      if (state.types.length <= 0) {
+        const types = await api.material.getKinds({ type: 3 })
+        types.shift()
+        state.types = types
+        for (const iterator of types) {
+          const { list } = await api.home.getCompList({
+            cate: iterator.id,
+            type: 1,
+            pageSize: 3,
+          })
+          state.showList.push(list)
         }
-      },
-    )
-    // onMounted(async () => {
-    // })
+      }
+    })
     const mouseup = (e: any) => {
       e.preventDefault()
       setTimeout(() => {

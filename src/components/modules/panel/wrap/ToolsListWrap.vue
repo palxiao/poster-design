@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-11 18:48:23
  * @Description: 组件列表
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-12 22:31:55
+ * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
+ * @LastEditTime: 2023-09-01 14:17:46
 -->
 <template>
   <div class="wrap">
@@ -31,23 +31,15 @@ import imageCutout from '@/components/business/image-cutout'
 export default {
   name: NAME,
   components: { imageCutout },
-  props: ['active'],
   data() {
     return {
       loadDone: false,
-      showList: false,
     }
   },
   computed: {
     ...mapGetters(['dPage']),
   },
-  watch: {
-    active(val) {
-      if (this.active) {
-        this.showList = true
-      }
-    },
-  },
+
   mounted() {
     // this.getDataList()
     setTimeout(() => {

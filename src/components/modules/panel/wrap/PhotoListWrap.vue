@@ -2,13 +2,13 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-11 18:48:23
  * @Description:  
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-10 16:27:41
+ * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
+ * @LastEditTime: 2023-09-01 14:18:14
 -->
 <template>
   <div class="wrap">
     <search-header type="none" @change="searchChange" />
-    <photo-list v-if="showList" :isDone="loadDone" :listData="recommendImgList" @load="getDataList" @drag="dragStart" @select="selectImg" />
+    <photo-list :isDone="loadDone" :listData="recommendImgList" @load="getDataList" @drag="dragStart" @select="selectImg" />
   </div>
 </template>
 
@@ -31,23 +31,15 @@ export default {
       recommendImgList: [],
       // loading: false,
       loadDone: false,
-      showList: false,
       page: 0,
     }
   },
   computed: {
     ...mapGetters(['dPage']),
   },
-  watch: {
-    active(val) {
-      if (this.active) {
-        this.showList = true
-        this.getDataList()
-      }
-    },
-  },
+
   mounted() {
-    // this.getDataList()
+    this.getDataList()
   },
   methods: {
     ...mapActions(['addWidget']),
