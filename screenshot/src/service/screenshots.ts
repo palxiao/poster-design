@@ -2,10 +2,11 @@
  * @Author: ShawnPhang
  * @Date: 2020-07-22 20:13:14
  * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 18:03:13
+ * @LastEditors: 侯超委 houchaowei@zhihu.com
+ * @LastEditTime: 2023-09-01 14:51:23
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
+const uuid = require('../utils/uuid.ts')
 const { filePath, upperLimit } = require('../configs.ts')
 const { queueRun, queueList } = require('../utils/node-queue.ts')
 // const path = require('path')
@@ -102,11 +103,11 @@ module.exports = {
      * @apiParam {Number} scale (可选) 针对移动端的设备像素比(DPR) 整型范围 1~4，默认1
      */
     let { width = 375, height = 0, url, type = 'file', size, quality, prevent = false, ua, devices, scale, wait } = req.query
-    const path = filePath + `screenshot_${new Date().getTime()}.png`
+    const path = filePath + `screenshot_${new Date().getTime()}_${uuid()}.png`
     const thumbPath = type === 'cover' ? path.replace('.png', '.jpg') : null
 
     if (url) {
-      const sign = new Date().getTime() + ''
+      const sign = `${new Date().getTime()}_${uuid(8)}`
       req._queueSign = sign
       // console.log(url + id, path, thumbPath);
       if (queueList.length > upperLimit) {
@@ -119,7 +120,9 @@ module.exports = {
             res.setHeader('Content-Type', 'image/jpg')
             // const stats = fs.statSync(path)
             // res.setHeader('Cache-Control', stats.size)
-            type === 'file' ? res.sendFile(path) : res.sendFile(thumbPath)
+            res.json({ code: 200, msg: '截图成功', data: { path, thumbPath } })
+          } else {
+            res.json({ code: 200, msg: 'ok' })
           }
         })
         .catch((e: any) => {
