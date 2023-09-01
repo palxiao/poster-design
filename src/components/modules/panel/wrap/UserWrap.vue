@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-13 22:18:35
  * @Description: 我的
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-14 01:03:40
+ * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
+ * @LastEditTime: 2023-09-01 14:17:23
 -->
 <template>
   <div class="wrap">
@@ -16,7 +16,7 @@
         <el-button class="upload-btn" plain>上传图片 <i class="iconfont icon-upload" /></el-button>
       </uploader>
       <el-button class="upload-btn upload-psd" plain type="primary" @click="openPSD">上传 PSD 模板</el-button>
-      <photo-list v-if="showList" ref="imgListRef" :edit="editOptions" :isDone="isDone" :listData="imgList" @load="load" @drag="dragStart" @select="selectImg" />
+      <photo-list ref="imgListRef" :edit="editOptions" :isDone="isDone" :listData="imgList" @load="load" @drag="dragStart" @select="selectImg" />
     </div>
     <div v-show="tabActiveName === 'design'" class="wrap">
       <ul ref="listRef" v-infinite-scroll="loadDesign" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, watch, nextTick, ref } from 'vue'
+import { defineComponent, reactive, toRefs, watch, nextTick, ref, onMounted } from 'vue'
 import { ElTabPane, ElTabs } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -50,7 +50,6 @@ export default defineComponent({
       percent: { num: 0 }, // 当前上传进度
       imgList: [],
       designList: [],
-      showList: false,
       isDone: false,
       editOptions: [],
       listRef: null,
@@ -113,18 +112,12 @@ export default defineComponent({
       isLess && loadFn()
     }
 
-    watch(
-      () => props.active,
-      () => {
-        if (props.active) {
-          state.showList = true
-          load(true)
-          nextTick(() => {
-            state.tabActiveName = 'pics'
-          })
-        }
-      },
-    )
+    onMounted(() => {
+      load(true)
+      nextTick(() => {
+        state.tabActiveName = 'pics'
+      })
+    })
 
     const selectImg = async (index: number) => {
       const item: any = state.imgList[index]

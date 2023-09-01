@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 15:19:22
+ * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
+ * @LastEditTime: 2023-09-01 14:18:30
 -->
 <template>
   <div class="wrap">
@@ -73,28 +73,20 @@ export default defineComponent({
     })
     const pageOptions = { page: 0, pageSize: 20 }
 
-    watch(
-      () => props.active,
-      async (active) => {
-        if (active) {
-          if (!props.active || state.types.length > 0) {
-            return
-          }
-          const types = await api.material.getKinds({ type: 2 })
-          types.shift()
-          state.types = types
-          for (const iterator of types) {
-            const { list } = await api.material.getList({
-              cate: iterator.id,
-              pageSize: 3,
-            })
-            state.showList.push(list)
-          }
+    onMounted(async () => {
+      if (state.types.length <= 0) {
+        const types = await api.material.getKinds({ type: 2 })
+        types.shift()
+        state.types = types
+        for (const iterator of types) {
+          const { list } = await api.material.getList({
+            cate: iterator.id,
+            pageSize: 3,
+          })
+          state.showList.push(list)
         }
-      },
-    )
-    // onMounted(async () => {
-    // })
+      }
+    })
     // const dragHelper = new DragHelper()
     // let isDrag = false
     // let startPoint = { x: 99999, y: 99999 }

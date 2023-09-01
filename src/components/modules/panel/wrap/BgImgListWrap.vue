@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-10 22:55:41
+ * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
+ * @LastEditTime: 2023-09-01 14:18:54
 -->
 <template>
   <div class="wrap">
@@ -29,7 +29,6 @@ import api from '@/api'
 import { mapActions, useStore } from 'vuex'
 
 export default defineComponent({
-  props: ['active'],
   // components: { ElDivider },
   setup(props) {
     const store = useStore()
@@ -37,19 +36,10 @@ export default defineComponent({
       loading: false,
       loadDone: false,
       bgList: [],
-      showList: false,
+      showList: true,
       colors: ['#000000ff', '#999999ff', '#CCCCCCff', '#FFFFFFff', '#E65353ff', '#FFD835ff', '#70BC59ff', '#607AF4ff', '#976BEEff'],
     })
     const pageOptions = { page: 0, pageSize: 20 }
-
-    watch(
-      () => props.active,
-      () => {
-        if (props.active) {
-          state.showList = true
-        }
-      },
-    )
 
     const loadData = () => {
       if (state.loading) {
@@ -70,9 +60,12 @@ export default defineComponent({
         pageOptions.page = 1
       }
 
-      api.material.getImagesList({ cate: 16, page: pageOptions.page }).then(({ list }: any) => {
-        state.bgList.push(...list)
-        list.length < 0 && (state.loadDone = true)
+      await api.material.getImagesList({ cate: 16, page: pageOptions.page }).then(({ list }: any) => {
+        if (list.length > 0) {
+          state.bgList.push(...list)
+        } else {
+          state.loadDone = true
+        }
       })
 
       setTimeout(() => {
