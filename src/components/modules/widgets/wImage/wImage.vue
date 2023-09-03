@@ -310,7 +310,7 @@ export default {
   opacity: 0.2;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  // object-fit: contain;
 }
 .drop {
   &__mask {
