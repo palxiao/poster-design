@@ -3,7 +3,7 @@
  * @Date: 2022-02-01 13:41:59
  * @Description: 配置文件
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-06 14:53:05
+ * @LastEditTime: 2023-09-04 14:09:51
  */
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -13,6 +13,11 @@ exports.servicePort = 7001
  * 配置服务器端的chrome浏览器位置
  */
 exports.executablePath = '/opt/google/chrome-unstable/chrome',
+
+/**
+ * 前端绘制页地址
+ */
+exports.drawLink = isDev ? 'http://localhost:3000/draw' : 'https://design.palxp.com/draw'
 
 /**
  * 截图并发数上限

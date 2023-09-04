@@ -3,11 +3,11 @@
  * @Date: 2020-07-22 20:13:14
  * @Description:
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-09-04 10:54:52
+ * @LastEditTime: 2023-09-04 14:08:10
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
 const uuid = require('../utils/uuid.ts')
-const { filePath, upperLimit } = require('../configs.ts')
+const { filePath, upperLimit, drawLink } = require('../configs.ts')
 const { queueRun, queueList } = require('../utils/node-queue.ts')
 // const path = require('path')
 const fs = require('fs')
@@ -55,11 +55,8 @@ module.exports = {
      * @apiParam {String} size 可选, 按比例缩小到宽度
      * @apiParam {String} quality 可选, 质量
      */
-    
-    const isDev = process.env.NODE_ENV === 'development'
     let { id, tempid, width, height, screenshot_url, type = 'file', size, quality } = req.query
-    const defaultUrl = isDev ? 'http://localhost:3000/draw' : 'https://design.palxp.com/draw'
-    const url = (screenshot_url || defaultUrl) + `${id ? '?id=' : '?tempid='}`
+    const url = (screenshot_url || drawLink) + `${id ? '?id=' : '?tempid='}`
     id = id || tempid
     const path = filePath + `${id}-screenshot.png`
     const thumbPath = type === 'cover' ? filePath + `${id}-cover.jpg` : null
