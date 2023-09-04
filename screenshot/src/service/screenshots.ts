@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2020-07-22 20:13:14
  * @Description:
- * @LastEditors: 侯超委 houchaowei@zhihu.com
- * @LastEditTime: 2023-09-01 14:51:23
+ * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditTime: 2023-09-04 10:54:52
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
 const uuid = require('../utils/uuid.ts')
@@ -117,7 +117,7 @@ module.exports = {
       queueRun(saveScreenshot, url, { width, height, path, thumbPath, size, quality, prevent, ua, devices, scale, wait }, sign)
         .then(() => {
           if (!res.headersSent) {
-            res.setHeader('Content-Type', 'image/jpg')
+            // res.setHeader('Content-Type', 'image/jpg')
             // const stats = fs.statSync(path)
             // res.setHeader('Cache-Control', stats.size)
             res.json({ code: 200, msg: '截图成功', data: { path, thumbPath } })
