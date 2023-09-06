@@ -99,6 +99,7 @@ export default {
   },
   updated() {
     this.updateRecord()
+    this.$store.commit('updateRect')
   },
   async mounted() {
     await this.$nextTick()
