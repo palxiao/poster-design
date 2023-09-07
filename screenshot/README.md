@@ -45,7 +45,7 @@ apt-get update
 apt-get install -y google-chrome-stable // 安装最新稳定版谷歌浏览器
 ```
 
-> 其它系统自行搜索如何安装Chrome，推荐使用Docker部署，本项目部署[参考说明](https://xp.palxp.com/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
+> 其它系统自行搜索如何安装Chrome，推荐使用Docker部署，本项目部署[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
 
 ### 生成 API 文档
 

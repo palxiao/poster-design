@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-12-24 17:51:15
  * @Description: 超时中间件
- * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditors: ShawnPhang <site: m.palxp.cn>
  * @LastEditTime: 2023-07-05 20:17:00
  */
 

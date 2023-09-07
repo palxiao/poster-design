@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2022-06-09 17:54:26
  * @Description: 设备预设列表
- * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditors: ShawnPhang <site: m.palxp.cn>
  * @LastEditTime: 2023-06-28 00:22:30
  */
 const DevicesNames = [

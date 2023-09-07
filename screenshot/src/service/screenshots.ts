@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2020-07-22 20:13:14
  * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditors: ShawnPhang <site: m.palxp.cn>
  * @LastEditTime: 2023-09-04 14:08:10
  */
 const { saveScreenshot } = require('../utils/download-single.ts')

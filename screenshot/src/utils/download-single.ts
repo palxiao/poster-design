@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（单浏览器版，适用于低配置服务器）
- * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditors: ShawnPhang <site: m.palxp.cn>
  * @LastEditTime: 2023-07-27 18:38:33
  */
 const isDev = process.env.NODE_ENV === 'development'

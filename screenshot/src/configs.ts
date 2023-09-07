@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-01 13:41:59
  * @Description: 配置文件
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-09-04 14:09:51
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-07 23:42:43
  */
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -17,7 +17,7 @@ exports.executablePath = '/opt/google/chrome-unstable/chrome',
 /**
  * 前端绘制页地址
  */
-exports.drawLink = isDev ? 'http://localhost:3000/draw' : 'https://design.palxp.com/draw'
+exports.drawLink = isDev ? 'http://localhost:3000/draw' : 'https://design.palxp.cn/draw'
 
 /**
  * 截图并发数上限
