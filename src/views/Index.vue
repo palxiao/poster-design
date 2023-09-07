@@ -88,7 +88,7 @@ export default defineComponent({
     function jump2home() {
       // const fullPath = window.location.href.split('/')
       // window.open(fullPath[0] + '//' + fullPath[2])
-      window.open('https://xp.palxp.com/')
+      window.open('https://xp.palxp.cn/')
     }
     return {
       ...toRefs(state),

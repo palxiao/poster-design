@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-25 15:56:22
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-07 22:32:24
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -166,7 +166,7 @@ export default defineComponent({
       }, 100)
     },
     jump2word() {
-      window.open('https://xp.palxp.com/#/articles/1687855172725')
+      window.open('https://xp.palxp.cn/#/articles/1687855172725')
       // window.open('https://kdocs.cn/l/clmBsIkhve8d')
     },
   },

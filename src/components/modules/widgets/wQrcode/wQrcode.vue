@@ -52,7 +52,7 @@ export default {
     dotRotation: 270,
     dotColor: '#35495E',
     dotColor2: '#35495E',
-    value: 'https://xp.palxp.com',
+    value: 'https://xp.palxp.cn',
     setting: [],
     record: {
       width: 0,

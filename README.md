@@ -1,4 +1,4 @@
-**[在线体验](https://design.palxp.com/)** | **[中文文档网站](https://xp.palxp.com/)** | [架构及目录说明](https://xp.palxp.com/#/articles/1689321259854)
+**[在线体验](https://design.palxp.com/)** | **[中文文档网站](https://xp.palxp.cn/)** | [架构及目录说明](https://xp.palxp.cn/#/articles/1689321259854)
 
 ---
 
@@ -8,7 +8,7 @@
 
 适用于海报图片生成、电商分享图、文章长图、视频/公众号封面等多种场景。
 
-![](https://xp.palxp.com/images/2023-7-16-1689500112694.gif)
+![](https://xp.palxp.cn/images/2023-7-16-1689500112694.gif)
 
 - 丝滑的操作体验，丰富的交互细节，基础功能完善
 - 采用服务端生成图片，确保多端出图统一性，支持各种 CSS 特性
@@ -54,7 +54,7 @@ npm run serve
 
 > 将会同时运行前端界面与图片生成服务(`3000`端口为前端项目，`7001`端口为图片生成服务)：
 >
-> ![](https://xp.palxp.com/images/2023-7-16-1689498291322.png)
+> ![](https://xp.palxp.cn/images/2023-7-16-1689498291322.png)
 > 如果你本地没有成功启动两个服务，可能是 win 系统不兼容，手动进 `screenshot` 目录安装依赖(`npm install`)并启动服务(`npm run dev`)
 > 或者使用 VSCode 自带的终端来运行命令，不要使用 CMD。
 
@@ -68,17 +68,17 @@ npm run serve
 
 ### 截图服务
 
-代码位于 [screenshots/](https://github.com/palxiao/poster-design/tree/main/screenshot) 目录下，查看[接口 API 文档](https://xp.palxp.com/apidoc/screenshot.html)。
+代码位于 [screenshots/](https://github.com/palxiao/poster-design/tree/main/screenshot) 目录下，查看[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
 
 > 打包注意事项与服务器配置相关请进入该目录下查看 README 文件说明。
 
 ### 截图服务 Docker 部署
 
-可以通过 Docker 运行一个带 Linux 浏览器的容器，[参考说明](https://xp.palxp.com/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
+可以通过 Docker 运行一个带 Linux 浏览器的容器，[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
 
 ### 服务端
 
-根据你的具体场景自行实现，目前本项目中的所有后端接口可参考：[接口 API 文档](https://xp.palxp.com/apidoc/index.html)。
+根据你的具体场景自行实现，目前本项目中的所有后端接口可参考：[接口 API 文档](https://xp.palxp.cn/apidoc/index.html)。
 
 ### 抠图服务部署
 
@@ -114,7 +114,7 @@ A：考虑到服务端的开发语言、数据库类型都可能不尽相同，�
 
 目前本项目也还在不断迭代中，有很多的不足之处，我也是一边学习一边成长。开源不易，希望看到这里的你可以给本项目点个 **Star** 支持一下~ 感谢！
 
-[后续部分迭代计划记录](https://xp.palxp.com/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
+[后续部分迭代计划记录](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
 
 ### LICENSE
 
