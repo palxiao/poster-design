@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-07 22:32:24
+ * @LastEditTime: 2023-09-07 22:55:33
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
