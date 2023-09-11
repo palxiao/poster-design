@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-07 22:55:33
+ * @LastEditTime: 2023-09-11 23:39:06
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -46,7 +46,7 @@ import { defineComponent, reactive, toRefs, getCurrentInstance, ComponentInterna
 import { processPSD2Page } from '@/utils/plugins/psd'
 import { useRoute } from 'vue-router'
 import { mapActions, mapGetters, useStore } from 'vuex'
-import RightClickMenu from '@/components/business/right-click-menu/rc-menu.vue'
+import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import shortcuts from '@/mixins/shortcuts'
 import wText from '@/components/modules/widgets/wText/wText.vue'

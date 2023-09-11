@@ -3,7 +3,7 @@
  * @Date: 2023-09-07 22:56:09
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-07 23:32:50
+ * @LastEditTime: 2023-09-11 23:29:43
  */
 // const prefix = import.meta.env
 const prefix = process.env
@@ -15,7 +15,7 @@ export default {
   BASE_URL: isDev ? '/' : './',
   VERSION: '1.1.0',
   APP_NAME: '迅排设计',
-  COPYRIGHT: 'ShawnPhang - Palxp.com',
+  COPYRIGHT: 'ShawnPhang - Palxp.cn',
   // API_URL: isDev ? 'http://localhost:9998' : '${API}',
   API_URL: 'https://www.palxp.cn:8887',
   SCREEN_URL: isDev ? 'http://localhost:7001' : '${SCREEN_URL}',

@@ -11,7 +11,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import { widgetMenu, pageMenu, menuList } from './rc-menu-data'
+import { widgetMenu, pageMenu, menuList } from './rcMenuData'
 import { getTarget } from '@/common/methods/target'
 
 export default defineComponent({

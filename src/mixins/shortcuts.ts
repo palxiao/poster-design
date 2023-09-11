@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-01 14:12:08
  * @Description: 快捷键，目前是mixin形式放入views/index.vue中
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-07 16:33:02
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-11 23:37:26
  */
 import store from '@/store'
 const _this: any = {}
@@ -12,8 +12,8 @@ _this.dHistoryParams = store.getters.dHistoryParams
 // _this.dPage = store.getters.dPage
 // _this.handleHistory = store.dispatch.ha
 
-import keyCodeOptions from './methods/KeyCodeOptions'
-import dealWithCtrl from './methods/DealWithCtrl'
+import keyCodeOptions from './methods/keyCodeOptions'
+import dealWithCtrl from './methods/dealWithCtrl'
 
 const ignoreNode = ['INPUT', 'TEXTAREA']
 

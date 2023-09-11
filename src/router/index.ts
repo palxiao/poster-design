@@ -2,14 +2,14 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-19 18:43:22
  * @Description: Router Enter
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-02-11 15:59:31
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-11 23:32:52
  */
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import config from '@/config'
 import hook from './hook'
 
-import Base from './Base'
+import Base from './base'
 
 const routes: Array<RouteRecordRaw> = [...Base]
 
