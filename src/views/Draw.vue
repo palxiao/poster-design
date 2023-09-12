@@ -61,7 +61,7 @@ export default defineComponent({
           if (item.fontClass && item.fontClass.value) {
             const loader = new FontFaceObserver(item.fontClass.value)
             fontData.push(item.fontClass)
-            fontLoaders.push(loader.load())
+            fontLoaders.push(loader.load(null, 30000)) // 延长超时让检测不会丢失字体
             // 按字体来收集所有文字
             if (fontContent[item.fontClass.value]) {
               fontContent[item.fontClass.value] += item.text
