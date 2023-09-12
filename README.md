@@ -98,9 +98,9 @@ docker run -d -p 5000:5000 --restart always danielgatis/rembg s
 
 ### Q&A
 
-Q：**我想二次开发，但是不会编写代码，可以付费开发吗？**
+Q：**项目可以直接部署上线吗？**
 
-A：抱歉，因本人时间精力有限，无法提供私有化部署或二次开发的服务，故不接受定制化开发的需求。如果您对项目有任何建议，非常欢迎与我交流。
+A：本项目支持本地运行体验完整功能，如需部署到生产，需自行开发配套的后端接口，自行部署图片生成服务，部署方法参考项目中的文档。
 
 Q：**后端源码不开源吗？**
 
@@ -113,6 +113,8 @@ A：考虑到服务端的开发语言、数据库类型都可能不尽相同，�
 或许你在工作中有类似的研发需求，或者对开发编辑器感兴趣，希望这个项目能给到你一些微薄帮助！
 
 目前本项目也还在不断迭代中，有很多的不足之处，我也是一边学习一边成长。开源不易，希望看到这里的你可以给本项目点个 **Star** 支持一下~ 感谢！
+
+[![Star History Chart](https://api.star-history.com/svg?repos=palxiao/poster-design&type=Date)](https://star-history.com/#palxiao/poster-design&Date)
 
 [后续部分迭代计划记录](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
 
