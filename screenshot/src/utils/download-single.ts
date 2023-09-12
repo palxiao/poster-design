@@ -2,14 +2,18 @@
  * @Author: ShawnPhang
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（单浏览器版，适用于低配置服务器）
- * @LastEditors: ShawnPhang <site: m.palxp.cn>
- * @LastEditTime: 2023-07-27 18:38:33
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-12 11:18:10
  */
 const isDev = process.env.NODE_ENV === 'development'
 const puppeteer = require('puppeteer')
 const images = require('images')
 const { executablePath } = require('../configs.ts')
 const forceTimeOut = 60 // 强制超时时间，单位：秒
+// 4K规格，总计约830万像素 3840 * 2160 2K规格，总计约830万像素 2048 * 1080
+// const maxPXs = 8294400 
+const maxPXs = 4211840 // 超出此规格会触发限制器降低dpr，节省服务器资源
+const maximum = 5000 // 最大宽高限制，超过截断以防止服务崩溃
 
 const saveScreenshot = async (url: string, { path, width, height, thumbPath, size = 0, quality = 0, prevent, ua, devices, scale, wait }: any) => {
   return new Promise(async (resolve: Function) => {
@@ -25,16 +29,12 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
     // 打开页面
     const page = await browser.newPage()
     // 设置浏览器视窗
-    // 4K规格，总计约830万像素 3840 * 2160 2K规格，总计约830万像素 2048 * 1080
-    // const maxPXs = 8294400 
-    const maxPXs = 4211840
     function limiter(w: number, h: number) {
-      // 限制器，超出规格会降低dpr输出，节省服务器资源
       return w*h < maxPXs ? 1 : +(1/(w*h) * maxPXs).toFixed(2)
     }
     page.setViewport({
-      width: Number(width),
-      height: Number(height),
+      width: Number(width) > maximum ? 5000 : Number(width),
+      height: Number(height) > maximum ? 5000 : Number(height),
       deviceScaleFactor: !isNaN(scale) ? (+scale > 4 ? 4 : +scale) : limiter(Number(width), Number(height)),
     })
     ua && page.setUserAgent(ua)
