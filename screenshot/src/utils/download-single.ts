@@ -3,7 +3,7 @@
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（单浏览器版，适用于低配置服务器）
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-12 11:18:10
+ * @LastEditTime: 2023-09-13 16:45:02
  */
 const isDev = process.env.NODE_ENV === 'development'
 const puppeteer = require('puppeteer')
@@ -19,7 +19,7 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
   return new Promise(async (resolve: Function) => {
     // 启动浏览器
     const browser = await puppeteer.launch({
-      headless: !isDev,
+      headless: true, // !isDev,
       executablePath: isDev ? null : executablePath,
       ignoreHTTPSErrors: true, // 忽略https安全提示
       args: ['–no-first-run', '–single-process', '–disable-gpu', '–no-zygote', '–disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox', `--window-size=${width},${height}`], // 优化配置
