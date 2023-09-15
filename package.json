@@ -28,7 +28,6 @@
     "moveable-helper": "^0.4.0",
     "nanoid": "^3.1.23",
     "normalize.css": "^8.0.1",
-    "psd": "^3.4.0",
     "qr-code-styling": "^1.6.0-rc.1",
     "selecto": "^1.13.0",
     "throttle-debounce": "^3.0.1",

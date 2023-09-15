@@ -86,12 +86,11 @@ docker run -d -p 5000:5000 --restart always danielgatis/rembg s
 
 ### 感谢
 
-本项目使用或参考了一些优秀开源项目，包括但不限于：
+项目还使用或参考了一些优秀开源项目，包括但不限于：
 
 - [moveable](https://github.com/daybrush/moveable): 提供了画布中选择、拖动缩放等能力
 - [html2canvas](https://github.com/niklasvh/html2canvas): 前端生成图片兜底方案
 - [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
-- [sky](https://github.com/cfour-hi/sky): 参考了其 PSD 解析的代码实现
 - [rembg](https://github.com/danielgatis/rembg): 图片删除背景，使用 u2net 预训练模型
 
 ### Q&A
@@ -114,7 +113,13 @@ A：考虑到服务端的开发语言、数据库类型都可能不尽相同，�
 
 [![Star History Chart](https://api.star-history.com/svg?repos=palxiao/poster-design&type=Date)](https://star-history.com/#palxiao/poster-design&Date)
 
-[后续部分迭代计划记录](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
+#### 部分迭代计划：
+
+- [ ] P1: 文字特效属性编辑面板开发
+- [ ] P1：字体抽取功能
+- [ ] P1：PSD 解析重构（涉及基础库更换）
+
+[ -> 完整后续迭代计划文档](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
 
 ### LICENSE
 

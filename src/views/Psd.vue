@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-14 18:17:05
+ * @LastEditTime: 2023-09-15 12:57:02
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -74,7 +74,7 @@ export default defineComponent({
     const route = useRoute()
     const { proxy }: any = getCurrentInstance() as ComponentInternalInstance
     let loading: any = null
-    const myWorker = new MyWorker('loadPSD')
+    // const myWorker = new MyWorker('loadPSD')
 
     onMounted(async () => {
       await nextTick()
