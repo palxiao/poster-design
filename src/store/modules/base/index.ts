@@ -3,11 +3,12 @@
  * @Date: 2021-12-16 16:20:16
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-13 10:05:03
+ * @LastEditTime: 2023-09-15 12:47:57
  */
 import mutations from './mutations'
 import actions from './actions'
 import { client } from '@gradio/client'
+import _config from '@/config'
 
 const all = {
   state: {
@@ -39,7 +40,7 @@ const all = {
       return state.fonts
     },
     app: async (state: Type.Object) => {
-      !state.app && (state.app = await client('https://kt.palxp.com'))
+      !state.app && (state.app = await client(_config.KT_URL))
       return state.app
     },
   },

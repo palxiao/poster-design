@@ -3,7 +3,7 @@
  * @Date: 2021-08-01 11:12:17
  * @Description: 前端出图 - 用于封面
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-13 17:44:29
+ * @LastEditTime: 2023-09-13 17:36:36
 -->
 <template>
   <div id="cover-wrap"></div>

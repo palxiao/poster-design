@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-11 23:39:06
+ * @LastEditTime: 2023-09-14 18:17:05
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -43,7 +43,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, getCurrentInstance, ComponentInternalInstance, onMounted, nextTick } from 'vue'
-import { processPSD2Page } from '@/utils/plugins/psd'
 import { useRoute } from 'vue-router'
 import { mapActions, mapGetters, useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
@@ -57,6 +56,8 @@ import designBoard from '@/components/modules/layout/designBoard.vue'
 import zoomControl from '@/components/modules/layout/zoomControl.vue'
 import HeaderOptions from './components/UploadTemplate.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
+import MyWorker from '@/utils/plugins/webWorker'
+import { processPSD2Page } from '@/utils/plugins/psd'
 
 export default defineComponent({
   components: { RightClickMenu, Moveable, uploader, designBoard, zoomControl, HeaderOptions, ProgressLoading },
@@ -73,6 +74,7 @@ export default defineComponent({
     const route = useRoute()
     const { proxy }: any = getCurrentInstance() as ComponentInternalInstance
     let loading: any = null
+    const myWorker = new MyWorker('loadPSD')
 
     onMounted(async () => {
       await nextTick()
@@ -91,6 +93,7 @@ export default defineComponent({
       state.isDone = true
     }
     async function loadPSD(file: any) {
+      // const { compositeBuffer, psdFile } = await myWorker.start(file)
       const data = await processPSD2Page(file)
 
       setTimeout(async () => {

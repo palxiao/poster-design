@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-24 13:01:03
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-15 12:38:49
 -->
 <template>
   <el-dialog v-model="show" title="AI抠图（测试版）" width="650" @close="handleClose">
@@ -61,7 +61,7 @@ export default defineComponent({
 
     const selectFile = async (file: File) => {
       if (file.size > 1024 * 1024 * 2) {
-        alert('上传的文件大小超过了限制！')
+        alert('请上传小于 2M 的图片')
         return false
       }
       // 显示选择的图片
