@@ -3,7 +3,7 @@
  * @Date: 2022-02-01 13:41:59
  * @Description: 配置文件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-07 23:42:43
+ * @LastEditTime: 2023-09-15 10:40:41
  */
 const isDev = process.env.NODE_ENV === 'development'
 

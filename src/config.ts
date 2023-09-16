@@ -3,7 +3,7 @@
  * @Date: 2023-09-07 22:56:09
  * @Description: 配置文件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-15 12:47:16
+ * @LastEditTime: 2023-09-16 20:32:48
  */
 // const prefix = import.meta.env
 const prefix = process.env
@@ -24,5 +24,5 @@ export default {
   // ICONFONT_URL: '//at.alicdn.com/t/font_3223711_74mlzj4jdue.css',
   ICONFONT_URL: '//at.alicdn.com/t/font_2717063_ypy8vprc3b.css?display=swap',
   ICONFONT_EXTRA: '//at.alicdn.com/t/c/font_3228074_6qsac4kteu7.css?&display=swap',
-  QINIUYUN_PLUGIN: 'https://cdn.jsdelivr.net/npm/qiniu-js@2.5.5/dist/qiniu.min.js',
+  QINIUYUN_PLUGIN: 'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qiniu-js/3.4.0/qiniu.min.js',
 }

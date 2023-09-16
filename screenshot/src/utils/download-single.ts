@@ -3,7 +3,7 @@
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（单浏览器版，适用于低配置服务器）
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-13 16:45:02
+ * @LastEditTime: 2023-09-16 20:30:38
  */
 const isDev = process.env.NODE_ENV === 'development'
 const puppeteer = require('puppeteer')
@@ -17,14 +17,21 @@ const maximum = 5000 // 最大宽高限制，超过截断以防止服务崩溃
 
 const saveScreenshot = async (url: string, { path, width, height, thumbPath, size = 0, quality = 0, prevent, ua, devices, scale, wait }: any) => {
   return new Promise(async (resolve: Function) => {
+    let isPageLoad = false
     // 启动浏览器
-    const browser = await puppeteer.launch({
+    let browser = await puppeteer.launch({
       headless: true, // !isDev,
       executablePath: isDev ? null : executablePath,
       ignoreHTTPSErrors: true, // 忽略https安全提示
       args: ['–no-first-run', '–single-process', '–disable-gpu', '–no-zygote', '–disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox', `--window-size=${width},${height}`], // 优化配置
       defaultViewport: null,
     })
+    const regulators = setTimeout(() => {
+      browser && browser.close()
+      browser = null
+      console.log('超时强制释放浏览器')
+      resolve()
+    }, forceTimeOut * 1000)
 
     // 打开页面
     const page = await browser.newPage()
@@ -51,6 +58,7 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
         await page.screenshot({ path, fullPage: true })
         // 关闭浏览器
         await browser.close()
+        browser = null
         compress()
         clearTimeout(regulators)
         resolve()
@@ -61,7 +69,7 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
       // console.log('-> 开始截图')
       await page.screenshot({ path })
       // 关闭浏览器
-      await browser.close()
+      browserClose()
       compress()
       // console.log('浏览器已释放');
       clearTimeout(regulators)
@@ -70,16 +78,10 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
 
     // 地址栏输入网页地址
     await page.goto(url, { waitUntil: 'domcontentloaded' })
+    isPageLoad = true
 
-    // 截图: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions
-    const regulators = setTimeout(() => {
-      browser && browser.close()
-      console.log('强制释放浏览器')
-      resolve()
-    }, forceTimeOut * 1000)
-
+    // 压缩图片
     function compress() {
-      // 压缩图片
       try {
         thumbPath &&
           images(path)
@@ -120,6 +122,16 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
           resolve()
         }, timeout)
       })
+    }
+
+    // 异步关闭：Error: Navigation failed because browser has disconnected!
+    async function browserClose() {
+      if (isPageLoad) {
+        await browser.close()
+        browser = null
+      } else {
+        browser = null
+      }
     }
   })
 }
