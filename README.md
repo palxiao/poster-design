@@ -60,13 +60,13 @@ npm run serve
 
 ### 打包
 
-| 前端页面          | 截图服务                                                                               |
-| ----------------- | -------------------------------------------------------------------------------------- |
-| `npm run v-build` | [/screenshot](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) |
+| 前端页面          | 截图服务                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| `npm run v-build` | [/screenshot/README.md](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) |
 
 ### 截图服务
 
-代码位于 [screenshots/](https://github.com/palxiao/poster-design/tree/main/screenshot) 目录下，查看[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
+代码位于 [/screenshot](https://github.com/palxiao/poster-design/tree/main/screenshot) 目录下，查看[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
 
 > 打包注意事项与服务器配置相关请进入该目录下查看 README 文件说明。
 
