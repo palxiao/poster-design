@@ -60,9 +60,9 @@ npm run serve
 
 ### 打包
 
-| 前端页面          | 截图服务                              |
-| ----------------- | ------------------------------------- |
-| `npm run v-build` | `cd sreenshot` <br /> `npm run build` |
+| 前端页面          | 截图服务                                                                               |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| `npm run v-build` | [/screenshot](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) |
 
 ### 截图服务
 
