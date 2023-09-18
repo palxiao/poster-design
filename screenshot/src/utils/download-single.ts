@@ -3,7 +3,7 @@
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（单浏览器版，适用于低配置服务器）
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-16 20:30:38
+ * @LastEditTime: 2023-09-18 18:17:54
  */
 const isDev = process.env.NODE_ENV === 'development'
 const puppeteer = require('puppeteer')
@@ -67,7 +67,8 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
     // 主动模式下注入全局方法
     await page.exposeFunction('loadFinishToInject', async () => {
       // console.log('-> 开始截图')
-      await page.screenshot({ path })
+      // await page.evaluate(() => document.body.style.background = 'transparent');
+      await page.screenshot({ path, omitBackground: true })
       // 关闭浏览器
       browserClose()
       compress()

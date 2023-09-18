@@ -55,7 +55,7 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
       // 主动模式下注入全局方法
       await page.exposeFunction('loadFinishToInject', async () => {
         clearTimeout(regulators)
-        await page.screenshot({ path }) // console.log('-> 开始截图')
+        await page.screenshot({ path, omitBackground: true })
         await page.close()
         thumbPath && compress()
         resolve()
