@@ -12,9 +12,11 @@
 
 @height2: 54px; // Appears 5 times
 
-#page-design-index {
+.page-design-bg-color {
   background-color: #4b678c;
   // background-color: #4682b4;
+}
+#page-design-index {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -124,10 +126,16 @@
     width: 1px;
     margin: 7px 0 0 18px;
   }
-  .shelter {
+  .shelter,
+  .shelter-bg {
     position: absolute;
+    pointer-events: none;
+  }
+  .shelter {
     box-shadow: 0 0 0 5000px rgba(255, 255, 255, 0.95);
     z-index: 8;
-    pointer-events: none;
+  }
+  .shelter-bg {
+    background-color: #ffffff;
   }
 }
