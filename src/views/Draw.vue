@@ -71,16 +71,16 @@ export default defineComponent({
           }
           // 收集图片元素、svg元素
           try {
-            if (item.imgUrl && !item.isNinePatch) {
+            if (item.svgUrl && item.type === 'w-svg') {
+              const cNodes: any = (window as any).document.getElementById(item.uuid).childNodes
+              svgsData.push(cNodes)
+            } else if (item.imgUrl && !item.isNinePatch) {
               const cNodes: any = (window as any).document.getElementById(item.uuid).childNodes
               for (const el of cNodes) {
                 if (el.className && el.className.includes('img__box')) {
                   imgsData.push(el.firstChild)
                 }
               }
-            } else if (item.svgUrl) {
-              const cNodes: any = (window as any).document.getElementById(item.uuid).childNodes
-              svgsData.push(cNodes)
             }
           } catch (e) {}
         })
