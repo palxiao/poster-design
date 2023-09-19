@@ -3,7 +3,7 @@
  * @Date: 2021-08-01 14:12:08
  * @Description: 快捷键，目前是mixin形式放入views/index.vue中
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-11 23:37:26
+ * @LastEditTime: 2023-09-19 17:29:06
  */
 import store from '@/store'
 const _this: any = {}

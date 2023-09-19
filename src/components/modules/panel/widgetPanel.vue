@@ -26,7 +26,7 @@
 <script lang="ts">
 // 组件面板
 const NAME = 'widget-panel'
-import widgetClassifyListData from '@/assets/data/widgetClassifyList'
+import widgetClassifyListData from '@/assets/data/WidgetClassifyList.ts'
 import { reactive, toRefs, onMounted, watch, nextTick, getCurrentInstance, ComponentInternalInstance } from 'vue'
 import { mapActions } from 'vuex'
 import { useRoute } from 'vue-router'
