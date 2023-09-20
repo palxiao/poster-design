@@ -73,7 +73,7 @@ export default {
       alias: '素材集市酷方体',
       id: 33925853,
       value: 'sucaijishikufangti',
-      url: 'https://res.palxp.com/static/fonts/20200809-152508-8654.woff',
+      url: 'https://res.palxp.cn/static/fonts/20200809-152508-8654.woff',
     },
     fontFamily: 'SourceHanSansSC-Regular',
     fontWeight: 'normal',

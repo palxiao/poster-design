@@ -3,17 +3,18 @@
  * @Date: 2023-09-07 22:56:09
  * @Description: 配置文件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-16 20:39:29
+ * @LastEditTime: 2023-09-20 16:09:59
  */
 // const prefix = import.meta.env
 const prefix = process.env
 
 const isDev = prefix.NODE_ENV === 'development'
+import { version } from '../package.json'
 
 export default {
   isDev,
   BASE_URL: isDev ? '/' : './',
-  VERSION: '1.1.0',
+  VERSION: version,
   APP_NAME: '迅排设计',
   COPYRIGHT: 'ShawnPhang - Palxp.cn',
   // API_URL: isDev ? 'http://localhost:9998' : '${API}',
