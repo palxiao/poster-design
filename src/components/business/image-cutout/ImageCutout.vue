@@ -3,7 +3,7 @@
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-30 12:10:31
+ * @LastEditTime: 2023-09-30 12:21:22
 -->
 <template>
   <el-dialog v-model="show" title="AI 智能抠图" width="650" @close="handleClose">
@@ -12,7 +12,7 @@
         <upload-filled style="width: 64px; height: 64px" />
         <div class="el-upload__text">在此拖入或选择<em>上传图片</em></div>
       </div>
-      <div class="el-upload__tip">由于服务器带宽过低，上传大小限制在 1M 内</div>
+      <div class="el-upload__tip">服务器带宽过低，为了更好的体验，请上传 2M 内的图片</div>
     </uploader>
     <el-progress v-if="!cutImage && progressText" :percentage="progress">
       <el-button text>
@@ -63,7 +63,7 @@ export default defineComponent({
     let isRuning: boolean = false
 
     const selectFile = async (file: File) => {
-      if (file.size > 1024 * 1024) {
+      if (file.size > 1024 * 1024 * 2) {
         alert('上传图片超出限制')
         return false
       }
