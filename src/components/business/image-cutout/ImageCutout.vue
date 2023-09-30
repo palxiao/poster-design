@@ -3,21 +3,25 @@
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-15 12:38:49
+ * @LastEditTime: 2023-09-30 12:10:31
 -->
 <template>
-  <el-dialog v-model="show" title="AI抠图（测试版）" width="650" @close="handleClose">
+  <el-dialog v-model="show" title="AI 智能抠图" width="650" @close="handleClose">
     <uploader v-if="!rawImage" :hold="true" :drag="true" :multiple="true" class="uploader" @load="selectFile">
       <div class="uploader__box">
         <upload-filled style="width: 64px; height: 64px" />
         <div class="el-upload__text">在此拖入或选择<em>上传图片</em></div>
       </div>
-      <div class="el-upload__tip">支持 jpg 或 png 格式的文件，大小不超过 2M</div>
+      <div class="el-upload__tip">由于服务器带宽过低，上传大小限制在 1M 内</div>
     </uploader>
+    <el-progress v-if="!cutImage && progressText" :percentage="progress">
+      <el-button text>
+        {{ progressText }} <span v-show="progress">{{ progress }}%</span>
+      </el-button>
+    </el-progress>
     <div class="content">
-      <div v-show="rawImage" v-loading="!cutImage" :style="{ width: offsetWidth ? offsetWidth + 'px' : '100%' }" class="scan-effect">
-        <img ref="raw" :src="rawImage" alt="" />
-        <div :style="{ right: 100 - percent + '%' }" class="bg"></div>
+      <div v-show="rawImage" v-loading="!cutImage" :style="{ width: offsetWidth ? offsetWidth + 'px' : '100%' }" class="scan-effect transparent-bg">
+        <img ref="raw" :style="{ 'clip-path': 'inset(0 0 0 ' + percent + '%)' }" :src="rawImage" alt="" />
         <img v-show="cutImage" :src="cutImage" alt="结果图像" @mousemove="mousemove" />
         <div v-show="cutImage" :style="{ left: percent + '%' }" class="scan-line"></div>
       </div>
@@ -33,14 +37,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, nextTick } from 'vue'
+import { defineComponent, reactive, toRefs } from 'vue'
 import { useStore } from 'vuex'
+import { ElProgress } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import uploader from '@/components/common/Uploader/index.vue'
 import _dl from '@/common/methods/download'
+import * as api from '@/api/ai'
 
 export default defineComponent({
-  components: { uploader, UploadFilled },
+  components: { uploader, UploadFilled, ElProgress },
   setup() {
     const store = useStore()
     const state: any = reactive({
@@ -50,18 +56,15 @@ export default defineComponent({
       raw: null,
       offsetWidth: 0,
       percent: 0,
+      progress: 0,
+      progressText: '',
     })
-
-    let app: any = null
     let fileName: string = 'unknow'
     let isRuning: boolean = false
-    onMounted(async () => {
-      app = await store.getters.app
-    })
 
     const selectFile = async (file: File) => {
-      if (file.size > 1024 * 1024 * 2) {
-        alert('请上传小于 2M 的图片')
+      if (file.size > 1024 * 1024) {
+        alert('上传图片超出限制')
         return false
       }
       // 显示选择的图片
@@ -70,10 +73,22 @@ export default defineComponent({
       })
       state.rawImage = URL.createObjectURL(file)
       fileName = file.name
-      // 返回抠图
-      const result = await app.predict('/predict', [file, 'u2netp', ''])
-      state.rawImage && (state.cutImage = result?.data[0])
-      requestAnimationFrame(run)
+      // 返回抠图结果
+      const result: any = await api.upload(file, (up: number, dp: number) => {
+        if (dp) {
+          state.progressText = '导入中..'
+          state.progress = dp
+        } else {
+          state.progressText = up < 100 ? '上传中..' : '正在处理，请稍候..'
+          state.progress = up < 100 ? up : 0
+        }
+        dp === 100 && (state.progressText = '')
+      })
+      if (result.type !== 'application/json') {
+        const resultImage = URL.createObjectURL(result)
+        state.rawImage && (state.cutImage = resultImage)
+        requestAnimationFrame(run)
+      } else alert('服务器繁忙，请稍等下重新尝试~')
     }
 
     const open = () => {
@@ -146,12 +161,6 @@ export default defineComponent({
     object-fit: contain;
     position: absolute;
   }
-  .bg {
-    width: 100%;
-    height: 100%;
-    background: #ffffff;
-    position: absolute;
-  }
 }
 
 .scan-line {
@@ -162,5 +171,9 @@ export default defineComponent({
   background: rgba(255, 255, 255, 0.7);
   // background-image: linear-gradient(to top, transparent, rgba(255, 255, 255, 0.7), transparent);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.progress {
+  width: 100%;
 }
 </style>

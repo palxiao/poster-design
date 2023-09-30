@@ -1,9 +1,9 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2021-08-27 14:42:15
- * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-21 11:19:04
+ * @Description: 媒体相关接口
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-28 11:24:13
  */
 import fetch from '@/utils/axios'
 
