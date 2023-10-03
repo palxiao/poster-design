@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
- * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
- * @LastEditTime: 2023-09-01 14:14:27
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-04 00:23:04
 -->
 <template>
   <div class="wrap">
@@ -24,7 +24,7 @@
         <div v-else class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
         <div class="list-wrap">
           <div v-for="(item, i) in showList[ti]" :key="i + 'sl'" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
-            <el-image class="list__img-thumb" :src="item.cover" fit="contain"></el-image>
+            <el-image class="list__img-thumb" :src="item.cover" fit="contain" lazy loading="lazy"></el-image>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
       <el-space fill wrap :fillRatio="30" direction="horizontal" class="list">
         <div v-for="(item, i) in list" :key="i + 'i'" class="list__item" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
           <!-- <edit-model :isComp="true" @action="action($event, item, i)"> -->
-          <el-image class="list__img" :src="item.cover" fit="contain"> </el-image>
+          <el-image class="list__img" :src="item.cover" fit="contain" lazy loading="lazy" />
           <!-- </edit-model> -->
         </div>
       </el-space>

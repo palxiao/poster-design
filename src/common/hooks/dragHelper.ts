@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2023-07-10 14:58:48
  * @Description: 拖拽优化
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-11 11:10:03
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-04 00:14:19
  */
 import store from '@/store'
 export default class dragHelper {

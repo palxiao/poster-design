@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-03 18:53:02
+ * @LastEditTime: 2023-10-04 00:21:34
 -->
 <template>
   <div class="wrap">
@@ -13,7 +13,7 @@
     <ul v-if="showList" v-infinite-scroll="loadData" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <div class="list">
         <el-tooltip v-for="(item, i) in bgList" :key="i + 'i'" :content="`<p style='max-width:140px;'><b>${item.description}</b></p><p>@${item.author}</p>`" offset="0" effect="light" placement="top-start" hide-after="0" :enterable="false" raw-content>
-          <el-image class="list__img" :src="item.thumb" fit="cover" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)"></el-image>
+          <el-image class="list__img" :src="item.thumb" fit="cover" lazy loading="lazy" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)"></el-image>
         </el-tooltip>
       </div>
       <div v-show="loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>

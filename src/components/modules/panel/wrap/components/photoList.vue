@@ -2,21 +2,21 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-23 15:48:52
  * @Description: 图片列表组件 Bookshelf Layout 
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 15:20:25
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-04 00:20:31
 -->
 <template>
   <ul ref="listRef" class="img-list-wrap" style="overflow: auto" @scroll="scrollEvent($event)">
     <div class="list">
-      <div v-for="(item, i) in list" :key="i + 'i'" :style="{ width: item.listWidth + 'px' }" class="list__img" draggable="false" @mousedown="dragStart($event, i)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="select(i)" @dragstart="dragStart($event, i)">
+      <div v-for="(item, i) in list" :key="i + 'i'" :style="{ width: item.listWidth + 'px' }" class="list__img transparent-bg" draggable="false" @mousedown="dragStart($event, i)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="select(i)" @dragstart="dragStart($event, i)">
         <edit-model v-if="edit" :options="edit" :data="{ item, i }">
           <div v-if="item.isDelect" class="list__mask">已删除</div>
-          <img class="img" :src="item.thumb || item.cover || item.url" />
+          <!-- <img class="img" :src="item.thumb || item.cover || item.url" /> -->
+          <el-image class="img" :src="item.thumb || item.url" lazy loading="lazy" />
         </edit-model>
         <template v-else>
-          <img class="img" :src="item.thumb || item.cover || item.url" />
+          <el-image class="img" :src="item.thumb || item.url" lazy loading="lazy" />
         </template>
-        <!-- <el-image :src="item.thumb || item.url" fit="cover"></el-image> -->
       </div>
     </div>
     <div v-if="!isDone" v-show="loading" class="loading"><i class="el-icon-loading" /> 拼命加载中</div>
@@ -178,6 +178,7 @@ export default defineComponent({
 }
 .img {
   transform-origin: center;
+  display: block;
   width: 100%;
   height: 100%;
 }
@@ -185,7 +186,7 @@ export default defineComponent({
   position: relative;
   padding: 4px 0 0 14px;
   &__img {
-    background: #f1f2f4;
+    // background: #f1f2f4;
     display: inline-block;
     cursor: pointer;
     margin: 0 6px 2px 0;

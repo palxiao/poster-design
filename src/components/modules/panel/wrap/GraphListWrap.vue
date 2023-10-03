@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表
- * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
- * @LastEditTime: 2023-09-01 14:18:30
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-04 00:23:52
 -->
 <template>
   <div class="wrap">
@@ -23,7 +23,7 @@
         <div v-else class="loading"><i class="el-icon-loading" /> 拼命加载中</div>
         <div class="list-wrap">
           <div v-for="(item, i) in showList[ti]" :key="i + 'sl'" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
-            <el-image class="list__img-thumb" :src="item.thumb" fit="contain"></el-image>
+            <el-image class="list__img-thumb" :src="item.thumb" fit="contain" lazy loading="lazy" />
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
       <span class="types__header-back" @click="back"><i class="iconfont icon-right"></i>{{ currentCategory.name }}</span>
       <el-space fill wrap :fillRatio="30" direction="horizontal" class="list">
         <div v-for="(item, i) in list" :key="i + 'i'" class="list__item" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
-          <el-image class="list__img" :src="item.thumb" fit="contain"></el-image>
+          <el-image class="list__img" :src="item.thumb" fit="contain" lazy loading="lazy" />
         </div>
       </el-space>
       <div v-show="loading" class="loading"><i class="el-icon-loading" /> 拼命加载中</div>
