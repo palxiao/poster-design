@@ -3,26 +3,24 @@
  * @Date: 2021-12-16 16:20:16
  * @Description: 瀑布流组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-03 22:58:32
+ * @LastEditTime: 2023-10-03 23:22:46
 -->
 <template>
   <div ref="imgWaterFall" :style="{ height: countHeight + 'px' }" class="img-water-fall">
     <!-- backgroundImage: `url(${item.cover})` -->
     <div v-for="(item, index) in list" :key="index + 'iwf'" :style="{ top: item.top + 'px', left: item.left + 'px', width: width + 'px', height: item.height + 'px' }" class="img-box" @click.stop="selectItem(item, index)">
-      <v-lazy-image v-if="!item.fail" class="img" :src="item.cover" @error="loadError(item)" />
+      <el-image v-if="!item.fail" class="img" :src="item.cover" lazy loading="lazy" @error="loadError(item)" />
       <div v-else class="fail_img">{{ item.title }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import vLazyImage from 'v-lazy-image'
 const NAME = 'img-water-fall'
 import { defineComponent, toRefs, reactive, watch } from 'vue'
 
 export default defineComponent({
   name: NAME,
-  components: { vLazyImage },
   props: {
     listData: {
       type: Array,

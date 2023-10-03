@@ -30,7 +30,6 @@
     "qr-code-styling": "^1.6.0-rc.1",
     "selecto": "^1.13.0",
     "throttle-debounce": "^3.0.1",
-    "v-lazy-image": "^2.1.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuedraggable": "^4.1.0",
