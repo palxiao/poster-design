@@ -3,7 +3,7 @@
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-30 12:21:22
+ * @LastEditTime: 2023-09-30 12:23:39
 -->
 <template>
   <el-dialog v-model="show" title="AI 智能抠图" width="650" @close="handleClose">
@@ -76,13 +76,12 @@ export default defineComponent({
       // 返回抠图结果
       const result: any = await api.upload(file, (up: number, dp: number) => {
         if (dp) {
-          state.progressText = '导入中..'
+          state.progressText = dp === 100 ? '' : '导入中..'
           state.progress = dp
         } else {
           state.progressText = up < 100 ? '上传中..' : '正在处理，请稍候..'
           state.progress = up < 100 ? up : 0
         }
-        dp === 100 && (state.progressText = '')
       })
       if (result.type !== 'application/json') {
         const resultImage = URL.createObjectURL(result)

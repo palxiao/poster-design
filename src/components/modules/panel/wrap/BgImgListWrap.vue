@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
- * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
- * @LastEditTime: 2023-09-01 14:18:54
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-03 18:53:02
 -->
 <template>
   <div class="wrap">
@@ -11,11 +11,11 @@
       <div v-for="c in colors" :key="c" :style="{ background: c }" class="color__item" @click="setBGcolor(c)"></div>
     </div>
     <ul v-if="showList" v-infinite-scroll="loadData" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
-      <el-space fill wrap :fillRatio="30" direction="horizontal" class="list">
-        <div v-for="(item, i) in bgList" :key="i + 'i'" draggable="false" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
-          <el-image class="list__img" :src="item.thumb" fit="cover"></el-image>
-        </div>
-      </el-space>
+      <div class="list">
+        <el-tooltip v-for="(item, i) in bgList" :key="i + 'i'" :content="`<p style='max-width:140px;'><b>${item.description}</b></p><p>@${item.author}</p>`" offset="0" effect="light" placement="top-start" hide-after="0" :enterable="false" raw-content>
+          <el-image class="list__img" :src="item.thumb" fit="cover" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)"></el-image>
+        </el-tooltip>
+      </div>
       <div v-show="loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
       <div v-show="loadDone" class="loading">全部加载完毕</div>
     </ul>
@@ -137,11 +137,14 @@ export default defineComponent({
 // }
 .list {
   width: 100%;
-  padding: 0 0 0 1rem;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: auto auto auto;
   &__img {
     cursor: pointer;
     width: 92px;
     height: 92px;
+    margin-bottom: 5px;
   }
   &__img:hover::before {
     content: ' ';
