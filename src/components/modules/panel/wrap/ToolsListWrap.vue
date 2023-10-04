@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-11 18:48:23
  * @Description: 组件列表
- * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
- * @LastEditTime: 2023-09-01 14:17:46
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-04 00:43:54
 -->
 <template>
   <div class="wrap">
@@ -55,11 +55,6 @@ export default {
       }
       this.loading = true
       this.page += 1
-      // let { list = [], total } = await api.material.getImagesList({ page: this.page, pageSize: 30 })
-      // list.length <= 0 ? (this.loadDone = true) : (this.recommendImgList = this.recommendImgList.concat(list))
-      // setTimeout(() => {
-      //   this.loading = false
-      // }, 100)
     },
     addQrcode() {
       this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择

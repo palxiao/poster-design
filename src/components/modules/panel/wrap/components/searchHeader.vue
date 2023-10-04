@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-01-27 11:05:48
  * @Description:  
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 16:50:02
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-04 01:53:10
 -->
 <template>
   <div class="search__wrap">
@@ -19,7 +19,7 @@
     </el-dropdown>
     <span v-else style="width: 1rem"></span>
 
-    <el-input size="large" v-model="searchValue" placeholder="输入关键词搜索" class="input-with-select">
+    <el-input v-model="searchValue" size="large" placeholder="输入关键词搜索" class="input-with-select">
       <template #append>
         <el-button><i class="iconfont icon-search"></i></el-button>
       </template>
@@ -46,6 +46,7 @@ export default defineComponent({
 
     if (props.type != 'none') {
       api.home.getCategories({ type: 1 }).then((list: any) => {
+        list.unshift({ id: 0, name: '全部' })
         state.materialCates = list
         const { cate } = route.query
         cate && (state.currentIndex = cate)

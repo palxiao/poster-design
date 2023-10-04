@@ -3,19 +3,24 @@
  * @Date: 2022-02-23 15:48:52
  * @Description: 图片列表组件 Bookshelf Layout 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-04 00:20:31
+ * @LastEditTime: 2023-10-04 22:05:21
 -->
 <template>
-  <ul ref="listRef" class="img-list-wrap" style="overflow: auto" @scroll="scrollEvent($event)">
+  <ul ref="listRef" class="img-list-wrap" :style="{ paddingBottom: isShort ? '15px' : '200px' }" @scroll="scrollEvent($event)">
     <div class="list">
-      <div v-for="(item, i) in list" :key="i + 'i'" :style="{ width: item.listWidth + 'px' }" class="list__img transparent-bg" draggable="false" @mousedown="dragStart($event, i)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="select(i)" @dragstart="dragStart($event, i)">
+      <div v-for="(item, i) in list" :key="i + 'i'" :style="{ width: item.listWidth + 'px', marginRight: item.gap + 'px' }" class="list__img" draggable="false" @mousedown="dragStart($event, i)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="select(i)" @dragstart="dragStart($event, i)">
         <edit-model v-if="edit" :options="edit" :data="{ item, i }">
           <div v-if="item.isDelect" class="list__mask">已删除</div>
-          <!-- <img class="img" :src="item.thumb || item.cover || item.url" /> -->
-          <el-image class="img" :src="item.thumb || item.url" lazy loading="lazy" />
+          <el-image class="img transparent-bg" :src="item.thumb || item.url" lazy loading="lazy" />
         </edit-model>
         <template v-else>
-          <el-image class="img" :src="item.thumb || item.url" lazy loading="lazy" />
+          <imageTip :detail="item">
+            <el-image class="img" :src="item.thumb || item.url" :style="{ height: getInnerHeight(item) + 'px' }" lazy loading="lazy">
+              <template #placeholder>
+                <div :style="{ backgroundColor: item.color }" class="image-color" />
+              </template>
+            </el-image>
+          </imageTip>
         </template>
       </div>
     </div>
@@ -34,6 +39,9 @@ export default defineComponent({
     listData: {},
     edit: {},
     isDone: {},
+    isShort: {
+      default: false,
+    },
   },
   emits: ['load', 'drag', 'select'],
   setup(props, context) {
@@ -63,14 +71,15 @@ export default defineComponent({
     watch(
       () => props.listData,
       async (newList: any, oldList: any) => {
+        !oldList && (oldList = [])
         if (newList.length <= 0) {
           state.list.length = 0
           return
         }
         let list = newList.filter((v: any) => !newList.includes(v) || !oldList.includes(v)) // difference
         list = JSON.parse(JSON.stringify(list))
-        const limitWidth = (await getFatherWidth()) - 32 //  296 // 256
         const marginRight = 6 // 间距
+        const limitWidth = (await getFatherWidth()) - marginRight
         const standardHeight = 280 // 高度阈值
         const neatArr: any = [] // 整理后的数组
         function factory(cutArr: any) {
@@ -103,8 +112,9 @@ export default defineComponent({
           }
           const { list: newList, height }: any = await factory([list.shift()])
           neatArr.push(
-            newList.map((x: any) => {
+            newList.map((x: any, index) => {
               x.listWidth = (x.width / x.height) * height
+              x.gap = index !== newList.length - 1 ? marginRight : 0
               return x
             }),
           )
@@ -126,6 +136,7 @@ export default defineComponent({
     }
 
     function getRef() {
+      // 用于在组件外调用内部ref
       return state.listRef
     }
 
@@ -154,6 +165,9 @@ export default defineComponent({
         load()
       }
     }
+
+    const getInnerHeight = ({ height, listWidth, width }: any) => (height * listWidth) / width
+
     return {
       load,
       dragStart,
@@ -164,6 +178,7 @@ export default defineComponent({
       getRef,
       mouseup,
       mousemove,
+      getInnerHeight,
     }
   },
 })
@@ -172,9 +187,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .img-list-wrap {
   height: 100%;
-  margin-top: 14px;
-  // overflow-y: scroll;
-  padding-bottom: 200px;
+  overflow: auto;
 }
 .img {
   transform-origin: center;
@@ -182,14 +195,21 @@ export default defineComponent({
   width: 100%;
   height: 100%;
 }
+.image-color {
+  width: 100%;
+  height: 100%;
+  animation: breathe 600ms ease-out infinite alternate;
+}
 .list {
   position: relative;
-  padding: 4px 0 0 14px;
+  // padding: 4px 0 0 14px;
+  padding: 4px 0 0 0;
   &__img {
     // background: #f1f2f4;
     display: inline-block;
     cursor: pointer;
-    margin: 0 6px 2px 0;
+    // margin: 0 6px 2px 0;
+    margin-bottom: 3px;
     border-radius: 2px;
     overflow: hidden;
     position: relative;
@@ -216,5 +236,14 @@ export default defineComponent({
   text-align: center;
   font-size: 14px;
   color: #999;
+}
+/* 呼吸效果 */
+@keyframes breathe {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

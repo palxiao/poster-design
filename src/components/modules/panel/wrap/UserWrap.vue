@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-13 22:18:35
  * @Description: 我的
- * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
- * @LastEditTime: 2023-09-01 14:17:23
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-04 19:11:12
 -->
 <template>
   <div class="wrap">
@@ -11,12 +11,14 @@
       <el-tab-pane label="资源管理" name="pics"> </el-tab-pane>
       <el-tab-pane label="我的作品" name="design"> </el-tab-pane>
     </el-tabs>
-    <div v-show="tabActiveName === 'pics'" class="wrap">
+    <div v-show="tabActiveName === 'pics'">
       <uploader v-model="percent" class="upload" @done="uploadDone">
         <el-button class="upload-btn" plain>上传图片 <i class="iconfont icon-upload" /></el-button>
       </uploader>
       <el-button class="upload-btn upload-psd" plain type="primary" @click="openPSD">上传 PSD 模板</el-button>
-      <photo-list ref="imgListRef" :edit="editOptions" :isDone="isDone" :listData="imgList" @load="load" @drag="dragStart" @select="selectImg" />
+      <div style="margin: 1rem; height: 100vh">
+        <photo-list ref="imgListRef" :edit="editOptions" :isDone="isDone" :listData="imgList" @load="load" @drag="dragStart" @select="selectImg" />
+      </div>
     </div>
     <div v-show="tabActiveName === 'design'" class="wrap">
       <ul ref="listRef" v-infinite-scroll="loadDesign" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
