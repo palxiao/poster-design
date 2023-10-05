@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:41:53
  * @Description: 
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-12 12:50:39
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-05 16:13:56
 -->
 <template>
   <div id="w-image-style">
@@ -22,7 +22,7 @@
         <div class="options">
           <el-button v-if="innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
           <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" />裁剪</el-button>
-          <el-button @click="openImageCutout" plain>抠图</el-button>
+          <el-button plain @click="openImageCutout">抠图</el-button>
           <!-- <uploader class="options__upload" @done="uploadImgDone">
             <el-button size="small" plain>替换图片</el-button>
           </uploader> -->
@@ -52,7 +52,7 @@
       <i style="padding: 0 8px; cursor: pointer" class="icon sd-queren" @click="imgCrop(false)" />
     </inner-tool-bar>
     <picBox ref="picBox" @select="selectDone" />
-    <imageCutout ref="imageCutout" />
+    <imageCutout ref="imageCutout" @done="cutImageDone" />
   </div>
 </template>
 
@@ -73,6 +73,8 @@ import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import picBox from '@/components/business/picture-selector'
 import imageCutout from '@/components/business/image-cutout'
+import Qiniu from '@/common/methods/QiNiu'
+import _config from '@/config'
 
 export default {
   name: NAME,
@@ -242,7 +244,24 @@ export default {
       this.$refs.picBox.open()
     },
     openImageCutout() {
-      this.$refs.imageCutout.open()
+      fetch(this.innerElement.imgUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], `image_${Math.random()}.jpg`, { type: 'image/jpeg' })
+          this.$refs.imageCutout.open(file)
+        })
+        .catch((error) => {
+          console.error('获取图片失败:', error)
+        })
+    },
+    // 完成抠图
+    async cutImageDone(file) {
+      const qnOptions = { bucket: 'xp-design', prePath: 'user' }
+      const result = await Qiniu.upload(file, qnOptions)
+      const { width, height } = await getImage(file)
+      const url = _config.IMG_URL + result.key
+      await api.material.addMyPhoto({ width, height, url })
+      this.innerElement.imgUrl = url
     },
   },
 }

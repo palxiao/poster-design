@@ -3,7 +3,7 @@
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-30 12:23:39
+ * @LastEditTime: 2023-10-05 16:19:11
 -->
 <template>
   <el-dialog v-model="show" title="AI 智能抠图" width="650" @close="handleClose">
@@ -29,15 +29,16 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button v-show="rawImage" @click="clear">重新选择图片</el-button>
-        <el-button v-show="cutImage" type="primary" plain @click="download"> 下载 </el-button>
+        <el-button v-show="rawImage && toolModel" @click="clear">重新选择图片</el-button>
+        <el-button v-show="cutImage && toolModel" type="primary" plain @click="download"> 下载 </el-button>
+        <el-button v-show="cutImage && !toolModel" type="primary" plain @click="cutDone"> 完成 </el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue'
+import { defineComponent, reactive, toRefs, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { ElProgress } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
@@ -47,7 +48,8 @@ import * as api from '@/api/ai'
 
 export default defineComponent({
   components: { uploader, UploadFilled, ElProgress },
-  setup() {
+  emits: ['done'],
+  setup(props, { emit }) {
     const store = useStore()
     const state: any = reactive({
       show: false,
@@ -58,6 +60,7 @@ export default defineComponent({
       percent: 0,
       progress: 0,
       progressText: '',
+      toolModel: true,
     })
     let fileName: string = 'unknow'
     let isRuning: boolean = false
@@ -90,9 +93,15 @@ export default defineComponent({
       } else alert('服务器繁忙，请稍等下重新尝试~')
     }
 
-    const open = () => {
+    const open = (file: File) => {
       state.show = true
       store.commit('setShowMoveable', false)
+      nextTick(() => {
+        if (file) {
+          selectFile(file)
+          state.toolModel = false
+        }
+      })
     }
 
     const handleClose = () => {
@@ -122,6 +131,15 @@ export default defineComponent({
       state.percent < 100 ? requestAnimationFrame(run) : (isRuning = false)
     }
 
+    const cutDone = async () => {
+      const response = await fetch(state.cutImage)
+      const buffer = await response.arrayBuffer()
+      const file = new File([buffer], `cut_image_${Math.random()}.png`)
+      emit('done', file)
+      state.show = false
+      handleClose()
+    }
+
     return {
       clear,
       download,
@@ -130,6 +148,7 @@ export default defineComponent({
       open,
       handleClose,
       ...toRefs(state),
+      cutDone,
     }
   },
 })
