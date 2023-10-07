@@ -3,7 +3,7 @@
  * @Date: 2022-02-11 18:48:23
  * @Description: 组件列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-04 00:43:54
+ * @LastEditTime: 2023-10-07 15:06:23
 -->
 <template>
   <div class="wrap">
@@ -12,6 +12,7 @@
       <i class="icon sd-w-qrcode" />
       <div class="text"><span>二维码</span><span class="desc">在设计中使用风格化二维码</span></div>
     </div>
+    <div class="header">其它</div>
     <div class="item" @click="openImageCutout">
       <i class="icon sd-w-table" />
       <div class="text"><span>AI抠图</span> <span class="desc">上传图像一键去除背景</span></div>

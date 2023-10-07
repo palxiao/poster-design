@@ -3,7 +3,7 @@
  * @Date: 2021-08-09 11:41:53
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-05 16:13:56
+ * @LastEditTime: 2023-10-07 15:46:30
 -->
 <template>
   <div id="w-image-style">
@@ -73,8 +73,6 @@ import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import picBox from '@/components/business/picture-selector'
 import imageCutout from '@/components/business/image-cutout'
-import Qiniu from '@/common/methods/QiNiu'
-import _config from '@/config'
 
 export default {
   name: NAME,
@@ -243,6 +241,7 @@ export default {
     openPicBox() {
       this.$refs.picBox.open()
     },
+    // 打开抠图
     openImageCutout() {
       fetch(this.innerElement.imgUrl)
         .then((response) => response.blob())
@@ -255,13 +254,10 @@ export default {
         })
     },
     // 完成抠图
-    async cutImageDone(file) {
-      const qnOptions = { bucket: 'xp-design', prePath: 'user' }
-      const result = await Qiniu.upload(file, qnOptions)
-      const { width, height } = await getImage(file)
-      const url = _config.IMG_URL + result.key
-      await api.material.addMyPhoto({ width, height, url })
-      this.innerElement.imgUrl = url
+    async cutImageDone(url) {
+      setTimeout(() => {
+        this.innerElement.imgUrl = url
+      }, 300)
     },
   },
 }

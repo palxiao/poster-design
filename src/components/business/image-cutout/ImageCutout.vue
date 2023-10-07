@@ -3,7 +3,7 @@
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-05 16:19:11
+ * @LastEditTime: 2023-10-07 15:48:27
 -->
 <template>
   <el-dialog v-model="show" title="AI 智能抠图" width="650" @close="handleClose">
@@ -31,7 +31,7 @@
       <span class="dialog-footer">
         <el-button v-show="rawImage && toolModel" @click="clear">重新选择图片</el-button>
         <el-button v-show="cutImage && toolModel" type="primary" plain @click="download"> 下载 </el-button>
-        <el-button v-show="cutImage && !toolModel" type="primary" plain @click="cutDone"> 完成 </el-button>
+        <el-button v-show="cutImage && !toolModel" v-loading="loading" type="primary" plain @click="cutDone"> {{ loading ? '上传中..' : '完成' }} </el-button>
       </span>
     </template>
   </el-dialog>
@@ -44,7 +44,10 @@ import { ElProgress } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import uploader from '@/components/common/Uploader/index.vue'
 import _dl from '@/common/methods/download'
-import * as api from '@/api/ai'
+import api from '@/api'
+import Qiniu from '@/common/methods/QiNiu'
+import _config from '@/config'
+import { getImage } from '@/common/methods/getImgDetail'
 
 export default defineComponent({
   components: { uploader, UploadFilled, ElProgress },
@@ -61,6 +64,7 @@ export default defineComponent({
       progress: 0,
       progressText: '',
       toolModel: true,
+      loading: false,
     })
     let fileName: string = 'unknow'
     let isRuning: boolean = false
@@ -77,7 +81,7 @@ export default defineComponent({
       state.rawImage = URL.createObjectURL(file)
       fileName = file.name
       // 返回抠图结果
-      const result: any = await api.upload(file, (up: number, dp: number) => {
+      const result: any = await api.ai.upload(file, (up: number, dp: number) => {
         if (dp) {
           state.progressText = dp === 100 ? '' : '导入中..'
           state.progress = dp
@@ -94,6 +98,7 @@ export default defineComponent({
     }
 
     const open = (file: File) => {
+      state.loading = false
       state.show = true
       store.commit('setShowMoveable', false)
       nextTick(() => {
@@ -132,10 +137,17 @@ export default defineComponent({
     }
 
     const cutDone = async () => {
+      state.loading = true
       const response = await fetch(state.cutImage)
       const buffer = await response.arrayBuffer()
       const file = new File([buffer], `cut_image_${Math.random()}.png`)
-      emit('done', file)
+      // upload
+      const qnOptions = { bucket: 'xp-design', prePath: 'user' }
+      const result = await Qiniu.upload(file, qnOptions)
+      const { width, height } = await getImage(file)
+      const url = _config.IMG_URL + result.key
+      await api.material.addMyPhoto({ width, height, url })
+      emit('done', url)
       state.show = false
       handleClose()
     }
