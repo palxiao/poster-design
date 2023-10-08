@@ -3,7 +3,7 @@
  * @Date: 2021-08-09 11:41:53
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-07 15:46:30
+ * @LastEditTime: 2023-10-09 00:59:44
 -->
 <template>
   <div id="w-image-style">
@@ -21,12 +21,12 @@
         <el-button style="width: 100%; margin-bottom: 12px" plain @click="openPicBox">替换图片</el-button>
         <div class="options">
           <el-button v-if="innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
-          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" />裁剪</el-button>
-          <el-button plain @click="openImageCutout">抠图</el-button>
+          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> 裁剪</el-button>
+          <el-button plain @click="openImageCutout"><i class="icon sd-AIkoutu" /> 抠图</el-button>
           <!-- <uploader class="options__upload" @done="uploadImgDone">
             <el-button size="small" plain>替换图片</el-button>
           </uploader> -->
-          <el-button size="small" disabled plain @click="openCropper">图片美化</el-button>
+          <el-button size="small" disabled plain @click="openCropper">美化</el-button>
         </div>
         <!-- <container-wrap @change="changeContainer" />
         <br /> -->
@@ -291,6 +291,9 @@ export default {
     width: auto;
     margin-left: 10px;
     display: inline-block;
+  }
+  .icon {
+    margin-right: 0.3em;
   }
 }
 

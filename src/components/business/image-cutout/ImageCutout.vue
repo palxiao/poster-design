@@ -3,10 +3,10 @@
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-07 15:48:27
+ * @LastEditTime: 2023-10-09 00:42:48
 -->
 <template>
-  <el-dialog v-model="show" title="AI 智能抠图" width="650" @close="handleClose">
+  <el-dialog v-model="show" title="AI 智能抠图" align-center width="650" @close="handleClose">
     <uploader v-if="!rawImage" :hold="true" :drag="true" :multiple="true" class="uploader" @load="selectFile">
       <div class="uploader__box">
         <upload-filled style="width: 64px; height: 64px" />
@@ -29,11 +29,13 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button v-show="rawImage && toolModel" @click="clear">重新选择图片</el-button>
+        <el-button v-show="rawImage && toolModel" @click="clear">清空重选</el-button>
+        <el-button v-show="cutImage" type="primary" plain @click="edit">进入编辑模式</el-button>
         <el-button v-show="cutImage && toolModel" type="primary" plain @click="download"> 下载 </el-button>
-        <el-button v-show="cutImage && !toolModel" v-loading="loading" type="primary" plain @click="cutDone"> {{ loading ? '上传中..' : '完成' }} </el-button>
+        <el-button v-show="cutImage && !toolModel" v-loading="loading" type="primary" plain @click="cutDone"> {{ loading ? '上传中..' : '完成抠图' }} </el-button>
       </span>
     </template>
+    <ImageExtraction ref="matting" />
   </el-dialog>
 </template>
 
@@ -48,9 +50,10 @@ import api from '@/api'
 import Qiniu from '@/common/methods/QiNiu'
 import _config from '@/config'
 import { getImage } from '@/common/methods/getImgDetail'
+import ImageExtraction from './ImageExtraction.vue'
 
 export default defineComponent({
-  components: { uploader, UploadFilled, ElProgress },
+  components: { uploader, UploadFilled, ElProgress, ImageExtraction },
   emits: ['done'],
   setup(props, { emit }) {
     const store = useStore()
@@ -65,6 +68,7 @@ export default defineComponent({
       progressText: '',
       toolModel: true,
       loading: false,
+      matting: null,
     })
     let fileName: string = 'unknow'
     let isRuning: boolean = false
@@ -152,6 +156,14 @@ export default defineComponent({
       handleClose()
     }
 
+    const edit = () => {
+      state.matting.open(state.rawImage, state.cutImage, (base64: any) => {
+        state.cutImage = base64
+        state.percent = 0
+        requestAnimationFrame(run)
+      })
+    }
+
     return {
       clear,
       download,
@@ -161,6 +173,7 @@ export default defineComponent({
       handleClose,
       ...toRefs(state),
       cutDone,
+      edit,
     }
   },
 })

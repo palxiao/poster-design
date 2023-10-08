@@ -2,13 +2,13 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:44:29
  * @Description: 数值滑块组件
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 15:41:38
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-09 00:20:23
 -->
 <template>
   <div id="number-slider">
     <span :style="{ width: labelWidth }" class="label">{{ label }}</span>
-    <el-slider v-model="innerValue" :min="minValue" :max="maxValue" :step="step" input-size="small" show-input :show-tooltip="false" :show-input-controls="false" @change="changeValue"> </el-slider>
+    <el-slider v-model="innerValue" :min="minValue" :max="maxValue" :step="step" input-size="small" :show-input="showInput" :show-tooltip="false" :show-input-controls="false" @change="changeValue"> </el-slider>
   </div>
 </template>
 
@@ -36,6 +36,9 @@ export default {
     },
     step: {
       default: 1,
+    },
+    showInput: {
+      default: true,
     },
   },
   emits: ['update:modelValue', 'finish'],
