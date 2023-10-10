@@ -1,9 +1,9 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2021-08-23 17:25:35
- * @Description:
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-02-24 00:16:59
+ * @Description: 获取图片细节的相关方法
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-09 10:42:54
  */
 export const getImage = (imgItem: string | File) => {
   // 创建对象
@@ -19,7 +19,7 @@ export const getImage = (imgItem: string | File) => {
       resolve(img)
     } else {
       // 加载完成执行
-      img.onload = function() {
+      img.onload = function () {
         resolve(img)
       }
     }

@@ -18,9 +18,9 @@
     <div class="page-design-index-wrap">
       <widget-panel></widget-panel>
       <design-board class="page-design-wrap" pageDesignCanvasId="page-design-canvas">
-        <!-- 用于挡住画布溢出部分，因为使用overflow有bug. PS:如shadow没有透明度则可以完全遮挡元素 -->
+        <!-- 用于挡住画布溢出部分，因为使用overflow有bug -->
         <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
-        <!-- 提供一个背景图层以免遮挡穿帮 -->
+        <!-- 提供一个背景图层 -->
         <div class="shelter-bg transparent-bg" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
       </design-board>
       <style-panel></style-panel>

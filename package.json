@@ -14,7 +14,7 @@
     "publish-fast": "git add . && git commit -m 'build: auto publish' && sh script/publish.sh"
   },
   "dependencies": {
-    "@palxp/color-picker": "^1.3.1",
+    "@palxp/color-picker": "^1.3.3",
     "@palxp/image-extraction": "^1.2.4",
     "@scena/guides": "^0.18.1",
     "@webtoon/psd": "^0.4.0",
