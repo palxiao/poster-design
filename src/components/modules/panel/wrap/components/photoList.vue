@@ -3,7 +3,7 @@
  * @Date: 2022-02-23 15:48:52
  * @Description: 图片列表组件 Bookshelf Layout 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-05 16:10:21
+ * @LastEditTime: 2023-10-12 14:05:31
 -->
 <template>
   <ul ref="listRef" class="img-list-wrap" :style="{ paddingBottom: isShort ? '15px' : '200px' }" @scroll="scrollEvent($event)">
@@ -11,7 +11,7 @@
       <div v-for="(item, i) in list" :key="i + 'i'" :style="{ width: item.listWidth + 'px', marginRight: item.gap + 'px' }" class="list__img" draggable="false" @mousedown="dragStart($event, i)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="select(i)" @dragstart="dragStart($event, i)">
         <edit-model v-if="edit" :options="edit" :data="{ item, i }">
           <div v-if="item.isDelect" class="list__mask">已删除</div>
-          <el-image class="img transparent-bg" :src="item.thumb || item.url" lazy loading="lazy" />
+          <el-image class="img transparent-bg" :src="item.thumb || item.url" :style="{ height: getInnerHeight(item) + 'px' }" lazy loading="lazy" />
         </edit-model>
         <template v-else>
           <imageTip :detail="item">
