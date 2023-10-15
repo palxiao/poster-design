@@ -2,12 +2,13 @@
  * @Author: ShawnPhang
  * @Date: 2022-01-08 09:43:37
  * @Description: 字体处理
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-25 11:13:01
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-13 01:30:33
  */
 // import { isSupportFontFamily, blob2Base64 } from './utils'
 import { getFonts } from '@/api/material'
-// import store from '@/store'
+
+const nowVersion = '2' // 当前字体文件版本更新，将刷新前端缓存
 
 const fontList: any = []
 // const download: any = {}
@@ -16,7 +17,7 @@ export const useFontStore = {
   // download,
   async init() {
     this.list = []
-    localStorage.getItem('FONTS_VERSION') !== '1' && localStorage.removeItem('FONTS')
+    localStorage.getItem('FONTS_VERSION') !== nowVersion && localStorage.removeItem('FONTS')
     const localFonts: any = localStorage.getItem('FONTS') ? JSON.parse(localStorage.getItem('FONTS') || '') : []
     if (localFonts.length > 0) {
       this.list.push(...localFonts)
@@ -26,12 +27,12 @@ export const useFontStore = {
       const res = await getFonts({ pageSize: 400 })
       this.list.unshift(
         ...res.list.map((x: any) => {
-          const { alias, oid, value, preview, woff, lang } = x
-          return { id: oid, value, preview, alias, url: woff, lang }
+          const { id, alias, oid, value, preview, woff, lang } = x
+          return { id, oid, value, preview, alias, url: woff, lang }
         }),
       )
       localStorage.setItem('FONTS', JSON.stringify(this.list))
-      localStorage.setItem('FONTS_VERSION', '1')
+      localStorage.setItem('FONTS_VERSION', nowVersion)
     }
     // store.dispatch('setFonts', this.list)
   },

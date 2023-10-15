@@ -1,28 +1,15 @@
 <!--
  * @Author: ShawnPhang
  * @Date: 2021-08-02 19:10:06
- * @Description: 
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-07 14:29:42
+ * @Description: 选项选择（未拆分字体选择器）
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-14 21:03:17
 -->
 <template>
   <div id="value-select" ref="select" :style="{ width: inputWidth }">
     <p v-if="label" class="input-label">
       {{ label }}
     </p>
-    <!-- <div class="input-wrap" :class="{ active: inputBorder }" :style="{ width: inputWidth }">
-      <input class="real-input" :style="{ textAlign: textAlign }" :class="{ disable: !disable }" :readonly="readonly ? 'readonly' : ''" type="text" :value="showValue" @input="innerValue = $event.target.value.replace(RegExp(suffix), '')" @focus="inputBorder = true" @blur="inputBorder = false" />
-      <div class="op-btn">
-        <div class="down" @click="inputBorder = !inputBorder"></div>
-      </div>
-    </div>
-    <el-popover ref="list" v-model="inputBorder" placement="bottom-start" trigger="click" :width="width" popper-class="value-select-list">
-      <ul v-if="data" class="list-ul">
-        <li v-for="listItem in data" :key="typeof listItem === 'object' ? listItem.name : listItem" :class="{ active: listItem == innerValue }" @click="selectItem(listItem)">
-          {{ (typeof listItem === 'object' ? listItem.name : listItem) + suffix }}
-        </li>
-      </ul>
-    </el-popover> -->
     <el-popover placement="bottom-end" width="auto">
       <!-- 单列表 -->
       <ul v-if="data && Array.isArray(data)" class="list-ul">
@@ -32,16 +19,18 @@
         </li>
       </ul>
       <!-- tab分类列表 -->
-      <el-tabs v-else v-model="activeTab">
-        <el-tab-pane v-for="(val, key, i) in data" :key="'tab' + i" :label="key" :name="key">
-          <ul class="list-ul">
-            <li v-for="listItem in data[key]" :key="typeof listItem === 'object' ? listItem.alias : listItem" :class="{ active: listItem == innerValue }" @click="selectItem(listItem)">
-              <img v-if="listItem.preview" class="preview" :src="listItem.preview" />
-              <span v-else>{{ (typeof listItem === 'object' ? listItem.alias : listItem) + suffix }}</span>
-            </li>
-          </ul>
-        </el-tab-pane>
-      </el-tabs>
+      <div v-else class="tabs-wrap">
+        <el-tabs v-model="activeTab">
+          <el-tab-pane v-for="(val, key, i) in data" :key="'tab' + i" :label="key" :name="key">
+            <ul class="list-ul">
+              <li v-for="listItem in data[key]" :key="typeof listItem === 'object' ? listItem.alias : listItem" :class="{ active: listItem == innerValue }" @click="selectItem(listItem)">
+                <img v-if="listItem.preview" class="preview" :src="listItem.preview" />
+                <span v-else :style="{ fontFamily: `'${listItem.value}'` }">{{ (typeof listItem === 'object' ? listItem.alias : listItem) + suffix }}</span>
+              </li>
+            </ul>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
       <template #reference>
         <div :class="['input-wrap', { active: inputBorder }]" :style="{ width: inputWidth }">
           <!-- <img v-if="innerPreview" class="preview" :src="innerPreview" /> -->
@@ -297,5 +286,9 @@ export default {
     // transform: scaleY(-1);
     height: 1.6em;
   }
+}
+
+.tabs-wrap {
+  width: 210px;
 }
 </style>

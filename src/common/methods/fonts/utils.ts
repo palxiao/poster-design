@@ -77,7 +77,7 @@ export function filterSkyFonts() {
   // );
   const textClouds: any = []
 
-  ;((textClouds as unknown) as CloudText[]).forEach((cloud) => {
+  ;(textClouds as unknown as CloudText[]).forEach((cloud) => {
     // 找到文字组件字体
     if (cloud.fontFamily && !fonts.includes(cloud.fontFamily)) {
       fonts.push(cloud.fontFamily)
@@ -114,6 +114,10 @@ export function base642Blob(b64Data: string, contentType = '', sliceSize = 512) 
 
 export async function blob2Base64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
+    if (blob.type === 'application/json') {
+      resolve('')
+      return
+    }
     const fileReader = new FileReader()
     fileReader.onload = () => {
       resolve(fileReader.result as string)

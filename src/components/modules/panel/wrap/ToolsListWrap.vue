@@ -3,7 +3,7 @@
  * @Date: 2022-02-11 18:48:23
  * @Description: 组件列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-08 22:57:34
+ * @LastEditTime: 2023-10-13 18:48:25
 -->
 <template>
   <div class="wrap">
@@ -15,7 +15,7 @@
     <div class="header">其它</div>
     <div class="item" @click="openImageCutout">
       <i class="icon sd-AI_zhineng" />
-      <div class="text"><span>在线抠图</span> <span class="desc">上传图像一键去除背景</span></div>
+      <div class="text"><span>智能抠图</span> <span class="desc">上传图像一键去除背景</span></div>
     </div>
     <imageCutout ref="imageCutout" />
   </div>

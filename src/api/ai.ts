@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 14:42:15
  * @Description: AI相关接口
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-30 12:08:01
+ * @LastEditTime: 2023-10-13 00:07:19
  */
 import fetch from '@/utils/axios'
 

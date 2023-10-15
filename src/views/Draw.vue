@@ -90,10 +90,6 @@ export default defineComponent({
           await preloadBg.imgs()
         }
         try {
-          const { list } = await api.material.getFonts({ ids: fontData.map((x: any) => x.id) })
-          fontData.forEach((item: any) => {
-            item.url = list.find((x: any) => x.oid == item.id)?.ttf
-          })
           fontWithDraw && (await font2style(fontContent, fontData))
           // console.log('1. base64 yes')
           const preload = new Preload(imgsData)

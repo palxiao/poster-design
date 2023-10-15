@@ -51,8 +51,8 @@
 <script>
 // 文本组件样式
 const NAME = 'w-text-style'
-import api from '@/api'
-import _config from '@/config'
+// import api from '@/api'
+// import _config from '@/config'
 import { mapGetters, mapActions } from 'vuex'
 import { styleIconList1, styleIconList2, alignIconList } from '../../../../assets/data/TextIconsData'
 import layerIconList from '@/assets/data/LayerIconList'
@@ -64,6 +64,7 @@ import textInputArea from '../../settings/textInputArea.vue'
 import valueSelect from '../../settings/valueSelect.vue'
 import effectWrap from '../../settings/EffectSelect/TextWrap.vue'
 import { useFontStore } from '@/common/methods/fonts'
+import usePageFontsFilter from './pageFontsFilter.ts'
 
 export default {
   name: NAME,
@@ -124,11 +125,13 @@ export default {
       // if (!this.isDraw) {
       // useFontStore().init()
       const localFonts = useFontStore.list
-      const fontLists = { 中文: [], 英文: [] }
+      const fontLists = { 当前页面: [], 中文: [], 英文: [] }
       for (const font of localFonts) {
-        const { id, value, url, alias, preview, lang } = font
-        lang === 'zh' ? fontLists['中文'].unshift({ id, value, url, alias, preview }) : fontLists['英文'].unshift({ id, value, url, alias, preview })
+        const { id, oid, value, url, alias, preview, lang } = font
+        const item = { id, oid, value, url, alias, preview }
+        lang === 'zh' ? fontLists['中文'].unshift(item) : fontLists['英文'].unshift(item)
       }
+      fontLists['当前页面'] = usePageFontsFilter()
       this.fontClassList = fontLists
       // }
       // const isDev = process.env.NODE_ENV === 'development'
@@ -180,6 +183,9 @@ export default {
         value: value,
         pushHistory: false,
       })
+      setTimeout(() => {
+        key === 'fontClass' && (this.fontClassList['当前页面'] = usePageFontsFilter())
+      }, 300)
     },
     layerAction(item) {
       this.updateLayerIndex({
