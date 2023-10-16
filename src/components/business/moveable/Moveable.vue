@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-04 11:46:39
  * @Description: 原版movable插件
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 11:53:30
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-15 23:31:22
 -->
 <template>
   <div id="empty" class="moveable__remove-item zk-moveable-style"></div>
@@ -227,12 +227,12 @@ export default defineComponent({
           this.updateWidgetData({
             uuid: this.dActiveElement.uuid,
             key: 'left',
-            value: this.holdPosition?.left,
+            value: Number(this.holdPosition?.left),
           })
           this.updateWidgetData({
             uuid: this.dActiveElement.uuid,
             key: 'top',
-            value: this.holdPosition?.top,
+            value: Number(this.holdPosition?.top),
           })
           this.holdPosition = null // important
           setTimeout(() => {

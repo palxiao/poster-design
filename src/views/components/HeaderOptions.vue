@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-08-23 17:33:12
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-16 09:23:06
 -->
 <template>
   <div class="top-title"><el-input v-model="title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -36,6 +36,7 @@ import SaveImage from '@/components/business/save-download/CreateCover.vue'
 import { useFontStore } from '@/common/methods/fonts'
 import copyRight from './CopyRight.vue'
 import _config from '@/config'
+import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 
 export default defineComponent({
   components: { copyRight, SaveImage },
@@ -70,14 +71,30 @@ export default defineComponent({
     }
     // 保存模板
     async function saveTemp() {
-      const { tempid } = route.query
-      const { stat } = await api.home.saveTemp({ id: tempid, title: proxy.title || '未命名模板', content: JSON.stringify({ page: proxy.dPage, widgets: proxy.dWidgets }), width: proxy.dPage.width, height: proxy.dPage.height })
-      stat != 0 && useNotification('保存成功', '模板内容已变更')
+      const { tempid, tempType: type } = route.query
+      let res = null
+      if (type == 1) {
+        // 保存组件，组合元素要保证在最后一位，才能默认选中
+        if (proxy.dWidgets[0].type === 'w-group') {
+          const group = proxy.dWidgets.shift()
+          group.record.width = 0
+          group.record.height = 0
+          proxy.dWidgets.push(group)
+        }
+        // TODO：如果保存组件不存在组合，则添加组合。该功能待优化
+        if (!proxy.dWidgets.some((x) => x.type === 'w-group')) {
+          alert('提交组件必须为组合！')
+          return
+          // proxy.dWidgets.push(wGroup.setting)
+        }
+        res = await api.home.saveTemp({ id: tempid, type, title: proxy.title || '未命名组件', content: JSON.stringify(proxy.dWidgets), width: proxy.dPage.width, height: proxy.dPage.height })
+      } else res = await api.home.saveTemp({ id: tempid, title: proxy.title || '未命名模板', content: JSON.stringify({ page: proxy.dPage, widgets: proxy.dWidgets }), width: proxy.dPage.width, height: proxy.dPage.height })
+      res.stat != 0 && useNotification('保存成功', '模板内容已变更')
     }
     // 停用启用
     async function stateChange(e: any) {
-      const { tempid } = route.query
-      const { stat } = await api.home.saveTemp({ id: tempid, state: e ? 1 : 0 })
+      const { tempid, tempType: type } = route.query
+      const { stat } = await api.home.saveTemp({ id: tempid, type, state: e ? 1 : 0 })
       stat != 0 && useNotification('保存成功', '模板内容已变更')
     }
     async function download() {
@@ -132,8 +149,8 @@ export default defineComponent({
     ...mapGetters(['dPage', 'dWidgets', 'tempEditing', 'dHistory', 'dPageHistory']),
   },
   methods: {
-    ...mapActions(['pushHistory']),
-    async load(id: any, tempId: any, cb: Function) {
+    ...mapActions(['pushHistory', 'addGroup']),
+    async load(id: any, tempId: any, type: any, cb: Function) {
       if (this.$route.name !== 'Draw') {
         await useFontStore.init() // 初始化加载字体
       }
@@ -142,15 +159,22 @@ export default defineComponent({
         cb()
         return
       }
-      const { data: content, title, state } = await api.home[apiName]({ id: id || tempId })
+      const { data: content, title, state, width, height } = await api.home[apiName]({ id: id || tempId, type })
       if (content) {
         const data = JSON.parse(content)
         this.stateBollean = !!state
         this.title = title
         this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择框
         // this.$store.commit('setDWidgets', [])
-        this.$store.commit('setDPage', data.page)
-        id ? this.$store.commit('setDWidgets', data.widgets) : this.$store.dispatch('setTemplate', data.widgets)
+        if (type == 1) {
+          // 加载文字组合组件
+          this.dPage.width = width
+          this.dPage.height = height
+          this.addGroup(data)
+        } else {
+          this.$store.commit('setDPage', data.page)
+          id ? this.$store.commit('setDWidgets', data.widgets) : this.$store.dispatch('setTemplate', data.widgets)
+        }
         cb()
         this.pushHistory('请求加载load')
       }

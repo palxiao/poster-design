@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-04 12:34:13
+ * @LastEditTime: 2023-10-16 00:30:16
 -->
 <template>
   <div class="wrap">
@@ -167,7 +167,6 @@ export default defineComponent({
       const group: any = await getComponentsData(tempDetail.data)
       let parent: any = { x: 0, y: 0 }
       const { width: pW, height: pH } = this.$store.getters.dPage
-      console.log(group)
 
       Array.isArray(group) &&
         group.forEach((element: any) => {

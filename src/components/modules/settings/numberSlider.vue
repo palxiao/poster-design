@@ -3,7 +3,7 @@
  * @Date: 2021-08-09 11:44:29
  * @Description: 数值滑块组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-09 00:20:23
+ * @LastEditTime: 2023-10-16 09:46:23
 -->
 <template>
   <div id="number-slider">
@@ -32,7 +32,7 @@ export default {
       default: 0,
     },
     maxValue: {
-      default: 100,
+      default: 500,
     },
     step: {
       default: 1,

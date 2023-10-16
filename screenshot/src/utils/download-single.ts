@@ -3,7 +3,7 @@
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（单浏览器版，适用于低配置服务器）
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-18 18:17:54
+ * @LastEditTime: 2023-10-16 10:56:35
  */
 const isDev = process.env.NODE_ENV === 'development'
 const puppeteer = require('puppeteer')
@@ -16,16 +16,28 @@ const maxPXs = 4211840 // 超出此规格会触发限制器降低dpr，节省服
 const maximum = 5000 // 最大宽高限制，超过截断以防止服务崩溃
 
 const saveScreenshot = async (url: string, { path, width, height, thumbPath, size = 0, quality = 0, prevent, ua, devices, scale, wait }: any) => {
-  return new Promise(async (resolve: Function) => {
+  return new Promise(async (resolve: Function, reject: Function) => {
     let isPageLoad = false
+    let browser: any = null
+    // 格式化浏览器宽高
+    width = Number(width).toFixed(0)
+    height = Number(height).toFixed(0)
     // 启动浏览器
-    let browser = await puppeteer.launch({
-      headless: true, // !isDev,
-      executablePath: isDev ? null : executablePath,
-      ignoreHTTPSErrors: true, // 忽略https安全提示
-      args: ['–no-first-run', '–single-process', '–disable-gpu', '–no-zygote', '–disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox', `--window-size=${width},${height}`], // 优化配置
-      defaultViewport: null,
-    })
+    try {
+      browser = await puppeteer.launch({
+        headless: true, // !isDev,
+        executablePath: isDev ? null : executablePath,
+        ignoreHTTPSErrors: true, // 忽略https安全提示
+        args: ['–no-first-run', '–single-process', '–disable-gpu', '–no-zygote', '–disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox', `--window-size=${width},${height}`], // 优化配置
+        defaultViewport: null,
+      })
+    } catch (error) {
+      console.log('Puppeteer启动错误！', '窗口大小：', width, height);
+    }
+    if (!browser) {
+      reject()
+      return false
+    }
     const regulators = setTimeout(() => {
       browser && browser.close()
       browser = null

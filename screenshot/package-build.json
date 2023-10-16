@@ -7,8 +7,15 @@
   "author": "ShawnPhang",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.24.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "fontmin": "^1.0.1",
+    "form-data": "^4.0.0",
+    "moment": "^2.18.1",
+    "multiparty": "^4.2.3",
+    "mysql": "^2.13.0",
+    "qiniu": "^7.4.0",
     "puppeteer": "^10.4.0",
     "images": "3.2.3"
   },

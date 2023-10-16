@@ -137,8 +137,9 @@ export default defineComponent({
       this.isContinue = false
     },
     loadData() {
-      const { id, tempid } = this.$route.query
-      ;(this.$refs as any).options.load(id, tempid, async () => {
+      // 初始化加载页面
+      const { id, tempid, tempType } = this.$route.query
+      ;(this.$refs as any).options.load(id, tempid, tempType, async () => {
         ;(this.$refs as any).zoomControl.screenChange()
         await this.$nextTick()
         // 初始化激活的控件为page

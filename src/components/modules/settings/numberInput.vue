@@ -81,7 +81,7 @@ export default {
       }
     },
     updateValue(value) {
-      this.$emit('update:modelValue', value)
+      this.$emit('update:modelValue', Number(value))
     },
     up() {
       this.updateValue(parseInt(this.modelValue || 0, 10) + this.step)

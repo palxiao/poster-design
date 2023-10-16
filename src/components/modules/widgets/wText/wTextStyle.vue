@@ -24,7 +24,7 @@
       </div> -->
       <!-- <el-collapse-item title="位置尺寸" name="1"> -->
       <div class="style-item slide-wrap">
-        <number-slider v-model="innerElement.letterSpacing" style="font-size: 14px" label="字距" labelWidth="40px" :step="0.05" :minValue="-50" :maxValue="innerElement.fontSize" @finish="(value) => finish('letterSpacing', value)" />
+        <number-slider v-model="innerElement.letterSpacing" style="font-size: 14px" label="字距" labelWidth="40px" :step="0.05" :minValue="-innerElement.fontSize" :maxValue="innerElement.fontSize * 2" @finish="(value) => finish('letterSpacing', value)" />
         <number-slider v-model="innerElement.lineHeight" style="font-size: 14px" label="行距" labelWidth="40px" :step="0.05" :minValue="0" :maxValue="2.5" @finish="(value) => finish('lineHeight', value)" />
       </div>
       <!-- </el-collapse-item> -->
