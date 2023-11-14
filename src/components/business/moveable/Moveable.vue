@@ -3,7 +3,7 @@
  * @Date: 2021-08-04 11:46:39
  * @Description: 原版movable插件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-15 23:31:22
+ * @LastEditTime: 2023-11-14 11:41:23
 -->
 <template>
   <div id="empty" class="moveable__remove-item zk-moveable-style"></div>
@@ -40,9 +40,9 @@ export default defineComponent({
           case 'w-image':
             this.moveable.renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
             break
-          // case 'w-svg':
-          //   this.moveable.renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
-          //   break
+          case 'w-svg':
+            this.moveable.renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
+            break
           default:
             this.moveable.renderDirections = ['nw', 'ne', 'sw', 'se']
             break
