@@ -3,14 +3,14 @@
  * @Date: 2021-08-02 19:10:06
  * @Description: 选项选择（未拆分字体选择器）
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-14 21:03:17
+ * @LastEditTime: 2023-11-20 18:21:55
 -->
 <template>
-  <div id="value-select" ref="select" :style="{ width: inputWidth }">
+  <div ref="select" class="value-select" :style="{ width: inputWidth }">
     <p v-if="label" class="input-label">
       {{ label }}
     </p>
-    <el-popover placement="bottom-end" width="auto">
+    <el-popover placement="bottom-end" trigger="click" width="auto">
       <!-- 单列表 -->
       <ul v-if="data && Array.isArray(data)" class="list-ul">
         <li v-for="listItem in data" :key="typeof listItem === 'object' ? listItem.alias : listItem" :class="{ active: listItem == innerValue }" @click="selectItem(listItem)">
@@ -179,7 +179,7 @@ export default {
 @color0: #e1e1e1; // Appears 2 times
 @color1: #d1d1d1; // Appears 2 times
 
-#value-select {
+.value-select {
   // height: 60px;
   line-height: 1.15;
   width: 80px;

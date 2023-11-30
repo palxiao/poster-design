@@ -31,7 +31,7 @@
 
 ### 拉取源码
 
-> 环境需求：**Node.js v16.18** 以上版本
+> 环境推荐：**Node.js v16.18** 以上版本
 
 ```
 git clone https://github.com/palxiao/poster-design.git
@@ -116,6 +116,12 @@ A：考虑到服务端的开发语言、数据库类型都可能不尽相同，�
 开源不易，别忘了给本项目点个 **Star** 支持一下~
 
 [![Star History Chart](https://api.star-history.com/svg?repos=palxiao/poster-design&type=Date)](https://star-history.com/#palxiao/poster-design&Date)
+
+### Contributions
+
+<a href="https://github.com/palxiao/poster-design/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=palxiao/poster-design" />
+</a>
 
 ### LICENSE
 

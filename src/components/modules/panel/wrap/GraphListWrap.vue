@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-04 12:34:27
+ * @LastEditTime: 2023-11-24 11:14:28
 -->
 <template>
   <div class="wrap">
@@ -184,7 +184,8 @@ export default defineComponent({
     },
     async dragStart(e: any, item: any) {
       startPoint = { x: e.x, y: e.y }
-      const img = await setImageData(item)
+      const { width, height, thumb, url } = item
+      const img = await setImageData({ width, height, url: thumb || url })
       dragHelper.start(e, img.canvasWidth)
       this.$store.commit('selectItem', { data: { value: item }, type: item.type })
     },

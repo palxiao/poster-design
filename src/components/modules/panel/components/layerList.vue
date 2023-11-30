@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-07 17:25:19
  * @Description: 图层组件
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-10 15:38:30
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-11-24 11:39:02
 -->
 <template>
   <ul class="widget-list">

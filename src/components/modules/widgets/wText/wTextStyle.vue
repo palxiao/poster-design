@@ -34,7 +34,7 @@
         <!-- <color-select v-model="innerElement.backgroundColor" label="背景颜色" @finish="(value) => finish('backgroundColor', value)" /> -->
       </div>
       <div class="line-layout style-item">
-        <effect-wrap v-model="innerElement.isEffect" :data="innerElement.textEffects" :degree="innerElement.degree" @select="testEffect" />
+        <effect-wrap v-model="innerElement.textEffects" :data="innerElement" :degree="innerElement.degree" @select="testEffect" />
       </div>
       <icon-item-select class="style-item" :data="layerIconList" @finish="layerAction" />
       <icon-item-select class="style-item" :data="alignIconList" @finish="alignAction" />
@@ -115,6 +115,7 @@ export default {
   methods: {
     ...mapActions(['updateWidgetData', 'updateAlign', 'updateLayerIndex', 'pushHistory']),
     testEffect({ key, value, style }) {
+      console.log('选择回调')
       const uuid = this.dActiveElement.uuid
       this.$store.commit('setWidgetStyle', { uuid, key, value })
       if (style) {

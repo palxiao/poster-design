@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-04 21:25:54
+ * @LastEditTime: 2023-11-22 09:56:18
 -->
 <template>
   <div class="wrap">
@@ -24,12 +24,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, watch } from 'vue'
-// import { ElDivider } from 'element-plus'
 import api from '@/api'
 import { mapActions, useStore } from 'vuex'
 
 export default defineComponent({
-  // components: { ElDivider },
   setup(props) {
     const store = useStore()
     const state = reactive({

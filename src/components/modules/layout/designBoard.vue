@@ -91,6 +91,10 @@ export default defineComponent({
   beforeUnmount() {},
   methods: {
     ...mapActions(['updateScreen', 'selectWidget', 'deleteWidget', 'addWidget', 'addGroup']),
+    // getBackground(data) {
+    //   if (data.startsWith('http')) return `url(${data})`
+    //   if (data.startsWith('linear-gradient')) return data
+    // },
     async dropOver(e) {
       if (this.dActiveElement.editable || this.dActiveElement.lock) {
         return false

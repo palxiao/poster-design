@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-16 00:30:16
+ * @LastEditTime: 2023-11-27 18:26:08
 -->
 <template>
   <div class="wrap">
@@ -42,7 +42,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue'
-// import { ElDivider } from 'element-plus'
 import api from '@/api'
 import { mapActions } from 'vuex'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
@@ -84,11 +83,11 @@ export default defineComponent({
     })
     const mouseup = (e: any) => {
       e.preventDefault()
-      setTimeout(() => {
-        isDrag = false
-        tempDetail = null
-        startPoint = { x: 99999, y: 99999 }
-      }, 10)
+      // setTimeout(() => {
+      isDrag = false
+      tempDetail = null
+      startPoint = { x: 99999, y: 99999 }
+      // }, 10)
     }
     const mousemove = (e: any) => {
       e.preventDefault()
@@ -185,15 +184,17 @@ export default defineComponent({
         this.addWidget(group)
       }
     },
-    async dragStart(e: any, { id }: any) {
+    async dragStart(e: any, { id, width, height, cover }: any) {
       startPoint = { x: e.x, y: e.y }
-      tempDetail = await api.home.getTempDetail({ id, type: 1 })
-      let finalWidth = tempDetail.width
+      // tempDetail = await api.home.getTempDetail({ id, type: 1 })
+      // let finalWidth = tempDetail.width
+      let finalWidth = 0
       if (finalWidth) {
-        const img = await setImageData(tempDetail)
+        const img = await setImageData({ width, height, url: cover })
         finalWidth = img.canvasWidth
       }
       dragHelper.start(e, finalWidth)
+      tempDetail = await api.home.getTempDetail({ id, type: 1 })
       if (Array.isArray(JSON.parse(tempDetail.data))) {
         this.$store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
       } else {

@@ -11,7 +11,7 @@
         <Tabs :value="mode" @update:value="onChangeMode">
           <TabPanel v-for="label in modes" :key="label" :label="label"></TabPanel>
         </Tabs>
-        <color-select v-show="mode === '颜色'" v-model="innerElement.backgroundColor" @finish="(value) => finish('backgroundColor', value)" />
+        <color-select v-show="mode === '颜色'" v-model="innerElement.backgroundColor" :modes="['纯色']" @change="colorChange" @finish="(value) => finish('backgroundColor', value)" />
         <!-- <bg-img-select :img="innerElement.backgroundImage"/> -->
         <div v-if="mode === '图片' && innerElement.backgroundImage" style="margin-top: 2rem">
           <el-image style="max-height: 428px" :src="innerElement.backgroundImage" fit="contain"></el-image>
@@ -79,6 +79,14 @@ export default {
   },
   methods: {
     ...mapActions(['updatePageData']),
+    colorChange(e) {
+      if (e.mode === '渐变') {
+        // setTimeout(() => {
+        //   console.log(1, e)
+        //   this.finish('backgroundImage', e.color)
+        // }, 1000)
+      }
+    },
     onChangeMode(value) {
       this.mode = value
       if (value === '颜色') {

@@ -16,7 +16,7 @@ export default {
   IMG_URL: 'https://store.palxp.com/', // 七牛云资源地址
   // ICONFONT_URL: '//at.alicdn.com/t/font_3223711_74mlzj4jdue.css',
   ICONFONT_URL: '//at.alicdn.com/t/font_2717063_ypy8vprc3b.css?display=swap',
-  ICONFONT_EXTRA: '//at.alicdn.com/t/c/font_3228074_zubqmza1sdk.css',
+  ICONFONT_EXTRA: '//at.alicdn.com/t/c/font_3228074_42xym3extur.css',
   QINIUYUN_PLUGIN: 'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/qiniu-js/2.5.5/qiniu.min.js',
   supportSubFont: true, // 是否开启服务端字体压缩
 }

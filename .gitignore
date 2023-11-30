@@ -3,6 +3,7 @@ node_modules
 /dist
 config.json
 package-lock.json
+yarn.lock
 
 screenshot/node_modules/
 screenshot/dist/

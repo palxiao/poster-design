@@ -239,6 +239,7 @@ export default {
     },
     mousewheelZoom(down) {
       const value = Number(this.dZoom.toFixed(0))
+      if (down && value <= 1) return
       this.updateZoom(down ? value - 1 : value + 1)
       this.zoom.text = value + '%'
       this.autoFixTop()
