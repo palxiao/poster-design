@@ -10,8 +10,8 @@ export default {
   VERSION: version,
   APP_NAME: '迅排设计',
   COPYRIGHT: 'ShawnPhang - Palxp.cn',
-  API_URL: isDev ? 'http://localhost:9998' : '${API}',
-  // API_URL: 'https://palxp.cn:8887', // 服务端地址
+  // API_URL: isDev ? 'http://localhost:9998' : '${API}',
+  API_URL: 'https://palxp.cn:8887', // 服务端地址
   SCREEN_URL: isDev ? 'http://localhost:7001' : '#{SCREEN_URL}', // 截图服务地址
   IMG_URL: 'https://store.palxp.com/', // 七牛云资源地址
   // ICONFONT_URL: '//at.alicdn.com/t/font_3223711_74mlzj4jdue.css',
