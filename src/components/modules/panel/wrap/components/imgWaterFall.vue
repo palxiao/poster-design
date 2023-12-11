@@ -3,14 +3,19 @@
  * @Date: 2021-12-16 16:20:16
  * @Description: 瀑布流组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-03 23:22:46
+ * @LastEditTime: 2023-12-11 11:45:24
 -->
 <template>
   <div ref="imgWaterFall" :style="{ height: countHeight + 'px' }" class="img-water-fall">
     <!-- backgroundImage: `url(${item.cover})` -->
-    <div v-for="(item, index) in list" :key="index + 'iwf'" :style="{ top: item.top + 'px', left: item.left + 'px', width: width + 'px', height: item.height + 'px' }" class="img-box" @click.stop="selectItem(item, index)">
-      <el-image v-if="!item.fail" class="img" :src="item.cover" lazy loading="lazy" @error="loadError(item)" />
-      <div v-else class="fail_img">{{ item.title }}</div>
+    <div v-for="(item, i) in list" :key="i + 'iwf'" :style="{ top: item.top + 'px', left: item.left + 'px', width: width + 'px', height: item.height + 'px' }" class="img-box" @click.stop="selectItem(item, i)">
+      <edit-model v-if="edit" :options="edit" :data="{ item, i }">
+        {{ item.isDelect }}
+        <div v-if="item.isDelect" class="list__mask">已删除</div>
+        <el-image v-if="!item.fail" class="img" :src="item.cover" lazy loading="lazy" @error="loadError(item)" />
+        <div v-else class="fail_img">{{ item.title }}</div>
+      </edit-model>
+      <el-image v-else class="img" :src="item.cover" lazy loading="lazy" @error="loadError(item)" />
     </div>
   </div>
 </template>
@@ -26,6 +31,7 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    edit: {}
   },
   emits: ['select', 'load'],
   setup(props, { emit }) {
@@ -123,6 +129,19 @@ export default defineComponent({
     height: 100%;
     z-index: 1;
     pointer-events: none;
+  }
+}
+.list {
+  &__mask {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

@@ -3,7 +3,7 @@
  * @Date: 2022-02-23 15:48:52
  * @Description: 图片列表组件 Bookshelf Layout 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-12 14:05:31
+ * @LastEditTime: 2023-12-11 11:12:04
 -->
 <template>
   <ul ref="listRef" class="img-list-wrap" :style="{ paddingBottom: isShort ? '15px' : '200px' }" @scroll="scrollEvent($event)">
@@ -225,7 +225,7 @@ export default defineComponent({
     z-index: 2;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     color: #ffffff;
     display: flex;
     align-items: center;

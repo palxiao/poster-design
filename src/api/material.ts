@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 14:42:15
  * @Description: 媒体相关接口
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-13 00:25:25
+ * @LastEditTime: 2023-12-11 11:40:47
  */
 import fetch from '@/utils/axios'
 
@@ -23,6 +23,7 @@ export const getImagesList = (params: Type.Object = {}) => fetch('design/imgs', 
 // 我的上传列表
 export const getMyPhoto = (params: Type.Object = {}) => fetch('design/user/image', params)
 export const deleteMyPhoto = (params: Type.Object = {}) => fetch('design/user/image/del', params, 'post')
+export const deleteMyWorks = (params: Type.Object = {}) => fetch('design/poster/del', params, 'post')
 
 // 添加图片
 export const addMyPhoto = (params: Type.Object = {}) => fetch('design/user/add_image', params)

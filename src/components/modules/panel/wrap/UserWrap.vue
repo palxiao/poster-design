@@ -3,7 +3,7 @@
  * @Date: 2022-02-13 22:18:35
  * @Description: 我的
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-04 19:11:12
+ * @LastEditTime: 2023-12-11 11:50:34
 -->
 <template>
   <div class="wrap">
@@ -17,12 +17,12 @@
       </uploader>
       <el-button class="upload-btn upload-psd" plain type="primary" @click="openPSD">上传 PSD 模板</el-button>
       <div style="margin: 1rem; height: 100vh">
-        <photo-list ref="imgListRef" :edit="editOptions" :isDone="isDone" :listData="imgList" @load="load" @drag="dragStart" @select="selectImg" />
+        <photo-list ref="imgListRef" :edit="editOptions.photo" :isDone="isDone" :listData="imgList" @load="load" @drag="dragStart" @select="selectImg" />
       </div>
     </div>
     <div v-show="tabActiveName === 'design'" class="wrap">
       <ul ref="listRef" v-infinite-scroll="loadDesign" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
-        <img-water-fall :listData="designList" @select="selectDesign" />
+        <img-water-fall :edit="editOptions.works" :listData="designList" @select="selectDesign" />
         <!-- <div v-show="loading" class="loading"><i class="el-icon-loading"></i>拼命加载中..</div> -->
         <div v-show="isDone" class="loading">全部加载完毕</div>
       </ul>
@@ -145,12 +145,29 @@ export default defineComponent({
       api.material.deleteMyPhoto({ id: item.id, key })
       state.imgListRef.delItem(i) // 通知标记
     }
-    state.editOptions = [
+    const deleteWorks = async ({ i, item }: any) => {
+      const isPass = await useConfirm('警告', '删除后不可找回，请确认操作', 'warning')
+      if (isPass) {
+        await api.material.deleteMyWorks({ id: item.id })
+        setTimeout(() => {
+          router.push({ path: '/home', query: {  }, replace: true })
+          loadDesign(true)
+        }, 300);
+      }
+    }
+    state.editOptions = {
+      photo: [
       {
         name: '删除',
         fn: deleteImg,
       },
+    ],works: [
+      {
+        name: '删除',
+        fn: deleteWorks,
+      },
     ]
+    }
     const dragStart = (index: number) => {
       const item = state.imgList[index]
       store.commit('selectItem', { data: { value: item }, type: 'image' })

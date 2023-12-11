@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-16 09:23:06
+ * @LastEditTime: 2023-12-11 12:40:59
 -->
 <template>
   <div class="top-title"><el-input v-model="title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -36,6 +36,7 @@ import SaveImage from '@/components/business/save-download/CreateCover.vue'
 import { useFontStore } from '@/common/methods/fonts'
 import copyRight from './CopyRight.vue'
 import _config from '@/config'
+import useConfirm from '@/common/methods/confirm'
 import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 
 export default defineComponent({
@@ -100,6 +101,13 @@ export default defineComponent({
     async function download() {
       if (state.loading === true) {
         return
+      }
+      // 临时提示
+      if (proxy.title === '自设计模板') {
+        const isPass = await useConfirm('提示', 'PSD自设计作品暂时保存在Github，下载可能失败', 'warning')
+        if (!isPass) {
+          return
+        }
       }
       state.loading = true
       context.emit('update:modelValue', true)
