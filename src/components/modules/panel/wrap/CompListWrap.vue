@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-27 18:26:08
+ * @LastEditTime: 2024-01-11 17:59:57
 -->
 <template>
   <div class="wrap">
@@ -43,19 +43,21 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue'
 import api from '@/api'
-import { mapActions } from 'vuex'
+import { useStore } from 'vuex'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
-import setImageData from '@/common/methods/DesignFeatures/setImage'
-
-const dragHelper = new DragHelper()
-let isDrag = false
-let startPoint = { x: 99999, y: 99999 }
-let tempDetail: any = null
+import setItem2Data from '@/common/methods/DesignFeatures/setImage'
 
 export default defineComponent({
   components: {},
   setup(props) {
+    // 拖拽效果相关
+    const dragHelper = new DragHelper()
+    let isDrag = false
+    let startPoint = { x: 99999, y: 99999 }
+    let tempDetail: any = null
+    // 缓存组件用以减少接口请求的次数
+    const compsCache: any = {}
     const state = reactive({
       loading: false,
       loadDone: false,
@@ -65,6 +67,7 @@ export default defineComponent({
       types: [],
       showList: [],
     })
+    const store = useStore()
     const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
     onMounted(async () => {
@@ -144,28 +147,31 @@ export default defineComponent({
       state.currentCategory = null
     }
 
-    return {
-      ...toRefs(state),
-      load,
-      action,
-      back,
-      selectTypes,
-      mouseup,
-      mousemove,
+    const dragStart = async (e: any, { id, width, height, cover }: any) => {
+      startPoint = { x: e.x, y: e.y }
+      // tempDetail = await api.home.getTempDetail({ id, type: 1 })
+      // let finalWidth = tempDetail.width
+      // 计算出拖拽到画布数值
+      const img = await setItem2Data({ width, height, url: cover })
+      dragHelper.start(e, img.canvasWidth)
+      tempDetail = await getCompDetail({ id, type: 1 })
+      if (Array.isArray(JSON.parse(tempDetail.data))) {
+        store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
+      } else {
+        store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
+      }
     }
-  },
-  methods: {
-    ...mapActions(['addGroup', 'addWidget']),
-    async selectItem(item: any) {
+
+    const selectItem = async (item: any) => {
       if (isDrag) {
         return
       }
-      this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择
-      tempDetail = tempDetail || (await api.home.getTempDetail({ id: item.id, type: 1 }))
+      store.commit('setShowMoveable', false) // 清理掉上一次的选择
+      tempDetail = tempDetail || (await getCompDetail({ id: item.id, type: 1 }))
       // let group = JSON.parse(tempDetail.data)
       const group: any = await getComponentsData(tempDetail.data)
       let parent: any = { x: 0, y: 0 }
-      const { width: pW, height: pH } = this.$store.getters.dPage
+      const { width: pW, height: pH } = store.getters.dPage
 
       Array.isArray(group) &&
         group.forEach((element: any) => {
@@ -176,31 +182,38 @@ export default defineComponent({
           element.left += (pW - parent.width) / 2
           element.top += (pH - parent.height) / 2
         })
-        this.addGroup(group)
+        store.dispatch('addGroup', group)
       } else {
         group.text && (group.text = decodeURIComponent(group.text))
         group.left = pW / 2 - group.fontSize * (group.text.length / 2)
         group.top = pH / 2 - group.fontSize / 2
-        this.addWidget(group)
+        store.dispatch('addWidget', group)
       }
-    },
-    async dragStart(e: any, { id, width, height, cover }: any) {
-      startPoint = { x: e.x, y: e.y }
-      // tempDetail = await api.home.getTempDetail({ id, type: 1 })
-      // let finalWidth = tempDetail.width
-      let finalWidth = 0
-      if (finalWidth) {
-        const img = await setImageData({ width, height, url: cover })
-        finalWidth = img.canvasWidth
-      }
-      dragHelper.start(e, finalWidth)
-      tempDetail = await api.home.getTempDetail({ id, type: 1 })
-      if (Array.isArray(JSON.parse(tempDetail.data))) {
-        this.$store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
-      } else {
-        this.$store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
-      }
-    },
+    }
+
+    function getCompDetail(params: any) {
+      // 有缓存则直接返回组件数据，否则请求获取数据
+      return new Promise((resolve) => {
+        if (compsCache[params.id]) {
+          resolve(compsCache[params.id])
+        } else api.home.getTempDetail(params).then((res: any) => {
+          resolve(res)
+          compsCache[params.id] = res // 缓存请求的组件数据
+        })
+      })
+    }
+
+    return {
+      ...toRefs(state),
+      load,
+      action,
+      back,
+      selectTypes,
+      mouseup,
+      mousemove,
+      dragStart,
+      selectItem,
+    }
   },
 })
 </script>
