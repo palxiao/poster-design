@@ -1,4 +1,4 @@
-**[在线体验](https://design.palxp.cn/)** | **[中文文档网站](https://xp.palxp.cn/)** | [架构及目录说明](https://xp.palxp.cn/#/articles/1689321259854)
+**[在线体验网址](https://design.palxp.cn/)** | **[中文文档](https://xp.palxp.cn/)** | **[项目常见问题](https://xp.palxp.cn/#/articles/1689323321667)** | [架构及目录说明](https://xp.palxp.cn/#/articles/1689321259854)
 
 ---
 
@@ -29,71 +29,39 @@
 - 图层操作，支持拖拽变更层级。
 - 颜色调色板，原生级取色器颜色吸管（Chrome）。
 
-### 拉取源码
-
-> 环境推荐：**Node.js v16.18** 以上版本
+### 快速开始
 
 ```
 git clone https://github.com/palxiao/poster-design.git
 cd poster-design
-```
-
-### 安装依赖
-
-```
 npm run prepared
-```
-
-> 网络太慢？尝试运行：npm config set registry https://registry.npmmirror.com 再安装依赖
-
-### 本地运行
-
-```
 npm run serve
 ```
 
-> 将会同时运行前端界面与图片生成服务(`3000`端口为前端项目，`7001`端口为图片生成服务)：
->
-> ![](https://xp.palxp.cn/images/2023-7-16-1689498291322.png)
->
-> 如果你本地没有成功启动两个服务，可能是 win 系统不兼容，手动进 `screenshot` 目录安装依赖(`npm install`)并启动服务(`npm run dev`) 或者使用 VSCode 自带的终端来运行命令，注意不要使用 CMD。
+![](https://xp.palxp.cn/images/2023-7-16-1689498291322.png)
 
 访问 http://127.0.0.1:3000/ 查看网页。
 
-### 打包
+> 查看完整[说明文档](https://xp.palxp.cn/#/articles/1689319644311)
 
-| 前端页面          | 截图服务                                                                                         |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| `npm run v-build` | [/screenshot/README.md](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) |
+### 图片生成服务
 
-### 截图服务
+代码位于根目录 [/screenshot](https://github.com/palxiao/poster-design/tree/main/screenshot)，接口API文档点此查看：[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
 
-代码位于 [/screenshot](https://github.com/palxiao/poster-design/tree/main/screenshot) 目录下，查看[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
-
-> 打包注意事项与服务器配置相关请进入该目录下查看 README 文件说明。
-
-### 截图服务 Docker 部署
-
-可以通过 Docker 运行一个带 Linux 浏览器的容器，[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
+> 更多相关事项请进入该目录下查看 [README.md](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) 文件。 Docker 部署：[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)
 
 ### 服务端
 
-根据你的具体场景自行实现，目前本项目中的所有后端接口可参考：[接口 API 文档](https://xp.palxp.cn/apidoc/index.html)。
-
-### 抠图服务部署
-
-```
-docker run -d -p 5000:5000 --restart always danielgatis/rembg s
-```
+目前本项目演示 Demo 中的后端接口参考：[接口 API 文档](https://xp.palxp.cn/apidoc/index.html)。
 
 ### 感谢
 
 项目还使用或参考了一些优秀开源项目，包括但不限于：
 
 - [moveable](https://github.com/daybrush/moveable): 提供了画布中选择、拖动缩放等能力
-- [html2canvas](https://github.com/niklasvh/html2canvas): 前端生成图片兜底方案
+- [html2canvas](https://github.com/niklasvh/html2canvas): 前端生图的一种快捷方案
 - [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
-- [rembg](https://github.com/danielgatis/rembg): 图片删除背景，使用 u2net 预训练模型
+- [rembg](https://github.com/danielgatis/rembg): 图片抠图，使用 u2net 预训练模型
 
 ### Q&A
 
@@ -107,24 +75,37 @@ A：考虑到服务端的开发语言、数据库类型都可能不尽相同，�
 
 ### 其它
 
-项目最早使用 Vue2 开发，后改用 Vue3 重构，所以有部分代码混合了 Options 写法。
+项目最早使用 Vue2 开发，后改用 Vue3 重构，目前有部分代码混合了 Options 写法。
 
 或许你在工作中有类似的需求，或许你也对开发编辑器感兴趣，希望这个项目能给到你一些微薄帮助！
 
-目前本项目也还在迭代中，有很多的不足，我也是一边学习一边成长。
+目前本项目也还在持续迭代中，有很多的不足，我也是一边学习一边成长。
 
 [ -> 实时迭代计划文档](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
 
-开源不易，别忘了给本项目点个 **Star** 支持一下~
+### `Star`
+
+开源不易，别忘了给本项目点个 **Star** ~
 
 [![Star History Chart](https://api.star-history.com/svg?repos=palxiao/poster-design&type=Date)](https://star-history.com/#palxiao/poster-design&Date)
 
-### Contributions
+感谢所有支持本项目的朋友 :heart:
+
+[![Stargazers](https://bytecrank.com/nastyox/reporoster/php/stargazersSVG.php?user=palxiao&repo=poster-design)](https://github.com/palxiao/poster-design/stargazers)
+
+### `Fork`
+
+这些小伙伴都在使用迅排设计 :heart:
+
+[![Forkers](https://bytecrank.com/nastyox/reporoster/php/forkersSVG.php?user=palxiao&repo=poster-design)](https://github.com/palxiao/poster-design/network/members)
+
+### `Contributions`
 
 <a href="https://github.com/palxiao/poster-design/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=palxiao/poster-design" />
 </a>
 
-### LICENSE
+### `LICENSE`
 
-[MIT License](https://github.com/palxiao/poster-design/blob/main/LICENSE)
+本项目完全免费，遵循 [MIT 开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE)
+
