@@ -1,3 +1,4 @@
+
 **[在线体验网址](https://design.palxp.cn/)** | **[中文文档](https://xp.palxp.cn/)** | **[项目常见问题](https://xp.palxp.cn/#/articles/1689323321667)** | [架构及目录说明](https://xp.palxp.cn/#/articles/1689321259854)
 
 ---
@@ -8,7 +9,7 @@
 
 适用于海报图片生成、电商分享图、文章长图、视频/公众号封面等多种场景。
 
-![](https://xp.palxp.cn/images/2023-7-16-1689500112694.gif)
+[![](https://xp.palxp.cn/images/2023-7-16-1689500112694.gif)](https://design.palxp.cn/)
 
 - 丝滑的操作体验，丰富的交互细节，基础功能完善
 - 采用服务端生成图片，确保多端出图统一性，支持各种 CSS 特性
@@ -29,7 +30,7 @@
 - 图层操作，支持拖拽变更层级。
 - 颜色调色板，原生级取色器颜色吸管（Chrome）。
 
-### 快速开始
+## 快速开始
 
 ```
 git clone https://github.com/palxiao/poster-design.git
@@ -40,19 +41,23 @@ npm run serve
 
 ![](https://xp.palxp.cn/images/2023-7-16-1689498291322.png)
 
-访问 http://127.0.0.1:3000/ 查看网页。
-
-> 查看完整[说明文档](https://xp.palxp.cn/#/articles/1689319644311)
+访问 http://127.0.0.1:3000/ 查看网页。点此查看[完整说明文档](https://xp.palxp.cn/#/articles/1689319644311)。
 
 ### 图片生成服务
 
 代码位于根目录 [/screenshot](https://github.com/palxiao/poster-design/tree/main/screenshot)，接口API文档点此查看：[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
 
-> 更多相关事项请进入该目录下查看 [README.md](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) 文件。 Docker 部署：[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)
+> 更多相关事项请进入该目录下查看 [README.md](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) 文件。 Docker 部署：[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
 
 ### 服务端
 
 目前本项目演示 Demo 中的后端接口参考：[接口 API 文档](https://xp.palxp.cn/apidoc/index.html)。
+
+## 其它
+
+项目最早使用 Vue2 开发，后改用 Vue3 重构，目前有部分代码混合了 Options 写法。
+
+目前也还在持续迭代中，有很多的不足，我也是一边学习一边成长。[实时迭代计划文档](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92).
 
 ### 感谢
 
@@ -63,25 +68,7 @@ npm run serve
 - [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
 - [rembg](https://github.com/danielgatis/rembg): 图片抠图，使用 u2net 预训练模型
 
-### Q&A
-
-Q：**项目可以直接部署上线吗？**
-
-A：本项目支持本地运行体验完整功能，如需部署到生产，需自行开发配套的后端接口，自行部署图片生成服务，部署方法参考项目中的文档。
-
-Q：**后端源码不开源吗？**
-
-A：考虑到服务端的开发语言、数据库类型都可能不尽相同，且本项目中实现简单，代码不具备参考性，所以暂时只提供接口 API 文档。（目前仅是一些增删改查）
-
-### 其它
-
-项目最早使用 Vue2 开发，后改用 Vue3 重构，目前有部分代码混合了 Options 写法。
-
-或许你在工作中有类似的需求，或许你也对开发编辑器感兴趣，希望这个项目能给到你一些微薄帮助！
-
-目前本项目也还在持续迭代中，有很多的不足，我也是一边学习一边成长。
-
-[ -> 实时迭代计划文档](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)
+或许你在工作中有类似的需求，或许你对开发编辑器感兴趣，也希望这个项目能给到你一些微薄帮助！
 
 ### `Star`
 
