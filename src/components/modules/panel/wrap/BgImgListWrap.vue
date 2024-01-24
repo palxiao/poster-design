@@ -3,15 +3,15 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-22 09:56:18
+ * @LastEditTime: 2024-01-24 16:39:27
 -->
 <template>
   <div class="wrap">
-    <div class="color__box">
+    <div class="color__box" :style="modelStyle.color">
       <div v-for="c in colors" :key="c" :style="{ background: c }" class="color__item" @click="setBGcolor(c)"></div>
     </div>
     <ul v-if="showList" v-infinite-scroll="loadData" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
-      <div class="list">
+      <div class="list" :style="modelStyle.list">
         <imageTip v-for="(item, i) in bgList" :key="i + 'i'" :detail="item">
           <el-image class="list__img" :src="item.thumb" fit="cover" lazy loading="lazy" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)"></el-image>
         </imageTip>
@@ -23,11 +23,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, watch } from 'vue'
+import { defineComponent, reactive, toRefs, computed } from 'vue'
 import api from '@/api'
 import { mapActions, useStore } from 'vuex'
 
 export default defineComponent({
+  props: {
+    model: {
+      default: 'widgetPanel'
+    }
+  },
   setup(props) {
     const store = useStore()
     const state = reactive({
@@ -37,6 +42,19 @@ export default defineComponent({
       showList: true,
       colors: ['#000000ff', '#999999ff', '#CCCCCCff', '#FFFFFFff', '#E65353ff', '#FFD835ff', '#70BC59ff', '#607AF4ff', '#976BEEff'],
     })
+    // 临时用于改变样式
+    const models: any = {
+      widgetPanel: {
+        color: 'padding: 1.2rem 1rem',
+        list: 'grid-template-columns: auto auto auto;padding: 0 1rem;',
+      },
+      stylePanel: {
+        color: 'padding: 1.2rem 0;',
+        list: 'grid-template-columns: repeat(3, 76px);',
+      }
+    }
+    const modelStyle = computed(() => models[props.model])
+
     const pageOptions = { page: 0, pageSize: 20 }
 
     const loadData = () => {
@@ -91,6 +109,7 @@ export default defineComponent({
       load,
       setBGcolor,
       loadData,
+      modelStyle
     }
   },
   methods: {
@@ -135,14 +154,13 @@ export default defineComponent({
 // }
 .list {
   width: 100%;
-  padding: 0 1rem;
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-gap: 5px;
   &__img {
     cursor: pointer;
-    width: 92px;
+    width: 100%;
     height: 92px;
-    margin-bottom: 5px;
+    border-radius: 4px;
   }
   &__img:hover::before {
     content: ' ';
@@ -166,7 +184,6 @@ export default defineComponent({
 
 .color {
   &__box {
-    padding: 1.2rem 1rem;
     display: flex;
     flex-wrap: wrap;
   }

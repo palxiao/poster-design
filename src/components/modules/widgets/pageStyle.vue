@@ -1,6 +1,12 @@
 <template>
   <div id="page-style">
-    <el-collapse v-model="activeNames">
+    <div v-if="showBgLib" style="width: 256px;height: 100%;">
+      <span class="header-back" @click="showBgLib = false">
+        <i class="iconfont icon-right"></i> 选择背景
+      </span>
+      <bg-img-list-wrap style="padding-top: 2rem;" model="stylePanel" />
+    </div>
+    <el-collapse v-else v-model="activeNames">
       <el-collapse-item title="画布尺寸" name="1">
         <div class="position-size">
           <number-input v-model="innerElement.width" label="宽" :maxValue="5000" @finish="(value) => finish('width', value)" />
@@ -8,6 +14,7 @@
         </div>
       </el-collapse-item>
       <el-collapse-item title="背景设置" name="2">
+        <el-button style="width: 100%; margin: 0 0 1rem 0;" type="primary" link @click="showBgLib = true">在背景库中选择</el-button>
         <Tabs :value="mode" @update:value="onChangeMode">
           <TabPanel v-for="label in modes" :key="label" :label="label"></TabPanel>
         </Tabs>
@@ -15,16 +22,14 @@
         <!-- <bg-img-select :img="innerElement.backgroundImage"/> -->
         <div v-if="mode === '图片' && innerElement.backgroundImage" style="margin-top: 2rem">
           <el-image style="max-height: 428px" :src="innerElement.backgroundImage" fit="contain"></el-image>
-          <el-button style="width: 100%; margin-top: 0.7rem" size="small" @click="deleteBg">删除</el-button>
+          <el-button class="btn-wrap" size="small" @click="deleteBg">删除</el-button>
         </div>
-        <uploader v-show="mode === '图片'" style="width: 100%; margin-top: 0.7rem" @done="uploadImgDone">
-          <el-button style="width: 100%" plain>{{ innerElement.backgroundImage ? '替换背景' : '上传背景' }}图</el-button>
+        <uploader v-show="mode === '图片'" class="btn-wrap" @done="uploadImgDone">
+          <el-button style="width: 100%" plain>{{ innerElement.backgroundImage ? '更换背景' : '上传背景' }}图</el-button>
         </uploader>
-        <el-button v-show="mode === '图片' && innerElement.backgroundImage" style="width: 100%; margin-top: 0.7rem" size="small" @click="downloadBG">{{ downP ? downP + ' %' : '下载背景图' }}</el-button>
+        <el-button v-show="mode === '图片' && innerElement.backgroundImage" class="btn-wrap" size="small" @click="downloadBG">{{ downP ? downP + ' %' : '下载背景图' }}</el-button>
+
       </el-collapse-item>
-      <!-- <el-collapse-item title="其他设置" name="3">
-        <el-input v-model="innerElement.name" label="名称" @finish="(value) => finish('name', value)" />
-      </el-collapse-item> -->
     </el-collapse>
   </div>
 </template>
@@ -52,9 +57,9 @@ export default {
       tag: false,
       ingoreKeys: ['backgroundColor', 'name', 'width', 'height'],
       downP: 0,
-      // canvasRunning: false,
       mode: '颜色',
       modes: ['颜色', '图片'],
+      showBgLib: false
     }
   },
   computed: {
@@ -188,5 +193,26 @@ export default {
 }
 .select {
   margin-bottom: 10px;
+}
+.btn-wrap {
+  width: 100%; margin-top: 0.7rem;
+}
+.header {
+  &-back {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: #333;
+      font-size: 14px;
+      font-weight: 600;
+      height: 2.9rem;
+      position: absolute;
+      z-index: 2;
+      background: #ffffff;
+      width: 259px;
+      .icon-right {
+        transform: rotate(180deg);
+      }
+    }
 }
 </style>
