@@ -1,5 +1,4 @@
-
-**[在线体验网址](https://design.palxp.cn/)** | **[中文文档](https://xp.palxp.cn/)** | **[项目常见问题](https://xp.palxp.cn/#/articles/1689323321667)** | [架构及目录说明](https://xp.palxp.cn/#/articles/1689321259854)
+**[在线体验网址](https://design.palxp.cn/)** | **[中文文档](https://xp.palxp.cn/)** | [常见问题](https://xp.palxp.cn/#/articles/1689323321667) | [架构说明](https://xp.palxp.cn/#/articles/1689321259854)
 
 ---
 

@@ -54,7 +54,7 @@
 const NAME = 'w-text'
 
 import { mapGetters, mapActions } from 'vuex'
-import { fontWithDraw } from '@/utils/widgets/loadFontRule'
+// import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg.ts'
 
 export default {
@@ -107,7 +107,7 @@ export default {
   computed: {
     ...mapGetters(['dActiveElement']),
     isDraw() {
-      return this.$route.name === 'Draw' && fontWithDraw
+      return this.$route.name === 'Draw' // && fontWithDraw
     },
   },
   watch: {
@@ -121,11 +121,7 @@ export default {
         const isDone = font.value === this.loadFontDone
 
         if (font.url && !isDone) {
-          if (font.id && this.isDraw) {
-            this.loading = false
-            return
-          }
-          this.loading = true
+          this.loading = !this.isDraw
           const loadFont = new window.FontFace(font.value, `url(${font.url})`)
           await loadFont.load()
           document.fonts.add(loadFont)
