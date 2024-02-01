@@ -54,7 +54,7 @@
 const NAME = 'w-text'
 
 import { mapGetters, mapActions } from 'vuex'
-// import { fontWithDraw } from '@/utils/widgets/loadFontRule'
+import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg.ts'
 
 export default {
@@ -107,7 +107,7 @@ export default {
   computed: {
     ...mapGetters(['dActiveElement']),
     isDraw() {
-      return this.$route.name === 'Draw' // && fontWithDraw
+      return this.$route.name === 'Draw' && fontWithDraw
     },
   },
   watch: {
@@ -121,6 +121,12 @@ export default {
         const isDone = font.value === this.loadFontDone
 
         if (font.url && !isDone) {
+          if (font.id && this.isDraw) {
+            // 如果为绘制模式，且开启了字体抽取，那么会跳过加载字体url的逻辑
+            // 此前该功能在demo中存在换行bug，实际上是由于抽取字体时忽略了空格导致的
+            this.loading = false
+            return
+          }
           this.loading = !this.isDraw
           const loadFont = new window.FontFace(font.value, `url(${font.url})`)
           await loadFont.load()
