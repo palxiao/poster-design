@@ -3,7 +3,7 @@
  * @Date: 2022-01-11 17:54:14
  * @Description: 模板编辑组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-11 11:35:48
+ * @LastEditTime: 2024-02-11 00:07:36
 -->
 <template>
   <div class="wrap">
@@ -54,6 +54,8 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .wrap {
+  width: 100%;
+  height: 100%;
   position: relative;
 }
 .wrap:hover > .showMask {
