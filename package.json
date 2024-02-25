@@ -31,7 +31,7 @@
     "qr-code-styling": "^1.6.0-rc.1",
     "selecto": "^1.13.0",
     "throttle-debounce": "^3.0.1",
-    "vue": "^3.0.0",
+    "vue": "3.2.22",
     "vue-router": "^4.0.0-0",
     "vuedraggable": "^4.1.0",
     "vuex": "^4.0.0-0"
@@ -41,7 +41,7 @@
     "@types/throttle-debounce": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
-    "@vitejs/plugin-vue": "^1.2.4",
+    "@vitejs/plugin-vue": "1.9.3",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
@@ -57,13 +57,13 @@
     "eslint-config-alloy": "~4.1.0",
     "eslint-plugin-vue": "^7.12.1",
     "less": "^4.1.1",
-    "typescript": "~4.1.5",
+    "typescript": "^4.4.3",
     "unplugin-element-plus": "^0.7.1",
-    "vite": "^2.4.1",
+    "vite": "2.6.4",
     "vite-plugin-compression": "^0.3.0",
     "vue-cli-plugin-norm": "~1.2.2",
     "vue-eslint-parser": "^7.6.0",
-    "vue-tsc": "^0.2.0"
+    "vue-tsc": "0.3.0"
   },
   "browserslist": [
     "> 1%",

@@ -1,3 +1,10 @@
+<!--
+ * @Author: ShawnPhang
+ * @Date: 2023-09-18 17:34:44
+ * @Description:  
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-02-25 14:51:00
+-->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
     <div :style="style" class="top-nav">
@@ -34,7 +41,13 @@
     <!-- 旋转缩放组件 -->
     <Moveable />
     <!-- 遮罩百分比进度条 -->
-    <ProgressLoading :percent="downloadPercent" :text="downloadText" cancelText="取消" @cancel="downloadCancel" @done="downloadPercent = 0" />
+    <ProgressLoading
+      :percent="downloadPercent"
+      :text="downloadText"
+      cancelText="取消"
+      @cancel="downloadCancel"
+      @done="downloadPercent = 0"
+    />
   </div>
 </template>
 
@@ -69,7 +82,7 @@ export default defineComponent({
     zoomControl,
     lineGuides,
   },
-  mixins: [shortcuts],
+  // mixins: [shortcuts],
   setup() {
     !_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
@@ -129,6 +142,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
+    ...shortcuts.methods,
     changeLineGuides() {
       this.showLineGuides = !this.showLineGuides
     },
@@ -161,7 +175,7 @@ export default defineComponent({
       const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
       this.style.left = `-${scrollLeft}px`
     },
-    clickListener(e) {
+    clickListener(e: Event) {
       console.log('click listener', e)
     },
     optionsChange({ downloadPercent, downloadText }: any) {

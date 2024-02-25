@@ -19,15 +19,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
+import { defineComponent } from 'vue'
 import addMouseWheel from '@/common/methods/addMouseWheel'
 
 // 组件大小控制器
 const NAME = 'zoom-control'
-let holder = null
+let holder: number | undefined
 
-export default {
+// TODO: TS类型补全
+export default defineComponent({
   name: NAME,
   data() {
     return {
@@ -101,6 +103,7 @@ export default {
       ],
       otherIndex: -1,
       bestZoom: 0,
+      curAction: "",
     }
   },
   computed: {
@@ -154,7 +157,7 @@ export default {
       this.activezoomIndex = this.zoomList.length - 1
     }
     // 添加滚轮监听
-    addMouseWheel('page-design', (isDown) => {
+    addMouseWheel('page-design', (isDown: boolean) => {
       this.mousewheelZoom(isDown)
     })
     // 添加窗口大小监听
@@ -171,6 +174,7 @@ export default {
       clearTimeout(holder)
       holder = setTimeout(() => {
         const screen = document.getElementById('page-design')
+        if (!screen) return
         this.updateScreen({
           width: screen.offsetWidth,
           height: screen.offsetHeight,
@@ -184,12 +188,12 @@ export default {
         this.autoFixTop()
       }
     },
-    selectItem(index) {
+    selectItem(index: number) {
       this.activezoomIndex = index
       this.otherIndex = -1
       this.show = false
     },
-    close(e) {
+    close(_: MouseEvent) {
       this.show = false
     },
     add() {
@@ -214,7 +218,7 @@ export default {
       }
     },
     sub() {
-      this.curAction = null
+      this.curAction = null as any
       this.show = false
       if (this.otherIndex === 0) {
         this.otherIndex = -1
@@ -237,14 +241,14 @@ export default {
         this.activezoomIndex--
       }
     },
-    mousewheelZoom(down) {
+    mousewheelZoom(down: boolean) {
       const value = Number(this.dZoom.toFixed(0))
       if (down && value <= 1) return
       this.updateZoom(down ? value - 1 : value + 1)
-      this.zoom.text = value + '%'
+      this.zoom.text = (value + '%') as any
       this.autoFixTop()
     },
-    nearZoom(add) {
+    nearZoom(add?: boolean) {
       for (let i = 0; i < this.zoomList.length; i++) {
         this.activezoomIndex = i
         if (this.zoomList[i].value > this.bestZoom) {
@@ -266,8 +270,10 @@ export default {
       await this.$nextTick()
       const presetPadding = 60
       const el = document.getElementById('out-page')
+      if (!el) return
       // const clientHeight = document.body.clientHeight - 54
-      const parentHeight = el.offsetParent.offsetHeight - 54
+      
+      const parentHeight = (el.offsetParent as HTMLElement).offsetHeight - 54
       let padding = (parentHeight - el.offsetHeight) / 2
       if (typeof this.curAction === 'undefined') {
         padding += presetPadding / 2
@@ -276,7 +282,7 @@ export default {
       this.$store.commit('updatePaddingTop', padding > 0 ? padding : 0)
     },
   },
-}
+})
 </script>
 
 <style lang="less" scoped>
