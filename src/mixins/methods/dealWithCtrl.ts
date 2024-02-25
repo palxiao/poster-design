@@ -2,10 +2,11 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-09 16:29:54
  * @Description: 处理和ctrl建相关的操作
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-03-25 16:12:27
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-09 09:49:54
  */
 import store from '@/store'
+import handlePaste from './handlePaste'
 
 export default function dealWithCtrl(e: any, _this: any) {
   switch (e.keyCode) {
@@ -63,6 +64,7 @@ function copy() {
  * 粘贴
  */
 function paste() {
+  handlePaste()
   if (store.getters.dCopyElement.length === 0) {
     return
   } else if (store.getters.dActiveElement.isContainer && checkGroupChild(store.getters.dActiveElement.uuid, 'editable')) {

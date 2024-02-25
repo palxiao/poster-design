@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-15 12:57:02
+ * @LastEditTime: 2023-10-13 00:12:11
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -56,7 +56,7 @@ import designBoard from '@/components/modules/layout/designBoard.vue'
 import zoomControl from '@/components/modules/layout/zoomControl.vue'
 import HeaderOptions from './components/UploadTemplate.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
-import MyWorker from '@/utils/plugins/webWorker'
+// import MyWorker from '@/utils/plugins/webWorker'
 import { processPSD2Page } from '@/utils/plugins/psd'
 
 export default defineComponent({

@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-22 15:06:14
  * @Description: 设置图片类型元素
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-10 17:37:27
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-01-11 17:36:44
  */
 import store from '@/store'
 import { getImage } from '../getImgDetail'
@@ -29,6 +29,5 @@ export default async function setItem2Data(item: any) {
 
   cloneItem.canvasWidth = cloneItem.width * (store.getters.dZoom / 100)
   // cloneItem.canvasHeight = cloneItem.height * (store.getters.dZoom / 100)
-
   return cloneItem
 }

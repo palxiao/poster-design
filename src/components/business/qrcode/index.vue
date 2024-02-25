@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-16 09:15:52
  * @Description:  
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-08 17:53:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-01-31 15:43:10
 -->
 <template>
   <div ref="qrCodeDom" class="qrcode__wrap"></div>
@@ -46,7 +46,7 @@ export default defineComponent({
         type: 'canvas' as DrawType, // canvas svg
         data: props.value,
         image: props.image, // /favicon.svg
-        margin: 2,
+        margin: 0,
         qrOptions: {
           typeNumber: 3 as TypeNumber,
           mode: 'Byte' as Mode,

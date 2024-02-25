@@ -1,12 +1,12 @@
 <template>
-  <div class="color__select">
+  <div class="color__select" :style="{ width }">
     <p v-if="label" class="input-label">
       {{ label }}
     </p>
     <div class="content">
-      <el-popover placement="left-end" width="auto">
+      <el-popover placement="left-end" trigger="click" width="auto" @after-enter="enter" @before-leave="hide">
         <!-- eslint-disable-next-line vue/no-v-model-argument -->
-        <color-picker v-model:value="innerColor" :modes="['纯色']" @blur="inputBlur" @nativePick="dropColor" />
+        <color-picker v-model:value="innerColor" :modes="modes" @change="colorChange" @nativePick="dropColor" />
         <template #reference>
           <div class="color__bar" :style="{ background: innerColor }"></div>
         </template>
@@ -35,9 +35,15 @@ export default defineComponent({
     modelValue: {
       default: '',
     },
+    width: {
+      default: '100%',
+    },
+    modes: {
+      default: () => ['纯色'],
+    },
   },
-  emits: ['finish', 'update:modelValue'],
-  setup(props, context) {
+  emits: ['finish', 'update:modelValue', 'change'],
+  setup(props, { emit }) {
     const store = useStore()
     const state: any = reactive({
       innerColor: '#ffffffff',
@@ -50,7 +56,9 @@ export default defineComponent({
     // })
 
     onMounted(() => {
-      state.innerColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
+      if (props.modelValue) {
+        state.innerColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
+      }
     })
     const dropColor = async (e: any) => {
       console.log('取色: ', e)
@@ -75,13 +83,13 @@ export default defineComponent({
     )
 
     const updateValue = (value: any) => {
-      context.emit('update:modelValue', value)
+      emit('update:modelValue', value)
     }
     const activeChange = (value: any) => {
       updateValue(value)
     }
     const onChange = () => {
-      context.emit('finish', state.innerColor)
+      emit('finish', state.innerColor)
     }
     // const addHistory = debounce(300, false, async (value) => {
     //   store.dispatch('pushColorToHistory', value)
@@ -94,6 +102,18 @@ export default defineComponent({
       state.innerColor = color
     }
 
+    const enter = () => {
+      store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+    }
+
+    const hide = () => {
+      store.commit('setShowMoveable', true) // 恢复上一次的选择框
+    }
+
+    const colorChange = (e) => {
+      emit('change', e)
+    }
+
     return {
       ...toRefs(state),
       // dColorHistory,
@@ -101,6 +121,9 @@ export default defineComponent({
       onChange,
       dropColor,
       inputBlur,
+      enter,
+      hide,
+      colorChange,
     }
   },
 })
@@ -115,15 +138,16 @@ export default defineComponent({
     border-radius: 3px;
     width: 100%;
     height: 28px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    // border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 6%);
     cursor: pointer;
   }
   &__bar:hover {
-    border: 1px solid#bdbfc5;
+    // border: 1px solid #bdbfc5;
+    box-shadow: inset 0 0 0 1px #bdbfc5;
   }
 }
 .color__select {
-  width: 100%;
   .content {
     width: 100%;
     align-items: center;

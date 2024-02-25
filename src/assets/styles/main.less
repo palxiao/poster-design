@@ -1,3 +1,5 @@
+// Some primary CSS, and reset CSS
+
 @font-face {
   font-family: TitleFont;
   src: url(../fonts/xpsj.subset.woff2) format('woff2');
@@ -15,10 +17,14 @@ body {
   -webkit-font-smoothing: antialiased;
   color: #333333;
   font-family: Hiragino Sans GB, Hiragino Sans GB W3, Arial, Microsoft Yahei, STHeiti, sans-serif;
+  overflow: hidden;
 }
 
 * {
   box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
   // font-size: 14px;
   scrollbar-width: none; /* 火狐滚动条无法自定义宽度，只能通过此属性使滚动条宽度变细 */
   -ms-overflow-style: none; /* 隐藏滚动条（在IE和Edge两个浏览器中很难更改样式，固采取隐藏方式） */
@@ -56,7 +62,9 @@ select:-webkit-autofill:focus {
 }
 
 a {
-  text-decoration: none;
+  // text-decoration: none;
+  color: inherit;
+  text-decoration: inherit;
 }
 ul,
 ol,
@@ -73,9 +81,27 @@ h6 {
 li {
   list-style: none;
 }
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  vertical-align: middle;
+}
+
 img {
   -webkit-user-drag: none;
   user-select: none;
+}
+img,
+video {
+  max-width: 100%;
+  height: auto;
 }
 input {
   outline: 0;
@@ -105,5 +131,5 @@ p {
   pointer-events: none;
 }
 .hide {
-  opacity: 0;
+  opacity: 0 !important;
 }

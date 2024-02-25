@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import api from '@/api'
 import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import Preload from '@/utils/plugins/preload'
@@ -33,6 +33,9 @@ export default defineComponent({
       ...toRefs(state),
     }
   },
+  computed: {
+    ...mapGetters(['dPage']),
+  },
   mounted() {
     this.initGroupJson(JSON.stringify(wGroup.setting))
     this.$nextTick(() => {
@@ -40,16 +43,25 @@ export default defineComponent({
     })
   },
   methods: {
-    ...mapActions(['initGroupJson', 'setTemplate']),
+    ...mapActions(['initGroupJson', 'setTemplate', 'addGroup']),
     async load() {
       let loadFlag = false
-      const { id, tempid } = this.$route.query
+      const { id, tempid, tempType: type } = this.$route.query
       if (id || tempid) {
-        const { data } = await api.home[id ? 'getWorks' : 'getTempDetail']({ id: id || tempid })
+        const { data, width, height } = await api.home[id ? 'getWorks' : 'getTempDetail']({ id: id || tempid, type })
         const content = JSON.parse(data)
+        const widgets = type == 1 ? content : content.widgets
 
-        this.$store.commit('setDPage', content.page)
-        id ? this.$store.commit('setDWidgets', content.widgets) : this.setTemplate(content.widgets)
+        if (type == 1) {
+          this.dPage.width = width
+          this.dPage.height = height
+          this.dPage.backgroundColor = '#ffffff00'
+          this.addGroup(content)
+        } else {
+          this.$store.commit('setDPage', content.page)
+          id ? this.$store.commit('setDWidgets', widgets) : this.setTemplate(widgets)
+        }
+
         await this.$nextTick()
 
         const imgsData: any = []
@@ -57,7 +69,7 @@ export default defineComponent({
         const fontLoaders: any = []
         const fontContent: any = {}
         let fontData: any = []
-        content.widgets.forEach((item: any) => {
+        widgets.forEach((item: any) => {
           if (item.fontClass && item.fontClass.value) {
             const loader = new FontFaceObserver(item.fontClass.value)
             fontData.push(item.fontClass)
@@ -71,29 +83,25 @@ export default defineComponent({
           }
           // 收集图片元素、svg元素
           try {
-            if (item.imgUrl && !item.isNinePatch) {
+            if (item.svgUrl && item.type === 'w-svg') {
+              const cNodes: any = (window as any).document.getElementById(item.uuid).childNodes
+              svgsData.push(cNodes)
+            } else if (item.imgUrl && !item.isNinePatch) {
               const cNodes: any = (window as any).document.getElementById(item.uuid).childNodes
               for (const el of cNodes) {
                 if (el.className && el.className.includes('img__box')) {
                   imgsData.push(el.firstChild)
                 }
               }
-            } else if (item.svgUrl) {
-              const cNodes: any = (window as any).document.getElementById(item.uuid).childNodes
-              svgsData.push(cNodes)
             }
           } catch (e) {}
         })
         // TODO优化: 背景图无法检测是否加载完毕，考虑应该将设置背景作为独立事件
-        if (content.page.backgroundImage) {
+        if (content.page?.backgroundImage) {
           const preloadBg = new Preload([content.page.backgroundImage])
           await preloadBg.imgs()
         }
         try {
-          const { list } = await api.material.getFonts({ ids: fontData.map((x: any) => x.id) })
-          fontData.forEach((item: any) => {
-            item.url = list.find((x: any) => x.oid == item.id)?.ttf
-          })
           fontWithDraw && (await font2style(fontContent, fontData))
           // console.log('1. base64 yes')
           const preload = new Preload(imgsData)
@@ -136,5 +144,11 @@ export default defineComponent({
     top: 0 !important;
     left: 0 !important;
   }
+}
+</style>
+
+<style lang="less">
+.layer-hover {
+  outline: 0 !important;
 }
 </style>

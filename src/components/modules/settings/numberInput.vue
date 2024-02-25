@@ -11,7 +11,11 @@
       </div>
     </div>
   </div> -->
-  <div class="number-input2">
+  <div v-if="type === 'simple'">
+    <span class="prepend">{{ prepend }}</span>
+    <input :class="{ 'small-input': true, disable: !editable }" type="text" :value="modelValue" :readonly="editable ? false : 'readonly'" @input="updateValue($event.target.value)" @focus="focusInput" @blur="blurInput" @keyup="verifyNumber" @keydown="(e) => opNumber(e)" />
+  </div>
+  <div v-else class="number-input2">
     <div class="input-wrap" @click="edit">
       <input :class="{ 'real-input': true, disable: !editable }" type="text" :value="modelValue" :readonly="editable ? false : 'readonly'" @input="updateValue($event.target.value)" @focus="focusInput" @blur="blurInput" @keyup="verifyNumber" @keydown="(e) => opNumber(e)" />
     </div>
@@ -46,6 +50,9 @@ export default {
       default: 1,
     },
     maxValue: {},
+    minValue: {},
+    type: {},
+    prepend: {},
   },
   emits: ['finish', 'update:modelValue'],
   data() {
@@ -73,24 +80,25 @@ export default {
           this.updateValue(Number(this.modelValue).toFixed(2))
         }, 10)
       }
-      // 超过阈值时
+      // 限定数字范围
       if (this.maxValue && this.modelValue > this.maxValue) {
         setTimeout(() => {
           this.updateValue(Number(this.maxValue))
         }, 10)
+      } else if (typeof this.minValue === 'number' && this.modelValue < this.minValue) {
+        setTimeout(() => {
+          this.updateValue(Number(this.minValue))
+        }, 10)
       }
     },
     updateValue(value) {
-      this.$emit('update:modelValue', value)
+      this.$emit('update:modelValue', value === '-' ? '-' : Number(value))
     },
     up() {
       this.updateValue(parseInt(this.modelValue || 0, 10) + this.step)
     },
     down() {
       let value = parseInt(this.modelValue || 0, 10) - this.step
-      if (value < 0) {
-        value = 0
-      }
       this.updateValue(value)
     },
     opNumber(e) {
@@ -108,9 +116,11 @@ export default {
       let value = String(this.modelValue)
       let len = value.length
       let newValue = ''
-      for (let i = 0; i < len; ++i) {
+      let isNegative = value[0] === '-'
+      // 判断是否连续字符，否则置为0
+      for (let i = isNegative ? 1 : 0; i < len; ++i) {
         let c = value[i]
-        if (c >= '0' && c <= '9') {
+        if (c == '.' || (c >= '0' && c <= '9')) {
           newValue += c
         } else {
           break
@@ -119,13 +129,20 @@ export default {
       if (newValue === '') {
         newValue = '0'
       }
-      this.updateValue(parseInt(newValue, 10))
+      if (isNegative) {
+        newValue = '-' + (newValue === '0' ? '' : newValue)
+      }
+      this.updateValue(newValue)
+      // this.updateValue(parseInt(newValue, 10))
     },
     focusInput() {
       this.inputBorder = true
       this.tagText = this.modelValue
     },
     blurInput() {
+      if (this.modelValue === '-') {
+        this.updateValue(0)
+      }
       this.inputBorder = false
       if (this.modelValue !== this.tagText) {
         this.$emit('finish', this.modelValue)
@@ -226,5 +243,21 @@ export default {
     text-align: left;
     width: 100%;
   }
+}
+.small-input {
+  font-size: 12px;
+  width: 100%;
+  padding: 4px 7px;
+  box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
+  border-radius: var(--el-input-border-radius, var(--el-border-radius-base));
+  cursor: text;
+}
+.prepend {
+  font-size: 12px;
+  position: absolute;
+  margin: -14px 0 0 3px;
+  transform: scale(0.85);
+  transform-origin: left;
+  color: #888888;
 }
 </style>

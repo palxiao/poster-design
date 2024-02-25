@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2020-07-22 20:13:14
  * @Description:
- * @LastEditors: ShawnPhang <site: m.palxp.cn>
- * @LastEditTime: 2023-09-04 14:08:10
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-16 10:03:51
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
 const uuid = require('../utils/uuid.ts')
@@ -48,6 +48,7 @@ module.exports = {
      *
      * @apiParam {String|Number} id (可选) 截图id，高优先级
      * @apiParam {String|Number} tempid (可选) 模板id，低优先级，无id时取该值
+     * @apiParam {String|Number} tempType (可选) 区分模板和组件类型，临时用
      * @apiParam {String} width (必传)视窗大小
      * @apiParam {String} height (必传)视窗大小
      * @apiParam {String} screenshot_url 可选
@@ -55,19 +56,20 @@ module.exports = {
      * @apiParam {String} size 可选, 按比例缩小到宽度
      * @apiParam {String} quality 可选, 质量
      */
-    let { id, tempid, width, height, screenshot_url, type = 'file', size, quality } = req.query
+    let { id, tempid, tempType, width, height, screenshot_url, type = 'file', size, quality } = req.query
     const url = (screenshot_url || drawLink) + `${id ? '?id=' : '?tempid='}`
     id = id || tempid
     const path = filePath + `${id}-screenshot.png`
-    const thumbPath = type === 'cover' ? filePath + `${id}-cover.jpg` : null
+    const thumbPath = type === 'cover' && tempType != 1 ? filePath + `${id}-cover.jpg` : null
 
     if (id && width && height) {
       if (queueList.length > upperLimit) {
         res.json({ code: 200, msg: '服务器表示顶不住啊，等等再来吧~' })
         return
       }
-      // console.log(url + id, path, thumbPath);
-      queueRun(saveScreenshot, url + id, { width, height, path, thumbPath, size, quality })
+      const targetUrl = url + id + `${tempType?'&tempType='+tempType:''}`
+      // console.log(targetUrl, path, thumbPath);
+      queueRun(saveScreenshot, targetUrl, { width, height, path, thumbPath, size, quality })
         .then(() => {
           res.setHeader('Content-Type', 'image/jpg')
           // const stats = fs.statSync(path)

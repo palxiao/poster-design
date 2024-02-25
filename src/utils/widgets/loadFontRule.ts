@@ -1,29 +1,34 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2023-08-23 17:37:16
- * @Description: 提取字体子集，如服务端不支持请关闭该功能，以保证页面能加载字体
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-08-23 17:48:34
+ * @Description: 提取字体子集
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-14 18:31:29
  */
+/**
+ * 只有ttf/otf这种原始字体支持提取，如果服务端不支持该功能请设置false，以保证页面能加载字体。
+ */
+import _config from '@/config'
+export const fontWithDraw = _config.supportSubFont // true 开启，false 关闭
+
 import api from '@/api'
 import { blob2Base64, generateFontStyle } from '@/common/methods/fonts/utils'
-
-export const fontWithDraw = true // true开启，false关闭
 
 export const font2style = async (fontContent: any, fontData: any = []) => {
   return new Promise((resolve: Function) => {
     Promise.all(
-      // 提取字体子集。只有ttf/otf这种原始字体支持提取，如果服务端不支持则关闭该功能，以保证页面能加载字体。
       Object.keys(fontContent).map(async (key) => {
         const font = fontData.find((font: any) => font.value === key) as any
         if (font.id) {
+          const extra = font.oid ? {} : { responseType: 'blob' }
+          const params = {
+            font_id: font.oid,
+            id: font.id,
+            content: shortText(fontContent[key]),
+          }
           try {
-            const base64 = await api.material.getFontSub({
-              font_id: font.id,
-              url: font.url,
-              content: 'Aa' + fontContent[key],
-            })
-            fontContent[key] = base64
+            const result = await api.material.getFontSub(params, extra)
+            fontContent[key] = font.oid ? result : await blob2Base64(result)
           } catch (e) {
             console.log('字体获取失败', e)
           }
@@ -36,4 +41,10 @@ export const font2style = async (fontContent: any, fontData: any = []) => {
       resolve()
     })
   })
+}
+
+function shortText(text: string) {
+  // 文字去重
+  const textArr = Array.from(new Set(text.split('')))
+  return textArr.join('')
 }

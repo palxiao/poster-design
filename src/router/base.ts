@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-19 18:43:22
  * @Description: 前端路由
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-25 17:00:52
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-19 17:32:04
  */
 export default [
   // {

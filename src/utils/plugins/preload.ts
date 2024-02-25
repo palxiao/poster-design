@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-12-24 15:13:58
  * @Description: 资源加载
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 14:25:53
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-19 17:19:07
  */
 export default class PreLoad {
   private i: number

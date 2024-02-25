@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
- * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
- * @LastEditTime: 2023-09-01 14:14:27
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-01-11 17:59:57
 -->
 <template>
   <div class="wrap">
@@ -15,27 +15,22 @@
       </el-input>
     </div>
     <el-divider content-position="left">推荐组件</el-divider> -->
-    <div v-show="!currentCategory" class="content__wrap">
-      <div v-for="(t, ti) in types" :key="ti + 't'">
-        <div v-if="showList[ti]?.length > 0" class="types__header" @click="selectTypes(t)">
-          <span style="flex: 1">{{ t.name }}</span>
-          <span class="types__header-more">全部<i class="iconfont icon-right"></i></span>
-        </div>
-        <div v-else class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
+    <classHeader v-show="!currentCategory" :types="types" @select="selectTypes">
+      <template v-slot="{ index }">
         <div class="list-wrap">
-          <div v-for="(item, i) in showList[ti]" :key="i + 'sl'" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
-            <el-image class="list__img-thumb" :src="item.cover" fit="contain"></el-image>
+          <div v-for="(item, i) in showList[index]" :key="i + 'sl'" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
+            <el-image class="list__img-thumb" :src="item.cover" fit="contain" lazy loading="lazy"></el-image>
           </div>
         </div>
-      </div>
-    </div>
+      </template>
+    </classHeader>
 
     <ul v-if="currentCategory" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
-      <span class="types__header-back" @click="back"><i class="iconfont icon-right"></i>{{ currentCategory.name }}</span>
+      <classHeader :is-back="true" @back="back">{{ currentCategory.name }}</classHeader>
       <el-space fill wrap :fillRatio="30" direction="horizontal" class="list">
         <div v-for="(item, i) in list" :key="i + 'i'" class="list__item" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
           <!-- <edit-model :isComp="true" @action="action($event, item, i)"> -->
-          <el-image class="list__img" :src="item.cover" fit="contain"> </el-image>
+          <el-image class="list__img" :src="item.cover" fit="contain" lazy loading="lazy" />
           <!-- </edit-model> -->
         </div>
       </el-space>
@@ -47,20 +42,22 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue'
-// import { ElDivider } from 'element-plus'
 import api from '@/api'
-import { mapActions } from 'vuex'
+import { useStore } from 'vuex'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
-import setImageData from '@/common/methods/DesignFeatures/setImage'
-const dragHelper = new DragHelper()
-let isDrag = false
-let startPoint = { x: 99999, y: 99999 }
-let tempDetail: any = null
+import setItem2Data from '@/common/methods/DesignFeatures/setImage'
 
 export default defineComponent({
-  // components: { ElDivider },
+  components: {},
   setup(props) {
+    // 拖拽效果相关
+    const dragHelper = new DragHelper()
+    let isDrag = false
+    let startPoint = { x: 99999, y: 99999 }
+    let tempDetail: any = null
+    // 缓存组件用以减少接口请求的次数
+    const compsCache: any = {}
     const state = reactive({
       loading: false,
       loadDone: false,
@@ -70,12 +67,12 @@ export default defineComponent({
       types: [],
       showList: [],
     })
+    const store = useStore()
     const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
     onMounted(async () => {
       if (state.types.length <= 0) {
         const types = await api.material.getKinds({ type: 3 })
-        types.shift()
         state.types = types
         for (const iterator of types) {
           const { list } = await api.home.getCompList({
@@ -89,11 +86,11 @@ export default defineComponent({
     })
     const mouseup = (e: any) => {
       e.preventDefault()
-      setTimeout(() => {
-        isDrag = false
-        tempDetail = null
-        startPoint = { x: 99999, y: 99999 }
-      }, 10)
+      // setTimeout(() => {
+      isDrag = false
+      tempDetail = null
+      startPoint = { x: 99999, y: 99999 }
+      // }, 10)
     }
     const mousemove = (e: any) => {
       e.preventDefault()
@@ -150,29 +147,31 @@ export default defineComponent({
       state.currentCategory = null
     }
 
-    return {
-      ...toRefs(state),
-      load,
-      action,
-      back,
-      selectTypes,
-      mouseup,
-      mousemove,
+    const dragStart = async (e: any, { id, width, height, cover }: any) => {
+      startPoint = { x: e.x, y: e.y }
+      // tempDetail = await api.home.getTempDetail({ id, type: 1 })
+      // let finalWidth = tempDetail.width
+      // 计算出拖拽到画布数值
+      const img = await setItem2Data({ width, height, url: cover })
+      dragHelper.start(e, img.canvasWidth)
+      tempDetail = await getCompDetail({ id, type: 1 })
+      if (Array.isArray(JSON.parse(tempDetail.data))) {
+        store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
+      } else {
+        store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
+      }
     }
-  },
-  methods: {
-    ...mapActions(['addGroup', 'addWidget']),
-    async selectItem(item: any) {
+
+    const selectItem = async (item: any) => {
       if (isDrag) {
         return
       }
-      this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择
-      tempDetail = tempDetail || (await api.home.getTempDetail({ id: item.id, type: 1 }))
+      store.commit('setShowMoveable', false) // 清理掉上一次的选择
+      tempDetail = tempDetail || (await getCompDetail({ id: item.id, type: 1 }))
       // let group = JSON.parse(tempDetail.data)
       const group: any = await getComponentsData(tempDetail.data)
       let parent: any = { x: 0, y: 0 }
-      const { width: pW, height: pH } = this.$store.getters.dPage
-      console.log(group)
+      const { width: pW, height: pH } = store.getters.dPage
 
       Array.isArray(group) &&
         group.forEach((element: any) => {
@@ -183,29 +182,38 @@ export default defineComponent({
           element.left += (pW - parent.width) / 2
           element.top += (pH - parent.height) / 2
         })
-        this.addGroup(group)
+        store.dispatch('addGroup', group)
       } else {
         group.text && (group.text = decodeURIComponent(group.text))
         group.left = pW / 2 - group.fontSize * (group.text.length / 2)
         group.top = pH / 2 - group.fontSize / 2
-        this.addWidget(group)
+        store.dispatch('addWidget', group)
       }
-    },
-    async dragStart(e: any, { id }: any) {
-      startPoint = { x: e.x, y: e.y }
-      tempDetail = await api.home.getTempDetail({ id, type: 1 })
-      let finalWidth = tempDetail.width
-      if (finalWidth) {
-        const img = await setImageData(tempDetail)
-        finalWidth = img.canvasWidth
-      }
-      dragHelper.start(e, finalWidth)
-      if (Array.isArray(JSON.parse(tempDetail.data))) {
-        this.$store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
-      } else {
-        this.$store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
-      }
-    },
+    }
+
+    function getCompDetail(params: any) {
+      // 有缓存则直接返回组件数据，否则请求获取数据
+      return new Promise((resolve) => {
+        if (compsCache[params.id]) {
+          resolve(compsCache[params.id])
+        } else api.home.getTempDetail(params).then((res: any) => {
+          resolve(res)
+          compsCache[params.id] = res // 缓存请求的组件数据
+        })
+      })
+    }
+
+    return {
+      ...toRefs(state),
+      load,
+      action,
+      back,
+      selectTypes,
+      mouseup,
+      mousemove,
+      dragStart,
+      selectItem,
+    }
   },
 })
 </script>
@@ -259,76 +267,9 @@ export default defineComponent({
   font-size: 14px;
   color: #999;
 }
-
-.types {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 10px 0 0 6px;
-  &__item {
-    position: relative;
-    width: 64px;
-    // height: 44px;
-    height: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-weight: 600;
-    font-size: 13px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 8px 4px 0 4px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-shadow: 0 1px 0 rgb(0 0 0 / 25%);
-    opacity: 0.5;
-  }
-  &--select {
-    opacity: 1;
-  }
-  &__header {
-    user-select: none;
-    cursor: pointer;
-    margin-bottom: 12px;
-    font-size: 13px;
-    color: #333333;
-    display: flex;
-    align-items: center;
-    &-more {
-      display: flex;
-      align-items: center;
-      color: #a0a0a0;
-      font-size: 13px;
-    }
-    &-back {
-      cursor: pointer;
-      padding: 0 0 0 0.6rem;
-      display: flex;
-      align-items: center;
-      color: #333;
-      font-size: 16px;
-      height: 2.9rem;
-      position: absolute;
-      z-index: 2;
-      background: #ffffff;
-      width: 320px;
-      .icon-right {
-        transform: rotate(180deg);
-      }
-    }
-  }
-}
 .list-wrap {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1.8rem;
-}
-.content {
-  &__wrap {
-    padding: 0.5rem 1rem;
-    height: 100%;
-    overflow: auto;
-    padding-bottom: 100px;
-  }
 }
 </style>

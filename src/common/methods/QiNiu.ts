@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-29 20:35:31
  * @Description: 七牛上传方法
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-11 22:02:12
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-05 16:11:55
  */
 import dayjs from 'dayjs'
 import api from '@/api/album'
@@ -18,7 +18,7 @@ export default {
   upload: async (file: File, options: Options, cb?: Function) => {
     const win: any = window
     let name = ''
-    const suffix = file.type.split('/')[1] // 文件后缀
+    const suffix = file.type.split('/')[1] || 'png' // 文件后缀
     if (!options.fullPath) {
       // const DT: any = await exifGetTime(file) // 照片时间
       const DT: any = new Date()

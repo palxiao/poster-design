@@ -1,16 +1,16 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2021-07-13 02:48:38
- * @Description: 接口规则：只有正确code为200时返回result结果对象，错误返回整个结果对象
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-31 09:34:34
+ * @Description: 本地测试项目请勿修改此文件
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-01-11 17:36:33
  */
 import axios from 'axios'
 import store from '@/store'
 import app_config from '@/config'
 
 axios.defaults.timeout = 30000
-// axios.defaults.headers.Authorization = 'Bearer ';
+axios.defaults.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTc4ODU3NDc1MDU4NX0.L_t6DFD48Dm6rUPfgIgOWJkz18En1m_-hhMHcpbxliY';
 // const version = app_config.VERSION;
 const baseUrl = app_config.API_URL
 
@@ -48,14 +48,11 @@ axios.interceptors.response.use(
   (res: Type.Object) => {
     // store.dispatch('hideLoading');
 
-    // if (res.status !== 200) {
-    //   // return falseInfo
-    // }
+    // 接口规则：只有正确code为200时返回result结果对象，错误返回整个结果对象
 
     if (!res.data) {
       return Promise.reject(res)
     }
-    // console.log(res.headers.authorization);
     if (res.data.code === 401) {
       console.log('登录失效')
       store.commit('changeOnline', false)
@@ -71,10 +68,6 @@ axios.interceptors.response.use(
   },
   (error) => {
     // if (error.response.status === 401) {
-    //   setTimeout(() => {
-    //     window.localStorage.clear()
-    //     // window.location.href = app_config.login + "?" + "redirect=" + window.location.href;
-    //   }, 1000)
     // }
     store.dispatch('hideLoading')
     return Promise.reject(error)
@@ -89,21 +82,19 @@ const fetch = (url: string, params: Type.Object, type: string | undefined = 'get
     // store.commit('loading', '加载中..');
   }
 
-  const objtest: Type.Object = {}
-  // const { value } = JSON.parse(localStorage.getItem('pro__Access-Token') || '{}')
-  // objtest.Authorization = `Bearer ${value}`
+  const token = localStorage.getItem('xp_token')
+  const headerObject: Type.Object = { }
+  token && (headerObject.authorization = token)
+  
   if (type === 'get') {
     return axios.get(url, {
-      // headers: {
-      //   // Authorization: String(localStorage.getItem('token')),
-      // },
-      headers: Object.assign(objtest, exheaders),
+      headers: Object.assign(headerObject, exheaders),
       params,
       ...extra,
     })
   } else {
     return (axios as Type.Object)[type](url, params, {
-      headers: Object.assign(objtest, exheaders),
+      headers: Object.assign(headerObject, exheaders),
       ...extra,
     })
   }

@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2023-07-10 14:58:48
  * @Description: 拖拽优化
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-11 11:10:03
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-11-22 18:11:15
  */
 import store from '@/store'
 export default class dragHelper {
@@ -18,6 +18,8 @@ export default class dragHelper {
         const { offsetX, offsetY, width, height } = this.initial
         // this.moveFlutter(e.pageX - offsetX, e.pageY - offsetY, this.distance(e))
         this.moveFlutter(e.pageX - width / 2, e.pageY - height / 2, this.distance(e))
+      } else {
+        this.finish()
       }
     })
     // 鼠标抬起
@@ -91,6 +93,9 @@ export default class dragHelper {
   }
   // 结束/完成处理（动画）
   private finish(done = false) {
+    if (!this.dragging) {
+      return
+    }
     this.dragging = false
     store.commit('setDraging', false)
     store.commit('selectItem', {})

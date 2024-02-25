@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:41:53
  * @Description: 
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-12 12:50:39
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-09 00:59:44
 -->
 <template>
   <div id="w-image-style">
@@ -21,12 +21,12 @@
         <el-button style="width: 100%; margin-bottom: 12px" plain @click="openPicBox">替换图片</el-button>
         <div class="options">
           <el-button v-if="innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
-          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" />裁剪</el-button>
-          <el-button @click="openImageCutout" plain>抠图</el-button>
+          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> 裁剪</el-button>
+          <el-button plain @click="openImageCutout"><i class="icon sd-AIkoutu" /> 抠图</el-button>
           <!-- <uploader class="options__upload" @done="uploadImgDone">
             <el-button size="small" plain>替换图片</el-button>
           </uploader> -->
-          <el-button size="small" disabled plain @click="openCropper">图片美化</el-button>
+          <el-button size="small" disabled plain @click="openCropper">美化</el-button>
         </div>
         <!-- <container-wrap @change="changeContainer" />
         <br /> -->
@@ -52,7 +52,7 @@
       <i style="padding: 0 8px; cursor: pointer" class="icon sd-queren" @click="imgCrop(false)" />
     </inner-tool-bar>
     <picBox ref="picBox" @select="selectDone" />
-    <imageCutout ref="imageCutout" />
+    <imageCutout ref="imageCutout" @done="cutImageDone" />
   </div>
 </template>
 
@@ -241,8 +241,23 @@ export default {
     openPicBox() {
       this.$refs.picBox.open()
     },
+    // 打开抠图
     openImageCutout() {
-      this.$refs.imageCutout.open()
+      fetch(this.innerElement.imgUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], `image_${Math.random()}.jpg`, { type: 'image/jpeg' })
+          this.$refs.imageCutout.open(file)
+        })
+        .catch((error) => {
+          console.error('获取图片失败:', error)
+        })
+    },
+    // 完成抠图
+    async cutImageDone(url) {
+      setTimeout(() => {
+        this.innerElement.imgUrl = url
+      }, 300)
     },
   },
 }
@@ -276,6 +291,9 @@ export default {
     width: auto;
     margin-left: 10px;
     display: inline-block;
+  }
+  .icon {
+    margin-right: 0.3em;
   }
 }
 

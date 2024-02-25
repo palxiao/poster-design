@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-02 09:41:41
  * @Description: 
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-03-15 10:22:14
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-16 00:30:03
 -->
 <template>
   <div
@@ -144,7 +144,6 @@ export default {
       // const opacity = this.$refs.widget.style.opacity
       // this.$refs.widget.style.opacity = 1
       setTimeout(() => {
-        console.log(this.temp)
         if (!this.temp) {
           return
         }

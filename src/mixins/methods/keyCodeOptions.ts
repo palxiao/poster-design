@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-09 14:20:09
  * @Description: 处理常用操作
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-30 17:29:28
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-11-30 10:09:55
  */
 import store from '@/store'
 
@@ -24,12 +24,19 @@ export default function keyCodeOptions(e: any, params: any) {
       break
     case 46:
     case 8:
-      if (store.getters.dActiveElement.isContainer) {
-        if (checkGroupChild(store.getters.dActiveElement.uuid, 'editable')) {
-          return
+      {
+        if (store.getters.dActiveElement.isContainer) {
+          if (checkGroupChild(store.getters.dActiveElement.uuid, 'editable')) {
+            return
+          }
         }
+        const { type, editable }: any = store.getters.dActiveElement
+
+        if (type === 'w-text') {
+          // 不在编辑状态则执行删除
+          !editable && store.getters.showMoveable && store.dispatch('deleteWidget')
+        } else store.dispatch('deleteWidget')
       }
-      !store.getters.dActiveElement.editable && store.dispatch('deleteWidget')
       break
   }
 }

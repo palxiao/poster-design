@@ -1,3 +1,10 @@
+<!--
+ * @Author: ShawnPhang
+ * @Date: 2023-09-18 17:34:44
+ * @Description:  
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-02-25 14:51:00
+-->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
     <div :style="style" class="top-nav">
@@ -18,10 +25,10 @@
     <div class="page-design-index-wrap">
       <widget-panel></widget-panel>
       <design-board class="page-design-wrap" pageDesignCanvasId="page-design-canvas">
-        <!-- 用于挡住画布溢出部分，因为使用overflow有bug. PS:如shadow没有透明度则可以完全遮挡元素 -->
+        <!-- 用于挡住画布溢出部分，因为使用overflow有bug -->
         <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
-        <!-- 提供一个背景图层以免遮挡穿帮 -->
-        <div class="shelter-bg" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
+        <!-- 提供一个背景图层 -->
+        <div class="shelter-bg transparent-bg" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
       </design-board>
       <style-panel></style-panel>
     </div>
@@ -34,7 +41,13 @@
     <!-- 旋转缩放组件 -->
     <Moveable />
     <!-- 遮罩百分比进度条 -->
-    <ProgressLoading :percent="downloadPercent" :text="downloadText" cancelText="取消" @cancel="downloadCancel" @done="downloadPercent = 0" />
+    <ProgressLoading
+      :percent="downloadPercent"
+      :text="downloadText"
+      cancelText="取消"
+      @cancel="downloadCancel"
+      @done="downloadPercent = 0"
+    />
   </div>
 </template>
 
@@ -69,7 +82,7 @@ export default defineComponent({
     zoomControl,
     lineGuides,
   },
-  mixins: [shortcuts],
+  // mixins: [shortcuts],
   setup() {
     !_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
@@ -129,6 +142,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
+    ...shortcuts.methods,
     changeLineGuides() {
       this.showLineGuides = !this.showLineGuides
     },
@@ -137,8 +151,9 @@ export default defineComponent({
       this.isContinue = false
     },
     loadData() {
-      const { id, tempid } = this.$route.query
-      ;(this.$refs as any).options.load(id, tempid, async () => {
+      // 初始化加载页面
+      const { id, tempid, tempType } = this.$route.query
+      ;(this.$refs as any).options.load(id, tempid, tempType, async () => {
         ;(this.$refs as any).zoomControl.screenChange()
         await this.$nextTick()
         // 初始化激活的控件为page
@@ -160,7 +175,7 @@ export default defineComponent({
       const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
       this.style.left = `-${scrollLeft}px`
     },
-    clickListener(e) {
+    clickListener(e: Event) {
       console.log('click listener', e)
     },
     optionsChange({ downloadPercent, downloadText }: any) {

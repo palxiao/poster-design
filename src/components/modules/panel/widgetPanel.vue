@@ -3,7 +3,7 @@
     <div class="widget-classify">
       <ul class="classify-wrap">
         <li v-for="(item, index) in widgetClassifyList" :key="index" :class="['classify-item', { 'active-classify-item': activeWidgetClassify === index }]" @click="clickClassify(index)">
-          <i :class="['iconfont', 'icon', item.icon]" :style="item.style"></i>
+          <div class="icon-box"><i :class="['iconfont', 'icon', item.icon]" :style="item.style" /></div>
           <p>{{ item.name }}</p>
         </li>
       </ul>
@@ -16,9 +16,9 @@
     </div>
     <!-- <div v-show="active" class="side-wrap"><div class="pack__up" @click="active = false">&lt;</div></div> -->
     <div v-show="active" class="side-wrap">
-      <el-tooltip effect="dark" content="收起侧边栏" placement="right">
+      <!-- <el-tooltip effect="dark" content="收起侧边栏" placement="right"> -->
         <div class="pack__up" @click="active = false"></div>
-      </el-tooltip>
+      <!-- </el-tooltip> -->
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@
 <script lang="ts">
 // 组件面板
 const NAME = 'widget-panel'
-import widgetClassifyListData from '@/assets/data/widgetClassifyList'
+import widgetClassifyListData from '@/assets/data/WidgetClassifyList.ts'
 import { reactive, toRefs, onMounted, watch, nextTick, getCurrentInstance, ComponentInternalInstance } from 'vue'
 import { mapActions } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -49,7 +49,7 @@ export default {
     onMounted(async () => {
       await nextTick()
       const { koutu } = route.query
-      koutu && (state.activeWidgetClassify = 5)
+      koutu && (state.activeWidgetClassify = 4)
     })
 
     watch(
@@ -125,8 +125,16 @@ export default {
         justify-content: center;
         width: 100%;
         p {
-          color: #9da3ac;
+          color: #666666;
+          font-weight: 600;
           margin-top: 2px;
+        }
+        .icon-box {
+          width: 24px;
+          height: 27px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .icon {
           color: #070707;

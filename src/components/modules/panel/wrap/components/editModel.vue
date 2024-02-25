@@ -2,19 +2,17 @@
  * @Author: ShawnPhang
  * @Date: 2022-01-11 17:54:14
  * @Description: 模板编辑组件
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-02-24 15:00:36
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-02-11 00:07:36
 -->
 <template>
   <div class="wrap">
     <slot />
     <div class="showMask" @click.stop="">
-      <el-dropdown placement="bottom-end">
+      <el-dropdown placement="bottom-end" :show-arrow="false">
         <i class="iconfont icon-more"></i>
         <template #dropdown>
           <el-dropdown-menu>
-            <!-- <el-dropdown-item @click="action('edit')">编辑</el-dropdown-item>
-            <el-dropdown-item @click="action('del')">删除</el-dropdown-item> -->
             <el-dropdown-item v-for="(op, oi) in options" :key="oi + 'o'" @click="op.fn(data)">{{ op.name }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -56,6 +54,8 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .wrap {
+  width: 100%;
+  height: 100%;
   position: relative;
 }
 .wrap:hover > .showMask {

@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 模板列表
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-04 00:00:54
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-11-22 09:55:59
 -->
 <template>
   <div class="wrap">
@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue'
-import { ElDivider } from 'element-plus'
 import api from '@/api'
 import { mapActions, mapGetters, useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -32,7 +31,7 @@ import searchHeader from './components/searchHeader.vue'
 import useConfirm from '@/common/methods/confirm'
 
 export default defineComponent({
-  components: { ElDivider, searchHeader },
+  components: { searchHeader },
   setup() {
     const listRef = ref(null)
     const route = useRoute()

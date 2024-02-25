@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-11 18:48:23
  * @Description: 组件列表
- * @LastEditors: rayadaschn 115447518+rayadaschn@users.noreply.github.com
- * @LastEditTime: 2023-09-01 14:17:46
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-13 18:48:25
 -->
 <template>
   <div class="wrap">
@@ -12,9 +12,10 @@
       <i class="icon sd-w-qrcode" />
       <div class="text"><span>二维码</span><span class="desc">在设计中使用风格化二维码</span></div>
     </div>
+    <div class="header">其它</div>
     <div class="item" @click="openImageCutout">
-      <i class="icon sd-w-table" />
-      <div class="text"><span>AI抠图</span> <span class="desc">上传图像一键去除背景</span></div>
+      <i class="icon sd-AI_zhineng" />
+      <div class="text"><span>智能抠图</span> <span class="desc">上传图像一键去除背景</span></div>
     </div>
     <imageCutout ref="imageCutout" />
   </div>
@@ -55,11 +56,6 @@ export default {
       }
       this.loading = true
       this.page += 1
-      // let { list = [], total } = await api.material.getImagesList({ page: this.page, pageSize: 30 })
-      // list.length <= 0 ? (this.loadDone = true) : (this.recommendImgList = this.recommendImgList.concat(list))
-      // setTimeout(() => {
-      //   this.loading = false
-      // }, 100)
     },
     addQrcode() {
       this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择

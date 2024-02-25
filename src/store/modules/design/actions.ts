@@ -623,8 +623,8 @@ export default {
       const group = JSON.parse(store.state.dGroupJson)
       group.uuid = nanoid()
       widgets.push(group)
-      let left = store.state.dPage.width
-      let top = store.state.dPage.height
+      let left = Number(store.state.dPage.width)
+      let top = Number(store.state.dPage.height)
       let right = 0
       let bottom = 0
       const sortWidgets = [] // 顺序取出元素
@@ -672,11 +672,10 @@ export default {
       //     widgets.push(sortWidgets[i].widget)
       // }
 
-      group.left = left
-      group.top = top
-      group.width = right - left
-      group.height = bottom - top
-
+      group.left = Number(left)
+      group.top = Number(top)
+      group.width = Number(right - left)
+      group.height = Number(bottom - top)
       store.state.dActiveElement = group
       store.state.dSelectWidgets = []
 

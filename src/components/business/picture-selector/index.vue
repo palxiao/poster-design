@@ -2,18 +2,22 @@
  * @Author: ShawnPhang
  * @Date: 2022-10-08 10:07:19
  * @Description:  
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 17:57:46
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-05 00:04:51
 -->
 <template>
   <el-dialog v-model="dialogVisible" title="选择图片" @close="close">
-    <el-tabs tab-position="left" style="height: 60vh" class="demo-tabs">
-      <el-tab-pane label="个人素材">
+    <el-tabs tab-position="left" style="height: 60vh" class="demo-tabs" @tab-change="tabChange">
+      <el-tab-pane label="我的素材">
         <div class="pic__box">
-          <photo-list ref="imgListComp" :isDone="isDone" :listData="imgList" @load="load" @select="selectImg" />
+          <photo-list :isDone="isDone" :listData="imgList" @load="load" @select="selectImg" />
         </div>
       </el-tab-pane>
-      <el-tab-pane label="照片库"></el-tab-pane>
+      <el-tab-pane label="照片图库">
+        <div class="pic__box">
+          <photo-list :isDone="isPicsDone" :listData="recommendImgList" @load="loadPic" @select="selectImg($event, recommendImgList)" />
+        </div>
+      </el-tab-pane>
     </el-tabs>
     <!-- <template #footer>
       <span class="dialog-footer">
@@ -40,12 +44,14 @@ export default defineComponent({
     const state: any = reactive({
       dialogVisible: false,
       imgList: [],
+      recommendImgList: [],
       isDone: false,
+      isPicsDone: false,
     })
 
     let loading = false
     let page = 0
-    let listPage = 0
+    let picPage = 0
     const load = (init?: boolean) => {
       if (init) {
         state.imgList = []
@@ -64,6 +70,22 @@ export default defineComponent({
         }, 100)
       })
     }
+    const loadPic = (init?: boolean) => {
+      if (state.isPicsDone || loading) {
+        return
+      }
+      if (init && state.recommendImgList.length > 0) {
+        return
+      }
+      loading = true
+      picPage += 1
+      api.material.getImagesList({ page: picPage }).then(({ list }: any) => {
+        list.length <= 0 ? (state.isPicsDone = true) : (state.recommendImgList = state.recommendImgList.concat(list))
+        setTimeout(() => {
+          loading = false
+        }, 100)
+      })
+    }
 
     const open = () => {
       state.dialogVisible = true
@@ -75,10 +97,16 @@ export default defineComponent({
       store.commit('setShowMoveable', true)
     }
 
-    const selectImg = (index: number) => {
-      const item: any = state.imgList[index]
+    const selectImg = (index: number, list: any) => {
+      const item: any = list ? list[index] : state.imgList[index]
       context.emit('select', item)
       state.dialogVisible = false
+    }
+
+    const tabChange = (index: any) => {
+      if (index == 1) {
+        loadPic(true)
+      }
     }
 
     return {
@@ -86,7 +114,9 @@ export default defineComponent({
       open,
       close,
       load,
+      loadPic,
       selectImg,
+      tabChange,
     }
   },
 })
