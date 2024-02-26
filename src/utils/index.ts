@@ -11,12 +11,13 @@ import * as utils from './utils'
 import _config from '@/config'
 import modules from './plugins/modules'
 import cssLoader from './plugins/cssLoader'
+import type {App} from 'vue'
 
 /**
  * 全局组件方法
  */
 export default {
-  install(myVue: Type.Object) {
+  install(myVue: App) {
     /** 全局组件注册 */
     modules(myVue)
     /** iconfont 注入 */

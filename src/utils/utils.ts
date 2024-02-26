@@ -1,6 +1,8 @@
 import app_config from '@/config'
 export const config = app_config
 
+type TComObj = Record<string,any>
+
 /**
  * 星期换算
  * @param {String} 'YYYY-MM-DD'
@@ -47,21 +49,24 @@ export const isInArray = (arr: Type.Object[], value: any) => {
   }
   return false
 }
+
 /** 删除多个对象元素 */
-export const deleteSome = (obj: Type.Object, arr: string[]) => {
+export const deleteSome = <R extends TComObj, T extends TComObj = TComObj>(obj: T, arr: string[]) => {
   arr.forEach((key) => {
     delete obj[key]
   })
-  return obj
+  return obj as R extends T ? R : Partial<T>
 }
+
 /** 拾取对象元素 */
-export const pickSome = (obj: Type.Object, arr: string[]) => {
-  const newObj: Type.Object = {}
+export const pickSome = <R extends TComObj, T extends TComObj = TComObj>(obj: T, arr: string[]) => {
+  const newObj: Record<string, any> = {}
   arr.forEach((key) => {
     newObj[key] = obj[key]
   })
-  return newObj
+  return newObj as R extends T ? R : Partial<T>
 }
+
 /** String长度 */
 // export const getBLen = (str: string | any) => {
 //   if (str === null) {
