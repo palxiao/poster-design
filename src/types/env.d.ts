@@ -1,4 +1,4 @@
-/// <reference lib="dom" />
+// / <reference lib="dom" />
 
 interface ImportMeta {
     url: string
@@ -23,7 +23,8 @@ interface ImportMeta {
       on(event: string, cb: (...args: any[]) => void): void
     }
   
-    readonly env: ImportMetaEnv
+    // readonly env: ImportMetaEnv
+    
   
     glob(pattern: string): Record<
       string,

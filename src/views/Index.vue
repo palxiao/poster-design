@@ -1,8 +1,9 @@
 <!--
  * @Author: ShawnPhang
  * @Date: 2023-09-18 17:34:44
- * @Description:  
+ * @Description: 
  * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastUpdateContent: Support typescript
  * @LastEditTime: 2024-02-25 14:51:00
 -->
 <template>

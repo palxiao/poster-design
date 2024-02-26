@@ -20,3 +20,7 @@ export default {
   QINIUYUN_PLUGIN: 'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/qiniu-js/2.5.5/qiniu.min.js',
   supportSubFont: true, // 是否开启服务端字体压缩
 }
+
+export const LocalStorageKey = {
+  tokenKey: "xp_token"
+}
