@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-07-13 02:48:38
  * @Description:
- * @LastEditors: ShawnPhang
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
  * @LastEditTime: 2022-03-07 20:25:54
  */
 // import store from '../store'

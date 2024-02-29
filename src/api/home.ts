@@ -11,10 +11,41 @@ import _config from '@/config'
 // const screenshot_url = window.location.protocol + '//' + window.location.host + '/draw'
 export const download = (params: Type.Object = {}) => `${_config.SCREEN_URL}/api/screenshots?id=${params.id}&width=${params.width}&height=${params.height}`
 
+type IGetTempListParam = {
+  search: string
+  page: number
+  pageSize: number
+  cate:number
+}
+type IGetTempListData = {
+  cover: string
+  height: number
+  id: number
+  state: number
+  title: string
+  width: number
+}
+type IGetTempListResult = TCommResResult<IGetTempListData>
+
 // 获取模板列表
-export const getTempList = (params: Type.Object = {}) => fetch('design/list', params, 'get')
+export const getTempList = (params: IGetTempListParam) => fetch<IGetTempListResult>('design/list', params, 'get')
+
 export const getTempDetail = (params: Type.Object = {}) => fetch('design/temp', params, 'get')
-export const getCategories = (params: Type.Object = {}) => fetch('design/cate', params, 'get')
+
+type TGetCategoriesParams = {
+  type?: number
+}
+export type TGetCategoriesData = {
+  id: number
+  name: string
+  pid: number
+  type: number
+}
+type TgetCategoriesResult = TCommResResult<TGetCategoriesData>
+
+export const getCategories = (params: TGetCategoriesParams) => fetch<TgetCategoriesResult[]>('design/cate', params, 'get')
+
+
 // 保存模板
 export const saveTemp = (params: Type.Object = {}) => fetch('design/edit', params, 'post')
 // export const delTemp = (params: Type.Object = {}) => fetch('/api/template/temp_del', params)

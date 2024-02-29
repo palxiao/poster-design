@@ -40,12 +40,10 @@ type TComObj = Record<string,any>
 //   }
 // }
 // 判断是否在数组中并返回下标
-export const isInArray = (arr: Type.Object[], value: any) => {
-  if (arr.indexOf && typeof arr.indexOf === 'function') {
-    const index = arr.indexOf(value)
-    if (index >= 0) {
-      return index
-    }
+export const isInArray = (arr: (string | number)[], value: (string | number)) => {
+  const index = arr.indexOf(value)
+  if (index >= 0) {
+    return index
   }
   return false
 }

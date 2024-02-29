@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-07-13 02:48:38
  * @Description: 本地测试项目请勿修改此文件
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
  * @LastEditTime: 2024-02-26 17:54:00
  */
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios'
@@ -79,13 +79,13 @@ type TFetchMethod = keyof Pick<
 >
 
 // export default axios;
-const fetch = (
+const fetch = <T = any> (
   url: string,
   params: TFetchRequestConfigParams, 
   type: TFetchMethod = 'get',
   exheaders: Record<string, any> = {},
   extra: Record<string, any> = {}
-) => {
+): Promise<AxiosResponse<T>> => {
   if (params?._noLoading) {
     delete params._noLoading
   } else {
@@ -106,7 +106,7 @@ const fetch = (
     return axios[type](url, params, {
       headers: Object.assign(headerObject, exheaders),
       ...extra,
-    })
+    }) as Promise<AxiosResponse<T>>
   }
 }
 

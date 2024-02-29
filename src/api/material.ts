@@ -10,8 +10,36 @@ import fetch from '@/utils/axios'
 // 获取素材分类：
 export const getKinds = (params: Type.Object = {}) => fetch('design/cate', params)
 
+type TGetListParam = {
+  cate: number
+  pageSize: number
+}
+
+export type TGetListData = {
+  category: number
+  created_time: string
+  height: number
+  id: number
+  model: string
+  original: string
+  state: number
+  thumb: string
+  title: string
+  type: string
+  updated_time: string
+  url: string
+  width: number
+}
+
+type TGetListResult = TCommResResult<{
+  list: TGetListData
+  total: number
+}>
+
+
+
 // 获取素材列表：
-export const getList = (params: Type.Object = {}) => fetch('design/material', params)
+export const getList = (params: TGetListParam) => fetch<TGetListResult>('design/material', params)
 
 // 获取字体
 export const getFonts = (params: Type.Object = {}) => fetch('design/fonts', params)

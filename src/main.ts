@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-03 14:13:16
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
  * @LastEditTime: 2024-02-26 17:54:00
  */
 import { createApp } from 'vue'
