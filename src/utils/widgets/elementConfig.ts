@@ -169,7 +169,7 @@ const components = [
   // ElUpload,
 ]
 
-const plugins: any = [
+const plugins = [
   ElInfiniteScroll,
   ElLoading,
   // ElMessage,
