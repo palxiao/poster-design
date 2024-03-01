@@ -2,9 +2,19 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-02 18:27:27
  * @Description:
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-02-25 10:30:38
+ * @LastEditors: ShawnPhang, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-01 20:55:51
  */
+
+import { AlignListData } from "./AlignListData"
+
+export type TStyleIconData = {
+  key: string
+  icon: string
+  tip: string
+  value: string[]
+  select: boolean
+}
 
 export const styleIconList1 = [
   {
@@ -42,7 +52,16 @@ export const styleIconList1 = [
     value: ['horizontal-tb', 'vertical-rl'], // tb-rl
     select: false,
   },
-]
+] as TStyleIconData[]
+
+export type TStyleIconData2 = {
+  key: string
+  icon: string
+  tip: string
+  value: string
+  select: boolean
+}
+
 export const styleIconList2 = [
   {
     key: 'textAlign',
@@ -72,7 +91,7 @@ export const styleIconList2 = [
     value: 'justify',
     select: false,
   },
-]
+] as TStyleIconData2[]
 
 export const alignIconList = [
   {
@@ -111,4 +130,4 @@ export const alignIconList = [
     tip: '下对齐',
     value: 'bottom',
   },
-]
+] as AlignListData[]
