@@ -214,20 +214,17 @@ export default {
       for (let i = 0; i < this.styleIconList1.length; ++i) {
         let key = this.styleIconList1[i].key
         this.styleIconList1[i].select = false
+        const [unchecked, checked] = this.styleIconList1[i].value
         switch (key) {
           case 'fontWeight':
-          case 'fontStyle':
-            if (this.innerElement[key] !== 'normal') {
-              this.styleIconList1[i].select = true
-            }
-            break
           case 'textDecoration':
-            if (this.innerElement[key] !== this.styleIconList1[i].value[0] && this.innerElement[key] == this.styleIconList1[i].value[1]) {
+          case 'fontStyle':
+            if (this.innerElement[key] !== unchecked && this.innerElement[key] == checked) {
               this.styleIconList1[i].select = !this.styleIconList1[i].select
             }
             break
           case 'writingMode':
-            if (this.innerElement[key] !== this.styleIconList1[i].value[0]) {
+            if (this.innerElement[key] !== unchecked) {
               this.styleIconList1[i].select = true
             }
             break

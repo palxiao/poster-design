@@ -53,11 +53,13 @@
 // 文本组件
 const NAME = 'w-text'
 
-import { mapGetters, mapActions } from 'vuex'
+import { defineComponent, reactive, toRefs, computed, onUpdated, watch, onMounted, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg.ts'
 
-export default {
+export default defineComponent({
   name: NAME,
   setting: {
     name: '文本',
@@ -97,116 +99,122 @@ export default {
     },
   },
   props: ['params', 'parent'],
-  data() {
-    return {
+  setup(props) {
+    const store = useStore()
+    const route = useRoute()
+    const state = reactive({
       loading: false,
       editable: false,
       loadFontDone: false,
-    }
-  },
-  computed: {
-    ...mapGetters(['dActiveElement']),
-    isDraw() {
-      return this.$route.name === 'Draw' && fontWithDraw
-    },
-  },
-  watch: {
-    params: {
-      async handler(nval) {
-        this.updateText()
-        if (this.loading) {
+    })
+    const widget = ref(null)
+    const editWrap = ref(null)
+
+    const dActiveElement = computed(() => store.getters.dActiveElement)
+    const isDraw = computed(() => route.name === 'Draw' && fontWithDraw)
+
+    onUpdated(() => {
+      updateRecord()
+    })
+
+    onMounted(() => {
+      updateRecord()
+      props.params.transform && (widget.value.style.transform = props.params.transform)
+      props.params.rotate && (widget.value.style.transform += `translate(0px, 0px) rotate(${props.params.rotate}) scale(1, 1)`)
+      // store.commit('updateRect')
+    })
+
+    watch(
+      () => props.params,
+      async (nval) => {
+        updateText()
+        if (state.loading) {
           return
         }
         let font = nval.fontClass
-        const isDone = font.value === this.loadFontDone
+        const isDone = font.value === state.loadFontDone
 
         if (font.url && !isDone) {
-          if (font.id && this.isDraw) {
+          if (font.id && isDraw.value) {
             // 如果为绘制模式，且开启了字体抽取，那么会跳过加载字体url的逻辑
             // 此前该功能在demo中存在换行bug，实际上是由于抽取字体时忽略了空格导致的
-            this.loading = false
+            state.loading = false
             return
           }
-          this.loading = !this.isDraw
+          state.loading = !isDraw.value
           const loadFont = new window.FontFace(font.value, `url(${font.url})`)
           await loadFont.load()
           document.fonts.add(loadFont)
-          this.loadFontDone = font.value
-          this.loading = false
+          state.loadFontDone = font.value
+          state.loading = false
         } else {
-          this.loading = false
+          state.loading = false
         }
       },
-      immediate: true,
-      deep: true,
-    },
-    editable(value) {
-      this.updateWidgetData({
-        uuid: this.params.uuid,
-        key: 'editable',
-        value,
-        pushHistory: false,
-      })
-    },
-  },
-  updated() {
-    this.updateRecord()
-  },
-  async mounted() {
-    this.updateRecord()
-    // await this.$nextTick()
-    this.params.transform && (this.$refs.widget.style.transform = this.params.transform)
-    this.params.rotate && (this.$refs.widget.style.transform += `translate(0px, 0px) rotate(${this.params.rotate}) scale(1, 1)`)
-    // this.$store.commit('updateRect')
-  },
-  methods: {
-    ...mapActions(['updateWidgetData', 'pushHistory']),
-    getGradientOrImg,
-    updateRecord() {
-      if (this.dActiveElement.uuid === this.params.uuid) {
-        let record = this.dActiveElement.record
-        record.width = this.$refs.widget.offsetWidth
-        record.height = this.$refs.widget.offsetHeight
-        record.minWidth = this.params.fontSize
-        record.minHeight = this.params.fontSize * this.params.lineHeight
-        this.writingText()
+      { immediate: true, deep: true },
+    )
+
+    watch(
+      () => state.editable,
+      (value) => {
+        store.dispatch('updateWidgetData', {
+          uuid: props.params.uuid,
+          key: 'editable',
+          value,
+          pushHistory: false,
+        })
+      },
+    )
+
+    function updateRecord() {
+      if (dActiveElement.value.uuid === props.params.uuid) {
+        let record = dActiveElement.value.record
+        record.width = widget.value.offsetWidth
+        record.height = widget.value.offsetHeight
+        record.minWidth = props.params.fontSize
+        record.minHeight = props.params.fontSize * props.params.lineHeight
+        writingText()
       }
-    },
-    updateText(e) {
-      const value = e ? e.target.innerHTML : this.params.text.replace(/\n/g, '<br/>')
-      // const value = (e ? e.target.innerText : this.params.text).replace(/<br\/>/g, '\r\n').replace(/&nbsp;/g, ' ')
-      if (value !== this.params.text) {
-        this.updateWidgetData({
-          uuid: this.params.uuid,
+    }
+
+    function updateText(e) {
+      const value = e ? e.target.innerHTML : props.params.text.replace(/\n/g, '<br/>')
+      // const value = (e ? e.target.innerText : props.params.text).replace(/<br\/>/g, '\r\n').replace(/&nbsp;/g, ' ')
+      if (value !== props.params.text) {
+        store.dispatch('updateWidgetData', {
+          uuid: props.params.uuid,
           key: 'text',
           value,
           pushHistory: false,
         })
       }
-    },
-    writingText(e) {
-      // this.updateText(e)
+    }
+
+    function writingText(e) {
+      // updateText(e)
       // TODO: 修正文字选框高度
-      const el = this.$refs.editWrap || this.$refs.widget
-      this.updateWidgetData({
-        uuid: this.params.uuid,
+      const el = editWrap.value || widget.value
+      store.dispatch('updateWidgetData', {
+        uuid: props.params.uuid,
         key: 'height',
         value: el.offsetHeight,
         pushHistory: false,
       })
-      this.$store.commit('updateRect')
-    },
-    writeDone(e) {
-      this.editable = false
+      store.commit('updateRect')
+    }
+
+    function writeDone(e) {
+      state.editable = false
       setTimeout(() => {
-        this.pushHistory('文字修改')
+        store.dispatch('pushHistory', '文字修改')
       }, 100)
-      this.updateText(e)
-    },
-    dblclickText(e) {
-      // this.$store.commit('setShowMoveable', false)
-      this.editable = true
-      const el = this.$refs.editWrap || this.$refs.widget
+      updateText(e)
+    }
+
+    function dblclickText(e) {
+      // store.commit('setShowMoveable', false)
+      state.editable = true
+      const el = editWrap.value || widget.value
       setTimeout(() => {
         el.focus()
         if (document.selection) {
@@ -220,9 +228,21 @@ export default {
           window.getSelection().addRange(range)
         }
       }, 100)
-    },
+    }
+
+    return {
+      ...toRefs(state),
+      getGradientOrImg,
+      updateRecord,
+      writingText,
+      updateText,
+      writeDone,
+      dblclickText,
+      widget,
+      editWrap,
+    }
   },
-}
+})
 </script>
 
 <style lang="less" scoped>
@@ -247,13 +267,4 @@ export default {
   width: 100%;
   height: 100%;
 }
-
-// @font-face {
-//   font-family: 'FONT-AZPPT';
-//   font-display: swap;
-//   src: url('./AZPPT.ttf') format('truetype');
-// }
-// .FONT-AZPPT {
-//   font-family: 'FONT-AZPPT';
-// }
 </style>

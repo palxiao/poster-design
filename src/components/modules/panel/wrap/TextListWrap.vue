@@ -70,7 +70,7 @@ export default {
         {
           text: '+ 添加文字',
           fontSize: 60,
-          fontWeight: 'bold',
+          fontWeight: 'normal',
         },
         // {
         //   text: '+ 添加文字',
@@ -97,8 +97,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// Color variables (appears count calculates by raw css)
-@color0: #3b74f1; // Appears 2 times
+// @color0: #3b74f1;
 
 #text-list-wrap {
   display: flex;

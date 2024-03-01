@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-01-11 17:59:57
+ * @LastEditTime: 2024-02-29 16:54:28
 -->
 <template>
   <div class="wrap">
@@ -241,14 +241,14 @@ export default defineComponent({
     background: #f8fafc;
   }
   &__img {
-    cursor: pointer;
+    cursor: grab;
     width: 142px;
     height: 142px;
     padding: 4px;
     border-radius: 4px;
   }
   &__img-thumb {
-    cursor: pointer;
+    cursor: grab;
     width: 90px;
     height: 90px;
     background: #f8fafc;
