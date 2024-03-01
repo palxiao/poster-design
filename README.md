@@ -67,17 +67,15 @@ npm run serve
 - [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
 - [rembg](https://github.com/danielgatis/rembg): 图片抠图，使用 u2net 预训练模型
 
-或许你在工作中有类似的需求，或许你对开发编辑器感兴趣，也希望这个项目能给到你一些微薄帮助！
+### 友情赞助商
+
+[![](https://xp.palxp.cn/images/2024-3-1-1709306907030.png)](https://dooring.vip/)
 
 ### 交流群
 
 | 作者微信：备注加群 | 公众号 |
 | --- | --- |
 | ![](https://xp.palxp.cn/images/2024-3-1-1709306328344.png) | ![](https://xp.palxp.cn/images/2024-3-1-1709306365949.png) |
-
-### 友情赞助商
-
-[![](https://xp.palxp.cn/images/2024-3-1-1709306907030.png)](https://dooring.vip/)
 
 ### `Star`
 
