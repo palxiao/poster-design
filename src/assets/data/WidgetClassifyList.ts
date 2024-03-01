@@ -2,9 +2,17 @@
  * @Author: ShawnPhang
  * @Date: 2021-07-17 11:20:22
  * @Description:
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-01-24 17:07:44
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-01 20:55:51
  */
+
+export type TWidgetClassifyData = {
+  name: string
+  icon: string
+  show: boolean
+  component: string
+}
+
 export default [
   {
     name: '模板',
@@ -49,4 +57,4 @@ export default [
     show: false,
     component: 'user-wrap',
   },
-]
+] as TWidgetClassifyData[]

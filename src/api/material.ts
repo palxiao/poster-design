@@ -11,8 +11,10 @@ import fetch from '@/utils/axios'
 export const getKinds = (params: Type.Object = {}) => fetch('design/cate', params)
 
 type TGetListParam = {
-  cate: number
-  pageSize: number
+  first_id?: number
+  second_id?: string
+  cate?: number
+  pageSize?: number
 }
 
 export type TGetListData = {

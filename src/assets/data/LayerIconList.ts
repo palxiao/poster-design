@@ -2,9 +2,17 @@
  * @Author: ShawnPhang
  * @Date: 2022-04-15 10:51:50
  * @Description:
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-15 10:51:51
+ * @LastEditors: ShawnPhang, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-01 20:55:51
  */
+
+export type LayerIconList = {
+  key: string
+  icon: string
+  tip: string
+  value: number
+}
+
 export default [
   {
     key: 'zIndex',
@@ -18,4 +26,4 @@ export default [
     tip: '下一层',
     value: -1,
   },
-]
+] as LayerIconList[]

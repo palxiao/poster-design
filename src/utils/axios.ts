@@ -85,7 +85,7 @@ const fetch = <T = any> (
   type: TFetchMethod = 'get',
   exheaders: Record<string, any> = {},
   extra: Record<string, any> = {}
-): Promise<AxiosResponse<T>> => {
+): Promise<T> => {
   if (params?._noLoading) {
     delete params._noLoading
   } else {
@@ -106,7 +106,7 @@ const fetch = <T = any> (
     return axios[type](url, params, {
       headers: Object.assign(headerObject, exheaders),
       ...extra,
-    }) as Promise<AxiosResponse<T>>
+    }) as Promise<T>
   }
 }
 
