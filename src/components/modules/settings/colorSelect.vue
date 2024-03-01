@@ -57,7 +57,9 @@ export default defineComponent({
 
     onMounted(() => {
       if (props.modelValue) {
-        state.innerColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
+        let fixColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
+        // 当前@palxp/color-picker对部分小写16进制颜色处理有异常，统一转为大写
+        state.innerColor = fixColor.toLocaleUpperCase()
       }
     })
     const dropColor = async (e: any) => {
