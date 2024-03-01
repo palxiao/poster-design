@@ -7,3 +7,13 @@ type TCommResResult<T> = {
   result: T
 }
 
+
+
+type TCommonItemData = {
+  fontFamily?: string
+  color?: string
+  fontSize: number
+  width?: number
+  fontWeight: number
+  value: TItem2DataParam
+}
