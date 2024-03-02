@@ -39,8 +39,8 @@ export function getTarget(currentTarget: HTMLElement) {
 
 export function getFinalTarget(currentTarget: HTMLElement) {
   let collector: string[] = []
-  let groupTarger: HTMLElement | null = null
-  let saveTarger: HTMLElement | null = null
+  // let groupTarger: HTMLElement | null = null
+  // let saveTarger: HTMLElement | null = null
   return new Promise((resolve) => {
     function findTarget(target: HTMLElement | null) {
       if (!target || target.id === 'page-design') {
@@ -51,8 +51,8 @@ export function getFinalTarget(currentTarget: HTMLElement) {
 
       collector = collector.concat(
         t.filter((x) => {
-          arr.includes(x) && (saveTarger = target)
-          x === 'w-group' && (groupTarger = target)
+          // arr.includes(x) && (saveTarger = target)
+          // x === 'w-group' && (groupTarger = target)
           return arr.includes(x)
         }),
       )
