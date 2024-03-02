@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 // 文本组件
 const NAME = 'w-text'
 
