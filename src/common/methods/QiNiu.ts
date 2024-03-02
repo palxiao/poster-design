@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-29 20:35:31
  * @Description: 七牛上传方法
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-05 16:11:55
+ * @LastEditors: ShawnPhang <site: book.palxp.com>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-02 11:50:00
  */
 import dayjs from 'dayjs'
 import api from '@/api/album'
@@ -15,13 +15,13 @@ interface Options {
 }
 
 export default {
-  upload: async (file: File, options: Options, cb?: Function) => {
-    const win: any = window
+  upload: async (file: File, options: Options, cb?: IQiniuSubscribeCb) => {
+    const win = window
     let name = ''
     const suffix = file.type.split('/')[1] || 'png' // 文件后缀
     if (!options.fullPath) {
       // const DT: any = await exifGetTime(file) // 照片时间
-      const DT: any = new Date()
+      const DT = new Date()
       const YM = `${dayjs(DT).format('YYYY')}/${dayjs(DT).format('MM')}/` // 文件时间分类
       const keyName = YM + new Date(DT).getTime()
       const prePath = options.prePath ? options.prePath + '/' : ''
@@ -32,15 +32,15 @@ export default {
       useCdnDomain: true, // 使用cdn加速
     }
     const observable = win.qiniu.upload(file, name, token, {}, exOption)
-    return new Promise((resolve: Function, reject: Function) => {
+    return new Promise((resolve: IQiniuSubscribeCb, reject: (err: string) => void) => {
       observable.subscribe({
-        next: (result: any) => {
-          cb && cb(result) // result.total.percent -> 展示进度
+        next: (result) => {
+          cb?.(result) // result.total.percent -> 展示进度
         },
-        error: (e: any) => {
+        error: (e) => {
           reject(e)
         },
-        complete: (result: any) => {
+        complete: (result) => {
           resolve(result)
           // cb && cb(result) // result.total.percent -> 展示进度
         },

@@ -21,7 +21,12 @@ export const init = (params: Type.Object = {}) => fetch(API.init, params, 'post'
 
 export const getPicList = (params: Type.Object = {}) => fetch(API.getList, params)
 
-export const getToken = (params: Type.Object = {}) => fetch(API.getToken, params)
+type TGetTokenParam = {
+  bucket: string,
+  name: string
+}
+
+export const getToken = (params: TGetTokenParam) => fetch<string>(API.getToken, params)
 
 export const deletePic = (params: Type.Object = {}) => fetch(API.delOne, params, 'post')
 

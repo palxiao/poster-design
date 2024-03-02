@@ -43,8 +43,23 @@ type TGetListResult = TCommResResult<{
 // 获取素材列表：
 export const getList = (params: TGetListParam) => fetch<TGetListResult>('design/material', params)
 
+export type TGetFontParam = {
+  pageSize?: number
+}
+
+/** 字体item数据 */
+export type TGetFontItemData = {
+  id: number
+  alias: string
+  oid: string
+  value: string
+  preview: string
+  woff: string
+  lang: string
+}
+
 // 获取字体
-export const getFonts = (params: Type.Object = {}) => fetch('design/fonts', params)
+export const getFonts = (params: TGetFontParam = {}) => fetch<TPageRequestResult<TGetFontItemData[]>>('design/fonts', params)
 export const getFontSub = (params: Type.Object = {}, extra: any = {}) => fetch('design/font_sub', params, 'get', {}, extra)
 
 // 图库列表
