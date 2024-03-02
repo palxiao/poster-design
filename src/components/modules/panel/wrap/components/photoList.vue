@@ -3,7 +3,7 @@
  * @Date: 2022-02-23 15:48:52
  * @Description: 图片列表组件 Bookshelf Layout 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-11 11:12:04
+ * @LastEditTime: 2024-02-29 16:52:37
 -->
 <template>
   <ul ref="listRef" class="img-list-wrap" :style="{ paddingBottom: isShort ? '15px' : '200px' }" @scroll="scrollEvent($event)">
@@ -207,7 +207,7 @@ export default defineComponent({
   &__img {
     // background: #f1f2f4;
     display: inline-block;
-    cursor: pointer;
+    cursor: grab;
     // margin: 0 6px 2px 0;
     margin-bottom: 3px;
     border-radius: 2px;
