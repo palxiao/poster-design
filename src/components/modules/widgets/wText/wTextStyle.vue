@@ -34,7 +34,7 @@
         <!-- <color-select v-model="innerElement.backgroundColor" label="背景颜色" @finish="(value) => finish('backgroundColor', value)" /> -->
       </div>
       <div class="line-layout style-item">
-        <effect-wrap v-model="innerElement.textEffects" :data="innerElement" :degree="innerElement.degree" @select="testEffect" />
+        <effect-wrap v-model="innerElement.textEffects" :data="innerElement" :degree="innerElement.degree" @select="selectTextEffect" />
       </div>
       <icon-item-select class="style-item" :data="layerIconList" @finish="layerAction" />
       <icon-item-select class="style-item" :data="alignIconList" @finish="alignAction" />
@@ -48,13 +48,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 // 文本组件样式
 const NAME = 'w-text-style'
-// import api from '@/api'
-// import _config from '@/config'
-import { mapGetters, mapActions } from 'vuex'
-import { styleIconList1, styleIconList2, alignIconList } from '../../../../assets/data/TextIconsData'
+import { defineComponent, reactive, toRefs, computed, watch, nextTick, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { styleIconList1, styleIconList2, alignIconList } from '@/assets/data/TextIconsData'
 import layerIconList from '@/assets/data/LayerIconList'
 import numberInput from '../../settings/numberInput.vue'
 import numberSlider from '../../settings/numberSlider.vue'
@@ -66,193 +66,191 @@ import effectWrap from '../../settings/EffectSelect/TextWrap.vue'
 import { useFontStore } from '@/common/methods/fonts'
 import usePageFontsFilter from './pageFontsFilter.ts'
 
-export default {
+export default defineComponent({
   name: NAME,
-  components: { numberInput, colorSelect, iconItemSelect, textInputArea, valueSelect, effectWrap, numberSlider },
-  data() {
-    return {
-      activeNames: [],
-      innerElement: {},
-      tag: false,
-      ingoreKeys: ['left', 'top', 'name', 'width', 'height', 'text', 'color', 'backgroundColor'],
-      fontSizeList: [12, 14, 24, 26, 28, 30, 36, 48, 60, 72, 96, 108, 120, 140, 180, 200, 250, 300, 400, 500],
-      fontClassList: [], // 不能设空字体系统默认字体，因为截图服务的默认字体无法保证一致
-      lineHeightList: [1, 1.5, 2],
-      letterSpacingList: [0, 10, 25, 50, 75, 100, 200],
-      layerIconList,
-      styleIconList1,
-      styleIconList2,
-      alignIconList,
+    components: { numberInput, colorSelect, iconItemSelect, textInputArea, valueSelect, effectWrap, numberSlider },
+    setup() {
+      const store = useStore()
+      const route = useRoute()
+      const state = reactive({
+        activeNames: [],
+        innerElement: {},
+        tag: false,
+        ingoreKeys: ['left', 'top', 'name', 'width', 'height', 'text', 'color', 'backgroundColor'],
+        fontSizeList: [12, 14, 24, 26, 28, 30, 36, 48, 60, 72, 96, 108, 120, 140, 180, 200, 250, 300, 400, 500],
+        fontClassList: [], // 不能设空字体系统默认字体，因为截图服务的默认字体无法保证一致
+        lineHeightList: [1, 1.5, 2],
+        letterSpacingList: [0, 10, 25, 50, 75, 100, 200],
+        layerIconList,
+        styleIconList1,
+        styleIconList2,
+        alignIconList,
+      })
+      const dActiveElement = computed(() => store.getters.dActiveElement)
+      const dMoving = computed(() => store.getters.dMoving)
+      // const isDraw = computed(() => route.name === 'Draw')
+
+      watch(() => dActiveElement.value, () => {
+        change()
+      }, { deep: true })
+
+      watch(() => state.innerElement, () => {
+        changeValue()
+      }, { deep: true })
+
+      let timer: any = null
+
+      onMounted(() => {
+        change()
+        setTimeout(() => {
+          loadFonts()
+        }, 100)
+      })
+
+      function change() {
+        if (timer) {
+          return
+        }
+        timer = true
+        setTimeout(() => {
+          timer = null
+        }, 300)
+        state.tag = true
+        state.innerElement = JSON.parse(JSON.stringify(dActiveElement.value))
+        changeStyleIconList()
+      }
+
+      function changeValue() {
+        if (state.tag) {
+          state.tag = false
+          return
+        }
+        if (dMoving.value) {
+          return
+        }
+        // TODO 修改数值
+        for (let key in state.innerElement) {
+          if (state.ingoreKeys.indexOf(key) !== -1) {
+            dActiveElement.value[key] = state.innerElement[key]
+          } else if (key !== 'setting' && key !== 'record' && state.innerElement[key] !== dActiveElement.value[key]) {
+            // const pushHistory = !['textEffects', 'transformData', 'fontClass'].includes(key)
+            store.dispatch('updateWidgetData', {
+              uuid: dActiveElement.value.uuid,
+              key,
+              value: state.innerElement[key],
+              pushHistory: false,
+            })
+          }
+        }
+      }
+
+      function selectTextEffect({ key, value, style }: any) {
+        const uuid = dActiveElement.value.uuid
+        store.commit('setWidgetStyle', { uuid, key, value })
+        if (style) {
+          finish('color', style.color || '')
+        }
+      }
+
+      function loadFonts() {
+        const localFonts = useFontStore.list
+        const fontLists = { 当前页面: [], 中文: [], 英文: [] }
+        for (const font of localFonts) {
+          const { id, oid, value, url, alias, preview, lang } = font
+          const item = { id, oid, value, url, alias, preview }
+          lang === 'zh' ? fontLists['中文'].unshift(item) : fontLists['英文'].unshift(item)
+        }
+        fontLists['当前页面'] = usePageFontsFilter()
+        state.fontClassList = fontLists
+      }
+
+      function finish(key, value) {
+        store.dispatch('updateWidgetData', {
+          uuid: dActiveElement.value.uuid,
+          key,
+          value,
+          pushHistory: false,
+        })
+        setTimeout(() => {
+          key === 'fontClass' && (state.fontClassList['当前页面'] = usePageFontsFilter())
+        }, 300)
+      }
+
+      function layerAction(item) {
+        store.dispatch('updateLayerIndex', {
+          uuid: dActiveElement.value.uuid,
+          value: item.value,
+        })
+      }
+
+      async function textStyleAction(item) {
+        let value = item.key === 'textAlign' ? item.value : item.value[item.select ? 1 : 0]
+        state.innerElement[item.key] = value
+        // TODO: 对竖版文字的特殊处理
+        item.key === 'writingMode' && relationChange()
+        await nextTick()
+        store.commit('updateRect')
+      }
+
+      async function alignAction(item) {
+        store.dispatch('updateAlign', {
+          align: item.value,
+          uuid: dActiveElement.value.uuid,
+        })
+        await nextTick()
+        store.commit('updateRect')
+      }
+
+      function changeStyleIconList() {
+        for (let i = 0; i < state.styleIconList1.length; ++i) {
+          let key = state.styleIconList1[i].key
+          state.styleIconList1[i].select = false
+          const [unchecked, checked] = state.styleIconList1[i].value
+          switch (key) {
+            case 'fontWeight':
+            case 'textDecoration':
+            case 'fontStyle':
+              if (state.innerElement[key] !== unchecked && state.innerElement[key] == checked) {
+                state.styleIconList1[i].select = !state.styleIconList1[i].select
+              }
+              break
+            case 'writingMode':
+              if (state.innerElement[key] !== unchecked) {
+                state.styleIconList1[i].select = true
+              }
+              break
+          }
+        }
+        for (let i = 0; i < state.styleIconList2.length; i++) {
+          let key = state.styleIconList2[i].key
+          state.styleIconList2[i].select = false
+          if (key === 'textAlign' && state.innerElement[key] === state.styleIconList2[i].value) {
+            state.styleIconList2[i].select = true
+            continue
+          }
+        }
+      }
+
+      function relationChange() {
+        setTimeout(() => {
+          if (dActiveElement.value.writingMode) {
+            const w_record = dActiveElement.value.width
+            state.innerElement.width = dActiveElement.value.height
+            state.innerElement.height = w_record
+          }
+        }, 10)
+      }
+
+      return {
+        ...toRefs(state),
+        selectTextEffect,
+        textStyleAction,
+        finish,
+        layerAction,
+        alignAction
+      }
     }
-  },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dMoving']),
-    isDraw() {
-      return this.$route.name === 'Draw'
-    },
-  },
-  watch: {
-    dActiveElement: {
-      handler(newValue, oldValue) {
-        this.change()
-      },
-      deep: true,
-    },
-    innerElement: {
-      handler(newValue, oldValue) {
-        this.changeValue()
-      },
-      deep: true,
-    },
-  },
-  created() {
-    this.timer = null
-    this.change()
-    setTimeout(() => {
-      this.loadFonts()
-    }, 100)
-  },
-  methods: {
-    ...mapActions(['updateWidgetData', 'updateAlign', 'updateLayerIndex', 'pushHistory']),
-    testEffect({ key, value, style }) {
-      console.log('选择回调')
-      const uuid = this.dActiveElement.uuid
-      this.$store.commit('setWidgetStyle', { uuid, key, value })
-      if (style) {
-        this.finish('color', style.color || '')
-      }
-    },
-    loadFonts() {
-      // if (!this.isDraw) {
-      // useFontStore().init()
-      const localFonts = useFontStore.list
-      const fontLists = { 当前页面: [], 中文: [], 英文: [] }
-      for (const font of localFonts) {
-        const { id, oid, value, url, alias, preview, lang } = font
-        const item = { id, oid, value, url, alias, preview }
-        lang === 'zh' ? fontLists['中文'].unshift(item) : fontLists['英文'].unshift(item)
-      }
-      fontLists['当前页面'] = usePageFontsFilter()
-      this.fontClassList = fontLists
-      // }
-      // const isDev = process.env.NODE_ENV === 'development'
-      // if (!isDev) {
-      //   const { list } = await api.material.getFonts() // { name: 'SourceHanSansCN-Normal' }
-      //   this.fontClassList = this.fontClassList.concat(list)
-      // }
-    },
-    change() {
-      if (this.timer) {
-        return
-      }
-      this.timer = true
-      setTimeout(() => {
-        this.timer = null
-      }, 300)
-      this.tag = true
-      this.innerElement = JSON.parse(JSON.stringify(this.dActiveElement))
-      this.changeStyleIconList()
-    },
-    changeValue() {
-      if (this.tag) {
-        this.tag = false
-        return
-      }
-      if (this.dMoving) {
-        return
-      }
-      // TODO 修改数值
-      for (let key in this.innerElement) {
-        if (this.ingoreKeys.indexOf(key) !== -1) {
-          this.dActiveElement[key] = this.innerElement[key]
-        } else if (key !== 'setting' && key !== 'record' && this.innerElement[key] !== this.dActiveElement[key]) {
-          // console.log('???', key)
-          // const pushHistory = !['textEffects', 'transformData', 'fontClass'].includes(key)
-          this.updateWidgetData({
-            uuid: this.dActiveElement.uuid,
-            key,
-            value: this.innerElement[key],
-            pushHistory: false,
-          })
-        }
-      }
-    },
-    finish(key, value) {
-      this.updateWidgetData({
-        uuid: this.dActiveElement.uuid,
-        key: key,
-        value: value,
-        pushHistory: false,
-      })
-      setTimeout(() => {
-        key === 'fontClass' && (this.fontClassList['当前页面'] = usePageFontsFilter())
-      }, 300)
-    },
-    layerAction(item) {
-      this.updateLayerIndex({
-        uuid: this.dActiveElement.uuid,
-        value: item.value,
-      })
-    },
-    async textStyleAction(item) {
-      let value = item.key === 'textAlign' ? item.value : item.value[item.select ? 1 : 0]
-      this.innerElement[item.key] = value
-      // TODO: 对竖版文字的特殊处理
-      item.key === 'writingMode' && this.relationChange()
-      await this.$nextTick()
-      this.$store.commit('updateRect')
-    },
-    async alignAction(item) {
-      this.updateAlign({
-        align: item.value,
-        uuid: this.dActiveElement.uuid,
-      })
-      await this.$nextTick()
-      this.$store.commit('updateRect')
-    },
-    changeStyleIconList() {
-      for (let i = 0; i < this.styleIconList1.length; ++i) {
-        let key = this.styleIconList1[i].key
-        this.styleIconList1[i].select = false
-        switch (key) {
-          case 'fontWeight':
-          case 'fontStyle':
-            if (this.innerElement[key] !== 'normal') {
-              this.styleIconList1[i].select = true
-            }
-            break
-          case 'textDecoration':
-            if (this.innerElement[key] !== this.styleIconList1[i].value[0] && this.innerElement[key] == this.styleIconList1[i].value[1]) {
-              this.styleIconList1[i].select = !this.styleIconList1[i].select
-            }
-            break
-          case 'writingMode':
-            if (this.innerElement[key] !== this.styleIconList1[i].value[0]) {
-              this.styleIconList1[i].select = true
-            }
-            break
-        }
-      }
-      for (let i = 0; i < this.styleIconList2.length; i++) {
-        let key = this.styleIconList2[i].key
-        this.styleIconList2[i].select = false
-        if (key === 'textAlign' && this.innerElement[key] === this.styleIconList2[i].value) {
-          this.styleIconList2[i].select = true
-          continue
-        }
-      }
-    },
-    relationChange() {
-      setTimeout(() => {
-        if (this.dActiveElement.writingMode) {
-          const w_record = this.dActiveElement.width
-          this.innerElement.width = this.dActiveElement.height
-          this.innerElement.height = w_record
-        }
-      }, 10)
-    },
-  },
-}
+})
 </script>
 
 <style lang="less" scoped>

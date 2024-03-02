@@ -2,11 +2,14 @@
  * @Author: ShawnPhang
  * @Date: 2021-09-30 15:52:59
  * @Description: 下载远程图片
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-12 16:54:51
+ * @LastEditors: ShawnPhang <site: book.palxp.com>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-02 11:50:00
  */
-export default (src: string, cb: Function) => {
-  return new Promise((resolve: any) => {
+
+type TCallBack = (progress: number, xhr: XMLHttpRequest) => void
+
+export default (src: string, cb: TCallBack) => {
+  return new Promise<void>((resolve) => {
     // const image = new Image()
     // // 解决跨域 Canvas 污染问题
     // image.setAttribute('crossOrigin', 'anonymous')
@@ -32,10 +35,10 @@ export default (src: string, cb: Function) => {
 
     fetchImageDataFromUrl(src, (progress: number, xhr: XMLHttpRequest) => {
       cb(progress, xhr)
-    }).then((res: any) => {
+    }).then((res) => {
       const reader = new FileReader()
       reader.onload = function (event) {
-        const txt: any = event?.target?.result
+        const txt = event?.target?.result as string
         // image.src = txt
         const a = document.createElement('a')
         const mE = new MouseEvent('click')
@@ -55,17 +58,17 @@ export default (src: string, cb: Function) => {
   })
 }
 
-function fetchImageDataFromUrl(url: string, cb: Function) {
-  return new Promise((resolve) => {
+function fetchImageDataFromUrl(url: string, cb: TCallBack) {
+  return new Promise<null>((resolve) => {
     const xhr = new XMLHttpRequest()
-    let totalLength: any = ''
+    let totalLength: string | number = ''
     xhr.open('GET', url)
     xhr.responseType = 'blob'
     xhr.onreadystatechange = function () {
       totalLength = Number(xhr.getResponseHeader('content-length')) // 'cache-control'
     }
     xhr.onprogress = function (event) {
-      cb((event.loaded / totalLength) * 100, xhr)
+      cb((event.loaded / Number(totalLength)) * 100, xhr)
     }
     xhr.onload = function () {
       if (xhr.status < 400) resolve(this.response)
