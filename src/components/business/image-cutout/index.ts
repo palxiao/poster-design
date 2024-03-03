@@ -5,5 +5,5 @@
  * @LastEditors: ShawnPhang <site: book.palxp.com>
  * @LastEditTime: 2023-07-12 00:05:48
  */
-import index from './ImageCutout.vue'
+import index from './ImageCutout/index.vue'
 export default index
