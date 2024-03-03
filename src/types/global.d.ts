@@ -31,7 +31,10 @@ interface HTMLElementEventMap {
 }
 
 interface IQiniuSubscribeCb {
-  (result: { total: { percent: number }}): void
+  (result: {
+    total: { percent: number }
+    key: string
+  }): void
 }
 
 interface Window {
