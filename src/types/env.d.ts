@@ -26,11 +26,11 @@ interface ImportMeta {
     // readonly env: ImportMetaEnv
     
   
-    glob(pattern: string): Record<
+    glob(pattern: string, { eager: boolean }): Record<
       string,
-      () => Promise<{
+      {
         [key: string]: any
-      }>
+      }
     >
   
     globEager(pattern: string): Record<

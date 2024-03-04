@@ -15,7 +15,8 @@ const exclude = ['settings', 'layout']
 const regex = RegExp('.*^(?!.*?(' + exclude.join('|') + ')).*\\.vue$')
 
 // const requireComponent = require.context('.', true, /\.vue$/) // 找到components文件夹下以.vue命名的文件
-const requireComponent = import.meta.globEager('./**/*.vue')
+
+const requireComponent = import.meta.glob('./**/*.vue', { eager: true })
 
 function guide(Vue: Type.Object) {
   for (const fileName in requireComponent) {
