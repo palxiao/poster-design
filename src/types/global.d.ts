@@ -40,7 +40,7 @@ interface IQiniuSubscribeCb {
 interface Window {
   qiniu: {
     upload: (
-      file: File,
+      file: File | Blob,
       name: string,
       token: string,
       exObj: Record<string, any>,
