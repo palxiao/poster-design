@@ -15,7 +15,7 @@ interface Options {
 }
 
 export default {
-  upload: async (file: File, options: Options, cb?: IQiniuSubscribeCb) => {
+  upload: async (file: File | Blob, options: Options, cb?: IQiniuSubscribeCb) => {
     const win = window
     let name = ''
     const suffix = file.type.split('/')[1] || 'png' // 文件后缀
