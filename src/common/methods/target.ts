@@ -8,7 +8,7 @@
 // TODO: Group类型比较特殊，所以需要全量循环并判断是否为group
 const arr = ['w-text', 'w-image', 'w-svg', 'w-group', 'w-qrcode']
 
-export function getTarget(currentTarget: HTMLElement) {
+export function getTarget(currentTarget: HTMLElement): Promise<HTMLElement | null> {
   let collector: string[] = []
   let groupTarger: HTMLElement | null = null
   let saveTarger: HTMLElement | null = null

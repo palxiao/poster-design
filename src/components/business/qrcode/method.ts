@@ -1,4 +1,11 @@
-import { CornerDotType,Options } from "qr-code-styling"
+/*
+ * @Author: Jeremy Yu
+ * @Date: 2024-03-04 18:10:00
+ * @Description:  
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @Date: 2024-03-04 18:10:00
+ */
+import { CornerDotType, Options } from "qr-code-styling"
 import { TQrcodeProps } from "./index.vue"
 
 /** 生成二维码数据 */

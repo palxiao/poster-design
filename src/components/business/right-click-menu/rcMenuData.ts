@@ -2,15 +2,28 @@
  * @Author: ShawnPhang
  * @Date: 2021-07-30 17:38:50
  * @Description:
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2021-07-30 18:15:22
+ * @LastEditors: ShawnPhang, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @Date: 2024-03-04 18:50:00
  */
-export const menuList: any = {
+
+export type TMenuItemData = {
+  left: number
+  top: number
+  list: TWidgetItemData[]
+}
+
+export const menuList: TMenuItemData = {
   left: 0,
   top: 0,
   list: [],
 }
-export const widgetMenu = [
+
+export type TWidgetItemData = {
+  type: 'copy' | 'paste' | 'index-up' | 'index-down' | 'del' | 'ungroup'
+  text: string
+}
+
+export const widgetMenu: TWidgetItemData[] = [
   {
     type: 'copy',
     text: '复制',
@@ -33,7 +46,7 @@ export const widgetMenu = [
   },
 ]
 
-export const pageMenu = [
+export const pageMenu: TWidgetItemData[] = [
   {
     type: 'paste',
     text: '粘贴',

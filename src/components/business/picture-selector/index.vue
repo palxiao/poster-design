@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-10-08 10:07:19
  * @Description:  
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-05 00:04:51
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @Date: 2024-03-04 18:10:00
 -->
 <template>
   <el-dialog v-model="state.dialogVisible" title="选择图片" @close="close">
