@@ -49,6 +49,7 @@
     "eslint-config-alloy": "~4.1.0",
     "eslint-plugin-vue": "^7.12.1",
     "less": "^4.1.1",
+    "terser": "^5.28.1",
     "typescript": "^5.2.2",
     "unplugin-element-plus": "^0.7.1",
     "vite": "^5.1.4",
