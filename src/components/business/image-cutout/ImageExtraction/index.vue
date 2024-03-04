@@ -110,3 +110,27 @@ const done = () => {
 }
 
 </script>
+
+
+<style lang="less" scoped>
+:deep(.el-dialog__body) {
+  padding: 0 !important;
+}
+:deep(.el-dialog__header) {
+  padding: 10px 35px;
+  // var(--el-dialog-padding-primary)
+}
+.tool-wrap {
+  display: flex;
+  align-items: center;
+}
+// .tool-left {
+//   display: inline-flex;
+//   flex: 1;
+// }
+.slider-wrap {
+  margin-left: 35px;
+  width: 240px;
+}
+</style>
+
