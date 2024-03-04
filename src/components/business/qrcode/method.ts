@@ -1,4 +1,4 @@
-import { CornerDotType, CornerSquareType, DrawType, ErrorCorrectionLevel, Mode, Options, TypeNumber } from "qr-code-styling"
+import { CornerDotType,Options } from "qr-code-styling"
 import { TQrcodeProps } from "./index.vue"
 
 /** 生成二维码数据 */
