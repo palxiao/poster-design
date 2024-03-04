@@ -46,7 +46,7 @@ import { ElProgress } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import uploader from '@/components/common/Uploader/index.vue'
 import _dl from '@/common/methods/download'
-import ImageExtraction from '../ImageExtraction.vue'
+import ImageExtraction from '../ImageExtraction/index.vue'
 import { selectImageFile, uploadCutPhotoToCloud } from './method'
 
 export type TImageCutoutState = {
@@ -100,7 +100,6 @@ defineExpose({
 })
 
 const handleUploaderLoad = (file: File) => {
-  console.log(file)
   selectImageFile(state as TImageCutoutState, raw, file, (result, name) => {
     fileName = name
     const resultImage = URL.createObjectURL(result)

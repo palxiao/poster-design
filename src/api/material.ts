@@ -62,11 +62,24 @@ export type TGetFontItemData = {
 export const getFonts = (params: TGetFontParam = {}) => fetch<TPageRequestResult<TGetFontItemData[]>>('design/fonts', params)
 export const getFontSub = (params: Type.Object = {}, extra: any = {}) => fetch('design/font_sub', params, 'get', {}, extra)
 
+type TGetImageListParams = {
+  page?: number
+}
+
+export type TGetImageListResult = {
+  created_time: string
+  height: number
+  width: number
+  url: string
+  user_id: number
+  id: string
+}
+
 // 图库列表
-export const getImagesList = (params: Type.Object = {}) => fetch('design/imgs', params, 'get')
+export const getImagesList = (params: TGetImageListParams) => fetch<TPageRequestResult<TGetImageListResult[]>>('design/imgs', params, 'get')
 
 // 我的上传列表
-export const getMyPhoto = (params: Type.Object = {}) => fetch('design/user/image', params)
+export const getMyPhoto = (params: TGetImageListParams) => fetch<TPageRequestResult<TGetImageListResult[]>>('design/user/image', params)
 export const deleteMyPhoto = (params: Type.Object = {}) => fetch('design/user/image/del', params, 'post')
 export const deleteMyWorks = (params: Type.Object = {}) => fetch('design/poster/del', params, 'post')
 
