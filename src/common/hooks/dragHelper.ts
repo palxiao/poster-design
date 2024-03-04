@@ -113,11 +113,14 @@ export default class DragHelper {
   private moveFlutter(x: number, y: number, d = 0, lazy = 0) {
     const { width, height, finallySize } = this.initial as TInitial
     let scale: string | null = null
-    if (!d) {
+    if (d) {
       if (width > finallySize) {
         scale = width - d >= finallySize ? `transform: scale(${(width - d) / width});` : null
-      } else scale = width + d <= finallySize ? `transform: scale(${(width + d) / width})` : null
+      } else {
+        scale = width + d <= finallySize ? `transform: scale(${(width + d) / width})` : null
+      }
     }
+
     const options = [`left: ${x}px`, `top: ${y}px`, `width: ${width}px`, `height: ${height}px`]
     scale && options.push(scale)
     options.push(`transition: all ${lazy}s`)
@@ -137,9 +140,7 @@ export default class DragHelper {
     this.dragging = false
     store.commit('setDraging', false)
     store.commit('selectItem', {})
-    if (!this.cloneEl) {
-      return
-    }
+
     if (!done) {
       const { pageX, offsetX, pageY, offsetY } = this.initial as TInitial
       this.changeStyle([`left: ${pageX - offsetX}px`, `top: ${pageY - offsetY}px`, 'transform: scale(1)', 'transition: all 0.3s'])
