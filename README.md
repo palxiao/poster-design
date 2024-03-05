@@ -54,9 +54,9 @@ npm run serve
 
 ## 其它
 
-项目最早使用 Vue2 开发，后改用 Vue3 重构，目前有部分代码混合了 Options 写法。
+本项目最早使用 Vue2 开发，现改用 Vue3 重构中。[一些迭代计划记录](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92).
 
-目前也还在持续迭代中，有很多的不足，我也是一边学习一边成长。[实时迭代计划文档](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92).
+目前开源版仍在持续迭代中，还有很多的不足，我的目标是做一款能对标稿定设计、创客贴、Canva等商业产品的强大在线设计器。
 
 ### 感谢
 
@@ -67,21 +67,17 @@ npm run serve
 - [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
 - [rembg](https://github.com/danielgatis/rembg): 图片抠图，使用 u2net 预训练模型
 
-### 友情赞助商
-
-[![](https://xp.palxp.cn/images/2024-3-1-1709306907030.png)](https://dooring.vip/)
-
 ### 交流群
 
-| 作者微信：备注加群 | 公众号 |
+| 作者微信：备注加群 | 关注公众号 |
 | --- | --- |
-| ![](https://xp.palxp.cn/images/2024-3-1-1709306328344.png) | ![](https://xp.palxp.cn/images/2024-3-1-1709306365949.png) |
-
-### `Star`
+| <img style="width: 240px;" src="https://xp.palxp.cn/images/2024-3-1-1709306328344.png" /> | <img style="width: 320px;" src="https://xp.palxp.cn/images/2024-3-1-1709306365949.png" /> |
 
 开源不易，别忘了给本项目点个 **Star** ~
 
 [![Star History Chart](https://api.star-history.com/svg?repos=palxiao/poster-design&type=Date)](https://star-history.com/#palxiao/poster-design&Date)
+
+### `Star`
 
 感谢所有支持本项目的朋友 :heart:
 
@@ -92,6 +88,10 @@ npm run serve
 这些小伙伴都在使用迅排设计 :heart:
 
 [![Forkers](https://bytecrank.com/nastyox/reporoster/php/forkersSVG.php?user=palxiao&repo=poster-design)](https://github.com/palxiao/poster-design/network/members)
+
+### 友情赞助商
+
+[![](https://xp.palxp.cn/images/2024-3-3-1709450701432.png)](https://dooring.vip/)
 
 ### `Contributions`
 
