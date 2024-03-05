@@ -1,3 +1,5 @@
+import { RouteRecordRaw } from 'vue-router';
+
 /*
  * @Author: ShawnPhang
  * @Date: 2021-08-19 18:43:22
@@ -40,4 +42,4 @@ export default [
     name: 'Psd',
     component: () => import(/* webpackChunkName: 'psd' */ '@/views/Psd.vue'),
   },
-]
+] as RouteRecordRaw[]

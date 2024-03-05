@@ -38,7 +38,7 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
-    "@types/node": "^16.3.1",
+    "@types/node": "^20.11.24",
     "@types/throttle-debounce": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
