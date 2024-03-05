@@ -17,7 +17,7 @@ import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
 import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
 import designBoard from '@/components/modules/layout/designBoard.vue'
-import zoomControl from '@/components/modules/layout/zoomControl.vue'
+import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 
 export default defineComponent({
   components: { designBoard, zoomControl },
