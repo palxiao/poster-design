@@ -9,7 +9,7 @@
   <div></div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { watch, defineProps } from 'vue'
 import { useStore } from 'vuex'
 import Guides, { GuideOptions } from '@scena/guides'
@@ -30,7 +30,9 @@ type TSameParams = {
 
 type TGuidesData = Guides & GuideOptions
 
-const props = defineProps<TProps>()
+const props = withDefaults(defineProps<TProps>(), {
+  show: false
+})
 
 const store = useStore()
 const container = 'page-design' // page-design out-page
