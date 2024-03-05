@@ -3,7 +3,7 @@
  * @Date: 2021-12-28 09:29:42
  * @Description: 百分比进度条
  * @LastEditors: ShawnPhang <site: book.palxp.com>, Jeremy Yu <https://github.com/JeremyYu-cn>
- * @Date: 2024-03-04 18:50:00
+ * @Date: 2024-03-05 10:50:00
 -->
 <template>
   <div v-if="percent" class="mask">

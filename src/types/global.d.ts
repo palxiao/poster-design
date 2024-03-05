@@ -34,6 +34,7 @@ interface IQiniuSubscribeCb {
   (result: {
     total: { percent: number }
     key: string
+    hash: string
   }): void
 }
 
