@@ -5,6 +5,8 @@
  * @LastEditors: ShawnPhang
  * @LastEditTime: 2022-04-08 10:28:47
  */
+import { App } from "vue"
+
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
@@ -18,7 +20,7 @@ const regex = RegExp('.*^(?!.*?(' + exclude.join('|') + ')).*\\.vue$')
 
 const requireComponent = import.meta.glob('./**/*.vue', { eager: true })
 
-function guide(Vue: Type.Object) {
+function guide(Vue: App) {
   for (const fileName in requireComponent) {
     if (regex.test(fileName)) {
       const componentConfig = requireComponent[fileName]
