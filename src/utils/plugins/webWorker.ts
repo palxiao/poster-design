@@ -2,11 +2,11 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-06 13:53:30
  * @Description: 计算密集型任务
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-14 17:28:53
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-05 12:00:00
  */
 export default class WebWorker {
-  private worker: any
+  private worker: Worker | undefined
 
   constructor(name: string) {
     if (typeof Worker === 'undefined') {
@@ -21,12 +21,15 @@ export default class WebWorker {
   }
   public start(data: any) {
     return new Promise((resolve) => {
-      // 监听Web Worker的消息
-      this.worker.onmessage = (e: any) => {
-        resolve(e.data)
+      if (!this.worker) resolve('')
+      else {
+        // 监听Web Worker的消息
+        this.worker.onmessage = (e) => {
+          resolve(e.data)
+        }
+        // 发送数据给Web Worker
+        this.worker.postMessage(data)
       }
-      // 发送数据给Web Worker
-      this.worker.postMessage(data)
     })
   }
 }
