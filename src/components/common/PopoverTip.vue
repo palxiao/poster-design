@@ -13,28 +13,21 @@
   </el-popover>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { defineProps } from 'vue'
 
-export default defineComponent({
-  props: {
-    title: {
-      default: '',
-    },
-    width: {
-      default: 0,
-    },
-    content: {
-      default: '',
-    },
-    // top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end
-    position: {
-      default: 'bottom',
-    },
-    // offset: {
-    //   default: 0,
-    // },
-  },
-  setup() {},
+type TProps = {
+  title: string
+  width: number
+  content: string
+  position: "bottom" | "auto" | "auto-start" | "auto-end" | "top" | "right" | "left" | "top-start" | "top-end" | "bottom-start" | "bottom-end" | "right-start" | "right-end" | "left-start" | "left-end"
+  offset?: number
+}
+
+const { title, width, content, position } = withDefaults(defineProps<TProps>(), {
+  title: '',
+  width: 0,
+  content: '',
+  position: 'bottom'
 })
 </script>
