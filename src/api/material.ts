@@ -64,6 +64,7 @@ export const getFontSub = (params: Type.Object = {}, extra: any = {}) => fetch('
 
 type TGetImageListParams = {
   page?: number
+  cate?: number
 }
 
 export type TGetImageListResult = {
@@ -73,6 +74,7 @@ export type TGetImageListResult = {
   url: string
   user_id: number
   id: string
+  thumb: string
 }
 
 // 图库列表
