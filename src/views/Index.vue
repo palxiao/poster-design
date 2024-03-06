@@ -58,7 +58,7 @@ import { defineComponent, reactive, toRefs } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
-import designBoard from '@/components/modules/layout/designBoard.vue'
+import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import lineGuides from '@/components/modules/layout/lineGuides.vue'
 

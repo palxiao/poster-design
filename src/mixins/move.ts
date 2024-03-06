@@ -48,7 +48,7 @@ const move = {
 
 const moveInit = {
   methods: {
-    initmovement(e: any) {
+    initmovement(e: MouseEvent) {
       if (!store.getters.dAltDown) {
         // 设置mouseevent给moveable初始
         // 在组合操作时排除

@@ -56,3 +56,9 @@ interface Window {
       }
   }
 }
+
+
+interface MouseEvent {
+  layerX: number
+  layerY: number
+}

@@ -1,7 +1,7 @@
 <!--
  * @Author: ShawnPhang
  * @Date: 2021-08-03 17:50:21
- * @Description: 旧大小控制组件，已交由moveable控制
+ * @Description: 旧大小控制组件，已交由moveable控制 (已不使用)
  * @LastEditors: ShawnPhang
  * @LastEditTime: 2021-08-09 11:13:09
 -->

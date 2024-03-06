@@ -16,7 +16,7 @@ import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
 import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
-import designBoard from '@/components/modules/layout/designBoard.vue'
+import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 
 export default defineComponent({
