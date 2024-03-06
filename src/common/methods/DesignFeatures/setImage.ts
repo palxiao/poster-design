@@ -13,9 +13,16 @@ export type TItem2DataParam = {
   height: number
   url: string
   model?: string
+  canvasWidth?: number
 }
 
-export default async function setItem2Data(item: TItem2DataParam) {
+export type TItem2DataResult = {
+  width: number
+  height: number
+  canvasWidth: number
+}
+
+export default async function setItem2Data(item: TItem2DataParam): Promise<Required<TItem2DataParam>> {
   const cloneItem = JSON.parse(JSON.stringify(item))
   const { width: screenWidth, height: screenHeight } = store.getters.dPage
   let { width: imgWidth, height: imgHeight } = item
