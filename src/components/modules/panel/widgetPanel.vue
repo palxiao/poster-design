@@ -2,87 +2,80 @@
   <div id="widget-panel">
     <div class="widget-classify">
       <ul class="classify-wrap">
-        <li v-for="(item, index) in widgetClassifyList" :key="index" :class="['classify-item', { 'active-classify-item': activeWidgetClassify === index }]" @click="clickClassify(index)">
+        <li v-for="(item, index) in state.widgetClassifyList" :key="index" :class="['classify-item', { 'active-classify-item': state.activeWidgetClassify === index }]" @click="clickClassify(index)">
           <div class="icon-box"><i :class="['iconfont', 'icon', item.icon]" :style="item.style" /></div>
           <p>{{ item.name }}</p>
         </li>
       </ul>
       <a href="https://github.com/palxiao/poster-design" target="_blank" class="github"><img src="https://fe-doc.palxp.cn/images/github.svg" alt="Github" title="Github" /> 源码</a>
     </div>
-    <div v-show="active" class="widget-wrap">
+    <div v-show="state.active" class="widget-wrap">
       <keep-alive>
-        <component :is="widgetClassifyList[activeWidgetClassify].component" />
+        <component :is="state.widgetClassifyList[state.activeWidgetClassify].component" />
       </keep-alive>
     </div>
     <!-- <div v-show="active" class="side-wrap"><div class="pack__up" @click="active = false">&lt;</div></div> -->
-    <div v-show="active" class="side-wrap">
+    <div v-show="state.active" class="side-wrap">
       <!-- <el-tooltip effect="dark" content="收起侧边栏" placement="right"> -->
-        <div class="pack__up" @click="active = false"></div>
+        <div class="pack__up" @click="state.active = false"></div>
       <!-- </el-tooltip> -->
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 // 组件面板
-const NAME = 'widget-panel'
-import widgetClassifyListData from '@/assets/data/WidgetClassifyList.ts'
-import { reactive, toRefs, onMounted, watch, nextTick, getCurrentInstance, ComponentInternalInstance } from 'vue'
-import { mapActions } from 'vuex'
+// const NAME = 'widget-panel'
+import widgetClassifyListData from '@/assets/data/WidgetClassifyList'
+import { reactive, onMounted, watch, nextTick, } from 'vue'
+// import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
-export default {
-  name: NAME,
-  setup() {
-    // const store = useStore()
-    const route = useRoute()
-    const state = reactive({
-      widgetClassifyList: widgetClassifyListData,
-      activeWidgetClassify: 0,
-      active: true,
-    })
-    const clickClassify = (index: number) => {
-      state.activeWidgetClassify = index
-      state.active = true
-    }
-
-    onMounted(async () => {
-      await nextTick()
-      const { koutu } = route.query
-      koutu && (state.activeWidgetClassify = 4)
-    })
-
-    watch(
-      () => state.activeWidgetClassify,
-      (index) => {
-        if (index >= 0 && index < state.widgetClassifyList.length) {
-          state.widgetClassifyList[index].show = true
-        }
-      },
-    )
-    // const { proxy } = getCurrentInstance() as ComponentInternalInstance
-    // watch(
-    //   () => state.active,
-    //   () => {
-    //     let screen = document.getElementById('page-design')
-    //     nextTick(() => {
-    //       proxy?.updateScreen({
-    //         width: screen.offsetWidth,
-    //         height: screen.offsetHeight,
-    //       })
-    //     })
-    //   },
-    // )
-
-    return {
-      clickClassify,
-      ...toRefs(state),
-    }
-  },
-  methods: {
-    ...mapActions(['updateScreen']),
-  },
+// const store = useStore()
+const route = useRoute()
+const state = reactive({
+  widgetClassifyList: widgetClassifyListData,
+  activeWidgetClassify: 0,
+  active: true,
+})
+const clickClassify = (index: number) => {
+  state.activeWidgetClassify = index
+  state.active = true
 }
+
+onMounted(async () => {
+  await nextTick()
+  const { koutu } = route.query
+  koutu && (state.activeWidgetClassify = 4)
+})
+
+watch(
+  () => state.activeWidgetClassify,
+  (index) => {
+    if (index >= 0 && index < state.widgetClassifyList.length) {
+      state.widgetClassifyList[index].show = true
+    }
+  },
+)
+
+// const { proxy } = getCurrentInstance() as ComponentInternalInstance
+// watch(
+//   () => state.active,
+//   () => {
+//     let screen = document.getElementById('page-design')
+//     nextTick(() => {
+//       proxy?.updateScreen({
+//         width: screen.offsetWidth,
+//         height: screen.offsetHeight,
+//       })
+//     })
+//   },
+// )
+
+defineExpose({
+  clickClassify
+})
+//   ...mapActions(['updateScreen']),
 </script>
 
 <style lang="less" scoped>
