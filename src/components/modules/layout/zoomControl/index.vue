@@ -19,270 +19,250 @@
   </div>
 </template>
 
-<script lang="ts">
-import { mapGetters, mapActions } from 'vuex'
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { useStore } from 'vuex'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import addMouseWheel from '@/common/methods/addMouseWheel'
+import { OtherList, TZoomData, ZoomList } from './data';
+import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
+const store = useStore()
 
 // 组件大小控制器
-const NAME = 'zoom-control'
 let holder: number | undefined
 
-// TODO: TS类型补全
-export default defineComponent({
-  name: NAME,
-  data() {
-    return {
-      hideControl: false,
-      activezoomIndex: 0,
-      zoomList: [
-        {
-          text: '25%',
-          value: 25,
-        },
-        {
-          text: '50%',
-          value: 50,
-        },
-        {
-          text: '75%',
-          value: 75,
-        },
-        {
-          text: '100%',
-          value: 100,
-        },
-        {
-          text: '125%',
-          value: 125,
-        },
-        {
-          text: '150%',
-          value: 150,
-        },
-        {
-          text: '200%',
-          value: 200,
-        },
-        {
-          text: '最佳尺寸',
-          value: -1,
-          // icon: 'icon-best-size',
-        },
-      ],
-      show: false,
-      zoom: {
-        value: 0,
-        text: 0,
-      },
-      otherList: [
-        {
-          text: '250%',
-          value: 250,
-        },
-        {
-          text: '300%',
-          value: 300,
-        },
-        {
-          text: '350%',
-          value: 350,
-        },
-        {
-          text: '400%',
-          value: 400,
-        },
-        {
-          text: '450%',
-          value: 450,
-        },
-        {
-          text: '500%',
-          value: 500,
-        },
-      ],
-      otherIndex: -1,
-      bestZoom: 0,
-      curAction: "",
-    }
-  },
-  computed: {
-    ...mapGetters(['dPage', 'dScreen', 'zoomScreenChange', 'dZoom']),
-  },
-  watch: {
-    activezoomIndex(value) {
-      if (value < 0 || value > this.zoomList.length - 1) {
-        return
-      }
-      this.zoom = JSON.parse(JSON.stringify(this.zoomList[value]))
-    },
-    otherIndex(value) {
-      if (value < 0 || value > this.otherList.length - 1) {
-        return
-      }
-      this.zoom = JSON.parse(JSON.stringify(this.otherList[value]))
-    },
-    zoom(value) {
-      let realValue = value.value
-      if (realValue === -1) {
-        realValue = this.calcZoom()
-      }
-      this.updateZoom(realValue)
-      this.autoFixTop()
-    },
-    dScreen: {
-      handler() {
-        this.screenChange()
-      },
-      deep: true,
-    },
-    zoomScreenChange() {
-      this.activezoomIndex = this.zoomList.length - 1
-      this.screenChange()
-    },
-    dPage: {
-      handler(val) {
-        this.screenChange()
-      },
-      deep: true,
-    },
-  },
-  async mounted() {
-    await this.$nextTick()
-    window.addEventListener('click', this.close)
-    if (this.$route.path === '/draw') {
-      this.activezoomIndex = 3
-      this.hideControl = true
-    } else {
-      this.activezoomIndex = this.zoomList.length - 1
-    }
-    // 添加滚轮监听
-    addMouseWheel('page-design', (isDown: boolean) => {
-      this.mousewheelZoom(isDown)
-    })
-    // 添加窗口大小监听
-    window.addEventListener('resize', (event) => {
-      this.changeScreen()
-    })
-  },
-  beforeUnmount() {
-    window.removeEventListener('click', this.close)
-  },
-  methods: {
-    ...mapActions(['updateZoom', 'updateScreen']),
-    changeScreen() {
-      clearTimeout(holder)
-      holder = setTimeout(() => {
-        const screen = document.getElementById('page-design')
-        if (!screen) return
-        this.updateScreen({
-          width: screen.offsetWidth,
-          height: screen.offsetHeight,
-        })
-      }, 300)
-    },
-    screenChange() {
-      // 弹性尺寸即时修改
-      if (this.activezoomIndex === this.zoomList.length - 1) {
-        this.updateZoom(this.calcZoom())
-        this.autoFixTop()
-      }
-    },
-    selectItem(index: number) {
-      this.activezoomIndex = index
-      this.otherIndex = -1
-      this.show = false
-    },
-    close(_: MouseEvent) {
-      this.show = false
-    },
-    add() {
-      this.curAction = 'add'
-      this.show = false
-      if (this.activezoomIndex === this.zoomList.length - 2 || this.activezoomIndex === this.zoomList.length - 1) {
-        this.activezoomIndex = this.zoomList.length
-        // this.otherIndex += 1
-        if (this.bestZoom) {
-          this.nearZoom(true)
-        } else {
-          this.otherIndex += 1
-        }
-        return
-      }
-      if (this.activezoomIndex != this.zoomList.length) {
-        this.activezoomIndex++
-        return
-      }
-      if (this.otherIndex < this.otherList.length - 1) {
-        this.otherIndex++
-      }
-    },
-    sub() {
-      this.curAction = null as any
-      this.show = false
-      if (this.otherIndex === 0) {
-        this.otherIndex = -1
-        this.activezoomIndex = this.zoomList.length - 2
-        return
-      }
-      if (this.otherIndex != -1) {
-        this.otherIndex--
-        return
-      }
-      if (this.activezoomIndex === this.zoomList.length - 1) {
-        if (this.bestZoom) {
-          this.nearZoom()
-        } else {
-          this.activezoomIndex = this.zoomList.length - 2
-        }
-        return
-      }
-      if (this.activezoomIndex != 0) {
-        this.activezoomIndex--
-      }
-    },
-    mousewheelZoom(down: boolean) {
-      const value = Number(this.dZoom.toFixed(0))
-      if (down && value <= 1) return
-      this.updateZoom(down ? value - 1 : value + 1)
-      this.zoom.text = (value + '%') as any
-      this.autoFixTop()
-    },
-    nearZoom(add?: boolean) {
-      for (let i = 0; i < this.zoomList.length; i++) {
-        this.activezoomIndex = i
-        if (this.zoomList[i].value > this.bestZoom) {
-          if (add) break
-        } else if (this.zoomList[i].value < this.bestZoom) {
-          if (!add) break
-        }
-      }
-      this.bestZoom = 0
-    },
-    calcZoom() {
-      let widthZoom = ((this.dScreen.width - 142) * 100) / this.dPage.width
-      let heightZoom = ((this.dScreen.height - 122) * 100) / this.dPage.height
-
-      this.bestZoom = Math.min(widthZoom, heightZoom)
-      return this.bestZoom
-    },
-    async autoFixTop() {
-      await this.$nextTick()
-      const presetPadding = 60
-      const el = document.getElementById('out-page')
-      if (!el) return
-      // const clientHeight = document.body.clientHeight - 54
-      
-      const parentHeight = (el.offsetParent as HTMLElement).offsetHeight - 54
-      let padding = (parentHeight - el.offsetHeight) / 2
-      if (typeof this.curAction === 'undefined') {
-        padding += presetPadding / 2
-      }
-      this.curAction === 'add' && (padding -= presetPadding)
-      this.$store.commit('updatePaddingTop', padding > 0 ? padding : 0)
-    },
-  },
+const hideControl = ref(false)
+const activezoomIndex = ref(0)
+const zoomList = ref<TZoomData[]>(ZoomList)
+const show = ref(false)
+const zoom = ref<TZoomData>({
+  value: 0,
+  text: '',
 })
+const otherList = ref<TZoomData[]>(OtherList)
+const otherIndex = ref(-1)
+const bestZoom = ref(0)
+const curAction = ref('')
+
+const { dPage, dScreen, zoomScreenChange, dZoom } = useSetupMapGetters(['dPage', 'dScreen', 'zoomScreenChange', 'dZoom'])
+
+watch(
+  activezoomIndex,
+  (data) => {
+    if (data < 0 || data > zoomList.value.length - 1) {
+      return
+    }
+    zoom.value = JSON.parse(JSON.stringify(zoomList.value[data]))
+  }
+)
+
+watch(
+  otherIndex,
+  (data) => {
+    if (data < 0 || data > otherList.value.length - 1) {
+      return
+    }
+    zoom.value = JSON.parse(JSON.stringify(otherList.value[data]))
+  }
+)
+
+watch(
+  zoom,
+  (data) => {
+    let realValue = data.value
+    if (realValue === -1) {
+      realValue = calcZoom()
+    }
+    store.dispatch('updateZoom', realValue)
+    // updateZoom(realValue)
+    autoFixTop()
+  }
+)
+
+watch(
+  dScreen,
+  () => {
+    screenChange()
+  },
+  { deep: true, }
+)
+
+watch(
+  zoomScreenChange,
+  () => {
+    activezoomIndex.value = zoomList.value.length - 1
+    screenChange()
+  }
+)
+
+watch(
+  dPage,
+  () => {
+    screenChange()
+  },
+  { deep: true }
+)
+
+onMounted(async () => {
+  await nextTick()
+  window.addEventListener('click', close)
+  if (route.path === '/draw') {
+    activezoomIndex.value = 3
+    hideControl.value = true
+  } else {
+    activezoomIndex.value = zoomList.value.length - 1
+  }
+  // 添加滚轮监听
+  addMouseWheel('page-design', (isDown: boolean) => {
+    mousewheelZoom(isDown)
+  })
+  // 添加窗口大小监听
+  window.addEventListener('resize', (event) => {
+    changeScreen()
+  })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('click', close)
+})
+
+    // ...mapActions(['updateZoom', 'updateScreen']),
+function changeScreen() {
+  clearTimeout(holder)
+  holder = setTimeout(() => {
+    const screen = document.getElementById('page-design')
+    if (!screen) return
+    store.dispatch('updateScreen', {
+      width: screen.offsetWidth,
+      height: screen.offsetHeight,
+    })
+    // updateScreen({
+    //   width: screen.offsetWidth,
+    //   height: screen.offsetHeight,
+    // })
+  }, 300)
+}
+
+function screenChange() {
+  // 弹性尺寸即时修改
+  if (activezoomIndex.value === zoomList.value.length - 1) {
+    store.dispatch('updateZoom', calcZoom())
+    // this.updateZoom(this.calcZoom())
+    autoFixTop()
+  }
+}
+
+function selectItem(index: number) {
+  activezoomIndex.value = index
+  otherIndex.value = -1
+  show.value = false
+}
+
+function close(_: MouseEvent) {
+  show.value = false
+}
+
+function add() {
+  curAction.value = 'add'
+  show.value = false
+  if (
+    activezoomIndex.value === zoomList.value.length - 2 ||
+    activezoomIndex.value === zoomList.value.length - 1
+  ) {
+    activezoomIndex.value = zoomList.value.length
+    // this.otherIndex += 1
+    if (bestZoom.value) {
+      nearZoom(true)
+    } else {
+      otherIndex.value += 1
+    }
+    return
+  }
+  if (activezoomIndex.value != zoomList.value.length) {
+    activezoomIndex.value++
+    return
+  }
+  if (otherIndex.value < otherList.value.length - 1) {
+    otherIndex.value++
+  }
+}
+
+function sub() {
+  curAction.value = ''
+  show.value = false
+  if (otherIndex.value === 0) {
+    otherIndex.value = -1
+    activezoomIndex.value = zoomList.value.length - 2
+    return
+  }
+  if (otherIndex.value != -1) {
+    otherIndex.value--
+    return
+  }
+  if (activezoomIndex.value === zoomList.value.length - 1) {
+    if (bestZoom) {
+      nearZoom()
+    } else {
+      activezoomIndex.value = zoomList.value.length - 2
+    }
+    return
+  }
+  if (activezoomIndex.value != 0) {
+    activezoomIndex.value--
+  }
+}
+
+function mousewheelZoom(down: boolean) {
+  const value = Number(dZoom.value.toFixed(0))
+  if (down && value <= 1) return
+  store.dispatch('updateZoom', down ? value - 1 : value + 1)
+  // updateZoom(down ? value - 1 : value + 1)
+  zoom.value.text = (value + '%') as any
+  autoFixTop()
+}
+
+function nearZoom(add?: boolean) {
+  for (let i = 0; i < zoomList.value.length; i++) {
+    activezoomIndex.value = i
+    if (zoomList.value[i].value > bestZoom.value) {
+      if (add) break
+    } else if (zoomList.value[i].value < bestZoom.value) {
+      if (!add) break
+    }
+  }
+  bestZoom.value = 0
+}
+
+function calcZoom() {
+  let widthZoom = ((dScreen.value.width - 142) * 100) / dPage.value.width
+  let heightZoom = ((dScreen.value.height - 122) * 100) / dPage.value.height
+
+  bestZoom.value = Math.min(widthZoom, heightZoom)
+  return bestZoom.value
+}
+
+async function autoFixTop() {
+  await nextTick()
+  const presetPadding = 60
+  const el = document.getElementById('out-page')
+  if (!el) return
+  // const clientHeight = document.body.clientHeight - 54
+  
+  const parentHeight = (el.offsetParent as HTMLElement).offsetHeight - 54
+  let padding = (parentHeight - el.offsetHeight) / 2
+  if (typeof curAction.value === 'undefined') {
+    padding += presetPadding / 2
+  }
+  curAction.value === 'add' && (padding -= presetPadding)
+  store.commit('updatePaddingTop', padding > 0 ? padding : 0)
+}
+
+defineExpose({
+  screenChange
+})
+
 </script>
 
 <style lang="less" scoped>
