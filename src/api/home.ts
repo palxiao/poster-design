@@ -15,22 +15,31 @@ type IGetTempListParam = {
   search: string
   page: number
   pageSize: number
-  cate:number
+  cate: number | string
 }
-type IGetTempListData = {
+export type IGetTempListData = {
   cover: string
   height: number
   id: number
   state: number
   title: string
   width: number
+  isDelect: boolean
+  fail: boolean
+  top: number
+  left: number
+  data?: string
 }
-type IGetTempListResult = TCommResResult<IGetTempListData>
+type IGetTempListResult = TPageRequestResult<IGetTempListData[]>
 
 // 获取模板列表
 export const getTempList = (params: IGetTempListParam) => fetch<IGetTempListResult>('design/list', params, 'get')
 
-export const getTempDetail = (params: Type.Object = {}) => fetch('design/temp', params, 'get')
+type TGetTempDetail = {
+  id: number
+}
+
+export const getTempDetail = (params: TGetTempDetail) => fetch<{data: string}>('design/temp', params, 'get')
 
 type TGetCategoriesParams = {
   type?: number
