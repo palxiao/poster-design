@@ -165,7 +165,6 @@ async function drop(e: MouseEvent) {
   }
   // 处理数据
   setting = await setWidgetData(type, item, setting)
-  console.log("setting", setting)
   // 绝对坐标
   const canvasEl = document.getElementById('page-design-canvas')
   if (!canvasEl) return
@@ -190,7 +189,7 @@ async function drop(e: MouseEvent) {
       element.left += (lost ? lostX - half.x : e.layerX - half.x) * (100 / store.getters.dZoom)
       element.top += (lost ? lostY - half.y : e.layerY - half.y) * (100 / store.getters.dZoom)
     })
-    store.dispatch('addGroup', item)
+    store.dispatch('addGroup', componentItem)
     // addGroup(item)
   }
   // 设置坐标

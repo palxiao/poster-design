@@ -178,7 +178,7 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
   const { data: content, title, state, width, height } = await api.home[apiName]({ id: id || tempId, type })
   if (content) {
     const data = JSON.parse(content)
-    state.stateBollean = !!state
+    state.stateBollean = (!!state)
     state.title = title
     store.commit('setShowMoveable', false) // 清理掉上一次的选择框
     // this.$store.commit('setDWidgets', [])
