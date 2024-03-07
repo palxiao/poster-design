@@ -39,6 +39,7 @@ const state = reactive({
   active: true,
 })
 const clickClassify = (index: number) => {
+  console.log('index' ,index)
   state.activeWidgetClassify = index
   state.active = true
 }

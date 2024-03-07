@@ -6,27 +6,27 @@
  * @LastEditTime: 2023-06-29 17:53:39
 -->
 <template>
-  <el-card class="box-card" shadow="hover" :body-style="{ padding: effectSelect ? '20px' : 0 }">
+  <el-card class="box-card" shadow="hover" :body-style="{ padding: state.effectSelect ? '20px' : 0 }">
     <template #header>
       <div class="card-header">
-        <template v-if="effectSelect">
-          <component :is="effectSelect" class="demo" />
+        <template v-if="state.effectSelect">
+          <component :is="state.effectSelect" class="demo" />
         </template>
-        <div v-show="!effectSelect">无</div>
+        <div v-show="!state.effectSelect">无</div>
         <span class="title">图片容器</span>
-        <el-popover :visible="visiable" placement="bottom-end" :width="260" trigger="click">
+        <el-popover :visible="state.visiable" placement="bottom-end" :width="260" trigger="click">
           <div class="box__header">
-            <el-radio-group v-model="type" size="small">
+            <el-radio-group v-model="state.type" size="small">
               <el-radio-button label="160">形状</el-radio-button>
               <el-radio-button label="166">框架</el-radio-button>
             </el-radio-group>
           </div>
           <div class="select__box">
-            <div class="select__box__select-item" @click="select(null)">无</div>
-            <el-image v-for="(item, i) in list" :key="i + 'l'" class="select__box__select-item" :src="item.thumbUrl" fit="contain" @click="select(item.imgUrl)"></el-image>
+            <div class="select__box__select-item" @click="select()">无</div>
+            <el-image v-for="(item, i) in state.list" :key="i + 'l'" class="select__box__select-item" :src="item.thumbUrl" fit="contain" @click="select(item.imgUrl)"></el-image>
           </div>
           <template #reference>
-            <el-button class="button" link @click="visiable = !visiable">{{ visiable ? '取消' : '选择' }}</el-button>
+            <el-button class="button" link @click="state.visiable = !state.visiable">{{ state.visiable ? '取消' : '选择' }}</el-button>
           </template>
         </el-popover>
       </div>
@@ -38,58 +38,74 @@
   </el-card>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import api from '@/api'
-import { defineComponent, toRefs, reactive, watch, onMounted, nextTick } from 'vue'
+import { toRefs, reactive, watch, onMounted, nextTick, defineProps, defineEmits, defineExpose } from 'vue'
 import { ElRadioGroup, ElRadioButton } from 'element-plus'
 import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
+import { TGetListResult } from '@/api/material';
 
-export default defineComponent({
-  components: { ElRadioGroup, ElRadioButton },
-  props: ['modelValue', 'degree'],
-  emits: ['change'],
-  setup(props, context) {
-    const state = reactive({
-      // strength: 20, // 强度
-      effectSelect: '', // 选择的模板
-      visiable: false, // 弹出选择层控制
-      type: '166', // 类型
-      list: [],
-    })
-    const select = (value: string = '') => {
-      state.visiable = false
-      const setting = JSON.parse(JSON.stringify(wSvg.setting))
-      setting.svgUrl = value
-      context.emit('change', setting)
-    }
-    onMounted(async () => {
-      await nextTick()
-      state.effectSelect = props?.modelValue || ''
-      // state.strength = props?.degree || state.strength
-      getList()
-    })
+type TProps = {
+  modelValue?: string
+  degree?: number
+}
 
-    async function getList() {
-      const res = await api.material.getList({
-        first_id: 2,
-        second_id: state.type,
-      })
-      state.list = res.list.map(({ thumbUrl, imgUrl }: any) => {
-        return { thumbUrl, imgUrl }
-      })
-    }
-    watch(
-      () => state.type,
-      (value) => {
-        getList()
-      },
-    )
-    return {
-      ...toRefs(state),
-      select,
-    }
+type TEmits = {
+  (event: 'change', data: Record<string, any>): void
+}
+
+type TState = {
+  effectSelect: string
+  visiable: boolean
+  type: string
+  list: {thumbUrl: string, imgUrl: string}[]
+}
+
+const props = defineProps<TProps>()
+
+const emit = defineEmits<TEmits>()
+
+const state = reactive<TState>({
+  // strength: 20, // 强度
+  effectSelect: '', // 选择的模板
+  visiable: false, // 弹出选择层控制
+  type: '166', // 类型
+  list: [],
+})
+
+const select = (value: string = '') => {
+  state.visiable = false
+  const setting = JSON.parse(JSON.stringify(wSvg.setting))
+  setting.svgUrl = value
+  emit('change', setting)
+}
+
+
+onMounted(async () => {
+  await nextTick()
+  state.effectSelect = props?.modelValue || ''
+  // state.strength = props?.degree || state.strength
+  getList()
+})
+
+async function getList() {
+  const res = await api.material.getList({
+    first_id: 2,
+    second_id: state.type,
+  })
+  state.list = res.list.map(({ thumbUrl, imgUrl }) => {
+    return { thumbUrl, imgUrl }
+  })
+}
+
+watch(
+  () => state.type,
+  (value) => {
+    getList()
   },
-  methods: {},
+)
+defineExpose({
+  select,
 })
 </script>
 
