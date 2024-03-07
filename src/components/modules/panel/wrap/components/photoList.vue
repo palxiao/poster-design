@@ -46,9 +46,9 @@ import { IGetTempListData } from '@/api/home';
 
 type TProps = {
   listData: IGetTempListData[]
-  edit: Record<string, any>
-  isDone: boolean
-  isShort: boolean
+  edit?: Record<string, any>
+  isDone?: boolean
+  isShort?: boolean
 }
 
 type TEmits = {
@@ -64,7 +64,8 @@ type TState = {
 }
 
 const props = withDefaults(defineProps<TProps>(), {
-  isShort: false
+  isShort: false,
+  listData: () => ([])
 })
 const emit = defineEmits<TEmits>()
 const listRef = ref<HTMLElement | null>(null)

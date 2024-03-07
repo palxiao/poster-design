@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, nextTick, onBeforeMount, ref } from 'vue'
+import { reactive, onMounted, nextTick, onBeforeMount, ref, getCurrentInstance } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
@@ -99,6 +99,9 @@ let loading: ReturnType<typeof useLoading> | null = null
 
 onMounted(async () => {
   await nextTick()
+  if (zoomControlRef.value){
+    zoomControlRef.value.screenChange()
+  }
   state.isDone = false
 })
 
@@ -158,19 +161,23 @@ const cancel = () => {
   window.open(`${window.location.protocol + '//' + window.location.host}/home?id=${route.query.id}`)
 }
 
-const {handleKeydowm, handleKeyup,} = shortcuts.methods
+const {handleKeydowm, handleKeyup, dealCtrl} = shortcuts.methods
 
 // ...mapGetters(['dPage', 'dZoom']),
 
+let checkCtrl: number | undefined
+
 onMounted(() => {
-  document.addEventListener('keydown', handleKeydowm, false)
-  document.addEventListener('keyup', handleKeyup, false)
+  const instance = getCurrentInstance()
+  document.addEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
+  document.addEventListener('keyup', handleKeyup(store, checkCtrl), false)
   loadJS()
 })
 
 onBeforeMount(() => {
-  document.removeEventListener('keydown', handleKeydowm, false)
-  document.removeEventListener('keyup', handleKeyup, false)
+  const instance = getCurrentInstance()
+  document.removeEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
+  document.removeEventListener('keyup', handleKeyup(store, checkCtrl), false)
   document.oncontextmenu = null
 })
 // ...mapActions(['selectWidget']),

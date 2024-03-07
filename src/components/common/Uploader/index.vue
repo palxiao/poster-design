@@ -35,9 +35,9 @@ export type TUploadDoneData = {
 type TQiNiuUploadReturn = { hash: string, key: string }
 
 type TProps = {
-  modelValue: TModelData
-  options: { bucket: string, prePath: string }
-  hold: boolean
+  modelValue?: TModelData
+  options?: { bucket: string, prePath: string }
+  hold?: boolean
 }
 
 type TEmits = {

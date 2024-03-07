@@ -52,7 +52,7 @@ import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 
 type TProps = {
-  active: number
+  active?: number
 }
 
 type TState = {
@@ -104,7 +104,6 @@ const load = (init?: boolean) => {
     } else {
       state.imgList = state.imgList.concat(list)
     }
-    console.log('state.imgList', state.imgList)
     setTimeout(() => {
       loading = false
       if (!imgListRef.value) return
@@ -133,11 +132,9 @@ const loadDesign = (init: boolean = false) => {
             return x
           }),
         ))
-    console.log('state.designList', state.designList)
     setTimeout(() => {
       loading = false
       if (!listRef.value) return
-      console.log('listRef.value', listRef.value)
       checkHeight(listRef.value, loadDesign)
     }, 100)
   })

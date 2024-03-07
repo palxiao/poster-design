@@ -214,6 +214,7 @@ defineExpose({
   save,
   saveTemp,
   stateChange,
+  load,
 })
 </script>
 
