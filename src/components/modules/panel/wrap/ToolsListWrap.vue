@@ -21,54 +21,55 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 // 图片列表
-const NAME = 'tool-list-wrap'
+// const NAME = 'tool-list-wrap'
 // import api from '@/api'
-import { mapActions, mapGetters } from 'vuex'
+import { ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import wQrcode from '../../widgets/wQrcode/wQrcode.vue'
 import imageCutout from '@/components/business/image-cutout'
+import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 
-export default {
-  name: NAME,
-  components: { imageCutout },
-  data() {
-    return {
-      loadDone: false,
-    }
-  },
-  computed: {
-    ...mapGetters(['dPage']),
-  },
+const store = useStore()
+const route = useRoute()
 
-  mounted() {
-    // this.getDataList()
-    setTimeout(() => {
-      const { koutu } = this.$route.query
-      koutu && this.openImageCutout()
-    }, 300)
-  },
-  methods: {
-    ...mapActions(['addWidget']),
-    async getDataList() {
-      if (this.loadDone || this.loading) {
-        return
-      }
-      this.loading = true
-      this.page += 1
-    },
-    addQrcode() {
-      this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择
-      let setting = JSON.parse(JSON.stringify(wQrcode.setting))
-      const { width: pW, height: pH } = this.dPage
-      setting.left = pW / 2 - setting.width / 2
-      setting.top = pH / 2 - setting.height / 2
-      this.addWidget(setting)
-    },
-    openImageCutout() {
-      this.$refs.imageCutout.open()
-    },
-  },
+const loadDone = ref(false)
+const imageCutoutRef = ref<typeof imageCutout | null>(null)
+const { dPage } = useSetupMapGetters(['dPage'])
+
+onMounted(() => {
+  // this.getDataList()
+  setTimeout(() => {
+    const { koutu } = route.query
+    koutu && openImageCutout()
+  }, 300)
+})
+
+// ...mapActions(['addWidget'])
+
+// async function getDataList() {
+//   if (loadDone || loading) {
+//     return
+//   }
+//   loading = true
+//   page += 1
+// }
+
+function addQrcode() {
+  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  let setting = JSON.parse(JSON.stringify(wQrcode.setting))
+  const { width: pW, height: pH } = dPage.value
+  setting.left = pW / 2 - setting.width / 2
+  setting.top = pH / 2 - setting.height / 2
+  store.dispatch('addWidget', setting)
+  // addWidget(setting)
+}
+
+function openImageCutout() {
+  if (!imageCutoutRef.value) return
+  imageCutoutRef.value.open()
 }
 </script>
 

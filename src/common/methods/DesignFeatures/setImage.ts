@@ -9,6 +9,7 @@ import store from '@/store'
 import { getImage } from '../getImgDetail'
 
 export type TItem2DataParam = {
+  id?: string | number
   width: number
   height: number
   url: string

@@ -36,7 +36,7 @@ import { useRoute } from 'vue-router'
 import api from '@/api'
 
 type TProps = {
-  type: string
+  type?: string
   modelValue: string
 }
 

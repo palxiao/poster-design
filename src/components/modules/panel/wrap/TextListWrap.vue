@@ -22,78 +22,74 @@
   </div>
 </template>
 
-<script lang="ts">
-const NAME = 'text-list-wrap'
+<script lang="ts" setup>
+// const NAME = 'text-list-wrap'
 
 import wText from '../../widgets/wText/wText.vue'
 
-import { mapActions, useStore } from 'vuex'
-import { getCurrentInstance, ComponentInternalInstance } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: NAME,
-  setup() {
-    const store: any = useStore()
-    const { proxy } = getCurrentInstance() as ComponentInternalInstance
-
-    const selectBasicText = (item: any) => {
-      store.commit('setShowMoveable', false) // 清理掉上一次的选择
-      let setting = JSON.parse(JSON.stringify(wText.setting))
-      setting.text = '双击编辑文字' // item.text
-      setting.width = item.fontSize * setting.text.length
-      setting.fontSize = item.fontSize
-      setting.fontWeight = item.fontWeight
-      const { width: pW, height: pH } = store.getters.dPage
-      setting.left = pW / 2 - item.fontSize * 3
-      setting.top = pH / 2 - item.fontSize / 2
-      ;(proxy as any).addWidget(setting)
-    }
-
-    const dragStart = (e: Element, item: any) => {
-      store.commit('setDraging', true)
-      store.commit('selectItem', { data: { value: item }, type: 'text' })
-    }
-
-    return {
-      selectBasicText,
-      dragStart,
-    }
-  },
-  data() {
-    return {
-      basicTextList: [
-        // {
-        //   text: '大标题',
-        //   fontSize: 96,
-        //   fontWeight: 'bold',
-        // },
-        {
-          text: '+ 添加文字',
-          fontSize: 60,
-          fontWeight: 'normal',
-        },
-        // {
-        //   text: '+ 添加文字',
-        //   fontSize: 40,
-        //   fontWeight: 'normal',
-        // },
-        // {
-        //   text: '小标题',
-        //   fontSize: 36,
-        //   fontWeight: 'normal',
-        // },
-        // {
-        //   text: '正文内容',
-        //   fontSize: 28,
-        //   fontWeight: 'normal',
-        // },
-      ],
-    }
-  },
-  methods: {
-    ...mapActions(['addWidget']),
-  },
+type TBasicTextData = {
+  text: string
+  fontSize: number
+  fontWeight: string
 }
+
+const store = useStore()
+
+
+const selectBasicText = (item: TBasicTextData) => {
+  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  let setting = JSON.parse(JSON.stringify(wText.setting))
+  setting.text = '双击编辑文字' // item.text
+  setting.width = item.fontSize * setting.text.length
+  setting.fontSize = item.fontSize
+  setting.fontWeight = item.fontWeight
+  const { width: pW, height: pH } = store.getters.dPage
+  setting.left = pW / 2 - item.fontSize * 3
+  setting.top = pH / 2 - item.fontSize / 2
+  store.dispatch('addWidget', setting)
+  // addWidget(setting)
+}
+
+const dragStart = (_: MouseEvent, item: any) => {
+  store.commit('setDraging', true)
+  store.commit('selectItem', { data: { value: item }, type: 'text' })
+}
+
+const basicTextList: TBasicTextData[] = [
+  // {
+  //   text: '大标题',
+  //   fontSize: 96,
+  //   fontWeight: 'bold',
+  // },
+  {
+    text: '+ 添加文字',
+    fontSize: 60,
+    fontWeight: 'normal',
+  },
+  // {
+  //   text: '+ 添加文字',
+  //   fontSize: 40,
+  //   fontWeight: 'normal',
+  // },
+  // {
+  //   text: '小标题',
+  //   fontSize: 36,
+  //   fontWeight: 'normal',
+  // },
+  // {
+  //   text: '正文内容',
+  //   fontSize: 28,
+  //   fontWeight: 'normal',
+  // },
+]
+defineExpose({
+  selectBasicText,
+  dragStart,
+})
+
+// ...mapActions(['addWidget'])
 </script>
 
 <style lang="less" scoped>

@@ -6,7 +6,7 @@
  * @Date: 2024-03-06 21:16:00
 -->
 <template>
-  <ul ref="listRef" class="img-list-wrap" :style="{ paddingBottom: isShort ? '15px' : '200px' }" @scroll="scrollEvent($event)">
+  <ul ref="listRef" class="img-list-wrap" :style="{ paddingBottom: props.isShort ? '15px' : '200px' }" @scroll="scrollEvent($event)">
     <div class="list">
       <div
         v-for="(item, i) in state.list" :key="i + 'i'"
@@ -18,7 +18,7 @@
         @click.stop="select(i)"
         @dragstart="dragStart($event, i)"
       >
-        <edit-model v-if="edit" :options="edit" :data="{ item, i }">
+        <edit-model v-if="props.edit" :options="props.edit" :data="{ item, i }">
           <div v-if="item.isDelect" class="list__mask">已删除</div>
           <el-image class="img transparent-bg" :src="item.thumb || item.url" :style="{ height: getInnerHeight(item) + 'px' }" lazy loading="lazy" />
         </edit-model>
@@ -33,7 +33,7 @@
         </template>
       </div>
     </div>
-    <div v-if="!isDone" v-show="state.loading" class="loading"><i class="el-icon-loading" /> 拼命加载中</div>
+    <div v-if="!props.isDone" v-show="state.loading" class="loading"><i class="el-icon-loading" /> 拼命加载中</div>
     <div v-else class="loading">全部加载完毕</div>
   </ul>
 </template>
@@ -42,11 +42,12 @@
 import { reactive, watch, nextTick, defineProps, defineExpose, defineEmits, ref } from 'vue'
 import DragHelper from '@/common/hooks/dragHelper'
 import setImageData, { TItem2DataParam } from '@/common/methods/DesignFeatures/setImage'
+import { IGetTempListData } from '@/api/home';
 
 type TProps = {
-  listData: TCommonPhotoListData[]
+  listData: IGetTempListData[]
   edit: Record<string, any>
-  isDone: Record<string, any>
+  isDone: boolean
   isShort: boolean
 }
 
@@ -59,10 +60,10 @@ type TEmits = {
 
 type TState = {
   loading: boolean
-  list: TCommonPhotoListData[]
+  list: IGetTempListData[]
 }
 
-const { listData, edit, isDone, isShort } = withDefaults(defineProps<TProps>(), {
+const props = withDefaults(defineProps<TProps>(), {
   isShort: false
 })
 const emit = defineEmits<TEmits>()
@@ -92,21 +93,21 @@ const mousemove = (e: MouseEvent) => {
 }
 
 watch(
-  () => listData,
-  async (newList: TCommonPhotoListData[], oldList: TCommonPhotoListData[]) => {
+  () => props.listData,
+  async (newList: IGetTempListData[], oldList: IGetTempListData[]) => {
     !oldList && (oldList = [])
     if (newList.length <= 0) {
       state.list.length = 0
       return
     }
-    let list = newList.filter((v: TCommonPhotoListData) => !newList.includes(v) || !oldList.includes(v)) // difference
+    let list = newList.filter((v: IGetTempListData) => !newList.includes(v) || !oldList.includes(v)) // difference
     list = JSON.parse(JSON.stringify(list))
     const marginRight = 6 // 间距
     const limitWidth = (await getFatherWidth()) - marginRight
     const standardHeight = 280 // 高度阈值
-    const neatArr: TCommonPhotoListData[][] = [] // 整理后的数组
-    function factory(cutArr: TCommonPhotoListData[]) {
-      return new Promise<{ height: number, list: TCommonPhotoListData[] }>((resolve) => {
+    const neatArr: IGetTempListData[][] = [] // 整理后的数组
+    function factory(cutArr: IGetTempListData[]) {
+      return new Promise<{ height: number, list: IGetTempListData[] }>((resolve) => {
         const lineup = list.shift()
         if (!lineup) {
           resolve({ height: calculate(cutArr), list: cutArr })
@@ -121,7 +122,7 @@ watch(
         }
       })
     }
-    function calculate(cutArr: TCommonPhotoListData[]) {
+    function calculate(cutArr: IGetTempListData[]) {
       let cumulate = 0
       for (const iterator of cutArr) {
         const { width, height } = iterator
@@ -133,9 +134,9 @@ watch(
       if (list.length <= 0) {
         return
       }
-      const { list: newList, height } = await factory([(list.shift() as TCommonPhotoListData)])
+      const { list: newList, height } = await factory([(list.shift() as IGetTempListData)])
       neatArr.push(
-        newList.map((x: TCommonPhotoListData, index: number) => {
+        newList.map((x: IGetTempListData, index: number) => {
           x.listWidth = (x.width / x.height) * height
           x.gap = index !== newList.length - 1 ? marginRight : 0
           return x
@@ -154,7 +155,7 @@ watch(
 async function getFatherWidth() {
   await nextTick()
   if (!listRef.value) return 0
-  const father = listRef.value.parentElement || listRef.value.parentNode
+  const father = listRef.value.parentElement ?? listRef.value.parentNode
   if (!father) return 0
   return (father as HTMLElement).offsetWidth
 }

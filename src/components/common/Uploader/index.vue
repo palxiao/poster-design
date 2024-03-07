@@ -26,7 +26,7 @@ type TModelData = {
   ratio?: string
 }
 
-type TUploadDoneData = {
+export type TUploadDoneData = {
   width: number
   height: number
   url: string
