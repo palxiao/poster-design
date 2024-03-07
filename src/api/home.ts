@@ -29,6 +29,12 @@ export type IGetTempListData = {
   top: number
   left: number
   data?: string
+  listWidth?: number
+  gap?: number
+  thumb?: string
+  url: string
+  model?: string
+  color?: string
 }
 type IGetTempListResult = TPageRequestResult<IGetTempListData[]>
 
@@ -73,5 +79,12 @@ export const saveMyTemp = (params: Type.Object = {}) => fetch('design/user/temp'
 // 获取作品
 export const getWorks = (params: Type.Object = {}) => fetch('design/poster', params, 'get')
 
+type TGetMyDesignParams = {
+  page: number
+  pageSize: number
+}
+
+type TGetMyDesignResult = TPageRequestResult<IGetTempListData[]>
+
 // 作品列表
-export const getMyDesign = (params: Type.Object = {}) => fetch('design/my', params, 'get')
+export const getMyDesign = (params: TGetMyDesignParams) => fetch<TGetMyDesignResult>('design/my', params, 'get')

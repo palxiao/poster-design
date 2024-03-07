@@ -7,7 +7,7 @@
     <div v-show="activeTab === 0" class="style-wrap">
       <div v-show="showGroupCombined" style="padding: 2rem 0">
         <el-button plain type="primary" class="gounp__btn" @click="handleCombine">成组</el-button>
-        <icon-item-select label="" :data="alignIconList" @finish="alignAction" />
+        <icon-item-select label="" :data="iconList" @finish="alignAction" />
       </div>
       <component :is="dActiveElement.type + '-style'" v-show="!showGroupCombined" v-if="dActiveElement.type" />
     </div>

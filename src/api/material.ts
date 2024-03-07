@@ -6,6 +6,7 @@
  * @LastEditTime: 2023-12-11 11:40:47
  */
 import fetch from '@/utils/axios'
+import { IGetTempListData } from './home'
 
 // 获取素材分类：
 export const getKinds = (params: Type.Object = {}) => fetch('design/cate', params)
@@ -75,7 +76,7 @@ export type TGetImageListResult = {
   user_id: number
   id: string
   thumb: string
-}
+} & IGetTempListData
 
 // 图库列表
 export const getImagesList = (params: TGetImageListParams) => fetch<TPageRequestResult<TGetImageListResult[]>>('design/imgs', params, 'get')
