@@ -24,7 +24,7 @@ type TProps = {
   percent: number
   text: string
   cancelText: string
-  msg: string
+  msg?: string
 }
 
 type TEmits = {
