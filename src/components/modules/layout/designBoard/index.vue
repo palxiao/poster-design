@@ -170,7 +170,6 @@ async function drop(e: MouseEvent) {
   if (!canvasEl) return
   const lostX = e.x - canvasEl.getBoundingClientRect().left
   const lostY = e.y - canvasEl.getBoundingClientRect().top
-  console.log('xy, ',lostX, lostY)
   // 放置组合
   if (type === 'group') {
     let parent: TParentData = {}
