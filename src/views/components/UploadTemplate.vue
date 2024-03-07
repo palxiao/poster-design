@@ -28,8 +28,15 @@ type TProps = {
   isDone?: boolean
 }
 
+export type TEmitChangeData = {
+  downloadPercent: number | null
+  downloadText: string
+  downloadMsg?: string
+  cancelText?: string
+}
+
 type TEmits = {
-  (event: 'change', data: { downloadPercent: number | null, downloadText: string, downloadMsg?: string, cancelText?: string }): void
+  (event: 'change', data: TEmitChangeData): void
   (event: 'update:modelValue', data: string): void
 }
 
