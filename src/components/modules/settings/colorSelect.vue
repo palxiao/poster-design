@@ -46,7 +46,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const store = useStore()
     const state: any = reactive({
-      innerColor: '#ffffffff',
+      innerColor: '',
       // colorLength: 0,
       // hasEyeDrop: 'EyeDropper' in window,
     })

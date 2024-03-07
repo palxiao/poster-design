@@ -43,6 +43,7 @@ export const getTempList = (params: IGetTempListParam) => fetch<IGetTempListResu
 
 type TGetTempDetail = {
   id: number
+  type?: number
 }
 
 export const getTempDetail = (params: TGetTempDetail) => fetch<{data: string}>('design/temp', params, 'get')

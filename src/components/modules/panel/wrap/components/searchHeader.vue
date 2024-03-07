@@ -37,7 +37,7 @@ import api from '@/api'
 
 type TProps = {
   type?: string
-  modelValue: string
+  modelValue?: string
 }
 
 type TEmits = {

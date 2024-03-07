@@ -32,12 +32,11 @@ export type TGetListData = {
   updated_time: string
   url: string
   width: number
+  thumbUrl: string
+  imgUrl: string
 }
 
-type TGetListResult = TCommResResult<{
-  list: TGetListData
-  total: number
-}>
+export type TGetListResult = TPageRequestResult<TGetListData[]>
 
 
 

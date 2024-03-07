@@ -30,7 +30,7 @@ export type TClassHeaderTypeData = {
 
 type TProps = {
   types: TClassHeaderTypeData[]
-  isBack: boolean
+  isBack?: boolean
 }
 
 type TEmits = {

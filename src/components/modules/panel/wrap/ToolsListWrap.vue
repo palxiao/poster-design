@@ -17,7 +17,7 @@
       <i class="icon sd-AI_zhineng" />
       <div class="text"><span>智能抠图</span> <span class="desc">上传图像一键去除背景</span></div>
     </div>
-    <imageCutout ref="imageCutout" />
+    <imageCutout ref="imageCutoutRef" />
   </div>
 </template>
 
