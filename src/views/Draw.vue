@@ -20,6 +20,7 @@ import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
+import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 
 type TState = {
   style: StyleValue
@@ -36,7 +37,7 @@ const state = reactive<TState>({
 const { dPage } = useSetupMapGetters(['dPage'])
 
 onMounted(() => {
-  store.dispatch('initGroupJson', JSON.stringify(wGroup.setting))
+  store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
   // initGroupJson(JSON.stringify(wGroup.setting))
   nextTick(() => {
     load()

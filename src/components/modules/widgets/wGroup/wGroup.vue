@@ -8,11 +8,11 @@
 <template>
   <div
     ref="widget"
-    :class="['w-group', { 'layer-lock': params.lock }]"
+    :class="['w-group', { 'layer-lock': props.params?.lock }]"
     :style="{
       position: 'absolute',
-      left: params.left - parent.left + 'px',
-      top: params.top - parent.top + 'px',
+      left: (props.params.left || 0) - (props.parent?.left || 0) + 'px',
+      top: (props.params.top || 0) - (props.parent.top || 0) + 'px',
       width: params.width + 'px',
       height: params.height + 'px',
       opacity: params.opacity,
@@ -22,184 +22,223 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 // 组合组件
 const NAME = 'w-group'
-
-import { mapGetters, mapActions } from 'vuex'
+import { nextTick, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
+import { mapGetters, mapActions, useStore } from 'vuex'
 import { setTransformAttribute } from '@/common/methods/handleTransform'
+import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
-export default {
-  name: NAME,
-  setting: {
-    name: '组合',
-    type: NAME,
-    uuid: -1,
+type TParamsData = {
+  left: number
+  top: number
+  width: number
+  height: number
+  opacity: number
+  rotate: number
+  uuid: string
+  lock: boolean
+  fontSize: number
+}
+
+type TProps = {
+  params?: Partial<TParamsData>
+  parent?: Partial<Pick<TParamsData, "top" | "left">>
+}
+const props = withDefaults(defineProps<TProps>(), {
+  params: () => ({}),
+  parent: () => ({})
+})
+const store = useStore();
+const widget = ref<HTMLElement | null>(null)
+const ratio = ref(0)
+const temp = ref<Record<string, any>>({})
+const compWidgetsRecord = ref<Record<string, any>>({})
+const setting = {
+  name: '组合',
+  type: NAME,
+  uuid: -1,
+  width: 0,
+  height: 0,
+  left: 0,
+  top: 0,
+  transform: '',
+  opacity: 1,
+  parent: '-1',
+  isContainer: true,
+  record: {
     width: 0,
     height: 0,
-    left: 0,
-    top: 0,
-    transform: '',
-    opacity: 1,
-    parent: '-1',
-    isContainer: true,
-    record: {
-      width: 0,
-      height: 0,
-      minWidth: 0,
-      minHeight: 0,
-      dir: 'none',
-    },
-  },
-  props: ['params', 'parent'],
-  data() {
-    return {
-      // loading: false,
-      timer: null,
-    }
-  },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dWidgets']),
-  },
-  // watch: {
-  //   params: {
-  //     async handler(nval) {
-  //       this.updateRecord(nval.tempScale)
-  //     },
-  //     immediate: true,
-  //     deep: true,
-  //   },
-  // },
-  updated() {
-    this.updateRecord()
-  },
-  async mounted() {
-    await this.$nextTick()
-    this.touchstart()
-    this.updateRecord()
-    document.addEventListener('mousedown', this.touchstart, false)
-    document.addEventListener('mouseup', this.touchend, false)
-    this.params.rotate && (this.$refs.widget.style.transform += `rotate(${this.params.rotate})`)
-  },
-  beforeUnmount() {
-    document.removeEventListener('mousedown', this.touchstart, false)
-    document.removeEventListener('mouseup', this.touchend, false)
-  },
-  methods: {
-    ...mapActions(['updateWidgetData']),
-    updateRecord(tempScale) {
-      if (this.dActiveElement.uuid === this.params.uuid) {
-        // clearTimeout(this.timer)
-        let record = this.dActiveElement.record
-        if (record.width <= 0) {
-          this.touchend()
-        }
-        // if (this.tempRecord && this.tempRecord.width && this.tempRecord.width != record.width) {
-        //   return
-        // }
-        this.ratio = tempScale || this.params.width / record.width
-
-        if (this.ratio != 1) {
-          this.temp = {}
-          if (record.width != 0) {
-            for (let i = this.dWidgets.length - 1; i >= 0; --i) {
-              if (this.dWidgets[i].parent === this.params.uuid) {
-                this.temp[this.dWidgets[i].uuid] = { width: this.dWidgets[i].width * this.ratio, height: this.dWidgets[i].height * this.ratio, raw: this.dWidgets[i] }
-              }
-            }
-          }
-          // TODO DOM Change
-          // this.dActiveElement.scale = this.ratio
-          this.$refs.widget.style.transformOrigin = 'left top' // 设置scale的原点
-          setTransformAttribute(this.$refs.widget, 'scale', this.ratio)
-          // this.timer = setTimeout(() => {
-          //   this.touchend()
-          // }, 300)
-        }
-      }
-    },
-    touchstart() {
-      if (this.dActiveElement.uuid !== this.params.uuid) {
-        return
-      }
-      this.tempRecord = {
-        width: this.params.width,
-        height: this.params.height,
-      }
-      this.compWidgetsRecord = {}
-      for (let i = this.dWidgets.length - 1; i >= 0; --i) {
-        if (this.dWidgets[i].parent === this.params.uuid) {
-          this.compWidgetsRecord[this.dWidgets[i].uuid] = {
-            left: Number(document.getElementById(this.dWidgets[i].uuid).style.left.replace('px', '')),
-            top: Number(document.getElementById(this.dWidgets[i].uuid).style.top.replace('px', '')),
-            fontSize: Number(document.getElementById(this.dWidgets[i].uuid).style.fontSize?.replace('px', '')),
-          }
-        }
-      }
-    },
-    touchend() {
-      if (this.dActiveElement.uuid !== this.params.uuid) {
-        return
-      }
-      // const opacity = this.$refs.widget.style.opacity
-      // this.$refs.widget.style.opacity = 1
-      setTimeout(() => {
-        if (!this.temp) {
-          return
-        }
-        this.$refs.widget.style.opacity = 0
-        setTransformAttribute(this.$refs.widget, 'scale', 1)
-        setTimeout(() => {
-          this.$refs.widget.style.opacity = this.params.opacity
-          // this.$refs.widget.style.transformOrigin = 'center' // 设置scale的原点
-        }, 100)
-
-        // const opacity = this.$refs.widget.style.opacity
-        // setTransformAttribute(this.$refs.widget, 'scale', 1)
-        for (const key in this.temp) {
-          if (Object.hasOwnProperty.call(this.temp, key)) {
-            this.keyChange(key, 'width', this.temp[key].width)
-            this.keyChange(key, 'height', this.temp[key].height)
-            // 重新拿前面设定好的，实时DOM修改过了
-            this.keySetValue(key, 'left', this.compWidgetsRecord[key].left * this.ratio)
-            this.keySetValue(key, 'top', this.compWidgetsRecord[key].top * this.ratio)
-            // this.keySetValue(key, 'left', Number(document.getElementById(key).style.left.replace('px', '')) * this.ratio)
-            // this.keySetValue(key, 'top', Number(document.getElementById(key).style.top.replace('px', '')) * this.ratio)
-            if (this.temp[key].raw.type === 'w-text') {
-              this.keyChange(key, 'fontSize', this.compWidgetsRecord[key].fontSize * this.ratio)
-              // this.keyChange(key, 'fontSize', this.temp[key].raw.fontSize * this.ratio)
-              // this.keyChange(key, 'letterSpacing', this.temp[key].raw.letterSpacing * this.ratio)
-            }
-          }
-        }
-        // this.$refs.widget.style.opacity = opacity
-        this.temp = null
-
-        if (this.dActiveElement.uuid === this.params.uuid) {
-          let record = this.dActiveElement.record
-          record.width = this.$refs.widget?.offsetWidth
-          record.height = this.$refs.widget?.offsetHeight
-          this.dActiveElement.width = this.$refs.widget?.offsetWidth
-          this.dActiveElement.height = this.$refs.widget?.offsetHeight
-        }
-      }, 10)
-    },
-    keyChange(uuid, key, value) {
-      this.updateWidgetData({
-        uuid,
-        key,
-        value,
-        pushHistory: false,
-      })
-    },
-    keySetValue(uuid, key, value) {
-      setTimeout(() => {
-        const widget = this.dWidgets.find((item) => item.uuid === uuid)
-        widget[key] = value + Number(this.params[key])
-      }, 10)
-    },
+    minWidth: 0,
+    minHeight: 0,
+    dir: 'none',
   },
 }
+
+const timer = ref<number | null>(null)
+const { dActiveElement, dWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
+
+// watch: {
+//   params: {
+//     async handler(nval) {
+//       this.updateRecord(nval.tempScale)
+//     },
+//     immediate: true,
+//     deep: true,
+//   },
+// },
+
+onUpdated(() => {
+  updateRecord()
+})
+
+onMounted(async () => {
+  await nextTick()
+  touchstart()
+  updateRecord()
+  document.addEventListener('mousedown', touchstart, false)
+  document.addEventListener('mouseup', touchend, false)
+  if (props.params?.rotate && widget.value) {
+    (widget.value.style.transform += `rotate(${props.params.rotate})`)
+  }
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', touchstart, false)
+  document.removeEventListener('mouseup', touchend, false)
+})
+// ...mapActions(['updateWidgetData']),
+
+function updateRecord(tempScale ?: number) {
+  if (dActiveElement.value.uuid === props.params.uuid) {
+    // clearTimeout(this.timer)
+    let record = dActiveElement.value.record
+    if (record.width <= 0) {
+      touchend()
+    }
+    // if (this.tempRecord && this.tempRecord.width && this.tempRecord.width != record.width) {
+    //   return
+    // }
+    ratio.value = tempScale || (props.params.width || 0) / record.width
+
+    if (ratio.value != 1) {
+      if (record.width != 0) {
+        for (let i = dWidgets.value.length - 1; i >= 0; --i) {
+          if (dWidgets.value[i].parent === props.params.uuid) {
+            temp.value[dWidgets.value[i].uuid] = { width: dWidgets.value[i].width * ratio.value, height: dWidgets.value[i].height * ratio.value, raw: dWidgets.value[i] }
+          }
+        }
+      }
+      // TODO DOM Change
+      // this.dActiveElement.scale = this.ratio
+      if (widget.value) {
+        widget.value.style.transformOrigin = 'left top' // 设置scale的原点
+        setTransformAttribute(widget.value, 'scale', ratio.value)
+      }
+      // this.timer = setTimeout(() => {
+      //   this.touchend()
+      // }, 300)
+    }
+  }
+}
+
+function touchstart() {
+  if (dActiveElement.value.uuid !== props.params.uuid) {
+    return
+  }
+  const tempRecord = {
+    width: props.params.width,
+    height: props.params.height,
+  }
+  for (let i = dWidgets.value.length - 1; i >= 0; --i) {
+    if (dWidgets.value[i].parent === props.params.uuid) {
+      const el = document.getElementById(dWidgets.value[i].uuid)
+      if (el) {
+        compWidgetsRecord.value[dWidgets.value[i].uuid] = {
+          left: Number(el.style.left.replace('px', '')),
+          top: Number(el.style.top.replace('px', '')),
+          fontSize: Number(el.style.fontSize?.replace('px', '')),
+        }
+      }
+    }
+  }
+}
+
+function touchend() {
+  if (dActiveElement.value.uuid !== props.params.uuid) {
+    return
+  }
+  // const opacity = this.$refs.widget.style.opacity
+  // this.$refs.widget.style.opacity = 1
+  setTimeout(() => {
+    if (!temp.value || !widget.value) {
+      return
+    }
+    widget.value.style.opacity = `${0}`
+    setTransformAttribute(widget.value, 'scale', 1)
+    setTimeout(() => {
+      if (!widget.value) return
+      widget.value.style.opacity = `${props.params.opacity}`
+      // this.$refs.widget.style.transformOrigin = 'center' // 设置scale的原点
+    }, 100)
+
+    // const opacity = this.$refs.widget.style.opacity
+    // setTransformAttribute(this.$refs.widget, 'scale', 1)
+    for (const key in temp.value) {
+      if (Object.hasOwnProperty.call(temp.value, key)) {
+        keyChange(key, 'width', temp.value[key].width)
+        keyChange(key, 'height', temp.value[key].height)
+        // 重新拿前面设定好的，实时DOM修改过了
+        keySetValue(key, 'left', compWidgetsRecord.value[key].left * ratio.value)
+        keySetValue(key, 'top', compWidgetsRecord.value[key].top * ratio.value)
+        // this.keySetValue(key, 'left', Number(document.getElementById(key).style.left.replace('px', '')) * this.ratio)
+        // this.keySetValue(key, 'top', Number(document.getElementById(key).style.top.replace('px', '')) * this.ratio)
+        if (temp.value[key].raw.type === 'w-text') {
+          keyChange(key, 'fontSize', compWidgetsRecord.value[key].fontSize * ratio.value)
+          // this.keyChange(key, 'fontSize', this.temp[key].raw.fontSize * this.ratio)
+          // this.keyChange(key, 'letterSpacing', this.temp[key].raw.letterSpacing * this.ratio)
+        }
+      }
+    }
+    // this.$refs.widget.style.opacity = opacity
+    temp.value = {}
+
+    if (dActiveElement.value.uuid === props.params.uuid) {
+      let record = dActiveElement.value.record
+      record.width = widget.value?.offsetWidth
+      record.height = widget.value?.offsetHeight
+      dActiveElement.value.width = widget.value?.offsetWidth
+      dActiveElement.value.height = widget.value?.offsetHeight
+    }
+  }, 10)
+}
+function keyChange(uuid: string, key: keyof TParamsData, value: number) {
+  store.dispatch('updateWidgetData', {
+    uuid,
+    key,
+    value,
+    pushHistory: false,
+  })
+  // updateWidgetData({
+  //   uuid,
+  //   key,
+  //   value,
+  //   pushHistory: false,
+  // })
+}
+
+function keySetValue(uuid: string, key: keyof TParamsData, value: number) {
+  setTimeout(() => {
+    const widget = dWidgets.value.find((item: TParamsData) => item.uuid === uuid)
+    widget[key] = value + Number(props.params[key] || '')
+  }, 10)
+}
+
+defineExpose({
+  setting
+})
+
 </script>
 
 <style lang="less" scoped>

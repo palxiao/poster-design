@@ -72,6 +72,7 @@ import HeaderOptions from './components/HeaderOptions.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
+import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 
 type TState = {
   style: CSSProperties
@@ -146,7 +147,7 @@ const { handleKeydowm, handleKeyup, dealCtrl } = shortcuts.methods
 let checkCtrl: number | undefined
 
 onMounted(() => {
-  store.dispatch('initGroupJson', JSON.stringify(wGroup.setting))
+  store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
   // initGroupJson(JSON.stringify(wGroup.setting))
   window.addEventListener('scroll', fixTopBarScroll)
   // window.addEventListener('click', this.clickListener)
