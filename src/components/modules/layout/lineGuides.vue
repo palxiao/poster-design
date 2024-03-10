@@ -2,15 +2,15 @@
  * @Author: ShawnPhang
  * @Date: 2022-04-08 10:31:34
  * @Description:  
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 18:07:40
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-03-11 01:42:25
 -->
 <template>
   <div></div>
 </template>
 
 <script lang="ts" setup>
-import { watch, defineProps } from 'vue'
+import { watch } from 'vue'
 import { useStore } from 'vuex'
 import Guides, { GuideOptions } from '@scena/guides'
 

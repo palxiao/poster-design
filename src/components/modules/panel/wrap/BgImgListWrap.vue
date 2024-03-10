@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-01-24 16:39:27
+ * @LastEditTime: 2024-03-11 01:42:36
 -->
 <template>
   <div class="wrap">
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, defineProps, defineExpose } from 'vue'
+import { reactive, computed } from 'vue'
 import api from '@/api'
 import { useStore } from 'vuex'
 import { ElImage } from 'element-plus'

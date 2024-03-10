@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-16 09:15:52
  * @Description:  
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-04 18:50:00
 -->
 <template>
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch, nextTick, defineProps } from 'vue'
+import { onMounted, ref, watch, nextTick } from 'vue'
 import QRCodeStyling, {DotType, Options } from 'qr-code-styling'
 import { debounce } from 'throttle-debounce'
 import { generateOption } from './method'

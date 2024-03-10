@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-11 12:40:59
+ * @LastEditTime: 2024-03-11 01:43:30
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import api from '@/api'
-import { reactive, toRefs, defineEmits, defineProps, ref } from 'vue'
+import { reactive, toRefs, ref } from 'vue'
 import { mapGetters, mapActions, useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import _dl from '@/common/methods/download'

@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, defineProps, onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { mapGetters, mapActions, useStore } from 'vuex'
 import { getTarget } from '@/common/methods/target'
 

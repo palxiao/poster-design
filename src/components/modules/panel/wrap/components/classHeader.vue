@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2023-10-04 02:04:04
  * @Description: 列表分类头部
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-06 21:16:00
 -->
 <template>
@@ -22,8 +22,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits } from 'vue'
-
 export type TClassHeaderTypeData = {
   name: string
 }
