@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-12-16 16:20:16
  * @Description: 瀑布流组件
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-06 21:16:00
 -->
 <template>
@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 // const NAME = 'img-water-fall'
 import { IGetTempListData } from '@/api/home';
-import { reactive, watch, defineProps, defineExpose, defineEmits } from 'vue'
+import { reactive, watch } from 'vue'
 
 type TProps = {
   listData: IGetTempListData[]

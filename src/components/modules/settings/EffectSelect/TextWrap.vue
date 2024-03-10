@@ -3,7 +3,7 @@
  * @Date: 2021-08-09 14:00:23
  * @Description: 文字特效选择框组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-30 10:14:30
+ * @LastEditTime: 2024-03-11 01:43:21
 -->
 <template>
   <el-card class="box-card" shadow="hover" :body-style="{ padding: '20px' }">
@@ -109,8 +109,7 @@
 
 <script lang="ts" setup>
 import { 
-  reactive, watch, onMounted, nextTick, computed,
-  defineProps, defineEmits, defineExpose
+  reactive, watch, onMounted, nextTick, computed
 } from 'vue'
 import colorSelect from '../colorSelect.vue'
 import { ElInputNumber, ElCheckbox } from 'element-plus'

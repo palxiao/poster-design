@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import api from '@/api'
 import { ElDialog } from 'element-plus'
-import { ref, defineEmits, reactive, nextTick, toRefs } from 'vue'
+import { ref, reactive, nextTick, toRefs } from 'vue'
 import { useStore } from 'vuex'
 import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'

@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-11 12:40:59
+ * @LastEditTime: 2024-03-11 01:43:30
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import api from '@/api'
-import { reactive, toRefs, defineEmits, defineProps, ref } from 'vue'
+import { reactive, toRefs, ref } from 'vue'
 import { mapGetters, mapActions, useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import _dl from '@/common/methods/download'
@@ -175,10 +175,10 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
     cb()
     return
   }
-  const { data: content, title, state, width, height } = await api.home[apiName]({ id: id || tempId, type })
+  const { data: content, title, state: _state, width, height } = await api.home[apiName]({ id: id || tempId, type })
   if (content) {
     const data = JSON.parse(content)
-    state.stateBollean = (!!state)
+    state.stateBollean = !!_state
     state.title = title
     store.commit('setShowMoveable', false) // 清理掉上一次的选择框
     // this.$store.commit('setDWidgets', [])

@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-04-10 12:12:57
  * @Description: tooltip提示
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-10 12:42:02
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-03-11 01:41:20
 -->
 <template>
   <el-popover ref="popover" :placement="position" :title="title" :width="width" trigger="hover" :content="content">
@@ -14,8 +14,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue'
-
 type TProps = {
   title: string
   width: number

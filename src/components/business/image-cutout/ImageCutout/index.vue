@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, nextTick, defineEmits, ref } from 'vue'
+import { reactive, nextTick, ref } from 'vue'
 import { useStore } from 'vuex'
 import { ElProgress } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'

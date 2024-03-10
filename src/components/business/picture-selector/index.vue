@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, defineEmits, defineExpose } from 'vue'
+import { reactive } from 'vue'
 import { useStore } from 'vuex'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import api from '@/api'

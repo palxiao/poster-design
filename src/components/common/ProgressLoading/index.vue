@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-12-28 09:29:42
  * @Description: 百分比进度条
- * @LastEditors: ShawnPhang <site: book.palxp.com>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-05 10:50:00
 -->
 <template>
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, defineProps, defineEmits } from 'vue'
+import { watch } from 'vue'
 import { ElProgress } from 'element-plus'
 
 type TProps = {

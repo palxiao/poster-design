@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2023-10-04 19:12:40
  * @Description: 图片描述ToolTip
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-06 21:16:00
 -->
 <template>
@@ -18,7 +18,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue'
 
 export type TImageTipDetailData = {
   author: string

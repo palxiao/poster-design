@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-23 15:48:52
  * @Description: 图片列表组件 Bookshelf Layout 
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-06 21:16:00
 -->
 <template>
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch, nextTick, defineProps, defineExpose, defineEmits, ref } from 'vue'
+import { reactive, watch, nextTick, ref } from 'vue'
 import DragHelper from '@/common/hooks/dragHelper'
 import setImageData, { TItem2DataParam } from '@/common/methods/DesignFeatures/setImage'
 import { IGetTempListData } from '@/api/home';

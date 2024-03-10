@@ -49,4 +49,4 @@ app.use(bodyParser.json())
 
 app.use(router)
 
-app.listen(port, () => console.log(`devServer start on port:${port}`))
+app.listen(port, () => console.log(`Screenshot Server start on port:${port}`))
