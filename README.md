@@ -2,11 +2,11 @@
 
 ---
 
-## 迅排设计
+## Poster Design
 
-一款漂亮且功能强大的在线海报图片设计器，仿稿定设计。
+迅排设计是一款漂亮易用且功能强大的开源创意图片编辑器，是对标稿定设计、创客贴、Canva 等商业产品的免费在线设计工具。
 
-适用于海报图片生成、电商分享图、文章长图、视频/公众号封面等多种场景。
+适用于多种场景：海报图片生成、电商分享图、文章长图、视频/公众号封面等，无需下载软件即可轻松实现云端编辑、迅速完成图文排版。
 
 [![](https://xp.palxp.cn/images/2023-7-16-1689500112694.gif)](https://design.palxp.cn/)
 
@@ -40,7 +40,7 @@ npm run serve
 
 ![](https://xp.palxp.cn/images/2023-7-16-1689498291322.png)
 
-访问 http://127.0.0.1:3000/ 查看网页。点此查看[完整说明文档](https://xp.palxp.cn/#/articles/1689319644311)。
+访问 http://127.0.0.1:5173/ 查看网页。点此查看[完整说明文档](https://xp.palxp.cn/#/articles/1689319644311)。
 
 ### 图片生成服务
 
@@ -56,7 +56,7 @@ npm run serve
 
 本项目最早使用 Vue2 开发，现改用 Vue3 重构中。[一些迭代计划记录](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92).
 
-目前开源版仍在持续迭代中，还有很多的不足，我的目标是做一款能对标稿定设计、创客贴、Canva等商业产品的强大在线设计器。
+目前开源版仍在持续迭代中，还有很多的不足，可以将你遇到的问题在 Issues 中提出，或者提交 Pull Request 帮助完善。
 
 ### 感谢
 
@@ -103,5 +103,5 @@ npm run serve
 
 ### `LICENSE`
 
-本项目完全免费，遵循 [MIT 开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE)
+本项目完全免费，可在保留 [MIT 开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE) 的前提下使用。
 

@@ -236,9 +236,12 @@ export default defineComponent({
   width: 100%;
   // padding: 20px 0 0 10px;
   padding: 3.1rem 0 0 1rem;
+  gap: 0 !important;
   &__item {
     overflow: hidden;
     background: #f8fafc;
+    margin-bottom: 8px;
+    margin-right: 8px;
   }
   &__img {
     cursor: grab;

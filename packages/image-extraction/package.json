@@ -1,0 +1,27 @@
+{
+  "name": "@palxp/image-extraction",
+  "version": "1.2.4",
+  "description": "TODO",
+  "author": "ShawnPhang <palxiao@vip.qq.com>",
+  "homepage": "https://fe-doc.palxp.cn/#/image-extraction",
+  "license": "ISC",
+  "main": "index.ts",
+  "module": "index.ts",
+  "types": "types/matting.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palxiao/front-end-arsenal.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/palxiao/front-end-arsenal/issues"
+  },
+  "dependencies": {
+    "throttle-debounce": "^5.0.0"
+  }
+}
