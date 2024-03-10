@@ -45,7 +45,7 @@ import { defineComponent } from 'vue'
 import { useMatting, useMattingBoard } from './composables/use-matting'
 import useMattingCursor from './composables/use-matting-cursor'
 import { RADIUS_SLIDER_MIN, RADIUS_SLIDER_MAX, RADIUS_SLIDER_STEP, HARDNESS_SLIDER_MAX, HARDNESS_SLIDER_STEP, HARDNESS_SLIDER_MIN, EventType, DEFAULT_MASK_COLOR } from './constants'
-import { ref, onMounted, Ref, computed, nextTick, watch, defineExpose, onUnmounted } from 'vue'
+import { ref, onMounted, Ref, computed, nextTick, watch, onUnmounted } from 'vue'
 import { generateResultImageURL, getLoadedImage } from './helpers/dom-helper'
 
 export default defineComponent({

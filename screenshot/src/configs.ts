@@ -22,7 +22,7 @@ exports.servicePort = serviceComfig.port
 /**
  * 前端绘制页地址
  */
-exports.drawLink = isDev ? 'http://localhost:3000/draw' : serviceComfig.website + '/draw'
+exports.drawLink = isDev ? 'http://localhost:5173/draw' : serviceComfig.website + '/draw'
 
 /**
  * 图片缓存目录位置，根据实际情况调整

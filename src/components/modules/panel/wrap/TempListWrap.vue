@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, defineExpose } from 'vue'
+import { reactive, ref } from 'vue'
 import api from '@/api'
 import { useStore } from 'vuex'
 import { LocationQueryValue, useRoute, useRouter } from 'vue-router'

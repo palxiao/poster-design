@@ -40,7 +40,7 @@
 
 <script lang="ts" setup>
 import api from '@/api'
-import { toRefs, reactive, watch, onMounted, nextTick, defineProps, defineEmits, defineExpose } from 'vue'
+import { toRefs, reactive, watch, onMounted, nextTick } from 'vue'
 import { ElRadioGroup, ElRadioButton } from 'element-plus'
 import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
 import { TGetListResult } from '@/api/material';
