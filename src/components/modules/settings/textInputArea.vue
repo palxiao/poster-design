@@ -9,61 +9,65 @@
   <div id="text-input-area">
     <p v-if="label" class="input-label">{{ label }}</p>
     <div :class="{ 'input-wrap': true, active: inputBorder }">
-      <textarea :maxlength="max" :class="{ 'real-input': true, disable: !editable }" type="text" rows="3" :value="dealValue" :readonly="editable ? false : 'readonly'" @input="updateValue($event.target.value)" @focus="focusInput" @blur="blurInput" />
+      <textarea
+        :maxlength="max" :class="{ 'real-input': true, disable: !editable }" 
+        type="text" rows="3" :value="dealValue" 
+        :readonly="!editable" @input="updateValue(($event.target as HTMLTextAreaElement).value)"
+        @focus="focusInput" @blur="blurInput"
+      />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { ref, computed } from 'vue'
 // 文本域输入组件
-const NAME = 'text-input-area'
+// const NAME = 'text-input-area'
 
-export default {
-  name: NAME,
-  props: {
-    label: {
-      default: '',
-    },
-    modelValue: {
-      default: '',
-    },
-    editable: {
-      default: true,
-    },
-    max: {},
-  },
-  emits: ['update:modelValue', 'finish'],
-  data() {
-    return {
-      inputBorder: false,
-      tagText: '',
-    }
-  },
-  computed: {
-    dealValue() {
-      return this.modelValue
-      // return this.modelValue.replace(/<br\/>/g, '\r\n').replace(/&nbsp;/g, ' ')
-    },
-  },
-  methods: {
-    updateValue(value) {
-      this.$emit('update:modelValue', this.getValue(value))
-    },
-    focusInput() {
-      this.inputBorder = true
-      this.tagText = this.modelValue
-    },
-    blurInput() {
-      this.inputBorder = false
-      let v = this.getValue(this.modelValue)
-      if (v !== this.tagText) {
-        this.$emit('finish', v)
-      }
-    },
-    getValue(value) {
-      return value.replace(/\n|\r\n/g, '<br/>').replace(/ /g, '&nbsp;')
-    },
-  },
+type TProps = {
+  label?: string
+  modelValue?: string
+  editable?: boolean
+  max?: string
+}
+
+type TEmits = {
+  (event:'update:modelValue', data: string): void
+  (event: 'finish', data: string): void
+}
+
+const props = withDefaults(defineProps<TProps>(), {
+  label: '',
+  modelValue: '',
+  editable: true,
+})
+
+const emit = defineEmits<TEmits>()
+const inputBorder = ref(false)
+const tagText = ref<string>('')
+
+const dealValue = computed(() => {
+  return props.modelValue
+})
+
+function updateValue(value: string) {
+  emit('update:modelValue', getValue(value))
+}
+
+function focusInput() {
+  inputBorder.value = true
+  tagText.value = props.modelValue
+}
+
+function blurInput() {
+  inputBorder.value = false
+  let v = getValue(props.modelValue)
+  if (v !== tagText.value) {
+    emit('finish', v)
+  }
+}
+function getValue(value: string) {
+  return value.replace(/\n|\r\n/g, '<br/>').replace(/ /g, '&nbsp;')
 }
 </script>
 

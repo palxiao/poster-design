@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 // 文本输入组件
-const NAME = 'text-input'
+// const NAME = 'text-input'
 
 type TProps = {
   label?: string
