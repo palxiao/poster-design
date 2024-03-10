@@ -1,9 +1,17 @@
+<!--
+ * @Author: ShawnPhang
+ * @Date: 2023-09-18 17:34:44
+ * @Description: 
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastUpdateContent: Support typescript
+ * @LastEditTime: 2024-02-25 14:51:00
+-->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
-    <div :style="style" class="top-nav">
+    <div :style="state.style" class="top-nav">
       <div class="top-nav-wrap">
         <div class="top-left">
-          <div class="name" @click="jump2home">{{ APP_NAME }}</div>
+          <div class="name" @click="jump2home">{{ state.APP_NAME }}</div>
           <div class="operation">
             <div :class="['operation-item', { disable: !undoable }]" @click="undoable ? handleHistory('undo') : ''"><i class="iconfont icon-undo" /></div>
             <div :class="['operation-item', { disable: !redoable }]" @click="redoable ? handleHistory('redo') : ''"><i class="iconfont icon-redo" /></div>
@@ -12,7 +20,7 @@
             <i style="font-size: 20px" class="icon sd-biaochi extra-operation" @click="changeLineGuides" />
           </el-tooltip>
         </div>
-        <HeaderOptions ref="options" v-model="isContinue" @change="optionsChange" />
+        <HeaderOptions ref="optionsRef" v-model="state.isContinue" @change="optionsChange" />
       </div>
     </div>
     <div class="page-design-index-wrap">
@@ -26,150 +34,196 @@
       <style-panel></style-panel>
     </div>
     <!-- 标尺 -->
-    <line-guides :show="showLineGuides" />
+    <line-guides :show="state.showLineGuides" />
     <!-- 缩放控制 -->
-    <zoom-control ref="zoomControl" />
+    <zoom-control ref="zoomControlRef" />
     <!-- 右键菜单 -->
     <right-click-menu />
     <!-- 旋转缩放组件 -->
     <Moveable />
     <!-- 遮罩百分比进度条 -->
-    <ProgressLoading :percent="downloadPercent" :text="downloadText" cancelText="取消" @cancel="downloadCancel" @done="downloadPercent = 0" />
+    <ProgressLoading
+      :percent="state.downloadPercent"
+      :text="state.downloadText"
+      cancelText="取消"
+      @cancel="downloadCancel"
+      @done="state.downloadPercent = 0"
+    />
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import _config from '../config'
-import { defineComponent, reactive, toRefs } from 'vue'
-import { mapActions, mapGetters } from 'vuex'
+import {
+  CSSProperties, computed, nextTick,
+  onBeforeUnmount, onMounted, reactive, ref,
+  getCurrentInstance
+} from 'vue'
+import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
-import designBoard from '@/components/modules/layout/designBoard.vue'
-import zoomControl from '@/components/modules/layout/zoomControl.vue'
+import designBoard from '@/components/modules/layout/designBoard/index.vue'
+import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import lineGuides from '@/components/modules/layout/lineGuides.vue'
 
 import shortcuts from '@/mixins/shortcuts'
 import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
+import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { useRoute } from 'vue-router'
+import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 
-const beforeUnload = function (e: any) {
-  const confirmationMessage = '系统不会自动保存您未修改的内容'
-  ;(e || window.event).returnValue = confirmationMessage // Gecko and Trident
+type TState = {
+  style: CSSProperties
+  downloadPercent: number // 下载进度
+  downloadText: string
+  isContinue: boolean
+  APP_NAME: string
+  showLineGuides: boolean
+}
+
+const beforeUnload = function (e: Event): string {
+  const confirmationMessage: string = '系统不会自动保存您未修改的内容';
+
+  (e || window.event).returnValue = (confirmationMessage as any) // Gecko and Trident
   return confirmationMessage // Gecko and WebKit
 }
 
-export default defineComponent({
-  components: {
-    RightClickMenu,
-    Moveable,
-    HeaderOptions,
-    ProgressLoading,
-    designBoard,
-    zoomControl,
-    lineGuides,
-  },
-  mixins: [shortcuts],
-  setup() {
-    !_config.isDev && window.addEventListener('beforeunload', beforeUnload)
+// mixins: [shortcuts],
+!_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
-    const state = reactive({
-      style: {
-        left: '0px',
-      },
-      // openDraw: false,
-      downloadPercent: 0, // 下载进度
-      downloadText: '',
-      isContinue: true,
-      APP_NAME: _config.APP_NAME,
-      showLineGuides: false,
-    })
-    // const draw = () => {
-    //   state.openDraw = true
-    // }
-    function jump2home() {
-      // const fullPath = window.location.href.split('/')
-      // window.open(fullPath[0] + '//' + fullPath[2])
-      window.open('https://xp.palxp.cn/')
-    }
-    return {
-      ...toRefs(state),
-      jump2home,
-    }
+const {
+  dActiveElement, dHistoryParams, dCopyElement, dPage, dZoom
+} = useSetupMapGetters(['dActiveElement', 'dHistoryParams', 'dCopyElement', 'dPage', 'dZoom'])
+
+const state = reactive<TState>({
+  style: {
+    left: '0px',
   },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dHistoryParams', 'dCopyElement', 'dPage', 'dZoom']),
-    undoable() {
-      return !(this.dHistoryParams.index === -1 || (this.dHistoryParams === 0 && this.dHistoryParams.length === this.dHistoryParams.maxLength))
-    },
-    redoable() {
-      return !(this.dHistoryParams.index === this.dHistoryParams.length - 1)
-    },
-  },
-  // watch: {
-  //   $route() {
-  //     console.log('change route', this.$route.query)
-  //     this.loadData()
-  //   },
-  // },
-  mounted() {
-    this.initGroupJson(JSON.stringify(wGroup.setting))
-    window.addEventListener('scroll', this.fixTopBarScroll)
-    // window.addEventListener('click', this.clickListener)
-    document.addEventListener('keydown', this.handleKeydowm, false)
-    document.addEventListener('keyup', this.handleKeyup, false)
-    this.loadData()
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.fixTopBarScroll)
-    // window.removeEventListener('click', this.clickListener)
-    document.removeEventListener('keydown', this.handleKeydowm, false)
-    document.removeEventListener('keyup', this.handleKeyup, false)
-    document.oncontextmenu = null
-  },
-  methods: {
-    ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
-    changeLineGuides() {
-      this.showLineGuides = !this.showLineGuides
-    },
-    downloadCancel() {
-      this.downloadPercent = 0
-      this.isContinue = false
-    },
-    loadData() {
-      // 初始化加载页面
-      const { id, tempid, tempType } = this.$route.query
-      ;(this.$refs as any).options.load(id, tempid, tempType, async () => {
-        ;(this.$refs as any).zoomControl.screenChange()
-        await this.$nextTick()
-        // 初始化激活的控件为page
-        this.selectWidget({
-          uuid: '-1',
-        })
-      })
-    },
-    zoomSub() {
-      ;(this.$refs as any).zoomControl.sub()
-    },
-    zoomAdd() {
-      ;(this.$refs as any).zoomControl.add()
-    },
-    save() {
-      ;(this.$refs as any).options.save()
-    },
-    fixTopBarScroll() {
-      const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
-      this.style.left = `-${scrollLeft}px`
-    },
-    clickListener(e) {
-      console.log('click listener', e)
-    },
-    optionsChange({ downloadPercent, downloadText }: any) {
-      this.downloadPercent = downloadPercent
-      this.downloadText = downloadText
-    },
-  },
+  // openDraw: false,
+  downloadPercent: 0, // 下载进度
+  downloadText: '',
+  isContinue: true,
+  APP_NAME: _config.APP_NAME,
+  showLineGuides: false,
 })
+const optionsRef = ref<typeof HeaderOptions | null>(null)
+const zoomControlRef = ref<typeof zoomControl | null>(null)
+const store = useStore()
+const route = useRoute()
+
+// const draw = () => {
+//   state.openDraw = true
+// }
+
+function jump2home() {
+  // const fullPath = window.location.href.split('/')
+  // window.open(fullPath[0] + '//' + fullPath[2])
+  window.open('https://xp.palxp.cn/')
+}
+
+defineExpose({
+  jump2home,
+})
+
+const undoable = computed(() => {
+  return !(
+    dHistoryParams.value.index === -1 || 
+    (dHistoryParams.value === 0 && dHistoryParams.value.length === dHistoryParams.value.maxLength))
+})
+
+const redoable = computed(() => {
+  return !(dHistoryParams.value.index === dHistoryParams.value.length - 1)
+})
+// watch: {
+//   $route() {
+//     console.log('change route', this.$route.query)
+//     this.loadData()
+//   },
+// },
+
+const { handleKeydowm, handleKeyup, dealCtrl } = shortcuts.methods
+let checkCtrl: number | undefined
+
+onMounted(() => {
+  store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
+  // initGroupJson(JSON.stringify(wGroup.setting))
+  window.addEventListener('scroll', fixTopBarScroll)
+  // window.addEventListener('click', this.clickListener)
+  const instance = getCurrentInstance()
+  document.addEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
+  document.addEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  loadData()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', fixTopBarScroll)
+  const instance = getCurrentInstance()
+  // window.removeEventListener('click', this.clickListener)
+  document.removeEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
+  document.removeEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  document.oncontextmenu = null
+})
+    // ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
+
+function handleHistory(data: string) {
+  store.dispatch('handleHistory', data)
+}
+
+function changeLineGuides() {
+  state.showLineGuides = !state.showLineGuides
+}
+
+function downloadCancel() {
+  state.downloadPercent = 0
+  state.isContinue = false
+}
+
+function loadData() {
+  // 初始化加载页面
+  const { id, tempid, tempType } = route.query
+  if (!optionsRef.value) return
+  optionsRef.value.load(id, tempid, tempType, async () => {
+    if (!zoomControlRef.value) return
+    zoomControlRef.value.screenChange()
+    await nextTick()
+    // 初始化激活的控件为page
+    store.dispatch('selectWidget', { uuid: '-1' })
+    // selectWidget({
+    //   uuid: '-1',
+    // })
+  })
+}
+
+function zoomSub() {
+  if (!zoomControlRef.value) return
+  zoomControlRef.value.sub()
+}
+
+function zoomAdd() {
+  if (!zoomControlRef.value) return
+  zoomControlRef.value.add()
+}
+
+function save() {
+  if (!optionsRef.value) return
+  optionsRef.value.save()
+}
+
+function fixTopBarScroll() {
+  const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
+  state.style.left = `-${scrollLeft}px`
+}
+
+function clickListener(e: Event) {
+  console.log('click listener', e)
+}
+
+function optionsChange({ downloadPercent, downloadText }: { downloadPercent: number, downloadText: string }) {
+  state.downloadPercent = downloadPercent
+  state.downloadText = downloadText
+}
 </script>
 
 <style lang="less" scoped>

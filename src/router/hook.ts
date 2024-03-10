@@ -1,8 +1,10 @@
 //  import store from '@/store'
 
- export default (router: Type.Object) => {
+import { NavigationGuardNext, RouteLocationNormalized, Router } from "vue-router"
+
+ export default (router: Router) => {
  
-     router.beforeEach((to: Type.Object, from: Type.Object, next: () => void) => {
+     router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
          // if (to.meta.requireAuth) { }
  
          // 有必要时清除残余的loading框

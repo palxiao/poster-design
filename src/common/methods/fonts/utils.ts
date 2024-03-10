@@ -70,27 +70,27 @@ export function generateFontStyle(name: string, url: string): HTMLStyleElement {
 }
 
 // 找到使用到的所有字体
-export function filterSkyFonts() {
-  const fonts: string[] = []
-  // const textClouds = sky.state.clouds.filter(
-  //   (cloud) => cloud.type === CLOUD_TYPE.text,
-  // );
-  const textClouds: any = []
+// export function filterSkyFonts() {
+//   const fonts: string[] = []
+//   // const textClouds = sky.state.clouds.filter(
+//   //   (cloud) => cloud.type === CLOUD_TYPE.text,
+//   // );
+//   const textClouds: any = []
 
-  ;(textClouds as unknown as CloudText[]).forEach((cloud) => {
-    // 找到文字组件字体
-    if (cloud.fontFamily && !fonts.includes(cloud.fontFamily)) {
-      fonts.push(cloud.fontFamily)
-    }
-    // 找到文字组件子级字体
-    cloud.texts.forEach((text) => {
-      if (text.fontFamily && !fonts.includes(text.fontFamily)) {
-        fonts.push(text.fontFamily)
-      }
-    })
-  })
-  return fonts
-}
+//   ;(textClouds as unknown as CloudText[]).forEach((cloud) => {
+//     // 找到文字组件字体
+//     if (cloud.fontFamily && !fonts.includes(cloud.fontFamily)) {
+//       fonts.push(cloud.fontFamily)
+//     }
+//     // 找到文字组件子级字体
+//     cloud.texts.forEach((text) => {
+//       if (text.fontFamily && !fonts.includes(text.fontFamily)) {
+//         fonts.push(text.fontFamily)
+//       }
+//     })
+//   })
+//   return fonts
+// }
 
 export function base642Blob(b64Data: string, contentType = '', sliceSize = 512) {
   const byteCharacters = atob(b64Data)

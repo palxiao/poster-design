@@ -6,128 +6,137 @@
     <div class="content">
       <el-popover placement="left-end" trigger="click" width="auto" @after-enter="enter" @before-leave="hide">
         <!-- eslint-disable-next-line vue/no-v-model-argument -->
-        <color-picker v-model:value="innerColor" :modes="modes" @change="colorChange" @nativePick="dropColor" />
+        <color-picker v-model:value="state.innerColor" :modes="modes" @change="colorChange" @nativePick="dropColor" />
         <template #reference>
-          <div class="color__bar" :style="{ background: innerColor }"></div>
+          <div class="color__bar" :style="{ background: state.innerColor }"></div>
         </template>
       </el-popover>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-const NAME = 'color-select'
-import { defineComponent, toRefs, reactive, computed, onMounted, watch } from 'vue'
+<script lang="ts" setup>
+// const NAME = 'color-select'
+import {reactive, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 // import { debounce } from 'throttle-debounce'
 // import { toolTip } from '@/common/methods/helper'
 // import colorPicker from '@/utils/plugins/color-picker/index.vue'
 import colorPicker from '@palxp/color-picker'
 
-export default defineComponent({
-  name: NAME,
-  components: { colorPicker },
-  inheritAttrs: false,
-  props: {
-    label: {
-      default: '',
-    },
-    modelValue: {
-      default: '',
-    },
-    width: {
-      default: '100%',
-    },
-    modes: {
-      default: () => ['纯色'],
-    },
-  },
-  emits: ['finish', 'update:modelValue', 'change'],
-  setup(props, { emit }) {
-    const store = useStore()
-    const state: any = reactive({
-      innerColor: '#ffffffff',
-      // colorLength: 0,
-      // hasEyeDrop: 'EyeDropper' in window,
-    })
-    let first = true
+type TProps = {
+  label?: string
+  modelValue?: string
+  width?: string
+  modes?: string[]
+}
+
+type TEmits = {
+  (event: 'finish', data: string): void
+  (event: 'update:modelValue', data: string): void
+  (event: 'change', data: string): void
+}
+
+type TState = {
+  innerColor: string
+}
+
+const props = withDefaults(defineProps<TProps>(), {
+  label: '',
+  modelValue: '',
+  width: '100%',
+  modes: () => (['纯色'])
+})
+
+const emit = defineEmits<TEmits>()
+
+const store = useStore()
+const state = reactive<TState>({
+  innerColor: '',
+  // colorLength: 0,
+  // hasEyeDrop: 'EyeDropper' in window,
+})
+let first = true
+
     // const dColorHistory = computed(() => {
     //   return store.getters.dColorHistory
     // })
 
-    onMounted(() => {
-      if (props.modelValue) {
-        let fixColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
-        // 当前@palxp/color-picker对部分小写16进制颜色处理有异常，统一转为大写
-        state.innerColor = fixColor.toLocaleUpperCase()
-      }
-    })
-    const dropColor = async (e: any) => {
-      console.log('取色: ', e)
-    }
+onMounted(() => {
+  if (props.modelValue) {
+    let fixColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
+    // 当前@palxp/color-picker对部分小写16进制颜色处理有异常，统一转为大写
+    state.innerColor = fixColor.toLocaleUpperCase()
+  }
+})
 
-    watch(
-      () => state.innerColor,
-      (value) => {
-        activeChange(value)
-        if (first) {
-          first = false
-          return
-        }
-        // addHistory(value)
-      },
-    )
-    watch(
-      () => props.modelValue,
-      (val) => {
-        val !== state.innerColor && (state.innerColor = val)
-      },
-    )
+const dropColor = async (color: string) => {
+  console.log('取色: ', color)
+}
 
-    const updateValue = (value: any) => {
-      emit('update:modelValue', value)
+watch(
+  () => state.innerColor,
+  (value) => {
+    activeChange(value)
+    if (first) {
+      first = false
+      return
     }
-    const activeChange = (value: any) => {
-      updateValue(value)
-    }
-    const onChange = () => {
-      emit('finish', state.innerColor)
-    }
-    // const addHistory = debounce(300, false, async (value) => {
-    //   store.dispatch('pushColorToHistory', value)
-    // })
-    // const colorChange = debounce(150, false, async (e) => {
-    //   state.innerColor = e + (e.length === 7 ? 'ff' : '')
-    // })
-
-    const inputBlur = (color: string) => {
-      state.innerColor = color
-    }
-
-    const enter = () => {
-      store.commit('setShowMoveable', false) // 清理掉上一次的选择框
-    }
-
-    const hide = () => {
-      store.commit('setShowMoveable', true) // 恢复上一次的选择框
-    }
-
-    const colorChange = (e) => {
-      emit('change', e)
-    }
-
-    return {
-      ...toRefs(state),
-      // dColorHistory,
-      activeChange,
-      onChange,
-      dropColor,
-      inputBlur,
-      enter,
-      hide,
-      colorChange,
-    }
+    // addHistory(value)
   },
+)
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    val !== state.innerColor && (state.innerColor = val)
+  },
+)
+
+const updateValue = (value: any) => {
+  emit('update:modelValue', value)
+}
+
+const activeChange = (value: any) => {
+  updateValue(value)
+}
+
+const onChange = () => {
+  emit('finish', state.innerColor)
+}
+
+// const addHistory = debounce(300, false, async (value) => {
+//   store.dispatch('pushColorToHistory', value)
+// })
+// const colorChange = debounce(150, false, async (e) => {
+//   state.innerColor = e + (e.length === 7 ? 'ff' : '')
+// })
+
+const inputBlur = (color: string) => {
+  state.innerColor = color
+}
+
+const enter = () => {
+  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+}
+
+const hide = () => {
+  store.commit('setShowMoveable', true) // 恢复上一次的选择框
+}
+
+const colorChange = (color: string) => {
+  emit('change', color)
+}
+
+defineExpose({
+  // dColorHistory,
+  activeChange,
+  onChange,
+  dropColor,
+  inputBlur,
+  enter,
+  hide,
+  colorChange,
 })
 </script>
 

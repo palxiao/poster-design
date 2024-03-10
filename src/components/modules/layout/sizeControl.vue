@@ -1,10 +1,11 @@
 <!--
  * @Author: ShawnPhang
  * @Date: 2021-08-03 17:50:21
- * @Description: 旧大小控制组件，已交由moveable控制
+ * @Description: 旧大小控制组件，已交由moveable控制 (已不使用)
  * @LastEditors: ShawnPhang
  * @LastEditTime: 2021-08-09 11:13:09
 -->
+
 <template>
   <div v-if="dActiveElement.record && dActiveElement.uuid !== '-1'" id="size-control">
     <!-- 上左 -->
@@ -99,73 +100,74 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+// import { mapGetters, mapActions } from 'vuex'
 
-// 组件大小控制器
-const NAME = 'size-control'
+// // 组件大小控制器
+// const NAME = 'size-control'
 
-export default {
-  name: NAME,
-  data() {
-    return {
-      dirs: [],
-    }
-  },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dWidgets']),
-    left() {
-      return parseInt(this.dActiveElement.left)
-    },
-    top() {
-      return parseInt(this.dActiveElement.top)
-    },
-    width() {
-      return parseInt(this.dActiveElement.record.width)
-    },
-    height() {
-      return parseInt(this.dActiveElement.record.height)
-    },
-  },
-  watch: {},
-  methods: {
-    ...mapActions(['dResize', 'initDResize', 'dResize', 'stopDResize']),
-    handlemousedown(e, dirs) {
-      e.stopPropagation()
-      this.dirs = dirs.split('-')
-      this.initDResize({
-        startX: e.pageX,
-        startY: e.pageY,
-        originX: this.dActiveElement.left,
-        originY: this.dActiveElement.top,
-        width: this.width,
-        height: this.height,
-      })
+// export default {
+//   name: NAME,
+//   data() {
+//     return {
+//       dirs: [],
+//     }
+//   },
+//   computed: {
+//     ...mapGetters(['dActiveElement', 'dWidgets']),
+//     left() {
+//       return parseInt(this.dActiveElement.left)
+//     },
+//     top() {
+//       return parseInt(this.dActiveElement.top)
+//     },
+//     width() {
+//       return parseInt(this.dActiveElement.record.width)
+//     },
+//     height() {
+//       return parseInt(this.dActiveElement.record.height)
+//     },
+//   },
+//   watch: {},
+//   methods: {
+//     ...mapActions(['dResize', 'initDResize', 'dResize', 'stopDResize']),
+//     handlemousedown(e, dirs) {
+//       e.stopPropagation()
+//       this.dirs = dirs.split('-')
+//       this.initDResize({
+//         startX: e.pageX,
+//         startY: e.pageY,
+//         originX: this.dActiveElement.left,
+//         originY: this.dActiveElement.top,
+//         width: this.width,
+//         height: this.height,
+//       })
 
-      document.addEventListener('mousemove', this.handlemousemove, true)
-      document.addEventListener('mouseup', this.handlemouseup, true)
-    },
+//       document.addEventListener('mousemove', this.handlemousemove, true)
+//       document.addEventListener('mouseup', this.handlemouseup, true)
+//     },
 
-    handlemousemove(e) {
-      e.stopPropagation()
-      e.preventDefault()
+//     handlemousemove(e) {
+//       e.stopPropagation()
+//       e.preventDefault()
 
-      this.dResize({
-        x: e.pageX,
-        y: e.pageY,
-        dirs: this.dirs,
-      })
-    },
+//       this.dResize({
+//         x: e.pageX,
+//         y: e.pageY,
+//         dirs: this.dirs,
+//       })
+//     },
 
-    handlemouseup() {
-      document.removeEventListener('mousemove', this.handlemousemove, true)
-      document.removeEventListener('mouseup', this.handlemouseup, true)
-      this.stopDResize()
-    },
-  },
-}
+//     handlemouseup() {
+//       document.removeEventListener('mousemove', this.handlemousemove, true)
+//       document.removeEventListener('mouseup', this.handlemouseup, true)
+//       this.stopDResize()
+//     },
+//   },
+// }
 </script>
 
 <style lang="less" scoped>
+/*
 #size-control {
   position: absolute;
   .square {
@@ -178,4 +180,5 @@ export default {
     z-index: 999;
   }
 }
+*/
 </style>

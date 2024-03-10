@@ -2,9 +2,21 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-16 11:38:48
  * @Description:
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-03-23 16:00:11
+ * @LastEditors: ShawnPhang, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-01 20:55:51
  */
+
+export type QrCodeLocalizationData = {
+  dotColorTypes: {
+    key: string
+    value: string
+  }[]
+  dotTypes: {
+    key: string
+    value: string
+  }[]
+}
+
 export default {
   dotColorTypes: [
     {
@@ -42,4 +54,4 @@ export default {
       value: '特殊风格',
     },
   ],
-}
+} as QrCodeLocalizationData

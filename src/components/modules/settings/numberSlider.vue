@@ -8,68 +8,71 @@
 <template>
   <div id="number-slider">
     <span :style="{ width: labelWidth }" class="label">{{ label }}</span>
-    <el-slider v-model="innerValue" :min="minValue" :max="maxValue" :step="step" input-size="small" :show-input="showInput" :show-tooltip="false" :show-input-controls="false" @change="changeValue"> </el-slider>
+    <el-slider
+      v-model="innerValue"
+      :min="minValue" :max="maxValue" :step="step"
+      input-size="small" 
+      :show-input="showInput" :show-tooltip="false" :show-input-controls="false"
+      @change="changeValue"
+    /> 
   </div>
 </template>
 
-<script>
-const NAME = 'number-slider'
-import { mapGetters, mapActions } from 'vuex'
+<script lang="ts" setup>
+// const NAME = 'number-slider'
+import { watch, ref, onMounted } from 'vue';
+import { mapActions } from 'vuex'
 
-export default {
-  name: NAME,
-  props: {
-    label: {
-      default: '',
-    },
-    labelWidth: {
-      default: '71px',
-    },
-    modelValue: {
-      default: 0,
-    },
-    minValue: {
-      default: 0,
-    },
-    maxValue: {
-      default: 500,
-    },
-    step: {
-      default: 1,
-    },
-    showInput: {
-      default: true,
-    },
-  },
-  emits: ['update:modelValue', 'finish'],
-  data() {
-    return {
-      innerValue: 0,
-      // first: true,
+type TProps = {
+  label?: string
+  labelWidth?: string
+  modelValue?: number
+  minValue?: number
+  maxValue?: number
+  step?: number
+  showInput?: boolean
+}
+
+type TEmits = {
+  (event: 'update:modelValue', data: number): void
+  (event: 'finish', data: number | number[]): void
+}
+
+const props = withDefaults(defineProps<TProps>(), {
+  label: '',
+  labelWidth: '71px',
+  modelValue: 0,
+  minValue: 0,
+  maxValue: 500,
+  step: 1,
+  showInput: true
+})
+const emit = defineEmits<TEmits>()
+
+const innerValue = ref<number>(0)
+
+watch(
+  () => innerValue.value,
+  (value) => {
+    if (props.modelValue !== value) {
+      emit('update:modelValue', value)
     }
-  },
-  computed: {
-    ...mapGetters([]),
-  },
-  watch: {
-    innerValue(value) {
-      if (this.modelValue !== value) {
-        this.$emit('update:modelValue', value)
-      }
-    },
-    modelValue(val) {
-      this.innerValue = this.modelValue
-    },
-  },
-  created() {
-    this.innerValue = this.modelValue
-  },
-  methods: {
-    ...mapActions([]),
-    changeValue(value) {
-      this.$emit('finish', value)
-    },
-  },
+  }
+)
+
+watch(
+  () => props.modelValue,
+  () => {
+    innerValue.value = props.modelValue
+  }
+)
+
+onMounted(() => {
+  innerValue.value = props.modelValue
+})
+
+function changeValue(value: number | number[]) {
+  emit('finish', value)
 }
 </script>
 

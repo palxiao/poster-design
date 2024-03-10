@@ -6,11 +6,14 @@
  * @LastEditTime: 2023-10-13 01:30:33
  */
 // import { isSupportFontFamily, blob2Base64 } from './utils'
-import { getFonts } from '@/api/material'
+import { TGetFontItemData, getFonts } from '@/api/material'
 
 const nowVersion = '2' // 当前字体文件版本更新，将刷新前端缓存
 
-const fontList: any = []
+/** 字体item类型 */
+export type TFontItemData = { url: string } & Omit<TGetFontItemData, "woff">
+
+const fontList: TFontItemData[] = []
 // const download: any = {}
 export const useFontStore = {
   list: fontList,
@@ -18,7 +21,7 @@ export const useFontStore = {
   async init() {
     this.list = []
     localStorage.getItem('FONTS_VERSION') !== nowVersion && localStorage.removeItem('FONTS')
-    const localFonts: any = localStorage.getItem('FONTS') ? JSON.parse(localStorage.getItem('FONTS') || '') : []
+    const localFonts: TFontItemData[] = localStorage.getItem('FONTS') ? JSON.parse(localStorage.getItem('FONTS') || '') : []
     if (localFonts.length > 0) {
       this.list.push(...localFonts)
     }
@@ -26,7 +29,7 @@ export const useFontStore = {
     if (this.list.length === 0) {
       const res = await getFonts({ pageSize: 400 })
       this.list.unshift(
-        ...res.list.map((x: any) => {
+        ...res.list.map((x) => {
           const { id, alias, oid, value, preview, woff, lang } = x
           return { id, oid, value, preview, alias, url: woff, lang }
         }),

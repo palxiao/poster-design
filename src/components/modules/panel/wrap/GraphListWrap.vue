@@ -212,9 +212,12 @@ export default defineComponent({
 .list {
   width: 100%;
   padding: 3.1rem 0 0 1rem;
+  gap: 0px !important;
   &__item {
     overflow: hidden;
     background: #f8fafc;
+    margin-bottom: 8px;
+    margin-right: 8px;
   }
   &__img {
     cursor: grab;

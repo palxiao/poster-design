@@ -18,34 +18,40 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 // 图标按钮选择组件
-const NAME = 'icon-item-select'
+// const NAME = 'icon-item-select'
 
-export default {
-  name: NAME,
-  props: {
-    label: {
-      default: '',
-    },
-    data: {
-      required: true,
-      type: Array,
-    },
-  },
-  emits: ['finish'],
-  data() {
-    return {}
-  },
-  methods: {
-    selectItem(item) {
-      if (typeof item.select !== 'undefined') {
-        item.select = !item.select
-      }
-      this.$emit('finish', item)
-    },
-  },
+type TPropData = {
+  select: boolean,
+  extraIcon: boolean,
+  tip: string
+  icon?: string
 }
+
+type TProps = {
+  label?: string
+  data: TPropData[]
+}
+
+type TEmits = {
+  (event: 'finish', data: TPropData): void
+}
+
+const props = withDefaults(defineProps<TProps>(), {
+  label: ''
+})
+
+const emit = defineEmits<TEmits>()
+
+
+function selectItem(item: TPropData) {
+  if (typeof item.select !== 'undefined') {
+    item.select = !item.select
+  }
+  emit('finish', item)
+}
+
 </script>
 
 <style lang="less" scoped>

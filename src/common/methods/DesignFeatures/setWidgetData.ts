@@ -11,7 +11,8 @@ import setImageData from '@/common/methods/DesignFeatures/setImage'
 import wText from '@/components/modules/widgets/wText/wText.vue'
 import wImage from '@/components/modules/widgets/wImage/wImage.vue'
 import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
-export default async function(type: string, item: any, data: any) {
+
+export default async function(type: string, item: TCommonItemData, data: Record<string, any>) {
   let setting = data
   if (type === 'text') {
     !item.fontFamily && !item.color ? (setting = JSON.parse(JSON.stringify(wText.setting))) : (setting = item)

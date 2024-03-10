@@ -5,17 +5,34 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2023-11-22 18:11:15
  */
+
 import store from '@/store'
-export default class dragHelper {
-  private cloneEl: any = null
+
+type TInitial = {
+  offsetX: number
+  offsetY: number
+  pageX: number
+  pageY: number
+  width: number
+  height: number
+  finallySize: number
+  flag: number
+  x: number
+  y: number
+}
+
+type TQueueFunction = () => void
+
+export default class DragHelper {
+  private cloneEl?: HTMLElement | null
   private dragging: boolean = false
-  private initial: any = {}
-  private queue: any = []
+  private initial: Partial<TInitial> = {}
+  private queue: TQueueFunction[] = []
 
   constructor() {
     window.addEventListener('mousemove', (e) => {
       if (this.dragging && this.cloneEl) {
-        const { offsetX, offsetY, width, height } = this.initial
+        const { width, height } = this.initial as TInitial
         // this.moveFlutter(e.pageX - offsetX, e.pageY - offsetY, this.distance(e))
         this.moveFlutter(e.pageX - width / 2, e.pageY - height / 2, this.distance(e))
       } else {
@@ -23,10 +40,18 @@ export default class dragHelper {
       }
     })
     // 鼠标抬起
-    window.addEventListener('mouseup', (e: any) => {
-      ;(window as any).document.getElementById('app').classList.remove('drag_active')
-      const cl = e.target.classList
-      if (e.target?.id === 'page-design-canvas' || cl.contains('target') || cl.contains('drop__mask') || cl.contains('edit-text')) {
+    window.addEventListener('mouseup', (e) => {
+      const el = window.document.getElementById('app')
+      if (!el || !e.target) return
+      el.classList.remove('drag_active')
+      const target = e.target as HTMLElement
+      const cl = target.classList
+      if (
+        target.id === 'page-design-canvas' ||
+        cl.contains('target') ||
+        cl.contains('drop__mask') ||
+        cl.contains('edit-text')
+      ) {
         setTimeout(() => {
           this.finish(true)
         }, 10)
@@ -44,29 +69,39 @@ export default class dragHelper {
   /**
    * 拖动开始 mousedown
    */
-  public start(e: any, finallySize: any) {
+  public start(e: MouseEvent, finallySize: number) {
     if (!this.cloneEl) {
       store.commit('setDraging', true)
-      ;(window as any).document.getElementById('app').classList.add('drag_active') // 整个鼠标全局变成抓取
+      const app = window.document.getElementById('app')
+      if (!app || !e) return
+      app.classList.add('drag_active') // 整个鼠标全局变成抓取
+      const target = e.target as HTMLElement
       // 选中了元素
-      this.cloneEl = e.target.cloneNode(true)
+      this.cloneEl = (target.cloneNode(true) as HTMLElement)
       this.cloneEl.classList.add('flutter')
       // 初始化数据
-      this.init(e, e.target, finallySize || e.target.offsetWidth, Math.random())
+      this.init(e, target, finallySize || target.offsetWidth, Math.random())
       // 加载原图
       // simulate(cloneEl.src, initial.flag)
-      this.cloneEl.style.width = e.target.offsetWidth
+      this.cloneEl.style.width = `${target.offsetWidth}`
       // e.target.parentElement.parentElement.appendChild(this.cloneEl)
-      ;(window as any).document.getElementById('widget-panel').appendChild(this.cloneEl)
+      const widgetPanel =  window.document.getElementById('widget-panel')
+      if (!widgetPanel) return
+      widgetPanel.appendChild(this.cloneEl)
       this.dragging = true
-      e.target.classList.add('hide') // 放在最后
+      target.classList.add('hide') // 放在最后
       this.queue.push(() => {
-        e.target.classList.remove('hide')
+        target.classList.remove('hide')
       })
     }
   }
   // 开始拖动初始化
-  private init({ offsetX, offsetY, pageX, pageY, x, y }: any, { offsetWidth: width, offsetHeight: height }: any, finallySize: number, flag: any) {
+  private init(
+    { offsetX, offsetY, pageX, pageY, x, y }: MouseEvent,
+    { offsetWidth: width, offsetHeight: height }: HTMLElement,
+    finallySize: number,
+    flag: number
+  ) {
     this.initial = { offsetX, offsetY, pageX, pageY, width, height, finallySize, flag, x, y }
     // store.commit('setDragInitData', { offsetX: 0, offsetY: 0 })
     this.moveFlutter(pageX - offsetX, pageY - offsetY, 0, 0.3)
@@ -76,17 +111,23 @@ export default class dragHelper {
   }
   // 改变漂浮元素（合并多个操作）
   private moveFlutter(x: number, y: number, d = 0, lazy = 0) {
-    const { width, height, finallySize } = this.initial
-    let scale: any = null
-    if (width > finallySize) {
-      scale = d ? (width - d >= finallySize ? `transform: scale(${(width - d) / width});` : null) : null
-    } else scale = d ? (width + d <= finallySize ? `transform: scale(${(width + d) / width})` : null) : null
+    const { width, height, finallySize } = this.initial as TInitial
+    let scale: string | null = null
+    if (d) {
+      if (width > finallySize) {
+        scale = width - d >= finallySize ? `transform: scale(${(width - d) / width});` : null
+      } else {
+        scale = width + d <= finallySize ? `transform: scale(${(width + d) / width})` : null
+      }
+    }
+
     const options = [`left: ${x}px`, `top: ${y}px`, `width: ${width}px`, `height: ${height}px`]
     scale && options.push(scale)
     options.push(`transition: all ${lazy}s`)
     this.changeStyle(options)
   }
-  private changeStyle(arr: any) {
+  private changeStyle(arr: string[]) {
+    if (!this.cloneEl) return
     const original = this.cloneEl.style.cssText.split(';')
     original.pop()
     this.cloneEl.style.cssText = original.concat(arr).join(';') + ';'
@@ -99,16 +140,14 @@ export default class dragHelper {
     this.dragging = false
     store.commit('setDraging', false)
     store.commit('selectItem', {})
-    if (!this.cloneEl) {
-      return
-    }
+
     if (!done) {
-      const { pageX, offsetX, pageY, offsetY } = this.initial
+      const { pageX, offsetX, pageY, offsetY } = this.initial as TInitial
       this.changeStyle([`left: ${pageX - offsetX}px`, `top: ${pageY - offsetY}px`, 'transform: scale(1)', 'transition: all 0.3s'])
     }
     setTimeout(
       () => {
-        this.queue.length && this.queue.shift()()
+        this.queue.length && (this.queue.shift() as TQueueFunction)()
         this.cloneEl && this.cloneEl.remove()
         this.cloneEl = null
       },
@@ -116,8 +155,8 @@ export default class dragHelper {
     )
   }
   // 计算两点之间距离
-  private distance({ pageX, pageY }: any) {
-    const { pageX: x, pageY: y } = this.initial
+  private distance({ pageX, pageY }: { pageX: number, pageY: number }) {
+    const { pageX: x, pageY: y } = this.initial as TInitial
     return Math.hypot(pageX - x, pageY - y)
   }
 }

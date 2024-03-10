@@ -2,12 +2,12 @@
  * @Author: ShawnPhang
  * @Date: 2021-07-13 02:48:38
  * @Description: 本地测试项目请勿修改此文件
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-01-11 17:36:33
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-02-26 17:54:00
  */
-import axios from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios'
 import store from '@/store'
-import app_config from '@/config'
+import app_config, { LocalStorageKey } from '@/config'
 
 axios.defaults.timeout = 30000
 axios.defaults.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTc4ODU3NDc1MDU4NX0.L_t6DFD48Dm6rUPfgIgOWJkz18En1m_-hhMHcpbxliY';
@@ -16,15 +16,15 @@ const baseUrl = app_config.API_URL
 
 // 请求拦截器
 axios.interceptors.request.use(
-  (config: Type.Object) => {
+  (config: AxiosRequestConfig) => {
     // const access_token = store.state.currentUser.access_token;
-    const url = config.url
+    const url = config.url ?? ""
     const values = {}
     // values.access_token = access_token;
     // values.version = version;
 
-    if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
-      url.indexOf('/') === 0 ? (config.url = baseUrl + url) : (config.url = baseUrl + '/' + url)
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      config.url = url.startsWith('/') ? baseUrl + url : config.url = baseUrl + '/' + url
     }
 
     if (config.method === 'get') {
@@ -44,10 +44,8 @@ axios.interceptors.request.use(
 )
 
 // 响应拦截器
-axios.interceptors.response.use(
-  (res: Type.Object) => {
+axios.interceptors.response.use((res: AxiosResponse<any>) => {
     // store.dispatch('hideLoading');
-
     // 接口规则：只有正确code为200时返回result结果对象，错误返回整个结果对象
 
     if (!res.data) {
@@ -74,16 +72,28 @@ axios.interceptors.response.use(
   },
 )
 
+type TFetchRequestConfigParams = AxiosRequestConfig & Record<string, any>
+type TFetchMethod = keyof Pick<
+  AxiosStatic, 
+  "get" | "post" | "put" | "getUri" | "request" | "delete" | "head" | "options" | "patch"
+>
+
 // export default axios;
-const fetch = (url: string, params: Type.Object, type: string | undefined = 'get', exheaders: Type.Object = {}, extra: any = {}) => {
-  if (params && params._noLoading) {
+const fetch = <T = any> (
+  url: string,
+  params: TFetchRequestConfigParams, 
+  type: TFetchMethod = 'get',
+  exheaders: Record<string, any> = {},
+  extra: Record<string, any> = {}
+): Promise<T> => {
+  if (params?._noLoading) {
     delete params._noLoading
   } else {
     // store.commit('loading', '加载中..');
   }
 
-  const token = localStorage.getItem('xp_token')
-  const headerObject: Type.Object = { }
+  const token = localStorage.getItem(LocalStorageKey.tokenKey)
+  const headerObject: Record<string, any> = {}
   token && (headerObject.authorization = token)
   
   if (type === 'get') {
@@ -93,10 +103,10 @@ const fetch = (url: string, params: Type.Object, type: string | undefined = 'get
       ...extra,
     })
   } else {
-    return (axios as Type.Object)[type](url, params, {
+    return axios[type](url, params, {
       headers: Object.assign(headerObject, exheaders),
       ...extra,
-    })
+    }) as Promise<T>
   }
 }
 

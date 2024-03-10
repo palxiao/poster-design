@@ -8,7 +8,7 @@
 <template>
   <el-dialog v-model="dialogVisible" title="裁剪图片" width="80%" :before-close="handleClose" @close="cancel">
     <div id="wrap" v-loading="loading" style="height: 50vh">
-      <img v-show="url" ref="imgBox" style="visibility: hidden" :src="url" />
+      <img v-show="url" ref="imgBox" style="visibility: hidden" alt="imgBox" :src="url" />
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -84,6 +84,7 @@ export default defineComponent({
         cancel()
       }, 100)
     }
+    
     const cancel = () => {
       store.commit('setShowMoveable', true)
       dialogVisible.value = false

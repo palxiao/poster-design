@@ -6,8 +6,8 @@
     </div>
     <div v-show="activeTab === 0" class="style-wrap">
       <div v-show="showGroupCombined" style="padding: 2rem 0">
-        <el-button plain type="primary" class="gounp__btn" @click="realCombined">成组</el-button>
-        <icon-item-select label="" :data="alignIconList" @finish="alignAction" />
+        <el-button plain type="primary" class="gounp__btn" @click="handleCombine">成组</el-button>
+        <icon-item-select label="" :data="iconList" @finish="alignAction" />
       </div>
       <component :is="dActiveElement.type + '-style'" v-show="!showGroupCombined" v-if="dActiveElement.type" />
     </div>
@@ -17,58 +17,64 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 // 样式设置面板
-const NAME = 'style-panel'
-import { mapGetters, mapActions } from 'vuex'
-import alignIconList from '@/assets/data/AlignListData'
+// const NAME = 'style-panel'
+import { useStore } from 'vuex'
+import alignIconList, { AlignListData } from '@/assets/data/AlignListData'
 import iconItemSelect from '../settings/iconItemSelect.vue'
+import { ref, watch } from 'vue';
+import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
-export default {
-  name: NAME,
-  components: { iconItemSelect },
-  data() {
-    return {
-      activeTab: 0,
-      alignIconList,
-      showGroupCombined: false,
-    }
+const store = useStore();
+
+const activeTab = ref(0)
+const iconList = ref<AlignListData[]>(alignIconList)
+const showGroupCombined = ref(false)
+
+const { dActiveElement, dWidgets, dSelectWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dSelectWidgets'])
+
+watch(
+  dSelectWidgets,
+  (items) => {
+    setTimeout(() => {
+      showGroupCombined.value = items.length > 1
+    }, 100)
   },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dWidgets', 'dSelectWidgets']),
-  },
-  watch: {
-    dSelectWidgets: {
-      handler(items) {
-        setTimeout(() => {
-          this.showGroupCombined = items.length > 1
-        }, 100)
-      },
-      deep: true,
-    },
-  },
-  methods: {
-    ...mapActions(['selectWidget', 'updateAlign', 'updateHoverUuid', 'getCombined', 'realCombined', 'ungroup', 'pushHistory']),
-    alignAction(item) {
-      const sWidgets = JSON.parse(JSON.stringify(this.dSelectWidgets))
-      this.getCombined().then((group) => {
-        for (let i = 0; i < sWidgets.length; i++) {
-          const element = sWidgets[i]
-          this.updateAlign({
-            align: item.value,
-            uuid: element.uuid,
-            group,
-          })
-        }
-        this.pushHistory()
-      })
-    },
-    layerChange(newLayer) {
-      this.$store.commit('setDWidgets', newLayer.reverse())
-      this.$store.commit('setShowMoveable', false)
-    },
-  },
+  {
+    deep: true
+  }
+)
+
+function handleCombine() {
+  store.dispatch('realCombined')
 }
+
+// ...mapActions(['selectWidget', 'updateAlign', 'updateHoverUuid', 'getCombined', 'realCombined', 'ungroup', 'pushHistory']),
+function alignAction(item: AlignListData) {
+  const sWidgets = JSON.parse(JSON.stringify(dSelectWidgets.value))
+  store.dispatch('getCombined').then((group) => {
+    sWidgets.forEach((element: Record<string, any>) => {
+      store.dispatch('updateAlign', {
+        align: item.value,
+        uuid: element.uuid,
+        group,
+      })
+      // updateAlign({
+      //   align: item.value,
+      //   uuid: element.uuid,
+      //   group,
+      // })
+    });
+    store.dispatch('pushHistory')
+    // pushHistory()
+  })
+}
+function layerChange(newLayer: Record<string, any>[]) {
+  store.commit('setDWidgets', newLayer.toReversed())
+  store.commit('setShowMoveable', false)
+}
+
 </script>
 
 <style lang="less" scoped>

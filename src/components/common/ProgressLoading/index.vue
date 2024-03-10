@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-12-28 09:29:42
  * @Description: 百分比进度条
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-13 23:05:29
+ * @LastEditors: ShawnPhang <site: book.palxp.com>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @Date: 2024-03-05 10:50:00
 -->
 <template>
   <div v-if="percent" class="mask">
@@ -16,33 +16,45 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, watch } from 'vue'
+<script lang="ts" setup>
+import { watch, defineProps, defineEmits } from 'vue'
 import { ElProgress } from 'element-plus'
 
-export default defineComponent({
-  components: { ElProgress },
-  props: ['percent', 'text', 'cancelText', 'msg'],
-  emits: ['done', 'cancel'],
-  setup(props, context) {
-    watch(
-      () => props.percent,
-      (num) => {
-        if (num >= 100) {
-          setTimeout(() => {
-            context.emit('done')
-          }, 1000)
-        }
-      },
-    )
+type TProps = {
+  percent: number
+  text: string
+  cancelText: string
+  msg?: string
+}
 
-    const cancel = () => {
-      context.emit('cancel')
+type TEmits = {
+  (event: 'done'): void
+  (event: 'cancel'): void
+}
+
+const {percent, text, cancelText, msg} = defineProps<TProps>()
+
+const emit = defineEmits<TEmits>()
+
+watch(
+  () => percent,
+  (num) => {
+    if (num >= 100) {
+      setTimeout(() => {
+        emit('done')
+      }, 1000)
     }
-
-    return { cancel }
   },
+)
+
+const cancel = () => {
+  emit('cancel')
+}
+
+defineExpose({
+  cancel
 })
+
 </script>
 
 <style lang="less" scoped>

@@ -8,132 +8,166 @@
 <template>
   <div class="wrap">
     <div class="color__box" :style="modelStyle.color">
-      <div v-for="c in colors" :key="c" :style="{ background: c }" class="color__item" @click="setBGcolor(c)"></div>
+      <div v-for="c in state.colors" :key="c" :style="{ background: c }" class="color__item" @click="setBGcolor(c)"></div>
     </div>
-    <ul v-if="showList" v-infinite-scroll="loadData" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
+    <ul v-if="state.showList" v-infinite-scroll="loadData" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <div class="list" :style="modelStyle.list">
-        <imageTip v-for="(item, i) in bgList" :key="i + 'i'" :detail="item">
+        <imageTip v-for="(item, i) in state.bgList" :key="i + 'i'" :detail="item">
           <el-image class="list__img" :src="item.thumb" fit="cover" lazy loading="lazy" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)"></el-image>
         </imageTip>
       </div>
-      <div v-show="loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
-      <div v-show="loadDone" class="loading">全部加载完毕</div>
+      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
+      <div v-show="state.loadDone" class="loading">全部加载完毕</div>
     </ul>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs, computed } from 'vue'
+<script lang="ts" setup>
+import { reactive, computed, defineProps, defineExpose } from 'vue'
 import api from '@/api'
-import { mapActions, useStore } from 'vuex'
+import { useStore } from 'vuex'
+import { ElImage } from 'element-plus'
+import { TGetImageListResult } from '@/api/material';
 
-export default defineComponent({
-  props: {
-    model: {
-      default: 'widgetPanel'
-    }
-  },
-  setup(props) {
-    const store = useStore()
-    const state = reactive({
-      loading: false,
-      loadDone: false,
-      bgList: [],
-      showList: true,
-      colors: ['#000000ff', '#999999ff', '#CCCCCCff', '#FFFFFFff', '#E65353ff', '#FFD835ff', '#70BC59ff', '#607AF4ff', '#976BEEff'],
-    })
-    // 临时用于改变样式
-    const models: any = {
-      widgetPanel: {
-        color: 'padding: 1.2rem 1rem',
-        list: 'grid-template-columns: auto auto auto;padding: 0 1rem;',
-      },
-      stylePanel: {
-        color: 'padding: 1.2rem 0;',
-        list: 'grid-template-columns: repeat(3, 76px);',
-      }
-    }
-    const modelStyle = computed(() => models[props.model])
+type TCommonPanelData = {
+  color: string
+  list: string
+}
 
-    const pageOptions = { page: 0, pageSize: 20 }
+type TTmpModalData = {
+  widgetPanel: TCommonPanelData
+  stylePanel: TCommonPanelData
+}
 
-    const loadData = () => {
-      if (state.loading) {
-        return
-      }
-      load()
-    }
+type TProps = {
+  model: 'widgetPanel'
+}
 
-    const load = async (init: boolean = false) => {
-      if (state.loadDone) {
-        return
-      }
-      state.loading = true
-      pageOptions.page += 1
+type TState = {
+  loading: boolean
+  loadDone: boolean
+  bgList: TGetImageListResult[]
+  showList: boolean
+  colors: string[]
 
-      if (init) {
-        state.bgList = []
-        pageOptions.page = 1
-      }
+}
 
-      await api.material.getImagesList({ cate: 16, page: pageOptions.page }).then(({ list }: any) => {
-        if (list.length > 0) {
-          state.bgList.push(...list)
-        } else {
-          state.loadDone = true
-        }
-      })
+const { model } = defineProps<TProps>()
 
-      setTimeout(() => {
-        state.loading = false
-      }, 100)
-    }
 
-    function setBGcolor(color: string) {
-      store.dispatch('updatePageData', {
-        key: 'backgroundImage',
-        value: '',
-      })
-      store.dispatch('updatePageData', {
-        key: 'backgroundColor',
-        value: color,
-        pushHistory: true,
-      })
-      store.dispatch('selectWidget', {
-        uuid: '-1',
-      })
-    }
-
-    return {
-      ...toRefs(state),
-      load,
-      setBGcolor,
-      loadData,
-      modelStyle
-    }
-  },
-  methods: {
-    ...mapActions(['selectWidget', 'updatePageData']),
-    async selectItem(item: any) {
-      // this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择
-      this.updatePageData({
-        key: 'backgroundTransform',
-        value: {},
-      })
-      this.updatePageData({
-        key: 'backgroundImage',
-        value: item.url,
-        pushHistory: true,
-      })
-      this.selectWidget({
-        uuid: '-1',
-      })
-    },
-    dragStart(e: any, item: any) {
-      this.$store.commit('selectItem', { data: {}, type: 'bg' })
-    },
-  },
+const store = useStore()
+const state = reactive<TState>({
+  loading: false,
+  loadDone: false,
+  bgList: [],
+  showList: true,
+  colors: ['#000000ff', '#999999ff', '#CCCCCCff', '#FFFFFFff', '#E65353ff', '#FFD835ff', '#70BC59ff', '#607AF4ff', '#976BEEff'],
 })
+
+// 临时用于改变样式
+const models: TTmpModalData = {
+  widgetPanel: {
+    color: 'padding: 1.2rem 1rem',
+    list: 'grid-template-columns: auto auto auto;padding: 0 1rem;',
+  },
+  stylePanel: {
+    color: 'padding: 1.2rem 0;',
+    list: 'grid-template-columns: repeat(3, 76px);',
+  }
+}
+
+const modelStyle = computed(() => models[model])
+
+const pageOptions = { page: 0, pageSize: 20 }
+
+const loadData = () => {
+  if (state.loading) {
+    return
+  }
+  load()
+}
+
+const load = async (init: boolean = false) => {
+  if (state.loadDone) {
+    return
+  }
+  state.loading = true
+  pageOptions.page += 1
+
+  if (init) {
+    state.bgList = []
+    pageOptions.page = 1
+  }
+
+  await api.material.getImagesList({ cate: 16, page: pageOptions.page }).then(({ list }) => {
+    if (list.length > 0) {
+      state.bgList.push(...list)
+    } else {
+      state.loadDone = true
+    }
+  })
+
+  setTimeout(() => {
+    state.loading = false
+  }, 100)
+}
+
+function setBGcolor(color: string) {
+  store.dispatch('updatePageData', {
+    key: 'backgroundImage',
+    value: '',
+  })
+  store.dispatch('updatePageData', {
+    key: 'backgroundColor',
+    value: color,
+    pushHistory: true,
+  })
+  store.dispatch('selectWidget', {
+    uuid: '-1',
+  })
+}
+
+// ...mapActions(['selectWidget', 'updatePageData']),
+async function selectItem(item: TGetImageListResult) {
+  // this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  store.dispatch('updatePageData', {
+    key: 'backgroundTransform',
+    value: {},
+  })
+  store.dispatch('updatePageData', {
+    key: 'backgroundImage',
+    value: item.url,
+    pushHistory: true,
+  })
+  store.dispatch('selectWidget', {
+    uuid: '-1',
+  })
+  // this.updatePageData({
+  //   key: 'backgroundTransform',
+  //   value: {},
+  // })
+  // this.updatePageData({
+  //   key: 'backgroundImage',
+  //   value: item.url,
+  //   pushHistory: true,
+  // })
+  // this.selectWidget({
+  //   uuid: '-1',
+  // })
+}
+
+function dragStart(_: MouseEvent, _item: TGetImageListResult) {
+  store.commit('selectItem', { data: {}, type: 'bg' })
+}
+
+
+defineExpose({
+  load,
+  setBGcolor,
+  loadData,
+  modelStyle
+})
+
 </script>
 
 <style lang="less" scoped>

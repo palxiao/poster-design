@@ -5,7 +5,7 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2023-10-09 10:42:54
  */
-export const getImage = (imgItem: string | File) => {
+export const getImage = (imgItem: string | File): Promise<HTMLImageElement> => {
   // 创建对象
   const img = new Image()
 

@@ -27,7 +27,7 @@
             :key="efi + 'effect'"
             :style="{
               color: ef.filling && ef.filling.enable && ef.filling.type === 0 ? ef.filling.color : 'transparent',
-              webkitTextStroke: ef.stroke && ef.stroke.enable ? `${ef.stroke.width / coefficient}px ${ef.stroke.color}` : undefined,
+              webkitTextStroke: ef.stroke && ef.stroke.enable ? `${ef.stroke.width / coefficient}px ${ef.stroke.color}` : '',
               textShadow: ef.shadow && ef.shadow.enable ? `${ef.shadow.offsetX / coefficient}px ${ef.shadow.offsetY / coefficient}px ${ef.shadow.blur / coefficient}px ${ef.shadow.color}` : undefined,
               backgroundImage: ef.filling && ef.filling.enable ? (ef.filling.type === 0 ? undefined : getGradientOrImg(ef)) : undefined,
               webkitBackgroundClip: ef.filling && ef.filling.enable ? (ef.filling.type === 0 ? undefined : 'text') : undefined,
@@ -39,52 +39,61 @@
           A
         </div>
         <span class="title">文字特效</span>
-        <el-popover :visible="visiable" placement="left" :width="220" trigger="click">
+        <el-popover :visible="state.visiable" placement="left" :width="220" trigger="click">
           <div class="select__box">
-            <div class="select__box__select-item" @click="selectEffect(null)">无</div>
-            <div v-for="(l, li) in list" :key="'list' + li" class="select__box__select-item" @click="selectEffect(l.id)">
+            <div class="select__box__select-item" @click="selectEffect()">无</div>
+            <div v-for="(l, li) in state.list" :key="'list' + li" class="select__box__select-item" @click="selectEffect(l.id)">
               <img :src="l.cover" />
             </div>
           </div>
           <template #reference>
-            <el-button class="button" link @click="openSet">{{ visiable ? '取消' : '选择' }}</el-button>
+            <el-button class="button" link @click="openSet">{{ state.visiable ? '取消' : '选择' }}</el-button>
           </template>
         </el-popover>
       </div>
     </template>
     <!-- filling 描边 stroke 阴影 shadow -->
-    <div v-show="layers && layers.length > 0" class="text item"><span style="width: 65px">强度</span> <el-slider v-model="strength" show-input :maxValue="100" input-size="small" :show-input-controls="false" @input="strengthChange"> </el-slider></div>
+    <div v-show="state.layers && state.layers.length > 0" class="text item"><span style="width: 65px">强度</span> <el-slider v-model="state.strength" show-input :maxValue="100" input-size="small" :show-input-controls="false" @input="strengthChange"> </el-slider></div>
     <el-collapse-item>
       <template #title>
         <b>高级编辑</b>
       </template>
       <div class="line"></div>
       <div style="display: flex; justify-content: space-between">
-        <el-button class="add-layer" size="small" type="primary" link @click="addLayer"> + 新建特效层</el-button> <el-button v-show="layers && layers.length > 0" class="add-layer" size="small" type="primary" link @click="unfold = !unfold">{{ unfold ? '收起' : '展开' }}全部</el-button>
+        <el-button
+          class="add-layer" size="small" type="primary" link
+          @click="addLayer">
+           + 新建特效层
+        </el-button>
+        <el-button
+          v-show="state.layers && state.layers.length > 0" class="add-layer" size="small"
+          type="primary" link @click="state.unfold = !state.unfold">
+          {{ state.unfold ? '收起' : '展开' }}全部
+        </el-button>
       </div>
       <div class="line"></div>
-      <draggable v-model="layers" handle=".sd-yidong" item-key="uuid" v-bind="dragOptions">
+      <draggable v-model="state.layers" handle=".sd-yidong" item-key="uuid" v-bind="dragOptions">
         <template #item="{ element, index }">
           <div class="feature__grab-wrap">
             <div class="layer__title">
               <i class="icon sd-yidong" /><span style="font-size: 12px"><b>特效层</b> {{ index + 1 }}</span>
               <i class="icon sd-delete" @click="removeLayer(index)" />
             </div>
-            <div v-if="element.filling && [0, 2, '0', '2'].includes(element.filling.type)" v-show="unfold" class="feature__item">
+            <div v-if="element.filling && [0, 2, '0', '2'].includes(element.filling.type)" v-show="state.unfold" class="feature__item">
               <el-checkbox v-model="element.filling.enable" label="填充" class="feature__header" />
               <color-select v-model="element.filling.color" width="28px" :modes="['纯色', '渐变']" label="" @change="colorChange($event, element.filling)" />
             </div>
-            <div v-if="element.stroke" v-show="unfold" class="feature__item">
+            <div v-if="element.stroke" v-show="state.unfold" class="feature__item">
               <el-checkbox v-model="element.stroke.enable" label="描边" class="feature__header" />
               <el-input-number v-model="element.stroke.width" style="width: 65px; margin-right: 0.5rem" :min="0" size="small" controls-position="right" />
               <color-select v-model="element.stroke.color" width="28px" label="" @finish="(value) => finish('color', value)" />
             </div>
-            <div v-if="element.offset" v-show="unfold" class="feature__item">
+            <div v-if="element.offset" v-show="state.unfold" class="feature__item">
               <el-checkbox v-model="element.offset.enable" label="偏移" class="feature__header" />
               <numberInput v-model="element.offset.x" style="width: 49.5px; margin-right: 2px" prepend="x" type="simple" />
               <numberInput v-model="element.offset.y" style="width: 49.5px" prepend="y" type="simple" />
             </div>
-            <div v-if="element.shadow" v-show="unfold" class="feature__item">
+            <div v-if="element.shadow" v-show="state.unfold" class="feature__item">
               <el-checkbox v-model="element.shadow.enable" label="阴影" class="feature__header" />
               <numberInput v-model="element.shadow.blur" prepend="blur" :minValue="0" style="width: 30px; margin-right: 2px" type="simple" />
               <numberInput v-model="element.shadow.offsetX" prepend="x" style="width: 30px; margin-right: 2px" type="simple" />
@@ -98,109 +107,135 @@
   </el-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, toRefs, reactive, watch, onMounted, nextTick, computed } from 'vue'
+<script lang="ts" setup>
+import { 
+  reactive, watch, onMounted, nextTick, computed,
+  defineProps, defineEmits, defineExpose
+} from 'vue'
 import colorSelect from '../colorSelect.vue'
 import { ElInputNumber, ElCheckbox } from 'element-plus'
 import numberInput from '../numberInput.vue'
 import draggable from 'vuedraggable'
 import api from '@/api'
 import getGradientOrImg from '../../widgets/wText/getGradientOrImg'
-let froze_font_effect_list: any = []
+let froze_font_effect_list: Record<string, any>[] = []
 
-export default defineComponent({
-  components: { colorSelect, ElInputNumber, numberInput, ElCheckbox, draggable },
-  props: ['modelValue', 'degree', 'data'],
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const state = reactive({
-      strength: 50, // 强度
-      visiable: false, // 弹出选择层控制
-      list: [],
-      layers: [],
-      draging: false,
-      unfold: true,
+type TProps = {
+  modelValue?: Record<string, any>
+  degree?: string | number
+  data: Record<string, any>
+}
+
+type TEmits = {
+  (event: 'update:modelValue', data: Record<string, any>[]): void
+}
+
+type TState = {
+  strength: number
+  visiable: boolean
+  list: Record<string,any>[]
+  layers: Record<string, any>[]
+  draging: boolean
+  unfold: boolean
+}
+
+const props = withDefaults(defineProps<TProps>(), {
+  modelValue: () => ({}),
+  data: () => ({})
+})
+
+const emit = defineEmits<TEmits>()
+
+const state = reactive<TState>({
+  strength: 50, // 强度
+  visiable: false, // 弹出选择层控制
+  list: [],
+  layers: [],
+  draging: false,
+  unfold: true,
+})
+
+const dragOptions = {
+  animation: 300,
+  ghostClass: 'ghost',
+  chosenClass: 'choose',
+}
+const coefficient = computed(() => Math.round(160 / 27))
+let rawData: Record<string, any>[] = [] // 初始化记录数据，用于强度修改
+
+onMounted(async () => {
+  await nextTick()
+  // console.log(props.data)
+  if (!props.data.textEffects) {
+    return
+  }
+  const clone = JSON.parse(JSON.stringify(props.data.textEffects)) || []
+  state.layers = clone
+    .map((x: any) => {
+      x.uuid = String(Math.random())
+      return x
     })
-    const dragOptions = {
-      animation: 300,
-      ghostClass: 'ghost',
-      chosenClass: 'choose',
-    }
-    const coefficient = computed(() => Math.round(160 / 27))
-    let rawData: any = [] // 初始化记录数据，用于强度修改
+    .reverse()
+  rawData = JSON.parse(JSON.stringify(state.layers))
+})
 
-    onMounted(async () => {
-      await nextTick()
-      // console.log(props.data)
-      if (!props.data.textEffects) {
-        return
-      }
-      const clone = JSON.parse(JSON.stringify(props.data.textEffects)) || []
-      state.layers = clone
-        .map((x: any) => {
-          x.uuid = String(Math.random())
-          return x
-        })
-        .reverse()
-      rawData = JSON.parse(JSON.stringify(state.layers))
+watch(
+  () => state.layers,
+  (v) => {
+    const newEffect = v.map((x) => {
+      delete x.uuid
+      return x
     })
-    watch(
-      () => state.layers,
-      (v) => {
-        const newEffect = v.map((x) => {
-          delete x.uuid
-          return x
-        })
-        emit('update:modelValue', newEffect.reverse())
-      },
-      { deep: true },
-    )
+    emit('update:modelValue', newEffect.reverse())
+  },
+  { deep: true },
+)
 
-    // 选中加载特效预设
-    const selectEffect = async (id) => {
-      state.visiable = false
-      if (id) {
-        const { data } = await api.home.getTempDetail({ id, type: 1 })
-        state.layers = JSON.parse(data)
-          .textEffects.map((x) => {
-            x.uuid = String(Math.random())
-            return x
-          })
-          .reverse()
-      } else state.layers = []
-    }
+// 选中加载特效预设
+const selectEffect = async (id?: number) => {
+  state.visiable = false
+  if (id) {
+    const { data } = await api.home.getTempDetail({ id, type: 1 })
+    state.layers = JSON.parse(data)
+      .textEffects.map((x: Record<string, any>) => {
+        x.uuid = String(Math.random())
+        return x
+      })
+      .reverse()
+  } else state.layers = []
+}
 
-    // 删除效果层
-    const removeLayer = (i: number) => {
-      state.layers.splice(i, 1)
-      rawData = JSON.parse(JSON.stringify(state.layers))
-    }
+// 删除效果层
+const removeLayer = (i: number) => {
+  state.layers.splice(i, 1)
+  rawData = JSON.parse(JSON.stringify(state.layers))
+}
 
-    // 添加效果层
-    const addLayer = () => {
-      const filling = { enable: false, type: 0, color: '#000000ff' }
-      const stroke = { enable: false, width: 0, color: '#000000ff', type: 'outer' }
-      const offset = { enable: false, x: 0, y: 0 }
-      const shadow = { enable: false, color: '#000000ff', offsetX: 0, offsetY: 0, blur: 0, opacity: 0 }
-      state.layers.unshift({ filling, stroke, shadow, offset, uuid: String(Math.random()) })
-      rawData = JSON.parse(JSON.stringify(state.layers))
-    }
+// 添加效果层
+const addLayer = () => {
+  const filling = { enable: false, type: 0, color: '#000000ff' }
+  const stroke = { enable: false, width: 0, color: '#000000ff', type: 'outer' }
+  const offset = { enable: false, x: 0, y: 0 }
+  const shadow = { enable: false, color: '#000000ff', offsetX: 0, offsetY: 0, blur: 0, opacity: 0 }
+  state.layers.unshift({ filling, stroke, shadow, offset, uuid: String(Math.random()) })
+  rawData = JSON.parse(JSON.stringify(state.layers))
+}
 
-    const finish = () => {}
+const finish = (type?: string, value?: string) => {}
 
-    const colorChange = (e: any, item: any) => {
-      const modeStr: any = {
-        渐变: 2,
-        纯色: 0,
-      }
-      item.gradient = {
-        angle: e.angle,
-        stops: e.stops,
-      }
-      setTimeout(() => {
-        item.type = modeStr[e.mode] || 0
-      }, 100)
-    }
+const colorChange = (e: Record<string, any>, item: Record<string, any>) => {
+  const modeStr: Record<string, number> = {
+    渐变: 2,
+    纯色: 0,
+  }
+  item.gradient = {
+    angle: e.angle,
+    stops: e.stops,
+  }
+  setTimeout(() => {
+    item.type = modeStr[e.mode] || 0
+  }, 100)
+}
 
     // const onMove = ({ relatedContext, draggedContext }: any) => {
     //   const relatedElement = relatedContext.element
@@ -223,35 +258,32 @@ export default defineComponent({
       })
     }
 
-    // 打开特效字体集
-    const openSet = async () => {
-      state.visiable = !state.visiable
-      if (froze_font_effect_list.length <= 0) {
-        const { list } = await api.home.getCompList({
-          cate: 12,
-          type: 1,
-          pageSize: 30,
-        })
-        state.list = list
-        froze_font_effect_list = list
-      } else state.list = froze_font_effect_list
-    }
-    return {
-      ...toRefs(state),
-      selectEffect,
-      finish,
-      coefficient,
-      removeLayer,
-      addLayer,
-      dragOptions,
-      onDone,
-      strengthChange,
-      openSet,
-      colorChange,
-      getGradientOrImg,
-    }
-  },
-  methods: {},
+// 打开特效字体集
+const openSet = async () => {
+  state.visiable = !state.visiable
+  if (froze_font_effect_list.length <= 0) {
+    const { list } = await api.home.getCompList({
+      cate: 12,
+      type: 1,
+      pageSize: 30,
+    })
+    state.list = list
+    froze_font_effect_list = list
+  } else state.list = froze_font_effect_list
+}
+
+defineExpose({
+  selectEffect,
+  finish,
+  coefficient,
+  removeLayer,
+  addLayer,
+  dragOptions,
+  onDone,
+  strengthChange,
+  openSet,
+  colorChange,
+  getGradientOrImg,
 })
 </script>
 

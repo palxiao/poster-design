@@ -13,18 +13,22 @@
     <el-popover placement="bottom-end" trigger="click" width="auto">
       <!-- 单列表 -->
       <ul v-if="data && Array.isArray(data)" class="list-ul">
-        <li v-for="listItem in data" :key="typeof listItem === 'object' ? listItem.alias : listItem" :class="{ active: listItem == innerValue }" @click="selectItem(listItem)">
-          <img v-if="listItem.preview" class="preview" :src="listItem.preview" />
+        <li
+          v-for="listItem in data" :key="typeof listItem === 'object' ? listItem.alias : listItem"
+          :class="{ active: listItem == state.innerValue }"
+          @click="selectItem(listItem)"
+        >
+          <img v-if="listItem.preview" class="preview" :src="listItem.preview" alt="preview" />
           <span v-else>{{ (typeof listItem === 'object' ? listItem.alias : listItem) + suffix }}</span>
         </li>
       </ul>
       <!-- tab分类列表 -->
       <div v-else class="tabs-wrap">
-        <el-tabs v-model="activeTab">
+        <el-tabs v-model="state.activeTab">
           <el-tab-pane v-for="(val, key, i) in data" :key="'tab' + i" :label="key" :name="key">
             <ul class="list-ul">
-              <li v-for="listItem in data[key]" :key="typeof listItem === 'object' ? listItem.alias : listItem" :class="{ active: listItem == innerValue }" @click="selectItem(listItem)">
-                <img v-if="listItem.preview" class="preview" :src="listItem.preview" />
+              <li v-for="listItem in data[key]" :key="typeof listItem === 'object' ? listItem.alias : listItem" :class="{ active: listItem == state.innerValue }" @click="selectItem(listItem)">
+                <img v-if="listItem.preview" class="preview" :src="listItem.preview" alt="preview" />
                 <span v-else :style="{ fontFamily: `'${listItem.value}'` }">{{ (typeof listItem === 'object' ? listItem.alias : listItem) + suffix }}</span>
               </li>
             </ul>
@@ -32,9 +36,16 @@
         </el-tabs>
       </div>
       <template #reference>
-        <div :class="['input-wrap', { active: inputBorder }]" :style="{ width: inputWidth }">
+        <div :class="['input-wrap', { active: state.inputBorder }]" :style="{ width: inputWidth }">
           <!-- <img v-if="innerPreview" class="preview" :src="innerPreview" /> -->
-          <input :style="{ fontFamily: modelValue.value }" :class="['real-input', { disable: !disable }]" :readonly="readonly ? 'readonly' : false" type="text" :value="showValue" @input="inputText" @focus="inputBorder = true" @blur="inputBorder = false" @keydown="(e) => opNumber(e)" />
+          <input
+            :style="{ fontFamily: modelValue.value }"
+            :class="['real-input', { disable: !disable }]"
+            :readonly="readonly" type="text"
+            :value="showValue"
+            @input="inputText" @focus="state.inputBorder = true"
+            @blur="state.inputBorder = false" @keydown="(e) => opNumber(e)"
+          />
           <!-- <span class="input-unit">{{ suffix }}</span> -->
           <div class="op-btn">
             <!-- <div class="down" @click="inputBorder = !inputBorder"></div> -->
@@ -46,124 +57,127 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 // 下拉选择框
 const NAME = 'value-input'
 import { ElTabPane, ElTabs } from 'element-plus'
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 
-export default {
-  name: NAME,
-  components: { ElTabPane, ElTabs },
-  props: {
-    label: {
-      default: '',
-    },
-    modelValue: {
-      default: '',
-    },
-    suffix: {
-      default: '',
-    },
-    data: {
-      required: true,
-    },
-    disable: {
-      default: true,
-    },
-    inputWidth: {
-      default: '80px',
-    },
-    // textAlign: {
-    //   default: 'center',
-    // },
-    readonly: {
-      default: false,
-    },
-    step: {
-      default: 1,
-    },
-  },
-  emits: ['finish', 'update:modelValue'],
-  data() {
-    return {
-      inputBorder: false,
-      tagText: '',
-      width: '0',
-      innerValue: '',
-      innerPreview: '',
-      activeTab: '中文',
+type TProps = {
+  label?: string
+  modelValue?: Record<string, any>
+  suffix?: string
+  data: Record<string, any>
+  disable?: boolean
+  inputWidth?: string
+  readonly?: boolean
+  step?: number
+}
+
+type TEmits = {
+  (event:'update:modelValue', data: Record<string, any> | string | number): void
+  (event: 'finish', data: Record<string, any> | string | number): void
+}
+
+type TState = {
+  inputBorder: boolean
+  tagText: string
+  width: string | number
+  innerValue: string
+  innerPreview: string
+  activeTab: string
+}
+
+const props = withDefaults(defineProps<TProps>(), {
+  label: '',
+  modelValue: () => ({}),
+  suffic: '',
+  data: () => ({}),
+  disable: true,
+  inputWidth: '80px',
+  readonly: false,
+  step: 1,
+})
+const emit = defineEmits<TEmits>()
+const state = reactive<TState>({
+  inputBorder: false,
+  tagText: '',
+  width: '0',
+  innerValue: '',
+  innerPreview: '',
+  activeTab: '中文',
+})
+const selectRef = ref<HTMLElement | null>(null)
+
+const showValue = computed(() => {
+  return state.innerValue
+})
+
+watch(
+  () => props.modelValue,
+  () => {
+    state.innerValue = typeof props.modelValue === 'object' ? props.modelValue.alias : props.modelValue
+  }
+)
+
+watch(
+  () => state.inputBorder,
+  (value) => {
+    if (value) {
+      state.tagText = state.innerValue
+    } else {
+      if (state.innerValue !== state.tagText) {
+        emit('finish', state.innerValue)
+      }
     }
-  },
-  computed: {
-    showValue() {
-      // return this.innerValue + this.suffix
-      return this.innerValue
-    },
-  },
-  watch: {
-    modelValue(value) {
-      this.innerValue = typeof this.modelValue === 'object' ? this.modelValue.alias : this.modelValue
-    },
-    inputBorder(value) {
-      if (value) {
-        this.tagText = this.innerValue
-      } else {
-        if (this.innerValue !== this.tagText) {
-          this.$emit('finish', this.innerValue)
-        }
-      }
-    },
-  },
-  created() {
-    this.innerValue = typeof this.modelValue === 'object' ? this.modelValue.alias : this.modelValue
-  },
-  mounted() {
-    this.width = this.$refs.select.offsetWidth
-    // if (Object.prototype.toString.call(this.data) === '[Object Object]') {
-    //   for (const key in this.data) {
-    //     console.log(key)
-    //     break
-    //   }
-    // }
-  },
-  methods: {
-    selectItem(item) {
-      let value = typeof item === 'object' ? item.alias : item
-      if (this.innerValue !== value) {
-        this.innerValue = value
-        this.innerPreview = item.preview
-        this.$emit('finish', item)
-      }
-    },
-    inputText(e) {
-      // this.innerValue = e.target.value.replace(RegExp(this.suffix), '')
-      this.innerValue = e.target.value
-      setTimeout(() => {
-        this.$emit('finish', this.innerValue)
-      }, 100)
-    },
-    opNumber(e) {
-      e.stopPropagation()
-      switch (e.keyCode) {
-        case 38:
-          typeof this.innerValue === 'number' && this.up()
-          return
-        case 40:
-          typeof this.innerValue === 'number' && this.down()
-          return
-      }
-    },
-    up() {
-      this.$emit('update:modelValue', parseInt(this.modelValue || 0, 10) + this.step)
-    },
-    down() {
-      let value = parseInt(this.modelValue || 0, 10) - this.step
-      if (value < 0) {
-        value = 0
-      }
-      this.$emit('update:modelValue', value)
-    },
-  },
+  }
+)
+
+onMounted(() => {
+  state.innerValue = typeof props.modelValue === 'object' ? props.modelValue.alias : props.modelValue
+  if (selectRef.value) {
+    state.width = selectRef.value.offsetWidth
+  }
+})
+
+function selectItem(item: Record<string, any>) {
+  let value = typeof item === 'object' ? item.alias : item
+  if (state.innerValue !== value) {
+    state.innerValue = value
+    state.innerPreview = item.preview
+    emit('finish', item)
+  }
+}
+
+function inputText(e: Event) {
+  // this.innerValue = e.target.value.replace(RegExp(this.suffix), '')
+  state.innerValue = (e.target as HTMLInputElement).value
+  setTimeout(() => {
+    emit('finish', state.innerValue)
+  }, 100)
+}
+function opNumber(e: KeyboardEvent) {
+  e.stopPropagation()
+  switch (e.keyCode) {
+    case 38:
+      typeof state.innerValue === 'number' && up()
+      return
+    case 40:
+      typeof state.innerValue === 'number' && down()
+      return
+  }
+}
+
+function up() {
+  emit('update:modelValue', parseInt(`${props.modelValue}` ?? '0', 10) + props.step)
+}
+
+function down() {
+  let value = parseInt(`${props.modelValue}` ?? '0', 10) - props.step
+  if (value < 0) {
+    value = 0
+  }
+  emit('update:modelValue', value)
 }
 </script>
 

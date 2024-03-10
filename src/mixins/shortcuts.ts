@@ -14,6 +14,7 @@ _this.dHistoryParams = store.getters.dHistoryParams
 
 import keyCodeOptions from './methods/keyCodeOptions'
 import dealWithCtrl from './methods/dealWithCtrl'
+import { useStore, Store } from 'vuex'
 
 const ignoreNode = ['INPUT', 'TEXTAREA']
 
@@ -36,94 +37,98 @@ let hadDown = false
 
 const shortcuts = {
   methods: {
-    handleKeydowm(e: any) {
-      const nodeName = e.target.nodeName
-      if (ignoreNode.indexOf(nodeName) !== -1 || (nodeName === 'DIV' && e.target.contentEditable === 'true')) {
-        return
-      }
-      // if (hadDown || this.showMenuBg) {
-      //   e.stopPropagation()
-      //   e.preventDefault()
-      //   return
-      // }
-      // hadDown = true
-      const ctrl = e.key === 'Control' || e.key === 'Meta'
-      const alt = e.key === 'Alt'
-      const shift = e.key === 'Shift'
-      // const dir = e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40
-      // const specialKey = ctrl || alt || shift || dir
-      // if (specialKey || e.metaKey) {
-      //   hadDown = false
-      // }
-      if (shift || ctrl) {
-        this.$store.dispatch('updateAltDown', true)
-        clearInterval(this.checkCtrl)
-        this.checkCtrl = setInterval(() => {
-          // TODO: 防止组合键导致页面失焦无法操作
-          if (!document.hasFocus()) {
-            clearInterval(this.checkCtrl)
-            hadDown = false
-            this.$store.dispatch('updateAltDown', false)
-          }
-        }, 500)
-      }
-      // const systemKey = systemKeyCode.find((item) => {
-      //   let f = false
-      //   let f2 = false
-      //   for (let i = 0; i < item.key.length; ++i) {
-      //     f = e[item.key[i]]
-      //     if (f) {
-      //       break
-      //     }
-      //   }
-      //   if (item.key2) {
-      //     for (let i = 0; i < item.key2.length; ++i) {
-      //       f2 = e[item.key2[i]]
-      //       if (f2) {
-      //         break
-      //       }
-      //     }
-      //   }
-      //   return f && f2 && e.keyCode === item.code
-      // })
-      // if (systemKey) {
-      //   return
-      // }
-      const withCtrl = e.ctrlKey || e.metaKey
-      if (withCtrl && !(ctrl || alt || shift)) {
-        this.dealCtrl(e)
-        return
-      }
-      // const withAlt = e.altKey
-      // if (withAlt && !specialKey) {
-      //   return
-      // }
-      const withShift = e.shiftKey
-      // if (withShift && !specialKey) {
-      //   return
-      // }
-      // // TODO
-      // if (!this.dActiveElement) {
-      //   return
-      // }
-      // if (this.dActiveElement.uuid === '-1') {
-      //   return
-      // }
-      // e.stopPropagation()
-      // e.preventDefault()
-      const f = withShift ? 10 : 1
-      keyCodeOptions(e, { f })
-    },
-    handleKeyup(e) {
-      console.log(e)
-      clearInterval(this.checkCtrl)
-      hadDown = false
-      if (e.key === 'Alt' || e.key === 'Shift' || e.key === 'Control' || e.key === 'Meta') {
-        this.$store.dispatch('updateAltDown', false)
+    handleKeydowm(store: Store<any>, checkCtrl: number | undefined, instance: any, dealCtrl: (e: any, instance: any) => void) {
+      return (e: any) => {
+        const nodeName = e.target.nodeName
+        if (ignoreNode.indexOf(nodeName) !== -1 || (nodeName === 'DIV' && e.target.contentEditable === 'true')) {
+          return
+        }
+        // if (hadDown || this.showMenuBg) {
+        //   e.stopPropagation()
+        //   e.preventDefault()
+        //   return
+        // }
+        // hadDown = true
+        const ctrl = e.key === 'Control' || e.key === 'Meta'
+        const alt = e.key === 'Alt'
+        const shift = e.key === 'Shift'
+        // const dir = e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40
+        // const specialKey = ctrl || alt || shift || dir
+        // if (specialKey || e.metaKey) {
+        //   hadDown = false
+        // }
+        if (shift || ctrl) {
+          store.dispatch('updateAltDown', true)
+          clearInterval(checkCtrl)
+          checkCtrl = setInterval(() => {
+            // TODO: 防止组合键导致页面失焦无法操作
+            if (!document.hasFocus()) {
+              clearInterval(checkCtrl)
+              hadDown = false
+              store.dispatch('updateAltDown', false)
+            }
+          }, 500)
+        }
+        // const systemKey = systemKeyCode.find((item) => {
+        //   let f = false
+        //   let f2 = false
+        //   for (let i = 0; i < item.key.length; ++i) {
+        //     f = e[item.key[i]]
+        //     if (f) {
+        //       break
+        //     }
+        //   }
+        //   if (item.key2) {
+        //     for (let i = 0; i < item.key2.length; ++i) {
+        //       f2 = e[item.key2[i]]
+        //       if (f2) {
+        //         break
+        //       }
+        //     }
+        //   }
+        //   return f && f2 && e.keyCode === item.code
+        // })
+        // if (systemKey) {
+        //   return
+        // }
+        const withCtrl = e.ctrlKey || e.metaKey
+        if (withCtrl && !(ctrl || alt || shift)) {
+          dealCtrl(e, instance)
+          return
+        }
+        // const withAlt = e.altKey
+        // if (withAlt && !specialKey) {
+        //   return
+        // }
+        const withShift = e.shiftKey
+        // if (withShift && !specialKey) {
+        //   return
+        // }
+        // // TODO
+        // if (!this.dActiveElement) {
+        //   return
+        // }
+        // if (this.dActiveElement.uuid === '-1') {
+        //   return
+        // }
+        // e.stopPropagation()
+        // e.preventDefault()
+        const f = withShift ? 10 : 1
+        keyCodeOptions(e, { f })
       }
     },
-    dealCtrl(e: any) {
-      dealWithCtrl(e, this)
+    handleKeyup(store: Store<any>, checkCtrl: number | undefined) {
+      return (e: any) => {
+        console.log(e)
+        clearInterval(checkCtrl)
+        hadDown = false
+        if (e.key === 'Alt' || e.key === 'Shift' || e.key === 'Control' || e.key === 'Meta') {
+          store.dispatch('updateAltDown', false)
+        }
+      }
+    },
+    dealCtrl(e: any, instance: any) {
+      dealWithCtrl(e, instance)
       console.log(e.key, e.keyCode)
     },
   },

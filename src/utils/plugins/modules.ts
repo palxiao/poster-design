@@ -7,8 +7,9 @@
  */
 // import { Button, Field, Divider, NavBar, Toast, Popup } from 'vant'
 import coms from '@/components/modules'
+import { App } from 'vue'
 
-export default (Vue: any) => {
+export default (Vue: App) => {
   coms(Vue)
   // Vue.component(Button.name, Button)
   // Vue.use(Field).use(Divider).use(NavBar).use(Toast).use(Popup)

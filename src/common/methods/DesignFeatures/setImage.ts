@@ -2,17 +2,33 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-22 15:06:14
  * @Description: 设置图片类型元素
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-01-11 17:36:44
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-01 20:55:51
  */
 import store from '@/store'
 import { getImage } from '../getImgDetail'
-export default async function setItem2Data(item: any) {
+
+export type TItem2DataParam = {
+  id?: string | number
+  width: number
+  height: number
+  url: string
+  model?: string
+  canvasWidth?: number
+}
+
+export type TItem2DataResult = {
+  width: number
+  height: number
+  canvasWidth: number
+}
+
+export default async function setItem2Data(item: TItem2DataParam): Promise<Required<TItem2DataParam>> {
   const cloneItem = JSON.parse(JSON.stringify(item))
   const { width: screenWidth, height: screenHeight } = store.getters.dPage
   let { width: imgWidth, height: imgHeight } = item
   if (!imgWidth || !imgHeight) {
-    const actual: any = await getImage(item.url)
+    const actual = await getImage(item.url)
     cloneItem.width = imgWidth = actual.width
     cloneItem.height = imgHeight = actual.height
   }

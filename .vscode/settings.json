@@ -5,7 +5,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.validate": ["javascript", "javascriptreact", "vue", "typescript", "typescriptreact"],
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "css.validate": false,
   "less.validate": false,

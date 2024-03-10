@@ -2,27 +2,27 @@
  * @Author: ShawnPhang
  * @Date: 2021-12-24 15:13:58
  * @Description: 资源加载
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-19 17:19:07
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-05 12:00:00
  */
 export default class PreLoad {
   private i: number
-  private arr: any[]
-  constructor(arr: string[]) {
+  private arr: (string | HTMLImageElement | ChildNode[])[]
+  constructor(arr: (string | HTMLImageElement | ChildNode[])[]) {
     this.i = 0
     this.arr = arr
   }
   public imgs() {
-    return new Promise((resolve: any) => {
+    return new Promise<void>((resolve) => {
       const work = (src: string) => {
         if (this.i < this.arr.length) {
           const img = new Image()
           img.src = src
           if (img.complete) {
-            work(this.arr[this.i++])
+            work(this.arr[this.i++] as string)
           } else {
             img.onload = () => {
-              work(this.arr[this.i++])
+              work(this.arr[this.i++] as string)
               img.onload = null
             }
           }
@@ -31,14 +31,14 @@ export default class PreLoad {
           resolve()
         }
       }
-      work(this.arr[this.i])
+      work(this.arr[this.i] as string)
     })
   }
   public doms() {
-    return new Promise((resolve: Function) => {
+    return new Promise<void>((resolve) => {
       const work = () => {
         if (this.i < this.arr.length) {
-          this.arr[this.i].complete && this.i++
+          (this.arr[this.i] as HTMLImageElement).complete && this.i++
           setTimeout(() => {
             work()
           }, 100)
@@ -51,10 +51,10 @@ export default class PreLoad {
   }
   /** 判断是否加载svg */
   public svgs() {
-    return new Promise((resolve: Function) => {
+    return new Promise<void>((resolve) => {
       const work = () => {
         if (this.i < this.arr.length) {
-          this.arr[this.i].length > 0 && this.i++
+          (this.arr[this.i] as ChildNode[]).length > 0 && this.i++
           setTimeout(() => {
             work()
           }, 100)
