@@ -20,7 +20,6 @@
 
 <script lang="ts" setup>
 // const NAME = 'number-slider'
-import { Arrayable } from 'element-plus/es/utils';
 import { watch, ref, onMounted } from 'vue';
 import { mapActions } from 'vuex'
 
@@ -36,7 +35,7 @@ type TProps = {
 
 type TEmits = {
   (event: 'update:modelValue', data: number): void
-  (event: 'finish', data: Arrayable<number>): void
+  (event: 'finish', data: number | number[]): void
 }
 
 const props = withDefaults(defineProps<TProps>(), {
@@ -72,7 +71,7 @@ onMounted(() => {
   innerValue.value = props.modelValue
 })
 
-function changeValue(value: Arrayable<number>) {
+function changeValue(value: number | number[]) {
   emit('finish', value)
 }
 </script>
