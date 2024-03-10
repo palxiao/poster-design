@@ -9,51 +9,59 @@
   <div class="text-input">
     <p v-if="label" class="input-label">{{ label }}</p>
     <div :class="{ 'input-wrap': true, active: inputBorder }">
-      <input :class="{ 'real-input': true, disable: !editable }" type="text" :value="modelValue" :readonly="editable ? false : 'readonly'" @input="updateValue($event.target.value)" @focus="focusInput" @blur="blurInput" />
+      <input 
+        :class="{ 'real-input': true, disable: !props.editable }" 
+        type="text" :value="props.modelValue" 
+        :readonly="!editable" 
+        @input="updateValue(($event.target as HTMLInputElement).value)" 
+        @focus="focusInput"
+        @blur="blurInput"
+      />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { ref } from 'vue'
 // 文本输入组件
 const NAME = 'text-input'
 
-export default {
-  name: NAME,
-  props: {
-    label: {
-      default: '',
-    },
-    modelValue: {
-      default: '',
-    },
-    editable: {
-      default: true,
-    },
-  },
-  emits: ['update:modelValue', 'finish'],
-  data() {
-    return {
-      inputBorder: false,
-      tagText: '',
-    }
-  },
-  computed: {},
-  methods: {
-    updateValue(value) {
-      this.$emit('update:modelValue', value)
-    },
-    focusInput() {
-      this.inputBorder = true
-      this.tagText = this.modelValue
-    },
-    blurInput() {
-      this.inputBorder = false
-      if (this.modelValue !== this.tagText) {
-        this.$emit('finish', this.modelValue)
-      }
-    },
-  },
+type TProps = {
+  label?: string
+  modelValue?: string
+  editable?: boolean
+}
+
+type TEmits = {
+  (event:'update:modelValue', data: string): void
+  (event: 'finish', data: string): void
+}
+
+const props = withDefaults(defineProps<TProps>(), {
+  label: '',
+  modelValue: '',
+  editable: true,
+})
+
+const emit = defineEmits<TEmits>()
+
+const inputBorder = ref(false)
+const tagText = ref<string>('')
+
+function updateValue(value: string) {
+  emit('update:modelValue', value)
+}
+
+function focusInput() {
+  inputBorder.value = true
+  tagText.value = props.modelValue
+}
+
+function blurInput() {
+  inputBorder.value = false
+  if (props.modelValue !== tagText.value) {
+    emit('finish', props.modelValue)
+  }
 }
 </script>
 
