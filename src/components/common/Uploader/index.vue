@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-29 18:17:13
  * @Description: 二次封装上传组件
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-05 10:50:00
 -->
 <template>
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, nextTick, defineProps, withDefaults, defineEmits } from 'vue'
+import { onMounted, nextTick, withDefaults } from 'vue'
 import { ElUpload, UploadRequestOptions } from 'element-plus'
 import Qiniu from '@/common/methods/QiNiu'
 import { getImage } from '@/common/methods/getImgDetail'

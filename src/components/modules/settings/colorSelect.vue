@@ -16,12 +16,8 @@
 </template>
 
 <script lang="ts" setup>
-// const NAME = 'color-select'
 import {reactive, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-// import { debounce } from 'throttle-debounce'
-// import { toolTip } from '@/common/methods/helper'
-// import colorPicker from '@/utils/plugins/color-picker/index.vue'
 import colorPicker from '@palxp/color-picker'
 
 type TProps = {
@@ -64,9 +60,7 @@ let first = true
 
 onMounted(() => {
   if (props.modelValue) {
-    let fixColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
-    // 当前@palxp/color-picker对部分小写16进制颜色处理有异常，统一转为大写
-    state.innerColor = fixColor.toLocaleUpperCase()
+    state.innerColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
   }
 })
 

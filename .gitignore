@@ -15,7 +15,6 @@ screenshot/_apidoc/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-yarn.lock*
 pnpm-debug.log*
 
 # Editor directories and files

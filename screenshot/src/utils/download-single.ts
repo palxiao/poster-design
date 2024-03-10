@@ -22,17 +22,22 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
     // 格式化浏览器宽高
     width = Number(width).toFixed(0)
     height = Number(height).toFixed(0)
+
+    const puppeteerArgs = {
+      old: ['–no-first-run', '--no-sandbox', '--disable-setuid-sandbox', `--window-size=${width},${height}`, '–single-process', '–disable-gpu', '–no-zygote', '–disable-dev-shm-usage'],
+      new: [ '–no-first-run', '--no-sandbox', '--disable-setuid-sandbox', `--window-size=${width},${height}` ]
+    }
     // 启动浏览器
     try {
       browser = await puppeteer.launch({
         headless: true, // !isDev,
-        executablePath: isDev ? null : executablePath,
+        executablePath,
         ignoreHTTPSErrors: true, // 忽略https安全提示
-        args: ['–no-first-run', '–single-process', '–disable-gpu', '–no-zygote', '–disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox', `--window-size=${width},${height}`], // 优化配置
+        args: puppeteerArgs.old, // 如puppeteer版本v20+报错请尝试使用新参数
         defaultViewport: null,
       })
     } catch (error) {
-      console.log('Puppeteer启动错误！', '窗口大小：', width, height);
+      console.log('Puppeteer Error: ', error, '窗口大小：', width, height);
     }
     if (!browser) {
       reject()

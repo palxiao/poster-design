@@ -91,7 +91,7 @@ type TState = {
 const props = withDefaults(defineProps<TProps>(), {
   label: '',
   modelValue: () => ({}),
-  suffic: '',
+  suffix: '',
   data: () => ({}),
   disable: true,
   inputWidth: '80px',

@@ -3,7 +3,7 @@
  * @Date: 2020-07-22 20:13:14
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-16 10:03:51
+ * @LastEditTime: 2023-12-07 12:23:57
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
 const uuid = require('../utils/uuid.ts')
@@ -68,7 +68,6 @@ module.exports = {
         return
       }
       const targetUrl = url + id + `${tempType?'&tempType='+tempType:''}`
-      // console.log(targetUrl, path, thumbPath);
       queueRun(saveScreenshot, targetUrl, { width, height, path, thumbPath, size, quality })
         .then(() => {
           res.setHeader('Content-Type', 'image/jpg')

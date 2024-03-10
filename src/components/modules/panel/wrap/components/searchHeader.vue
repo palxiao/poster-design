@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2022-01-27 11:05:48
  * @Description:  
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-06 21:16:00
 -->
 <template>
@@ -30,7 +30,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive, toRefs, watch, defineProps, defineEmits, defineExpose } from 'vue'
+import { reactive, toRefs, watch } from 'vue'
 import { ElDropdown, ElDropdownItem, ElDropdownMenu } from 'element-plus'
 import { useRoute } from 'vue-router'
 import api from '@/api'

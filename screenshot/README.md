@@ -1,4 +1,3 @@
-
 ## Node截图服务
 
 目录结构比较简单，主要就实现了三个接口，其中 `api/screenshots` 即是项目中所使用到的图片生成接口，在真实生产项目中可以把该服务单独部署，于内网调用，这样利于做一些鉴权之类的处理。
@@ -7,7 +6,17 @@
 
 ### 安装依赖
 
-`npm install` 或 `yarn`
+`npm install`
+
+安装依赖时可能会出现这个报错提示：
+
+```
+ERROR: Failed to set up Chromium xxx! Set "PUPPETEER_SKIP_DOWNLOAD" env variable to skip download.
+```
+
+不用慌，这是因为 puppeteer 会自动下载 Chromium，国内会受到网络波动的影响。
+
+如果跳过的话需要手动安装，比较麻烦所以并不推荐。解决方法是多尝试几次，或者更换国内的镜像源即可。
 
 ### 启动项目并热更新
 
@@ -17,35 +26,23 @@
 
 `npm run build`
 
-#### 打包说明
+#### 打包部署步骤
 
-直接打包可能会出现未知错误，本项目在 **webpack.config.js** 中过滤掉了依赖（打包出来的文件会非常小因为只包含项目代码），建议将 `package.json` 放到服务器上主动安装依赖来使用，具体的做法类似以下步骤：
+> 服务器环境需求：Node.js 16.18.1（版本不同则可能出现错误）、PM2（进程守护）
 
-1. 将项目中的 `package-build.json` 上传到服务器中，重命名为 `package.json`
-2. 目录下执行 `yarn` 安装依赖
-3. 执行 `npm run build`
-4. 将打包的 `dist/server.js` 放在 `node_modules` 同级目录中
-5. 使用 `pm2 start server.js` 启动并守护服务
+1. 本地执行 `npm run build` 打包
+2. 打包后项目根目录 `dist/` 文件夹上传服务器，并执行 `npm install` 安装依赖
+3. 运行 `pm2 start dist/server.js` 启动并守护服务
 
-### 服务器配置
+### 配置说明
 
-在 Linux 环境下推荐主动安装浏览器，再给项目中的配置文件 `src/config.ts` 设置好路径：
+配置文件 `src/config.ts` 配置项说明：
 
 ```js
-exports.executablePath = '/opt/google/chrome-unstable/chrome'
+port // 端口号
+website // 编辑器项目的地址
+filePath // 生成图片保存的目录
 ```
-
-> `/opt/google` 为默认路径，一般不会变动
-
-一些可能用到的 linux 命令参考（Debian GNU/Linux 9）：
-
-```shell
-google-chrome --version # 查看浏览器版本号
-apt-get update
-apt-get install -y google-chrome-stable // 安装最新稳定版谷歌浏览器
-```
-
-> 其它系统自行搜索如何安装Chrome，推荐使用Docker部署，本项目部署[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
 
 ### 生成 API 文档
 

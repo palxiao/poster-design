@@ -3,7 +3,7 @@
  * @Date: 2022-02-13 22:18:35
  * @Description: 我的
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-11 11:50:34
+ * @LastEditTime: 2024-03-11 01:42:44
 -->
 <template>
   <div class="wrap">
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs, watch, nextTick, ref, onMounted, defineProps, defineExpose } from 'vue'
+import { reactive, toRefs, watch, nextTick, ref, onMounted } from 'vue'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'

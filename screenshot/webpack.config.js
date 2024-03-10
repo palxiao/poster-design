@@ -10,6 +10,7 @@
 const path = require('path')
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const nodeExternals = require('webpack-node-externals');
+const buildPlugin = require('./webpack.plugin.js');
 
 module.exports = {
   mode: process.env.NODE_ENV,
@@ -39,4 +40,5 @@ module.exports = {
     ],
   },
   // plugins: [new BundleAnalyzerPlugin()],
+  plugins: [ new buildPlugin() ]
 }
