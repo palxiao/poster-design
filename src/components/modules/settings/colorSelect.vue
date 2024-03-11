@@ -30,11 +30,17 @@ type TProps = {
 type TEmits = {
   (event: 'finish', data: string): void
   (event: 'update:modelValue', data: string): void
-  (event: 'change', data: string): void
+  (event: 'change', data: colorChangeData): void
 }
 
 type TState = {
   innerColor: string
+}
+
+export type colorChangeData = {
+  angle: number
+  color: string
+  mode: string
 }
 
 const props = withDefaults(defineProps<TProps>(), {
@@ -118,7 +124,9 @@ const hide = () => {
   store.commit('setShowMoveable', true) // 恢复上一次的选择框
 }
 
-const colorChange = (color: string) => {
+
+const colorChange = (color: colorChangeData) => {
+  // console.log('color', color)
   emit('change', color)
 }
 
