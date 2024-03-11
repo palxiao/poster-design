@@ -63,3 +63,14 @@ interface MouseEvent {
   layerY: number
 }
 
+interface Document {
+  selection?: Selection
+}
+
+interface HTMLElement {
+  createTextRange(): {
+    moveToElementText(el: HTMLElement): void
+    select(): void
+  }
+}
+
