@@ -7,8 +7,8 @@
 -->
 <template>
   <div
-    :id="params.uuid"
-    ref="widget"
+    :id="`${params.uuid}`"
+    ref="widgetRef"
     :class="['w-qrcode', { 'layer-lock': params.lock }]"
     :style="{
       position: 'absolute',
@@ -19,109 +19,101 @@
       opacity: params.opacity,
     }"
   >
-    <QRCode ref="qrcode" v-bind="qrCodeOptions" :width="width" :height="width" class="target" :image="params.url" :value="params.value" />
+    <QRCode
+      ref="qrcode"
+      v-bind="state.qrCodeOptions"
+      :width="width"
+      :height="width"
+      class="target"
+      :image="params.url"
+      :value="params.value"
+    />
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 // 图片组件
-const NAME = 'w-qrcode'
+// const NAME = 'w-qrcode'
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, useStore } from 'vuex'
 import QRCode from '@/components/business/qrcode'
+import { TWQrcodeSetting } from './wQrcodeSetting';
+import { computed, nextTick, onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { Options } from 'qr-code-styling';
 
-export default {
-  name: NAME,
-  components: { QRCode },
-  setting: {
-    name: '二维码',
-    type: NAME,
-    uuid: -1,
-    width: 300,
-    height: 300,
-    left: 0,
-    top: 0,
-    zoom: 1,
-    transform: '',
-    radius: 0,
-    opacity: 1,
-    parent: '-1',
-    url: '',
-    dotType: 'classy',
-    dotColorType: 'single',
-    dotRotation: 270,
-    dotColor: '#35495E',
-    dotColor2: '#35495E',
-    value: 'https://xp.palxp.cn',
-    setting: [],
-    record: {
-      width: 0,
-      height: 0,
-      minWidth: 10,
-      minHeight: 10,
-      dir: 'all',
-    },
+type TProps = {
+  params: TWQrcodeSetting & {
+    rotate?: number
+    lock?: boolean
+  }
+  parent: {
+    top: number
+    left: number
+  }
+}
+
+type TState = {
+  qrCodeOptions: Options
+}
+
+const store = useStore()
+const props = defineProps<TProps>()
+const state = reactive<TState>({
+  qrCodeOptions: {}
+})
+const { dActiveElement, dZoom } = useSetupMapGetters(['dActiveElement', 'dZoom'])
+const width = computed(() => Number(props.params.width))
+const widgetRef = ref<HTMLElement | null>(null)
+
+watch(
+  () => props.params,
+  () => {
+    changeValues()
   },
-  props: ['params', 'parent'],
-  data() {
-    return {
-      qrCodeOptions: {},
-    }
-  },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dZoom']),
-    width() {
-      return Number(this.params.width)
-    },
-  },
-  watch: {
-    params: {
-      async handler(nval) {
-        this.changeValues()
+  { immediate: true, deep: true, }
+)
+
+onUpdated(() => {
+  updateRecord()
+  store.commit('updateRect')
+})
+
+onMounted(async () => {
+  updateRecord()
+  await nextTick()
+  if (widgetRef.value){
+    props.params.rotate && (widgetRef.value.style.transform += `rotate(${props.params.rotate})`)
+  }
+})
+// ...mapActions(['updateWidgetData']),
+function updateRecord() {
+  if (dActiveElement.value.uuid === props.params.uuid) {
+    let record = dActiveElement.value.record
+    if (!widgetRef.value) return
+    record.width = widgetRef.value.offsetWidth
+    record.height = widgetRef.value.offsetHeight
+  }
+  // this.updateZoom()
+}
+
+function changeValues() {
+  state.qrCodeOptions = {
+    qrOptions: { typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' },
+    // dotsOptions: { color: '#999999' },
+    dotsOptions: {
+      type: props.params.dotType,
+      color: props.params.dotColor,
+      gradient: {
+        type: 'linear',
+        rotation: props.params.dotRotation,
+        colorStops: [
+          { offset: 0, color: props.params.dotColor },
+          { offset: 1, color: props.params.dotColorType === 'single' ? props.params.dotColor : props.params.dotColor2 },
+        ],
       },
-      immediate: true,
-      deep: true,
     },
-  },
-  updated() {
-    this.updateRecord()
-    this.$store.commit('updateRect')
-  },
-
-  async mounted() {
-    this.updateRecord()
-    await this.$nextTick()
-    this.params.rotate && (this.$refs.widget.style.transform += `rotate(${this.params.rotate})`)
-  },
-  methods: {
-    ...mapActions(['updateWidgetData']),
-    updateRecord() {
-      if (this.dActiveElement.uuid === this.params.uuid) {
-        let record = this.dActiveElement.record
-        record.width = this.$refs.widget.offsetWidth
-        record.height = this.$refs.widget.offsetHeight
-      }
-      // this.updateZoom()
-    },
-    changeValues() {
-      this.qrCodeOptions = {
-        qrOptions: { typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' },
-        // dotsOptions: { color: '#999999' },
-        dotsOptions: {
-          type: this.params.dotType,
-          color: this.params.dotColor,
-          gradient: {
-            type: 'linear',
-            rotation: this.params.dotRotation,
-            colorStops: [
-              { offset: 0, color: this.params.dotColor },
-              { offset: 1, color: this.params.dotColorType === 'single' ? this.params.dotColor : this.params.dotColor2 },
-            ],
-          },
-        },
-      }
-    },
-  },
+  }
 }
 </script>
 
