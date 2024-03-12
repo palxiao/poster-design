@@ -17,8 +17,7 @@ import Qiniu from '@/common/methods/QiNiu'
 import _config from '@/config'
 import { getImage } from '@/common/methods/getImgDetail'
 import wImage from '@/components/modules/widgets/wImage/wImage.vue'
-// import wText from '@/components/modules/widgets/wText/wText.vue'
-import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
+import wText from '@/components/modules/widgets/wText/wText.vue'
 
 export default () => {
   navigator.clipboard
@@ -48,7 +47,7 @@ export default () => {
           break
         } else if (item.types.toString().indexOf('text') !== -1) {
           store.commit('setShowMoveable', false) // 清理掉上一次的选择
-          const setting = JSON.parse(JSON.stringify(wTextSetting))
+          const setting = JSON.parse(JSON.stringify(wText.setting))
           setting.text = await navigator.clipboard.readText()
           store.dispatch('addWidget', setting)
           break
