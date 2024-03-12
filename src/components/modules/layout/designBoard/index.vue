@@ -1,5 +1,6 @@
 <template>
   <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px' }">
+    <el-scrollbar class="scroll-container">
     <div
       id="out-page"
       class="out-page"
@@ -54,12 +55,14 @@
         <!-- <size-control v-if="dSelectWidgets.length === 0" /> -->
       </div>
     </div>
+  </el-scrollbar>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { nextTick, onMounted, ref } from 'vue'
 import { mapGetters, mapActions, useStore } from 'vuex'
+import { ElScrollbar } from 'element-plus'
 import { getTarget } from '@/common/methods/target'
 
 import setWidgetData from '@/common/methods/DesignFeatures/setWidgetData'
