@@ -41,12 +41,12 @@ type IGetTempListResult = TPageRequestResult<IGetTempListData[]>
 // 获取模板列表
 export const getTempList = (params: IGetTempListParam) => fetch<IGetTempListResult>('design/list', params, 'get')
 
-type TGetTempDetail = {
+export type TGetTempDetail = {
   id: number
   type?: number
 }
 
-type TTempDetail = {
+export type TTempDetail = {
   /** 分类 */
   category: number
   /** 封面 */
@@ -93,7 +93,7 @@ type TGetCompListParam = {
   page?: number
   type?: number
   pageSize: number
-  cate: number
+  cate?: number | string
 }
 
 /** 获取组件返回类型 */
@@ -104,13 +104,19 @@ export type TGetCompListResult = {
   state: number
   title: string
   width: number
+  name?: string
 }
 
 type getCompListReturn = TPageRequestResult<TGetCompListResult[]>
 
 // 组件相关接口
 export const getCompList = (params: TGetCompListParam) => fetch<getCompListReturn>('design/list', params, 'get')
-export const removeComp = (params: Type.Object = {}) => fetch('design/del', params, 'post')
+
+type TRemoveComp = {
+  id: string | number
+}
+
+export const removeComp = (params: TRemoveComp) => fetch<void>('design/del', params, 'post')
 // export const getCompDetail = (params: Type.Object = {}) => fetch('/api/template/temp_info', params, 'get')
 
 // 保存作品
