@@ -15,152 +15,175 @@
       </el-input>
     </div>
     <el-divider content-position="left">推荐组件</el-divider> -->
-    <classHeader v-show="!currentCategory" :types="types" @select="selectTypes">
+    <classHeader v-show="!state.currentCategory" :types="state.types" @select="selectTypes">
       <template v-slot="{ index }">
         <div class="list-wrap">
-          <div v-for="(item, i) in showList[index]" :key="i + 'sl'" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
+          <div
+            v-for="(item, i) in state.showList[index]" :key="i + 'sl'"
+            draggable="false" 
+            @mousedown="dragStart($event, item)" @mousemove="mousemove"
+            @mouseup="mouseup" @click.stop="selectItem(item)"
+            @dragstart="dragStart($event, item)"
+          >
             <el-image class="list__img-thumb" :src="item.cover" fit="contain" lazy loading="lazy"></el-image>
           </div>
         </div>
       </template>
     </classHeader>
 
-    <ul v-if="currentCategory" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
-      <classHeader :is-back="true" @back="back">{{ currentCategory.name }}</classHeader>
+    <ul v-if="state.currentCategory" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
+      <classHeader :is-back="true" @back="back">{{ state.currentCategory.name }}</classHeader>
       <el-space fill wrap :fillRatio="30" direction="horizontal" class="list">
-        <div v-for="(item, i) in list" :key="i + 'i'" class="list__item" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
+        <div v-for="(item, i) in state.list" :key="i + 'i'" class="list__item" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
           <!-- <edit-model :isComp="true" @action="action($event, item, i)"> -->
           <el-image class="list__img" :src="item.cover" fit="contain" lazy loading="lazy" />
           <!-- </edit-model> -->
         </div>
       </el-space>
-      <div v-show="loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
-      <div v-show="loadDone" class="loading">全部加载完毕</div>
+      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
+      <div v-show="state.loadDone" class="loading">全部加载完毕</div>
     </ul>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue'
+<script lang="ts" setup>
+import { reactive, onMounted } from 'vue'
 import api from '@/api'
 import { useStore } from 'vuex'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
 import setItem2Data from '@/common/methods/DesignFeatures/setImage'
+import { TGetCompListResult, TGetTempDetail, TTempDetail } from '@/api/home'
 
-export default defineComponent({
-  components: {},
-  setup(props) {
-    // 拖拽效果相关
-    const dragHelper = new DragHelper()
-    let isDrag = false
-    let startPoint = { x: 99999, y: 99999 }
-    let tempDetail: any = null
-    // 缓存组件用以减少接口请求的次数
-    const compsCache: any = {}
-    const state = reactive({
-      loading: false,
-      loadDone: false,
-      list: [],
-      searchValue: '',
-      currentCategory: null,
-      types: [],
-      showList: [],
-    })
-    const store = useStore()
-    const pageOptions = { type: 1, page: 0, pageSize: 20 }
+type TState = {
+  loading: boolean
+  loadDone: boolean
+  list: TGetCompListResult[]
+  searchValue: string
+  currentCategory: TGetCompListResult | null
+  types: []
+  showList: TGetCompListResult[][]
+}
 
-    onMounted(async () => {
-      if (state.types.length <= 0) {
-        const types = await api.material.getKinds({ type: 3 })
-        state.types = types
-        for (const iterator of types) {
-          const { list } = await api.home.getCompList({
-            cate: iterator.id,
-            type: 1,
-            pageSize: 3,
-          })
-          state.showList.push(list)
-        }
-      }
-    })
-    const mouseup = (e: any) => {
-      e.preventDefault()
-      // setTimeout(() => {
-      isDrag = false
-      tempDetail = null
-      startPoint = { x: 99999, y: 99999 }
-      // }, 10)
-    }
-    const mousemove = (e: any) => {
-      e.preventDefault()
-      if (e.x - startPoint.x > 2 || e.y - startPoint.y > 2) {
-        isDrag = true
-      }
-    }
+// 拖拽效果相关
+const dragHelper = new DragHelper()
+let isDrag = false
+let startPoint = { x: 99999, y: 99999 }
+let tempDetail: TTempDetail | null = null
+// 缓存组件用以减少接口请求的次数
+const compsCache: any = {}
+const state = reactive<TState>({
+  loading: false,
+  loadDone: false,
+  list: [],
+  searchValue: '',
+  currentCategory: null,
+  types: [],
+  showList: [],
+})
+const store = useStore()
+const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
-    const load = async (init: boolean = false) => {
-      if (init) {
-        state.list = []
-        pageOptions.page = 0
-        state.loadDone = false
-      }
-
-      if (state.loadDone || state.loading) {
-        return
-      }
-
-      state.loading = true
-      pageOptions.page += 1
-
-      const res = await api.home.getCompList({
-        ...Object.assign(pageOptions, { cate: state.currentCategory?.id }),
+onMounted(async () => {
+  if (state.types.length <= 0) {
+    const types = await api.material.getKinds({ type: 3 })
+    state.types = types
+    for (const iterator of types) {
+      const { list } = await api.home.getCompList({
+        cate: iterator.id,
+        type: 1,
+        pageSize: 3,
       })
-      if (init) {
-        state.list = res?.list
-      } else {
-        res?.list.length <= 0 && (state.loadDone = true)
-        state.list = state.list.concat(res?.list)
-      }
-      setTimeout(() => {
-        state.loading = false
-      }, 100)
+      state.showList.push(list)
     }
+  }
+})
+const mouseup = (e: any) => {
+  e.preventDefault()
+  // setTimeout(() => {
+  isDrag = false
+  tempDetail = null
+  startPoint = { x: 99999, y: 99999 }
+  // }, 10)
+}
 
-    function action({ name, value }: any, item: any, index: number) {
-      switch (name) {
-        case 'del':
-          delComp(item, index)
-          break
-      }
-    }
-    function delComp({ id }: any, index: number) {
-      api.home.removeComp({ id })
-      state.list.splice(index, 1)
-    }
+const mousemove = (e: MouseEvent) => {
+  e.preventDefault()
+  if (e.x - startPoint.x > 2 || e.y - startPoint.y > 2) {
+    isDrag = true
+  }
+}
 
-    const selectTypes = (item: any) => {
-      state.currentCategory = item
-      load(true)
-    }
-    const back = () => {
-      state.currentCategory = null
-    }
+const load = async (init: boolean = false) => {
+  if (init) {
+    state.list = []
+    pageOptions.page = 0
+    state.loadDone = false
+  }
 
-    const dragStart = async (e: any, { id, width, height, cover }: any) => {
-      startPoint = { x: e.x, y: e.y }
-      // tempDetail = await api.home.getTempDetail({ id, type: 1 })
-      // let finalWidth = tempDetail.width
-      // 计算出拖拽到画布数值
-      const img = await setItem2Data({ width, height, url: cover })
-      dragHelper.start(e, img.canvasWidth)
-      tempDetail = await getCompDetail({ id, type: 1 })
-      if (Array.isArray(JSON.parse(tempDetail.data))) {
-        store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
-      } else {
-        store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
-      }
-    }
+  if (state.loadDone || state.loading) {
+    return
+  }
+
+  state.loading = true
+  pageOptions.page += 1
+
+  const res = await api.home.getCompList({
+    ...pageOptions,
+    cate: state.currentCategory?.id,
+  })
+  if (init) {
+    state.list = res?.list
+  } else {
+    res?.list.length <= 0 && (state.loadDone = true)
+    state.list = state.list.concat(res?.list)
+  }
+  setTimeout(() => {
+    state.loading = false
+  }, 100)
+}
+
+type TActionParam = {
+  name: string
+  value: string
+}
+
+function action({ name, value }: TActionParam, item: TGetCompListResult, index: number) {
+  switch (name) {
+    case 'del':
+      delComp(item, index)
+      break
+  }
+}
+
+function delComp({ id }: TGetCompListResult, index: number) {
+  api.home.removeComp({ id })
+  state.list.splice(index, 1)
+}
+
+const selectTypes = (item: TGetCompListResult) => {
+  state.currentCategory = item
+  load(true)
+}
+
+const back = () => {
+  state.currentCategory = null
+}
+
+const dragStart = async (e: MouseEvent, { id, width, height, cover }: TGetCompListResult) => {
+  startPoint = { x: e.x, y: e.y }
+  // tempDetail = await api.home.getTempDetail({ id, type: 1 })
+  // let finalWidth = tempDetail.width
+  // 计算出拖拽到画布数值
+  const img = await setItem2Data({ width, height, url: cover })
+  dragHelper.start(e, img.canvasWidth)
+  tempDetail = await getCompDetail({ id, type: 1 })
+  if (Array.isArray(JSON.parse(tempDetail.data))) {
+    store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
+  } else {
+    store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
+  }
+}
 
     const selectItem = async (item: any) => {
       if (isDrag) {
@@ -191,7 +214,7 @@ export default defineComponent({
       }
     }
 
-    function getCompDetail(params: any) {
+    function getCompDetail(params: TGetTempDetail): Promise<TTempDetail> {
       // 有缓存则直接返回组件数据，否则请求获取数据
       return new Promise((resolve) => {
         if (compsCache[params.id]) {
@@ -203,18 +226,15 @@ export default defineComponent({
       })
     }
 
-    return {
-      ...toRefs(state),
-      load,
-      action,
-      back,
-      selectTypes,
-      mouseup,
-      mousemove,
-      dragStart,
-      selectItem,
-    }
-  },
+defineExpose({
+  load,
+  action,
+  back,
+  selectTypes,
+  mouseup,
+  mousemove,
+  dragStart,
+  selectItem,
 })
 </script>
 
