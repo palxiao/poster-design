@@ -237,7 +237,7 @@ export default {
     if (activeElement.type === 'page') {
       return
     }
-
+    navigator.clipboard.writeText('') // 清空系统剪贴板内容
     const container = []
     const selectWidgets = store.state.dSelectWidgets
     if (selectWidgets.length === 0) {

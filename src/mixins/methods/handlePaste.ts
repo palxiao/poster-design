@@ -20,41 +20,53 @@ import wImage from '@/components/modules/widgets/wImage/wImage.vue'
 import wText from '@/components/modules/widgets/wText/wText.vue'
 
 export default () => {
-  navigator.clipboard
-    .read()
-    .then(async (dataTransfer: any) => {
-      for (let i = 0; i < dataTransfer.length; i++) {
-        const item = dataTransfer[i]
-        if (item.types.toString().indexOf('image') !== -1) {
-          const imageBlob = await item.getType(item.types[0])
-          const file = new File([imageBlob], 'screenshot.png', { type: 'image/png' })
-          // 上传图片
-          const qnOptions = { bucket: 'xp-design', prePath: 'user' }
-          const result: any = await Qiniu.upload(file, qnOptions)
-          const { width, height }: any = await getImage(file)
-          const url = _config.IMG_URL + result.key
-          await api.material.addMyPhoto({ width, height, url })
-          // 添加图片到画布中
-          store.commit('setShowMoveable', false) // 清理掉上一次的选择
-          const setting = JSON.parse(JSON.stringify(wImage.setting))
-          setting.width = width
-          setting.height = height
-          setting.imgUrl = url
-          const { width: pW, height: pH } = store.getters.dPage
-          setting.left = pW / 2 - width / 2
-          setting.top = pH / 2 - height / 2
-          store.dispatch('addWidget', setting)
-          break
-        } else if (item.types.toString().indexOf('text') !== -1) {
-          store.commit('setShowMoveable', false) // 清理掉上一次的选择
-          const setting = JSON.parse(JSON.stringify(wText.setting))
-          setting.text = await navigator.clipboard.readText()
-          store.dispatch('addWidget', setting)
-          break
+  return new Promise<void>((resolve) => {
+    navigator.clipboard
+      .read()
+      .then(async (dataTransfer: any) => {
+        if (store.getters.dActiveElement.editable) {
+          return
         }
-      }
-    })
-    .catch((error) => {
-      console.error('无法读取剪贴板内容：', error)
-    })
+        for (let i = 0; i < dataTransfer.length; i++) {
+          const item = dataTransfer[i]
+          if (item.types.toString().indexOf('image') !== -1) {
+            const imageBlob = await item.getType(item.types[0])
+            const file = new File([imageBlob], 'screenshot.png', { type: 'image/png' })
+            // 上传图片
+            const qnOptions = { bucket: 'xp-design', prePath: 'user' }
+            const result: any = await Qiniu.upload(file, qnOptions)
+            const { width, height }: any = await getImage(file)
+            const url = _config.IMG_URL + result.key
+            await api.material.addMyPhoto({ width, height, url })
+            // 添加图片到画布中
+            store.commit('setShowMoveable', false) // 清理掉上一次的选择
+            const setting = JSON.parse(JSON.stringify(wImage.setting))
+            setting.width = width
+            setting.height = height
+            setting.imgUrl = url
+            const { width: pW, height: pH } = store.getters.dPage
+            setting.left = pW / 2 - width / 2
+            setting.top = pH / 2 - height / 2
+            store.dispatch('addWidget', setting)
+            // 清空剪贴板，防止多次上传图片
+            navigator.clipboard.write([
+              new ClipboardItem({
+                'text/plain': new Blob([''], {type: 'text/plain'})
+              })
+            ])
+            break
+          } else if (item.types.toString().indexOf('text') !== -1) {
+            store.commit('setShowMoveable', false) // 清理掉上一次的选择
+            const setting = JSON.parse(JSON.stringify(wText.setting))
+            setting.text = await navigator.clipboard.readText()
+            store.dispatch('addWidget', setting)
+            break
+          }
+        }
+      })
+      .catch((error) => {
+        // 剪贴板内容为空
+        resolve()
+      })
+  })
 }
