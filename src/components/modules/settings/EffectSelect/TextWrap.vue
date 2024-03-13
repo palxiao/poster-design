@@ -27,10 +27,10 @@
             :key="efi + 'effect'"
             :style="{
               color: ef.filling && ef.filling.enable && ef.filling.type === 0 ? ef.filling.color : 'transparent',
-              webkitTextStroke: ef.stroke && ef.stroke.enable ? `${ef.stroke.width / coefficient}px ${ef.stroke.color}` : '',
+              WebkitTextStroke: ef.stroke && ef.stroke.enable ? `${ef.stroke.width / coefficient}px ${ef.stroke.color}` : '',
               textShadow: ef.shadow && ef.shadow.enable ? `${ef.shadow.offsetX / coefficient}px ${ef.shadow.offsetY / coefficient}px ${ef.shadow.blur / coefficient}px ${ef.shadow.color}` : undefined,
               backgroundImage: ef.filling && ef.filling.enable ? (ef.filling.type === 0 ? undefined : getGradientOrImg(ef)) : undefined,
-              webkitBackgroundClip: ef.filling && ef.filling.enable ? (ef.filling.type === 0 ? undefined : 'text') : undefined,
+              WebkitBackgroundClip: ef.filling && ef.filling.enable ? (ef.filling.type === 0 ? undefined : 'text') : undefined,
             }"
             class="demo"
           >
@@ -117,7 +117,9 @@ import numberInput from '../numberInput.vue'
 import draggable from 'vuedraggable'
 import api from '@/api'
 import getGradientOrImg from '../../widgets/wText/getGradientOrImg'
-let froze_font_effect_list: Record<string, any>[] = []
+import { TGetCompListResult } from '@/api/home'
+
+let froze_font_effect_list: TGetCompListResult[] = []
 
 type TProps = {
   modelValue?: Record<string, any>
@@ -132,7 +134,7 @@ type TEmits = {
 type TState = {
   strength: number
   visiable: boolean
-  list: Record<string,any>[]
+  list: TGetCompListResult[]
   layers: Record<string, any>[]
   draging: boolean
   unfold: boolean

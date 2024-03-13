@@ -46,7 +46,29 @@ type TGetTempDetail = {
   type?: number
 }
 
-export const getTempDetail = (params: TGetTempDetail) => fetch<{data: string}>('design/temp', params, 'get')
+type TTempDetail = {
+  /** 分类 */
+  category: number
+  /** 封面 */
+  cover: string
+  /** 创建时间 */
+  created_time: string
+  /** Template内容 */
+  data: string
+  /** 高度 */
+  height: number
+  id: number
+  /** 来源 */
+  original: string
+  resource: string
+  state: string
+  tag: string | null
+  title: string
+  updated_time: string
+  width: number
+}
+
+export const getTempDetail = (params: TGetTempDetail) => fetch<TTempDetail>('design/temp', params, 'get')
 
 type TGetCategoriesParams = {
   type?: number
@@ -66,8 +88,28 @@ export const getCategories = (params: TGetCategoriesParams) => fetch<TgetCategor
 export const saveTemp = (params: Type.Object = {}) => fetch('design/edit', params, 'post')
 // export const delTemp = (params: Type.Object = {}) => fetch('/api/template/temp_del', params)
 
+type TGetCompListParam = {
+  search?: string
+  page?: number
+  type?: number
+  pageSize: number
+  cate: number
+}
+
+/** 获取组件返回类型 */
+export type TGetCompListResult = {
+  cover: string
+  height: number
+  id: number
+  state: number
+  title: string
+  width: number
+}
+
+type getCompListReturn = TPageRequestResult<TGetCompListResult[]>
+
 // 组件相关接口
-export const getCompList = (params: Type.Object = {}) => fetch('design/list', params, 'get')
+export const getCompList = (params: TGetCompListParam) => fetch<getCompListReturn>('design/list', params, 'get')
 export const removeComp = (params: Type.Object = {}) => fetch('design/del', params, 'post')
 // export const getCompDetail = (params: Type.Object = {}) => fetch('/api/template/temp_info', params, 'get')
 
