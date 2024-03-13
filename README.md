@@ -2,7 +2,7 @@
 
 ---
 
-## Poster Design
+## 迅排设计
 
 一款漂亮易用且功能强大的开源创意图片编辑器，是对标稿定设计、创客贴、Canva 等商业产品的免费在线设计工具。
 
@@ -47,8 +47,6 @@ npm run dev
 ### 图片生成服务
 
 代码位于根目录 [/screenshot](https://github.com/palxiao/poster-design/tree/main/screenshot)，接口API文档点此查看：[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
-
-> 更多相关事项请进入该目录下查看 [README.md](https://github.com/palxiao/poster-design/blob/main/screenshot/README.md) 文件。 Docker 部署：[参考说明](https://xp.palxp.cn/#/articles/1689319644311?id=docker%e5%ae%b9%e5%99%a8)。
 
 ### 服务端
 
