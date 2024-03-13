@@ -34,7 +34,13 @@
     <ul v-if="state.currentCategory" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <classHeader :is-back="true" @back="back">{{ state.currentCategory.name }}</classHeader>
       <el-space fill wrap :fillRatio="30" direction="horizontal" class="list">
-        <div v-for="(item, i) in state.list" :key="i + 'i'" class="list__item" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
+        <div
+          v-for="(item, i) in state.list" :key="i + 'i'"
+          class="list__item" draggable="false"
+          @mousedown="dragStart($event, item)" @mousemove="mousemove"
+          @mouseup="mouseup" @click.stop="selectItem(item)"
+          @dragstart="dragStart($event, item)"
+        >
           <!-- <edit-model :isComp="true" @action="action($event, item, i)"> -->
           <el-image class="list__img" :src="item.cover" fit="contain" lazy loading="lazy" />
           <!-- </edit-model> -->
@@ -98,7 +104,7 @@ onMounted(async () => {
     }
   }
 })
-const mouseup = (e: any) => {
+const mouseup = (e: MouseEvent) => {
   e.preventDefault()
   // setTimeout(() => {
   isDrag = false
@@ -185,34 +191,34 @@ const dragStart = async (e: MouseEvent, { id, width, height, cover }: TGetCompLi
   }
 }
 
-    const selectItem = async (item: any) => {
-      if (isDrag) {
-        return
-      }
-      store.commit('setShowMoveable', false) // 清理掉上一次的选择
-      tempDetail = tempDetail || (await getCompDetail({ id: item.id, type: 1 }))
-      // let group = JSON.parse(tempDetail.data)
-      const group: any = await getComponentsData(tempDetail.data)
-      let parent: any = { x: 0, y: 0 }
-      const { width: pW, height: pH } = store.getters.dPage
+const selectItem = async (item: TGetCompListResult) => {
+  if (isDrag) {
+    return
+  }
+  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  tempDetail = tempDetail || (await getCompDetail({ id: item.id, type: 1 }))
+  // let group = JSON.parse(tempDetail.data)
+  const group: any = await getComponentsData(tempDetail.data)
+  let parent: Record<string, any> = { x: 0, y: 0 }
+  const { width: pW, height: pH } = store.getters.dPage
 
-      Array.isArray(group) &&
-        group.forEach((element: any) => {
-          element.type === 'w-group' && (parent = element)
-        })
-      if (parent.isContainer) {
-        group.forEach((element: any) => {
-          element.left += (pW - parent.width) / 2
-          element.top += (pH - parent.height) / 2
-        })
-        store.dispatch('addGroup', group)
-      } else {
-        group.text && (group.text = decodeURIComponent(group.text))
-        group.left = pW / 2 - group.fontSize * (group.text.length / 2)
-        group.top = pH / 2 - group.fontSize / 2
-        store.dispatch('addWidget', group)
-      }
-    }
+  Array.isArray(group) &&
+    group.forEach((element) => {
+      element.type === 'w-group' && (parent = element)
+    })
+  if (parent.isContainer) {
+    group.forEach((element: any) => {
+      element.left += (pW - parent.width) / 2
+      element.top += (pH - parent.height) / 2
+    })
+    store.dispatch('addGroup', group)
+  } else {
+    group.text && (group.text = decodeURIComponent(group.text))
+    group.left = pW / 2 - group.fontSize * (group.text.length / 2)
+    group.top = pH / 2 - group.fontSize / 2
+    store.dispatch('addWidget', group)
+  }
+}
 
     function getCompDetail(params: TGetTempDetail): Promise<TTempDetail> {
       // 有缓存则直接返回组件数据，否则请求获取数据
