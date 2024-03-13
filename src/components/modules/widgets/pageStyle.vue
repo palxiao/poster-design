@@ -1,161 +1,175 @@
 <template>
   <div id="page-style">
-    <div v-if="showBgLib" style="width: 256px;height: 100%;">
-      <span class="header-back" @click="showBgLib = false">
+    <div v-if="state.showBgLib" style="width: 256px;height: 100%;">
+      <span class="header-back" @click="state.showBgLib = false">
         <i class="iconfont icon-right"></i> 选择背景
       </span>
       <bg-img-list-wrap style="padding-top: 2rem;" model="stylePanel" />
     </div>
-    <el-collapse v-else v-model="activeNames">
+    <el-collapse v-else v-model="state.activeNames">
       <el-collapse-item title="画布尺寸" name="1">
         <div class="position-size">
-          <number-input v-model="innerElement.width" label="宽" :maxValue="5000" @finish="(value) => finish('width', value)" />
-          <number-input v-model="innerElement.height" label="高" :maxValue="5000" @finish="(value) => finish('height', value)" />
+          <number-input v-model="state.innerElement.width" label="宽" :maxValue="5000" @finish="(value) => finish('width', value)" />
+          <number-input v-model="state.innerElement.height" label="高" :maxValue="5000" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
       <el-collapse-item title="背景设置" name="2">
-        <el-button style="width: 100%; margin: 0 0 1rem 0;" type="primary" link @click="showBgLib = true">在背景库中选择</el-button>
-        <Tabs :value="mode" @update:value="onChangeMode">
-          <TabPanel v-for="label in modes" :key="label" :label="label"></TabPanel>
+        <el-button style="width: 100%; margin: 0 0 1rem 0;" type="primary" link @click="state.showBgLib = true">在背景库中选择</el-button>
+        <Tabs :value="state.mode" @update:value="onChangeMode">
+          <TabPanel v-for="label in state.modes" :key="label" :label="label"></TabPanel>
         </Tabs>
-        <color-select v-show="mode === '颜色'" v-model="innerElement.backgroundColor" :modes="['纯色']" @change="colorChange" @finish="(value) => finish('backgroundColor', value)" />
+        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色']" @change="colorChange" @finish="(value) => finish('backgroundColor', value)" />
         <!-- <bg-img-select :img="innerElement.backgroundImage"/> -->
-        <div v-if="mode === '图片' && innerElement.backgroundImage" style="margin-top: 2rem">
-          <el-image style="max-height: 428px" :src="innerElement.backgroundImage" fit="contain"></el-image>
+        <div v-if="state.mode === '图片' && state.innerElement.backgroundImage" style="margin-top: 2rem">
+          <el-image style="max-height: 428px" :src="state.innerElement.backgroundImage" fit="contain"></el-image>
           <el-button class="btn-wrap" size="small" @click="deleteBg">删除</el-button>
         </div>
-        <uploader v-show="mode === '图片'" class="btn-wrap" @done="uploadImgDone">
-          <el-button style="width: 100%" plain>{{ innerElement.backgroundImage ? '更换背景' : '上传背景' }}图</el-button>
+        <uploader v-show="state.mode === '图片'" class="btn-wrap" @done="uploadImgDone">
+          <el-button style="width: 100%" plain>{{ state.innerElement.backgroundImage ? '更换背景' : '上传背景' }}图</el-button>
         </uploader>
-        <el-button v-show="mode === '图片' && innerElement.backgroundImage" class="btn-wrap" size="small" @click="downloadBG">{{ downP ? downP + ' %' : '下载背景图' }}</el-button>
+        <el-button v-show="state.mode === '图片' && state.innerElement.backgroundImage" class="btn-wrap" size="small" @click="downloadBG">{{ state.downP ? state.downP + ' %' : '下载背景图' }}</el-button>
 
       </el-collapse-item>
     </el-collapse>
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 // 画布组件样式
-const NAME = 'page-style'
-import { mapGetters, mapActions } from 'vuex'
+// const NAME = 'page-style'
+import { nextTick, onMounted, reactive, watch } from 'vue'
+import { mapGetters, mapActions, useStore } from 'vuex'
 import numberInput from '../settings/numberInput.vue'
-import colorSelect from '../settings/colorSelect.vue'
-import uploader from '@/components/common/Uploader/index.vue'
+import colorSelect, { colorChangeData } from '../settings/colorSelect.vue'
+import uploader, { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import api from '@/api'
 import _dl from '@/common/methods/download'
 // import ColorPipette from '@/utils/plugins/color-pipette'
 import Tabs from '@palxp/color-picker/comps/Tabs.vue'
 import TabPanel from '@palxp/color-picker/comps/TabPanel.vue'
+import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 
-export default {
-  name: NAME,
-  components: { numberInput, colorSelect, uploader, Tabs, TabPanel },
-  data() {
-    return {
-      activeNames: ['1', '2', '3', '4'],
-      innerElement: {},
-      tag: false,
-      ingoreKeys: ['backgroundColor', 'name', 'width', 'height'],
-      downP: 0,
-      mode: '颜色',
-      modes: ['颜色', '图片'],
-      showBgLib: false
-    }
+type TState = {
+  activeNames: string[]
+  innerElement: Record<string, any>
+  tag: boolean
+  ingoreKeys: string[]
+  downP: number
+  mode: string
+  modes: string[]
+  showBgLib: boolean
+}
+
+const store = useStore()
+const state = reactive<TState>({
+  activeNames: ['1', '2', '3', '4'],
+  innerElement: {},
+  tag: false,
+  ingoreKeys: ['backgroundColor', 'name', 'width', 'height'],
+  downP: 0,
+  mode: '颜色',
+  modes: ['颜色', '图片'],
+  showBgLib: false
+})
+const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+let _localTempBG: string | null = null
+
+watch(
+  () => dActiveElement.value,
+  () => {
+    change()
   },
-  computed: {
-    ...mapGetters(['dActiveElement']),
+  { deep: true }
+)
+
+watch(
+  () => state.innerElement,
+  () => {
+    changeValue()
   },
-  watch: {
-    dActiveElement: {
-      handler(newValue, oldValue) {
-        this.change()
-      },
-      deep: true,
-    },
-    innerElement: {
-      handler(newValue, oldValue) {
-        this.changeValue()
-      },
-      deep: true,
-    },
-  },
-  created() {
-    this.change()
-  },
-  methods: {
-    ...mapActions(['updatePageData']),
-    colorChange(e) {
-      if (e.mode === '渐变') {
-        // setTimeout(() => {
-        //   console.log(1, e)
-        //   this.finish('backgroundImage', e.color)
-        // }, 1000)
-      }
-    },
-    onChangeMode(value) {
-      this.mode = value
-      if (value === '颜色') {
-        this._localTempBG = this.innerElement.backgroundImage
-        this.finish('backgroundImage', '')
+  { deep: true }
+)
+
+onMounted(() => {
+  change()
+})
+
+// ...mapActions(['updatePageData']),
+function colorChange(e: colorChangeData) {
+  if (e.mode === '渐变') {
+    // setTimeout(() => {
+    //   console.log(1, e)
+    //   this.finish('backgroundImage', e.color)
+    // }, 1000)
+  }
+}
+function onChangeMode(value: string) {
+  state.mode = value
+  if (value === '颜色') {
+    _localTempBG = state.innerElement.backgroundImage
+    finish('backgroundImage', '')
+  } else {
+    _localTempBG && finish('backgroundImage', _localTempBG)
+  }
+}
+function change() {
+  state.mode = state.modes[0]
+  state.tag = true
+  state.innerElement = JSON.parse(JSON.stringify(dActiveElement.value))
+  state.innerElement.backgroundImage && (state.mode = state.modes[1])
+}
+function changeValue() {
+  if (state.tag) {
+    state.tag = false
+    return
+  }
+  for (let key in state.innerElement) {
+    if (key !== 'setting' && key !== 'record' && state.innerElement[key] !== dActiveElement.value[key]) {
+      if (state.ingoreKeys.indexOf(key) !== -1) {
+        dActiveElement.value[key] = state.innerElement[key]
       } else {
-        this._localTempBG && this.finish('backgroundImage', this._localTempBG)
+        store.dispatch('updatePageData', {
+          key: key,
+          value: state.innerElement[key],
+        })
+        // updatePageData({
+        //   key: key,
+        //   value: this.innerElement[key],
+        // })
       }
-    },
-    change() {
-      this.mode = this.modes[0]
-      this.tag = true
-      this.innerElement = JSON.parse(JSON.stringify(this.dActiveElement))
-      this.innerElement.backgroundImage && (this.mode = this.modes[1])
-    },
-    changeValue() {
-      if (this.tag) {
-        this.tag = false
-        return
-      }
-      for (let key in this.innerElement) {
-        if (key !== 'setting' && key !== 'record' && this.innerElement[key] !== this.dActiveElement[key]) {
-          if (this.ingoreKeys.indexOf(key) !== -1) {
-            this.dActiveElement[key] = this.innerElement[key]
-          } else {
-            this.updatePageData({
-              key: key,
-              value: this.innerElement[key],
-            })
-          }
-        }
-      }
-    },
-    finish(key, value) {
-      this.updatePageData({
-        key: key,
-        value: value,
-        pushHistory: true,
-      })
-    },
-    async uploadImgDone(img) {
-      await api.material.addMyPhoto(img)
-      this.updatePageData({
-        key: 'backgroundTransform',
-        value: {},
-      })
-      this.finish('backgroundImage', img.url)
-    },
-    async deleteBg() {
-      this._localTempBG = null
-      this.updatePageData({
-        key: 'backgroundImage',
-        value: '',
-        pushHistory: true,
-      })
-      await this.$nextTick()
-      this.mode = this.modes[1]
-    },
-    async downloadBG() {
-      await _dl.downloadImg(this.innerElement.backgroundImage, (p) => {
-        this.downP = p < 99 ? p / 100 : 0
-      })
-    },
-  },
+    }
+  }
+}
+
+function finish(key: string, value: string | number) {
+  store.dispatch('updatePageData', {
+    key: key,
+    value: value,
+    pushHistory: true,
+  })
+}
+async function uploadImgDone(img: TUploadDoneData) {
+  await api.material.addMyPhoto(img)
+  store.dispatch('updatePageData', {
+    key: 'backgroundTransform',
+    value: {},
+  })
+  finish('backgroundImage', img.url)
+}
+async function deleteBg() {
+  _localTempBG = null
+  store.dispatch('updatePageData', {
+    key: 'backgroundImage',
+    value: '',
+    pushHistory: true,
+  })
+  await nextTick()
+  state.mode = state.modes[1]
+}
+async function downloadBG() {
+  await _dl.downloadImg(state.innerElement.backgroundImage, (p) => {
+    state.downP = p < 99 ? p / 100 : 0
+  })
 }
 </script>
 
