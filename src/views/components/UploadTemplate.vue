@@ -66,7 +66,7 @@ useFontStore.init() // 初始化加载字体
 
 // 生成封面
 const draw = () => {
-  return new Promise((resolve) => {
+  return new Promise<string>((resolve) => {
     if (!canvasImage.value) {
       resolve('')
     } else {

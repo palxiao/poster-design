@@ -82,7 +82,7 @@ async function save(hasCover: boolean = false) {
   const { id, tempid } = route.query
   const cover = hasCover ? await draw() : undefined
   const widgets = dWidgets.value // reviseData()
-  const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id, title: state.title || '未命名设计', data: JSON.stringify({ page: dPage.value, widgets }), temp_id: tempid, width: dPage.value.width, height: dPage.value.height })
+  const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id: (id as string), title: state.title || '未命名设计', data: JSON.stringify({ page: dPage.value, widgets }), temp_id: (tempid as string), width: dPage.value.width, height: dPage.value.height })
   stat !== 0 ? useNotification('保存成功', '可在"我的作品"中查看') : useNotification('保存失败', msg, { type: 'error' })
   !id && router.push({ path: '/home', query: { id: newId }, replace: true })
   store.commit('setShowMoveable', true)
@@ -199,7 +199,7 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
 }
 
 function draw() {
-  return new Promise((resolve) => {
+  return new Promise<string>((resolve) => {
     if (!canvasImage.value) resolve('')
     else {
       canvasImage.value.createCover(({ key }: {key: string}) => {

@@ -19,11 +19,12 @@ function getBase64(file: File) {
   })
 }
 
-const putPic = async (file: File) => {
+const putPic = async (file: File | string) => {
   const repo = 'shawnphang/files'
   const d = new Date()
   const content = typeof file === 'string' ? file : await getBase64(file)
-  const path = `${d.getFullYear()}/${d.getMonth()}/${d.getTime()}${file.name?.split('.').pop() || '.png'}`
+  const extra = typeof file === 'string' ? '.png' : file.name?.split('.').pop()
+  const path = `${d.getFullYear()}/${d.getMonth()}/${d.getTime()}${extra}`
   const imageUrl = 'https://api.github.com/repos/' + repo + '/contents/' + path
   const body = { branch: 'main', message: 'upload', content, path }
   const res = await fetch(imageUrl, body, 'put', {
