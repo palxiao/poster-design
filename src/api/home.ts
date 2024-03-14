@@ -41,12 +41,34 @@ type IGetTempListResult = TPageRequestResult<IGetTempListData[]>
 // 获取模板列表
 export const getTempList = (params: IGetTempListParam) => fetch<IGetTempListResult>('design/list', params, 'get')
 
-type TGetTempDetail = {
+export type TGetTempDetail = {
   id: number
   type?: number
 }
 
-export const getTempDetail = (params: TGetTempDetail) => fetch<{data: string}>('design/temp', params, 'get')
+export type TTempDetail = {
+  /** 分类 */
+  category: number
+  /** 封面 */
+  cover: string
+  /** 创建时间 */
+  created_time: string
+  /** Template内容 */
+  data: string
+  /** 高度 */
+  height: number
+  id: number
+  /** 来源 */
+  original: string
+  resource: string
+  state: string
+  tag: string | null
+  title: string
+  updated_time: string
+  width: number
+}
+
+export const getTempDetail = (params: TGetTempDetail) => fetch<TTempDetail>('design/temp', params, 'get')
 
 type TGetCategoriesParams = {
   type?: number
@@ -66,19 +88,61 @@ export const getCategories = (params: TGetCategoriesParams) => fetch<TgetCategor
 export const saveTemp = (params: Type.Object = {}) => fetch('design/edit', params, 'post')
 // export const delTemp = (params: Type.Object = {}) => fetch('/api/template/temp_del', params)
 
+type TGetCompListParam = {
+  search?: string
+  page?: number
+  type?: number
+  pageSize: number
+  cate?: number | string
+}
+
+/** 获取组件返回类型 */
+export type TGetCompListResult = {
+  cover: string
+  height: number
+  id: number
+  state: number
+  title: string
+  width: number
+  name?: string
+}
+
+type getCompListReturn = TPageRequestResult<TGetCompListResult[]>
+
 // 组件相关接口
-export const getCompList = (params: Type.Object = {}) => fetch('design/list', params, 'get')
-export const removeComp = (params: Type.Object = {}) => fetch('design/del', params, 'post')
+export const getCompList = (params: TGetCompListParam) => fetch<getCompListReturn>('design/list', params, 'get')
+
+type TRemoveComp = {
+  id: string | number
+}
+
+export const removeComp = (params: TRemoveComp) => fetch<void>('design/del', params, 'post')
 // export const getCompDetail = (params: Type.Object = {}) => fetch('/api/template/temp_info', params, 'get')
 
+type TSaveWorksParams = {
+  title: string
+  temp_id?: string
+  width: number
+  height: number
+  data: string
+  cover?: string
+  id?: string | number
+}
+
+export type TSaveWorksResult = {
+  id: number | string,
+  stat?: number,
+  msg: string
+}
+
 // 保存作品
-export const saveWorks = (params: Type.Object = {}) => fetch('design/save', params, 'post')
+export const saveWorks = (params: TSaveWorksParams) => fetch<TSaveWorksResult>('design/save', params, 'post')
 
 // 保存个人模板
 export const saveMyTemp = (params: Type.Object = {}) => fetch('design/user/temp', params, 'post')
 
 // 获取作品
-export const getWorks = (params: Type.Object = {}) => fetch('design/poster', params, 'get')
+export const getWorks = (params: TGetTempDetail) => fetch<TTempDetail>('design/poster', params, 'get')
 
 type TGetMyDesignParams = {
   page: number

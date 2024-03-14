@@ -11,19 +11,20 @@ const cutToken = 'ghp_qpV8PUxwY7as4jc'
 const reader = new FileReader()
 function getBase64(file: File) {
   return new Promise((resolve) => {
-    reader.onload = function (event: any) {
-      const fileContent = event.target.result
-      resolve(fileContent.split(',')[1])
+    reader.onload = function (event) {
+      const fileContent = event.target && event.target.result
+      resolve((fileContent as string).split(',')[1])
     }
     reader.readAsDataURL(file)
   })
 }
 
-const putPic = async (file: any) => {
+const putPic = async (file: File | string) => {
   const repo = 'shawnphang/files'
   const d = new Date()
   const content = typeof file === 'string' ? file : await getBase64(file)
-  const path = `${d.getFullYear()}/${d.getMonth()}/${d.getTime()}${file.name?.split('.').pop() || '.png'}`
+  const extra = typeof file === 'string' ? '.png' : file.name?.split('.').pop()
+  const path = `${d.getFullYear()}/${d.getMonth()}/${d.getTime()}${extra}`
   const imageUrl = 'https://api.github.com/repos/' + repo + '/contents/' + path
   const body = { branch: 'main', message: 'upload', content, path }
   const res = await fetch(imageUrl, body, 'put', {

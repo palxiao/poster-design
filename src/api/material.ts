@@ -38,8 +38,6 @@ export type TGetListData = {
 
 export type TGetListResult = TPageRequestResult<TGetListData[]>
 
-
-
 // 获取素材列表：
 export const getList = (params: TGetListParam) => fetch<TGetListResult>('design/material', params)
 
@@ -60,7 +58,18 @@ export type TGetFontItemData = {
 
 // 获取字体
 export const getFonts = (params: TGetFontParam = {}) => fetch<TPageRequestResult<TGetFontItemData[]>>('design/fonts', params)
-export const getFontSub = (params: Type.Object = {}, extra: any = {}) => fetch('design/font_sub', params, 'get', {}, extra)
+
+type TGetFontSubParam = {
+  font_id: string | number
+  id: string | number
+  content: string
+}
+
+type TGetFontSubExtra = {
+  responseType?: string
+}
+
+export const getFontSub = (params: TGetFontSubParam, extra: TGetFontSubExtra = {}) => fetch<Blob | string>('design/font_sub', params, 'get', {}, extra)
 
 type TGetImageListParams = {
   page?: number
@@ -74,16 +83,49 @@ export type TGetImageListResult = {
   url: string
   user_id: number
   id: string
-  thumb: string
-} & IGetTempListData
+  thumb?: string
+} & Partial<IGetTempListData>
 
 // 图库列表
 export const getImagesList = (params: TGetImageListParams) => fetch<TPageRequestResult<TGetImageListResult[]>>('design/imgs', params, 'get')
 
+type TMyPhotoParams = {
+  
+  page: number
+  pageSize?: number
+}
+
+/** 获取我的资源管理返回 */
+export type TMyPhotoResult = {
+  created_time: string
+  height: number
+  id: number
+  url: string
+  user_id: number
+  width: number
+} & IGetTempListData
+
 // 我的上传列表
-export const getMyPhoto = (params: TGetImageListParams) => fetch<TPageRequestResult<TGetImageListResult[]>>('design/user/image', params)
-export const deleteMyPhoto = (params: Type.Object = {}) => fetch('design/user/image/del', params, 'post')
-export const deleteMyWorks = (params: Type.Object = {}) => fetch('design/poster/del', params, 'post')
+export const getMyPhoto = (params: TMyPhotoParams) => fetch<TPageRequestResult<TMyPhotoResult[]>>('design/user/image', params)
+
+type TDeleteMyPhotoParams = {
+  id: string | number
+  key: string
+}
+
+export const deleteMyPhoto = (params: TDeleteMyPhotoParams) => fetch<void>('design/user/image/del', params, 'post')
+
+type TDeleteMyWorksParams = {
+  id: string | number
+}
+
+export const deleteMyWorks = (params: TDeleteMyWorksParams) => fetch<void>('design/poster/del', params, 'post')
+
+type TAddMyPhotoParam = {
+  width: number
+  height: number
+  url: string
+}
 
 // 添加图片
-export const addMyPhoto = (params: Type.Object = {}) => fetch('design/user/add_image', params)
+export const addMyPhoto = (params: TAddMyPhotoParam) => fetch<void>('design/user/add_image', params)
