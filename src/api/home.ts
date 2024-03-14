@@ -119,14 +119,30 @@ type TRemoveComp = {
 export const removeComp = (params: TRemoveComp) => fetch<void>('design/del', params, 'post')
 // export const getCompDetail = (params: Type.Object = {}) => fetch('/api/template/temp_info', params, 'get')
 
+type TSaveWorksParams = {
+  title: string
+  temp_id?: string
+  width: number
+  height: number
+  data: string
+  cover?: string
+  id?: string | number
+}
+
+export type TSaveWorksResult = {
+  id: number | string,
+  stat?: number,
+  msg: string
+}
+
 // 保存作品
-export const saveWorks = (params: Type.Object = {}) => fetch('design/save', params, 'post')
+export const saveWorks = (params: TSaveWorksParams) => fetch<TSaveWorksResult>('design/save', params, 'post')
 
 // 保存个人模板
 export const saveMyTemp = (params: Type.Object = {}) => fetch('design/user/temp', params, 'post')
 
 // 获取作品
-export const getWorks = (params: Type.Object = {}) => fetch('design/poster', params, 'get')
+export const getWorks = (params: TGetTempDetail) => fetch<TTempDetail>('design/poster', params, 'get')
 
 type TGetMyDesignParams = {
   page: number
