@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, watch, nextTick } from 'vue'
-import QRCodeStyling, { Options } from 'qr-code-styling'
+import QRCodeStyling, {DotType, Options } from 'qr-code-styling'
 import { debounce } from 'throttle-debounce'
 import { generateOption } from './method'
 
@@ -20,7 +20,10 @@ export type TQrcodeProps = {
   height?: number
   image?: string
   value?: string
-  dotsOptions: Options['dotsOptions']
+  dotsOptions: {
+    color: string,
+    type: DotType,
+  }
 }
 
 const props = withDefaults(defineProps<TQrcodeProps>(), {

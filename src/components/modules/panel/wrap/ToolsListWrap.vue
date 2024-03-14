@@ -28,10 +28,9 @@
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-// import wQrcode from '../../widgets/wQrcode/wQrcode.vue'
+import wQrcode from '../../widgets/wQrcode/wQrcode.vue'
 import imageCutout from '@/components/business/image-cutout'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { wQrcodeSetting } from '../../widgets/wQrcode/wQrcodeSetting'
 
 const store = useStore()
 const route = useRoute()
@@ -60,7 +59,7 @@ onMounted(() => {
 
 function addQrcode() {
   store.commit('setShowMoveable', false) // 清理掉上一次的选择
-  let setting = JSON.parse(JSON.stringify(wQrcodeSetting))
+  let setting = JSON.parse(JSON.stringify(wQrcode.setting))
   const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - setting.width / 2
   setting.top = pH / 2 - setting.height / 2

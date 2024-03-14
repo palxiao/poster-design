@@ -1,6 +1,3 @@
-<!--
-  TODO: 重构
--->
 <template>
   <div
     :id="params.uuid"
