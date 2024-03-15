@@ -26,7 +26,7 @@
 // 组合组件
 const NAME = 'w-group'
 import { nextTick, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+import { useStore } from 'vuex'
 import { setTransformAttribute } from '@/common/methods/handleTransform'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
@@ -55,26 +55,26 @@ const widget = ref<HTMLElement | null>(null)
 const ratio = ref(0)
 const temp = ref<Record<string, any>>({})
 const compWidgetsRecord = ref<Record<string, any>>({})
-const setting = {
-  name: '组合',
-  type: NAME,
-  uuid: -1,
-  width: 0,
-  height: 0,
-  left: 0,
-  top: 0,
-  transform: '',
-  opacity: 1,
-  parent: '-1',
-  isContainer: true,
-  record: {
-    width: 0,
-    height: 0,
-    minWidth: 0,
-    minHeight: 0,
-    dir: 'none',
-  },
-}
+// const setting = {
+//   name: '组合',
+//   type: NAME,
+//   uuid: -1,
+//   width: 0,
+//   height: 0,
+//   left: 0,
+//   top: 0,
+//   transform: '',
+//   opacity: 1,
+//   parent: '-1',
+//   isContainer: true,
+//   record: {
+//     width: 0,
+//     height: 0,
+//     minWidth: 0,
+//     minHeight: 0,
+//     dir: 'none',
+//   },
+// }
 
 const timer = ref<number | null>(null)
 const { dActiveElement, dWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
@@ -235,9 +235,9 @@ function keySetValue(uuid: string, key: keyof TParamsData, value: number) {
   }, 10)
 }
 
-defineExpose({
-  setting
-})
+// defineExpose({
+//   setting
+// })
 
 </script>
 

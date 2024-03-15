@@ -60,7 +60,7 @@ import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import shortcuts from '@/mixins/shortcuts'
-import wText from '@/components/modules/widgets/wText/wText.vue'
+// import wText from '@/components/modules/widgets/wText/wText.vue'
 import wImage from '@/components/modules/widgets/wImage/wImage.vue'
 import useLoading from '@/common/methods/loading'
 import uploader from '@/components/common/Uploader/index.vue'
@@ -71,6 +71,7 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 // import MyWorker from '@/utils/plugins/webWorker'
 import { processPSD2Page } from '@/utils/plugins/psd'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 
 type TState = {
   isDone: boolean
@@ -124,7 +125,7 @@ async function loadPSD(file: File) {
 
   setTimeout(async () => {
     const types: any = {
-      text: wText.setting,
+      text: wTextSetting,
       image: wImage.setting,
     }
     for (let i = 0; i < data.clouds.length; i++) {
