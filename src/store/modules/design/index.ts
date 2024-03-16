@@ -29,7 +29,6 @@ const all = {
     dDraging: false, // 是否正在抓取组件
     dResizeing: false, // 是否正在调整组件宽高
     dShowRefLine: true, // 是否显示参考线
-
     dResizeWH: {
       // 初始化调整大小时组件的宽高
       width: 0,
