@@ -12,7 +12,7 @@
 import { StyleValue, onMounted, reactive, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import api from '@/api'
-import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
+// import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
 import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
