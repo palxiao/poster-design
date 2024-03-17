@@ -6,8 +6,10 @@
  * @LastEditTime: 2024-02-26 17:54:00
  */
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios'
-import store from '@/store'
+// import store from '@/store'
 import app_config, { LocalStorageKey } from '@/config'
+import useUserStore from '@/store/modules/base/user';
+import useBaseStore from '@/store/modules/base';
 
 axios.defaults.timeout = 30000
 axios.defaults.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTc4ODU3NDc1MDU4NX0.L_t6DFD48Dm6rUPfgIgOWJkz18En1m_-hhMHcpbxliY';
@@ -53,7 +55,8 @@ axios.interceptors.response.use((res: AxiosResponse<any>) => {
     }
     if (res.data.code === 401) {
       console.log('登录失效')
-      store.commit('changeOnline', false)
+      useUserStore().changeOnline(false)
+      // store.commit('changeOnline', false)
     }
 
     if (res.data.result && res.data.code === 200) {
@@ -67,7 +70,8 @@ axios.interceptors.response.use((res: AxiosResponse<any>) => {
   (error) => {
     // if (error.response.status === 401) {
     // }
-    store.dispatch('hideLoading')
+    useBaseStore().hideLoading()
+    // store.dispatch('hideLoading')
     return Promise.reject(error)
   },
 )

@@ -12,7 +12,8 @@
       <span style="color: #999; font-size: 14px; margin-right: 0.5rem">{{ state.stateBollean ? '启用' : '停用' }}</span> <el-switch v-model="state.stateBollean" @change="stateChange" />
       <div class="divide__line">|</div>
       <el-button plain type="primary" @click="saveTemp">保存模板</el-button>
-      <el-button @click="$store.commit('managerEdit', false)">取消</el-button>
+      <el-button @click="userStore.managerEdit(false)">取消</el-button>
+      <!-- <el-button @click="$store.commit('managerEdit', false)">取消</el-button> -->
       <div class="divide__line">|</div>
     </template>
     <!-- <el-button @click="draw">绘制(测试)</el-button> -->
@@ -39,6 +40,7 @@ import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import useUserStore from '@/store/modules/base/user'
 
 type TProps = {
   modelValue?: boolean
@@ -60,6 +62,7 @@ const emit = defineEmits<TEmits>()
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
+const userStore = useUserStore()
 const canvasImage = ref<typeof SaveImage | null>(null)
 const {
   dPage, dWidgets, tempEditing, dHistory, dPageHistory

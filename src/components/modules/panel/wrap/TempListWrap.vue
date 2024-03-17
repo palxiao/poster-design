@@ -32,6 +32,7 @@ import useConfirm from '@/common/methods/confirm'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
+import useUserStore from '@/store/modules/base/user'
 
 type TState = {
   loading: boolean
@@ -52,6 +53,7 @@ const listRef = ref<HTMLElement | null>(null)
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
+const userStore = useUserStore()
 const state = reactive<TState>({
   loading: false,
   loadDone: false,
@@ -64,8 +66,9 @@ const { tempEditing, dHistoryParams } = useSetupMapGetters(['tempEditing', 'dHis
 
 const pageOptions: TPageOptions = { page: 0, pageSize: 20, cate: 1 }
 const { cate, edit } = route.query
-cate && (pageOptions.cate = (cate as LocationQueryValue) || 1)
-edit && store.commit('managerEdit', true)
+cate && (pageOptions.cate = (cate as LocationQueryValue) ?? 1)
+// edit && store.commit('managerEdit', true)
+edit && userStore.managerEdit(true)
 
 // onMounted(async () => {})
 
@@ -116,7 +119,8 @@ async function selectItem(item: IGetTempListData) {
       return false
     }
   }
-  store.commit('managerEdit', false)
+  // store.commit('managerEdit', false)
+  userStore.managerEdit(false)
   store.commit('setDWidgets', [])
 
   setTempId(item.id)
