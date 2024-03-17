@@ -50,6 +50,7 @@ import photoList from './components/photoList.vue'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
+import eventBus from '@/utils/plugins/eventBus'
 
 type TProps = {
   active?: number
@@ -237,6 +238,11 @@ const selectDesign = async (item: IGetTempListData) => {
 const openPSD = () => {
   window.open(router.resolve('/psd').href, '_blank')
 }
+
+eventBus.on('refreshUserImages', () => {
+  state.imgList = []
+  load(true)
+})
 
 defineExpose({
   selectDesign,
