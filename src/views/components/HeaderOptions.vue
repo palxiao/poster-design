@@ -37,7 +37,7 @@ import { useFontStore } from '@/common/methods/fonts'
 import copyRight from './CopyRight.vue'
 import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
-import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
+// import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 
 type TProps = {

@@ -17,7 +17,8 @@ import Qiniu from '@/common/methods/QiNiu'
 import _config from '@/config'
 import { getImage } from '@/common/methods/getImgDetail'
 import wImage from '@/components/modules/widgets/wImage/wImage.vue'
-import wText from '@/components/modules/widgets/wText/wText.vue'
+import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
+import eventBus from '@/utils/plugins/eventBus'
 
 export default () => {
   return new Promise<void>((resolve) => {
@@ -38,6 +39,8 @@ export default () => {
             const { width, height }: any = await getImage(file)
             const url = _config.IMG_URL + result.key
             await api.material.addMyPhoto({ width, height, url })
+            // 刷新用户列表
+            eventBus.emit('refreshUserImages')
             // 添加图片到画布中
             store.commit('setShowMoveable', false) // 清理掉上一次的选择
             const setting = JSON.parse(JSON.stringify(wImage.setting))
@@ -54,10 +57,14 @@ export default () => {
                 'text/plain': new Blob([''], {type: 'text/plain'})
               })
             ])
+            // 最后尝试复制，将图片替换为图片组件
+            setTimeout(() => {
+              store.dispatch('copyWidget')
+            }, 100)
             break
           } else if (item.types.toString().indexOf('text') !== -1) {
             store.commit('setShowMoveable', false) // 清理掉上一次的选择
-            const setting = JSON.parse(JSON.stringify(wText.setting))
+            const setting = JSON.parse(JSON.stringify(wTextSetting))
             setting.text = await navigator.clipboard.readText()
             store.dispatch('addWidget', setting)
             break
