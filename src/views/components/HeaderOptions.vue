@@ -40,7 +40,7 @@ import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import useUserStore from '@/store/modules/base/user'
+import { useUserStore } from '@/pinia/index'
 
 type TProps = {
   modelValue?: boolean
