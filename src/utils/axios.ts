@@ -8,8 +8,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios'
 // import store from '@/store'
 import app_config, { LocalStorageKey } from '@/config'
-import useUserStore from '@/store/modules/base/user';
-import useBaseStore from '@/store/modules/base';
+import { useBaseStore, useUserStore } from '@/pinia/index';
 
 axios.defaults.timeout = 30000
 axios.defaults.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTc4ODU3NDc1MDU4NX0.L_t6DFD48Dm6rUPfgIgOWJkz18En1m_-hhMHcpbxliY';

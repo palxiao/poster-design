@@ -3,7 +3,7 @@
  * @Date: 2024-03-17 15:00:00
  * @Description: User全局状态管理
  * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-17 15:00:00
+ * @LastEditTime: 2024-03-18 21:00:00
  */
 
 import { defineStore } from "pinia"
@@ -29,6 +29,7 @@ type TUserAction = {
   managerEdit: (status: boolean) => void
 }
 
+/** User全局状态管理 */
 const useUserStore = defineStore<'userStore', TUserStoreState, {}, TUserAction>('userStore', {
   state: () => ({
     online: true, // 登录状态，
