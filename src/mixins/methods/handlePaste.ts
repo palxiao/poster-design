@@ -19,9 +19,11 @@ import { getImage } from '@/common/methods/getImgDetail'
 import wImage from '@/components/modules/widgets/wImage/wImage.vue'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 import eventBus from '@/utils/plugins/eventBus'
+import { usePageStore } from '@/pinia'
 
 export default () => {
   return new Promise<void>((resolve) => {
+    const pageStore = usePageStore()
     navigator.clipboard
       .read()
       .then(async (dataTransfer: any) => {
@@ -47,7 +49,7 @@ export default () => {
             setting.width = width
             setting.height = height
             setting.imgUrl = url
-            const { width: pW, height: pH } = store.getters.dPage
+            const { width: pW, height: pH } = pageStore.dPage
             setting.left = pW / 2 - width / 2
             setting.top = pH / 2 - height / 2
             store.dispatch('addWidget', setting)

@@ -25,9 +25,11 @@
 <script lang="ts" setup>
 // const NAME = 'text-list-wrap'
 
+import { storeToRefs } from 'pinia';
 import wText from '../../widgets/wText/wText.vue'
 
 import { useStore } from 'vuex'
+import { usePageStore } from '@/pinia';
 
 type TBasicTextData = {
   text: string
@@ -36,6 +38,7 @@ type TBasicTextData = {
 }
 
 const store = useStore()
+const { dPage } = storeToRefs(usePageStore())
 
 
 const selectBasicText = (item: TBasicTextData) => {
@@ -45,7 +48,7 @@ const selectBasicText = (item: TBasicTextData) => {
   setting.width = item.fontSize * setting.text.length
   setting.fontSize = item.fontSize
   setting.fontWeight = item.fontWeight
-  const { width: pW, height: pH } = store.getters.dPage
+  const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - item.fontSize * 3
   setting.top = pH / 2 - item.fontSize / 2
   store.dispatch('addWidget', setting)

@@ -40,7 +40,8 @@ import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useUserStore } from '@/pinia/index'
+import { usePageStore, useUserStore } from '@/pinia/index'
+import { storeToRefs } from 'pinia'
 
 type TProps = {
   modelValue?: boolean
@@ -65,8 +66,11 @@ const store = useStore()
 const userStore = useUserStore()
 const canvasImage = ref<typeof SaveImage | null>(null)
 const {
-  dPage, dWidgets, tempEditing, dHistory, dPageHistory
-} = useSetupMapGetters(['dPage', 'dWidgets', 'tempEditing', 'dHistory', 'dPageHistory'])
+  dWidgets, tempEditing, dHistory, dPageHistory
+} = useSetupMapGetters(['dWidgets', 'tempEditing', 'dHistory', 'dPageHistory'])
+const pageStore = usePageStore()
+const { dPage } = storeToRefs(pageStore)
+
 
 const state = reactive<TState>({
   stateBollean: false,
@@ -192,7 +196,8 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
       store.dispatch('addGroup', data)
       // addGroup(data)
     } else {
-      store.commit('setDPage', data.page)
+      pageStore.setDPage(data.page)
+      // store.commit('setDPage', data.page)
       id ? store.commit('setDWidgets', data.widgets) : store.dispatch('setTemplate', data.widgets)
     }
     cb()

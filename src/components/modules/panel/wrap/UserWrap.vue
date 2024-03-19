@@ -51,6 +51,8 @@ import imgWaterFall from './components/imgWaterFall.vue'
 import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 import eventBus from '@/utils/plugins/eventBus'
+import { storeToRefs } from 'pinia'
+import { usePageStore } from '@/pinia'
 
 type TProps = {
   active?: number
@@ -70,6 +72,7 @@ const props = defineProps<TProps>()
 
 const router = useRouter()
 const store = useStore()
+const { dPage } = storeToRefs(usePageStore())
 const listRef = ref<HTMLElement | null>(null)
 const imgListRef = ref<typeof photoList | null>(null)
 
@@ -164,7 +167,7 @@ const selectImg = async (index: number) => {
   setting.width = img.width
   setting.height = img.height // parseInt(100 / item.value.ratio, 10)
   setting.imgUrl = item.url
-  const { width: pW, height: pH } = store.getters.dPage
+  const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - img.width / 2
   setting.top = pH / 2 - img.height / 2
   store.dispatch('addWidget', setting)

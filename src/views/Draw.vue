@@ -21,6 +21,8 @@ import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
+import { storeToRefs } from 'pinia'
+import { usePageStore } from '@/pinia'
 
 type TState = {
   style: StyleValue
@@ -34,7 +36,9 @@ const state = reactive<TState>({
     left: '0px',
   },
 })
-const { dPage } = useSetupMapGetters(['dPage'])
+const pageStore = usePageStore()
+const { dPage } = storeToRefs(pageStore)
+// const { dPage } = useSetupMapGetters(['dPage'])
 
 onMounted(() => {
   store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
@@ -64,7 +68,8 @@ async function load() {
       store.dispatch('addGroup', content)
       // addGroup(content)
     } else {
-      store.commit('setDPage', content.page)
+      pageStore.setDPage(content.page)
+      // store.commit('setDPage', content.page)
       if (id) {
         store.commit('setDWidgets', widgets)
       } else {

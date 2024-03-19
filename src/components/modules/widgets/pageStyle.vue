@@ -48,6 +48,8 @@ import _dl from '@/common/methods/download'
 import Tabs from '@palxp/color-picker/comps/Tabs.vue'
 import TabPanel from '@palxp/color-picker/comps/TabPanel.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { usePageStore } from '@/pinia'
+import { TPageStore } from '@/pinia/design/page'
 
 type TState = {
   activeNames: string[]
@@ -61,6 +63,7 @@ type TState = {
 }
 
 const store = useStore()
+const pageStore = usePageStore()
 const state = reactive<TState>({
   activeNames: ['1', '2', '3', '4'],
   innerElement: {},
@@ -94,7 +97,6 @@ onMounted(() => {
   change()
 })
 
-// ...mapActions(['updatePageData']),
 function colorChange(e: colorChangeData) {
   if (e.mode === '渐变') {
     // setTimeout(() => {
@@ -128,21 +130,17 @@ function changeValue() {
       if (state.ingoreKeys.indexOf(key) !== -1) {
         dActiveElement.value[key] = state.innerElement[key]
       } else {
-        store.dispatch('updatePageData', {
-          key: key,
+        pageStore.updatePageData({
+          key: key as keyof TPageStore,
           value: state.innerElement[key],
         })
-        // updatePageData({
-        //   key: key,
-        //   value: this.innerElement[key],
-        // })
       }
     }
   }
 }
 
-function finish(key: string, value: string | number) {
-  store.dispatch('updatePageData', {
+function finish(key: keyof TPageStore, value: string | number) {
+  pageStore.updatePageData({
     key: key,
     value: value,
     pushHistory: true,
@@ -150,7 +148,7 @@ function finish(key: string, value: string | number) {
 }
 async function uploadImgDone(img: TUploadDoneData) {
   await api.material.addMyPhoto(img)
-  store.dispatch('updatePageData', {
+  pageStore.updatePageData({
     key: 'backgroundTransform',
     value: {},
   })
@@ -158,7 +156,7 @@ async function uploadImgDone(img: TUploadDoneData) {
 }
 async function deleteBg() {
   _localTempBG = null
-  store.dispatch('updatePageData', {
+  pageStore.updatePageData({
     key: 'backgroundImage',
     value: '',
     pushHistory: true,

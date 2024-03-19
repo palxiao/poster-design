@@ -32,7 +32,7 @@ import useConfirm from '@/common/methods/confirm'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
-import useUserStore from '@/store/modules/base/user'
+import {usePageStore, useUserStore} from '@/pinia'
 
 type TState = {
   loading: boolean
@@ -54,6 +54,7 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 const userStore = useUserStore()
+const pageStore = usePageStore()
 const state = reactive<TState>({
   loading: false,
   loadDone: false,
@@ -135,7 +136,9 @@ async function selectItem(item: IGetTempListData) {
   const { page, widgets } = result
   console.log(widgets)
 
-  store.commit('setDPage', page)
+  pageStore.setDPage(page)
+  // store.commit('setDPage', page)
+  
   store.dispatch('setTemplate', widgets)
   // setTemplate(widgets)
   setTimeout(() => {

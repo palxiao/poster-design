@@ -26,6 +26,8 @@ import addMouseWheel from '@/common/methods/addMouseWheel'
 import { OtherList, TZoomData, ZoomList } from './data';
 import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { usePageStore } from '@/pinia';
 
 const route = useRoute()
 const store = useStore()
@@ -46,7 +48,9 @@ const otherIndex = ref(-1)
 const bestZoom = ref(0)
 const curAction = ref('')
 
-const { dPage, dScreen, zoomScreenChange, dZoom } = useSetupMapGetters(['dPage', 'dScreen', 'zoomScreenChange', 'dZoom'])
+const { dScreen, zoomScreenChange, dZoom } = useSetupMapGetters(['dScreen', 'zoomScreenChange', 'dZoom'])
+const { dPage } = storeToRefs(usePageStore())
+
 
 watch(
   activezoomIndex,

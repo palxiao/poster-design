@@ -22,6 +22,8 @@ import { useFontStore } from '@/common/methods/fonts'
 import _config from '@/config'
 import github from '@/api/github'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { usePageStore } from '@/pinia'
+import { storeToRefs } from 'pinia'
 
 type TProps = {
   modelValue?: string
@@ -46,7 +48,8 @@ type TState = {
   loading: false,
 }
 
-const { dPage, dWidgets } = useSetupMapGetters(['dPage', 'dWidgets'])
+const { dWidgets } = useSetupMapGetters(['dWidgets'])
+const { dPage } = storeToRefs(usePageStore())
 
 const props = defineProps<TProps>()
 const emit = defineEmits<TEmits>()

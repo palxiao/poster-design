@@ -32,13 +32,15 @@ import { useRoute } from 'vue-router'
 import imageCutout from '@/components/business/image-cutout'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wQrcodeSetting } from '../../widgets/wQrcode/wQrcodeSetting'
+import { storeToRefs } from 'pinia'
+import { usePageStore } from '@/pinia'
 
 const store = useStore()
 const route = useRoute()
 
 const loadDone = ref(false)
 const imageCutoutRef = ref<typeof imageCutout | null>(null)
-const { dPage } = useSetupMapGetters(['dPage'])
+const { dPage } = storeToRefs(usePageStore())
 
 onMounted(() => {
   // this.getDataList()

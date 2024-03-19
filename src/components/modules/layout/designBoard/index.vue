@@ -70,6 +70,8 @@ import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import { debounce } from 'throttle-debounce'
 import { move, moveInit } from '@/mixins/move'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { usePageStore } from '@/pinia'
+import { storeToRefs } from 'pinia'
 // 页面设计组件
 type TProps = {
   pageDesignCanvasId: string
@@ -90,10 +92,12 @@ type TSetting = {
 const store = useStore()
 const { pageDesignCanvasId } = defineProps<TProps>()
 const {
-  dPaddingTop, dPage, dZoom, dScreen, dWidgets,
+  dPaddingTop, dZoom, dScreen, dWidgets,
   dActiveElement, dSelectWidgets, dAltDown, dDraging,
   dHoverUuid, showRotatable
-} = useSetupMapGetters(['dPaddingTop', 'dPage', 'dZoom', 'dScreen', 'dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown', 'dDraging', 'showRotatable'])
+} = useSetupMapGetters(['dPaddingTop', 'dZoom', 'dScreen', 'dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown', 'dDraging', 'showRotatable'])
+const { dPage } = storeToRefs(usePageStore())
+
 
 let _dropIn: string | null = ''
 let _srcCache: string | null = ''

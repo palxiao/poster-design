@@ -35,11 +35,14 @@ type TPageGetter = {
 }
 
 type TPageActions = {
+  /** 更新Page数据 */
   updatePageData<T extends keyof TPageStore>(data: {
     key: T
     value: TPageStore[T]
-    pushHistory: boolean
+    pushHistory?: boolean
   }): void
+  /** 设置dPage */
+  setDPage(data: TPageStore): void
 }
 
 export default defineStore<"pageStore", TPageStore, TPageGetter, TPageActions>("pageStore", {
@@ -78,5 +81,13 @@ export default defineStore<"pageStore", TPageStore, TPageGetter, TPageActions>("
         // store.dispatch('pushHistory', 'updatePageData')
       }
     },
+    /** 设置dPage */
+    setDPage(data: TPageStore) {
+      const cur = this as Record<string, any>
+      const keys = Object.keys(data) as (keyof TPageStore)[];
+      keys.forEach(val => {
+        cur[val] = data[val]
+      })
+    }
   }
 })

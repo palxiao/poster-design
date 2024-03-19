@@ -73,6 +73,8 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
+import { storeToRefs } from 'pinia'
+import { usePageStore } from '@/pinia'
 
 type TState = {
   style: CSSProperties
@@ -94,8 +96,10 @@ const beforeUnload = function (e: Event): string {
 !_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
 const {
-  dActiveElement, dHistoryParams, dCopyElement, dPage, dZoom
-} = useSetupMapGetters(['dActiveElement', 'dHistoryParams', 'dCopyElement', 'dPage', 'dZoom'])
+  dActiveElement, dHistoryParams, dCopyElement, dZoom
+} = useSetupMapGetters(['dActiveElement', 'dHistoryParams', 'dCopyElement', 'dZoom'])
+const { dPage } = storeToRefs(usePageStore())
+
 
 const state = reactive<TState>({
   style: {

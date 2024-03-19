@@ -60,6 +60,7 @@ import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
 import setItem2Data from '@/common/methods/DesignFeatures/setImage'
 import { TGetCompListResult, TGetTempDetail, TTempDetail } from '@/api/home'
+import { usePageStore } from '@/pinia'
 
 type TState = {
   loading: boolean
@@ -88,6 +89,7 @@ const state = reactive<TState>({
   showList: [],
 })
 const store = useStore()
+const dPage = usePageStore().dPage
 const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
 onMounted(async () => {
@@ -200,7 +202,7 @@ const selectItem = async (item: TGetCompListResult) => {
   // let group = JSON.parse(tempDetail.data)
   const group: any = await getComponentsData(tempDetail.data)
   let parent: Record<string, any> = { x: 0, y: 0 }
-  const { width: pW, height: pH } = store.getters.dPage
+  const { width: pW, height: pH } = dPage
 
   Array.isArray(group) &&
     group.forEach((element) => {
