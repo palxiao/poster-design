@@ -16,7 +16,8 @@ import api from '@/api'
 import Qiniu from '@/common/methods/QiNiu'
 import _config from '@/config'
 import { getImage } from '@/common/methods/getImgDetail'
-import wImage from '@/components/modules/widgets/wImage/wImage.vue'
+// import wImage from '@/components/modules/widgets/wImage/wImage.vue'
+import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 import eventBus from '@/utils/plugins/eventBus'
 import { usePageStore } from '@/pinia'
@@ -45,7 +46,7 @@ export default () => {
             eventBus.emit('refreshUserImages')
             // 添加图片到画布中
             store.commit('setShowMoveable', false) // 清理掉上一次的选择
-            const setting = JSON.parse(JSON.stringify(wImage.setting))
+            const setting = JSON.parse(JSON.stringify(wImageSetting))
             setting.width = width
             setting.height = height
             setting.imgUrl = url

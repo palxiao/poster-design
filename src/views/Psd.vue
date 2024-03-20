@@ -61,7 +61,8 @@ import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import shortcuts from '@/mixins/shortcuts'
 // import wText from '@/components/modules/widgets/wText/wText.vue'
-import wImage from '@/components/modules/widgets/wImage/wImage.vue'
+// import wImage from '@/components/modules/widgets/wImage/wImage.vue'
+import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import useLoading from '@/common/methods/loading'
 import uploader from '@/components/common/Uploader/index.vue'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
@@ -72,7 +73,7 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { processPSD2Page } from '@/utils/plugins/psd'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import { usePageStore } from '@/pinia'
+import { useCanvasStore, usePageStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
 
 type TState = {
@@ -94,9 +95,10 @@ const state = reactive<TState>({
 const store = useStore()
 const route = useRoute()
 
-const { dZoom } = useSetupMapGetters(['dZoom'])
+// const { dZoom } = useSetupMapGetters(['dZoom'])
 const pageStore = usePageStore()
 const { dPage } = storeToRefs(pageStore)
+const { dZoom } = storeToRefs(useCanvasStore())
 
 const zoomControlRef = ref<typeof zoomControl | null>()
 
@@ -131,7 +133,7 @@ async function loadPSD(file: File) {
   setTimeout(async () => {
     const types: any = {
       text: wTextSetting,
-      image: wImage.setting,
+      image: wImageSetting,
     }
     for (let i = 0; i < data.clouds.length; i++) {
       const x: any = data.clouds[i]

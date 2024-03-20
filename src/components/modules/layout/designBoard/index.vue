@@ -70,7 +70,7 @@ import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import { debounce } from 'throttle-debounce'
 import { move, moveInit } from '@/mixins/move'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { usePageStore } from '@/pinia'
+import { useCanvasStore, usePageStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
 // 页面设计组件
 type TProps = {
@@ -92,11 +92,12 @@ type TSetting = {
 const store = useStore()
 const { pageDesignCanvasId } = defineProps<TProps>()
 const {
-  dPaddingTop, dZoom, dScreen, dWidgets,
+  dWidgets,
   dActiveElement, dSelectWidgets, dAltDown, dDraging,
   dHoverUuid, showRotatable
-} = useSetupMapGetters(['dPaddingTop', 'dZoom', 'dScreen', 'dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown', 'dDraging', 'showRotatable'])
+} = useSetupMapGetters(['dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown', 'dDraging', 'showRotatable'])
 const { dPage } = storeToRefs(usePageStore())
+const { dZoom, dPaddingTop, dScreen } = storeToRefs(useCanvasStore())
 
 
 let _dropIn: string | null = ''
@@ -188,24 +189,24 @@ async function drop(e: MouseEvent) {
       }
     })
     const half = {
-      x: parent.width ? (parent.width * store.getters.dZoom) / 100 / 2 : 0,
-      y: parent.height ? (parent.height * store.getters.dZoom) / 100 / 2 : 0
+      x: parent.width ? (parent.width * dZoom.value) / 100 / 2 : 0,
+      y: parent.height ? (parent.height * dZoom.value) / 100 / 2 : 0
     }
     componentItem.forEach((element) => {
-      element.left += (lost ? lostX - half.x : e.layerX - half.x) * (100 / store.getters.dZoom)
-      element.top += (lost ? lostY - half.y : e.layerY - half.y) * (100 / store.getters.dZoom)
+      element.left += (lost ? lostX - half.x : e.layerX - half.x) * (100 / dZoom.value)
+      element.top += (lost ? lostY - half.y : e.layerY - half.y) * (100 / dZoom.value)
     })
     store.dispatch('addGroup', componentItem)
     // addGroup(item)
   }
   // 设置坐标
   const half = { 
-    x: setting.width ? (setting.width * store.getters.dZoom) / 100 / 2 : 0,
-    y: setting.height ? (setting.height * store.getters.dZoom) / 100 / 2 : 0
+    x: setting.width ? (setting.width * dZoom.value) / 100 / 2 : 0,
+    y: setting.height ? (setting.height * dZoom.value) / 100 / 2 : 0
   }
   // const half = { x: (this.dDragInitData.offsetX * this.dZoom) / 100, y: (this.dDragInitData.offsetY * this.dZoom) / 100 }
-  setting.left = (lost ? lostX - half.x : e.layerX - half.x) * (100 / store.getters.dZoom)
-  setting.top = (lost ? lostY - half.y : e.layerY - half.y) * (100 / store.getters.dZoom)
+  setting.left = (lost ? lostX - half.x : e.layerX - half.x) * (100 / dZoom.value)
+  setting.top = (lost ? lostY - half.y : e.layerY - half.y) * (100 / dZoom.value)
   if (lost && type === 'image') {
     // 如果不从画布加入，且不是图片类型，则判断是否加入到svg中
     const target = await getTarget(eventTarget)

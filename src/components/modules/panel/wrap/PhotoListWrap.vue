@@ -28,7 +28,8 @@
 // 图片列表
 // const NAME = 'img-list-wrap'
 import { toRefs, reactive, computed, onMounted } from 'vue'
-import wImage from '../../widgets/wImage/wImage.vue'
+// import wImage from '../../widgets/wImage/wImage.vue'
+import wImageSetting from '../../widgets/wImage/wImageSetting'
 import api from '@/api'
 import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
@@ -81,7 +82,7 @@ onMounted(async () => {
 const selectImg = async (index: number, list: TGetImageListResult[]) => {
   const item = list ? list[index] : state.recommendImgList[index]
   store.commit('setShowMoveable', false) // 清理掉上一次的选择
-  let setting = JSON.parse(JSON.stringify(wImage.setting))
+  let setting = JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item) // await getImage(item.url)
   setting.width = img.width
   setting.height = img.height // parseInt(100 / item.value.ratio, 10)

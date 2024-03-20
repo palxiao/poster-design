@@ -13,11 +13,15 @@
 import { useStore } from 'vuex'
 import html2canvas from 'html2canvas'
 import Qiniu from '@/common/methods/QiNiu'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { storeToRefs } from 'pinia';
+import { useCanvasStore } from '@/pinia';
 
 const store = useStore();
 
-const { dZoom } = useSetupMapGetters(['dZoom'])
+// const { dZoom } = useSetupMapGetters(['dZoom'])
+const canvasStore = useCanvasStore()
+const { dZoom } = storeToRefs(canvasStore)
 
 
 // props: ['modelValue'], 
@@ -29,7 +33,8 @@ async function createCover(cb: any) {
   store.dispatch('selectWidget', {
     uuid: '-1',
   })
-  store.dispatch('updateZoom', 100)
+  canvasStore.updateZoom(100)
+  // store.dispatch('updateZoom', 100)
 
   const opts = {
     useCORS: true, // 跨域图片
@@ -51,7 +56,8 @@ async function createCover(cb: any) {
         'image/jpeg',
         0.15,
       )
-      store.dispatch('updateZoom', nowZoom)
+      canvasStore.updateZoom(nowZoom)
+      // store.dispatch('updateZoom', nowZoom)
       clonePage.remove()
     })
   }, 10)

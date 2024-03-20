@@ -27,7 +27,7 @@ import { OtherList, TZoomData, ZoomList } from './data';
 import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { usePageStore } from '@/pinia';
+import { useCanvasStore, usePageStore } from '@/pinia';
 
 const route = useRoute()
 const store = useStore()
@@ -48,8 +48,10 @@ const otherIndex = ref(-1)
 const bestZoom = ref(0)
 const curAction = ref('')
 
-const { dScreen, zoomScreenChange, dZoom } = useSetupMapGetters(['dScreen', 'zoomScreenChange', 'dZoom'])
+const { zoomScreenChange } = useSetupMapGetters(['zoomScreenChange'])
+const canvasStore = useCanvasStore()
 const { dPage } = storeToRefs(usePageStore())
+const { dZoom, dScreen } = storeToRefs(canvasStore)
 
 
 watch(
@@ -79,7 +81,8 @@ watch(
     if (realValue === -1) {
       realValue = calcZoom()
     }
-    store.dispatch('updateZoom', realValue)
+    canvasStore.updateZoom(realValue)
+    // store.dispatch('updateZoom', realValue)
     // updateZoom(realValue)
     autoFixTop()
   }
@@ -152,7 +155,8 @@ function changeScreen() {
 function screenChange() {
   // 弹性尺寸即时修改
   if (activezoomIndex.value === zoomList.value.length - 1) {
-    store.dispatch('updateZoom', calcZoom())
+    canvasStore.updateZoom(calcZoom())
+    // store.dispatch('updateZoom', calcZoom())
     // this.updateZoom(this.calcZoom())
     autoFixTop()
   }
@@ -221,7 +225,8 @@ function sub() {
 function mousewheelZoom(down: boolean) {
   const value = Number(dZoom.value.toFixed(0))
   if (down && value <= 1) return
-  store.dispatch('updateZoom', down ? value - 1 : value + 1)
+  canvasStore.updateZoom(down ? value - 1 : value + 1)
+  // store.dispatch('updateZoom', down ? value - 1 : value + 1)
   // updateZoom(down ? value - 1 : value + 1)
   zoom.value.text = (value + '%') as any
   autoFixTop()

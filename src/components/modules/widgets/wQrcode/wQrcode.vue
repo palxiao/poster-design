@@ -62,7 +62,7 @@ const props = defineProps<TProps>()
 const state = reactive<TState>({
   qrCodeOptions: {}
 })
-const { dActiveElement, dZoom } = useSetupMapGetters(['dActiveElement', 'dZoom'])
+const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
 const width = computed(() => Number(props.params.width))
 const widgetRef = ref<HTMLElement | null>(null)
 

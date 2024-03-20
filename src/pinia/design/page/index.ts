@@ -1,3 +1,11 @@
+/*
+ * @Author: Jeremy Yu
+ * @Date: 2024-03-18 21:00:00
+ * @Description: Page全局配置
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-18 21:00:00
+ */
+
 import { defineStore } from 'pinia'
 
 export type TPageStore = {

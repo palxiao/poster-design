@@ -23,25 +23,29 @@ export default {
     // 激活组件默认为page
     store.state.dActiveElement = store.state.dPage
   },
-  updateZoom(store, zoom) {
-    store.state.dZoom = zoom
-  },
-  updateScreen(store, { width, height }) {
-    store.state.dScreen.width = width
-    store.state.dScreen.height = height
-  },
+  
+  // updateZoom(store, zoom) {
+  //   store.state.dZoom = zoom
+  // },
+  // updateScreen(store, { width, height }) {
+  //   store.state.dScreen.width = width
+  //   store.state.dScreen.height = height
+  // },
+
   // updateGridSize(store, { width, height }) {
   //   store.state.gridSize.width = width
   //   store.state.gridSize.height = height
   // },
-  updatePageData(store, { key, value, pushHistory }) {
-    const page = store.state.dPage
-    if (page[key] !== value || pushHistory) {
-      page[key] = value
-      // 画布修改先不压入历史栈，因为替换模板后会重复压栈
-      // store.dispatch('pushHistory', 'updatePageData')
-    }
-  },
+
+  // updatePageData(store, { key, value, pushHistory }) {
+  //   const page = store.state.dPage
+  //   if (page[key] !== value || pushHistory) {
+  //     page[key] = value
+  //     // 画布修改先不压入历史栈，因为替换模板后会重复压栈
+  //     // store.dispatch('pushHistory', 'updatePageData')
+  //   }
+  // },
+
   updateWidgetData(store, { uuid, key, value, pushHistory }: any) {
     const widget = store.state.dWidgets.find((item) => item.uuid === uuid)
     if (widget && (widget[key] !== value || pushHistory)) {

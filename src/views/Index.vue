@@ -74,7 +74,7 @@ import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
-import { usePageStore } from '@/pinia'
+import { useCanvasStore, usePageStore } from '@/pinia'
 
 type TState = {
   style: CSSProperties
@@ -96,9 +96,10 @@ const beforeUnload = function (e: Event): string {
 !_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
 const {
-  dActiveElement, dHistoryParams, dCopyElement, dZoom
-} = useSetupMapGetters(['dActiveElement', 'dHistoryParams', 'dCopyElement', 'dZoom'])
+  dActiveElement, dHistoryParams, dCopyElement
+} = useSetupMapGetters(['dActiveElement', 'dHistoryParams', 'dCopyElement'])
 const { dPage } = storeToRefs(usePageStore())
+const { dZoom } = storeToRefs(useCanvasStore())
 
 
 const state = reactive<TState>({

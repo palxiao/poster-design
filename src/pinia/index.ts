@@ -8,10 +8,12 @@
 
 import useBaseStore from "./base";
 import useUserStore from "./base/user";
-import usePageStore from "./design/page/index"
+import usePageStore from "./design/page"
+import useCanvasStore from "./design/canvas"
 
 export {
   useBaseStore,
   useUserStore,
   usePageStore,
+  useCanvasStore,
 }

@@ -41,7 +41,8 @@
 <script lang="ts" setup>
 import { reactive, toRefs, onMounted } from 'vue'
 import api from '@/api'
-import wImage from '../../widgets/wImage/wImage.vue'
+// import wImage from '../../widgets/wImage/wImage.vue'
+import wImageSetting from '../../widgets/wImage/wImageSetting'
 import wSvg from '../../widgets/wSvg/wSvg.vue'
 import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
@@ -187,7 +188,7 @@ async function selectItem(item: TGetListData) {
   }
   store.commit('setShowMoveable', false) // 清理掉上一次的选择
   // this.$store.commit('setShowMoveable', false)
-  let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvg.setting)) : JSON.parse(JSON.stringify(wImage.setting))
+  let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvg.setting)) : JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item)
 
   setting.width = img.width
