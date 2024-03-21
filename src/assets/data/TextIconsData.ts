@@ -14,6 +14,7 @@ export type TStyleIconData = {
   tip: string
   value: string[]
   select: boolean
+  extraIcon?: boolean,
 }
 
 export const styleIconList1 = [
