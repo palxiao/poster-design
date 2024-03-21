@@ -49,7 +49,7 @@ const props = withDefaults(defineProps<TProps>(), {
 })
 const emit = defineEmits<TEmits>()
 
-const innerValue = ref<number>(1)
+const innerValue = ref<number>(props.minValue)
 
 watch(
   () => innerValue.value,
