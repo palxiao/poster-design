@@ -38,5 +38,5 @@ export default {
   },
   managerEdit(state: Type.Object, status: string) {
     state.tempEditing = status
-  },
+  }
 }

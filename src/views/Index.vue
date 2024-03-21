@@ -67,7 +67,7 @@ import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import lineGuides from '@/components/modules/layout/lineGuides.vue'
 
 import shortcuts from '@/mixins/shortcuts'
-import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
+// import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'

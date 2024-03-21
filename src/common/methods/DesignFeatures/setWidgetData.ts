@@ -8,15 +8,17 @@
 // import store from '@/store'
 // import { getImage } from '../getImgDetail'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
-import wText from '@/components/modules/widgets/wText/wText.vue'
 // import wImage from '@/components/modules/widgets/wImage/wImage.vue'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
+// import wText from '@/components/modules/widgets/wText/wText.vue'
+import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
+import wImage from '@/components/modules/widgets/wImage/wImage.vue'
 import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
 
 export default async function(type: string, item: TCommonItemData, data: Record<string, any>) {
   let setting = data
   if (type === 'text') {
-    !item.fontFamily && !item.color ? (setting = JSON.parse(JSON.stringify(wText.setting))) : (setting = item)
+    !item.fontFamily && !item.color ? (setting = JSON.parse(JSON.stringify(wTextSetting))) : (setting = item)
     !setting.text ? (setting.text = '双击编辑文字') : (setting.text = decodeURIComponent(setting.text)) // item.text
     setting.fontSize = item.fontSize
     setting.width = item.width || item.fontSize * setting.text.length

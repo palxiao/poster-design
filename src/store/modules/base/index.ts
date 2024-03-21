@@ -38,6 +38,9 @@ const all = {
     fonts: (state: Type.Object) => {
       return state.fonts
     },
+    app: (state: Type.Object) => {
+      return state.app
+    }
   },
   mutations: {
     ...mutations,
