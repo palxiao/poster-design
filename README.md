@@ -1,4 +1,4 @@
-**[在线体验网站](https://design.palxp.cn/)** | **[在线文档](https://xp.palxp.cn/)** | [常见问题](https://xp.palxp.cn/#/articles/1689323321667)
+**[在线体验网站](https://design.palxp.cn/)** | **[在线文档](https://xp.palxp.cn/)** | [常见问题](https://xp.palxp.cn/#/articles/1689323321667) | [性能压测](https://juejin.cn/post/7348288810722869300)
 
 ---
 
