@@ -29,6 +29,7 @@ export type TImageSetting = {
     ratio: number
     left: number
   }
+  cropEdit?: boolean
 }
 
 const setting: TImageSetting = {

@@ -89,6 +89,8 @@ import imageCutout from '@/components/business/image-cutout'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import wImageSetting, { TImageSetting } from './wImageSetting'
 import { TGetImageListResult } from '@/api/material'
+import { storeToRefs } from 'pinia'
+import { useControlStore } from '@/pinia'
 
 type TState = {
   picBoxShow: boolean
@@ -132,8 +134,9 @@ const imageCutoutRef = ref<typeof imageCutout | null>(null)
 
 const store = useStore()
 const {
-  dActiveElement, dMoving, dWidgets
-} = useSetupMapGetters(['dActiveElement', 'dMoving', 'dWidgets'])
+  dActiveElement, dWidgets
+} = useSetupMapGetters(['dActiveElement', 'dWidgets'])
+const { dMoving } = storeToRefs(useControlStore())
 // computed: {
 //   ...mapGetters(['dActiveElement', 'dMoving', 'dWidgets']),
 // },

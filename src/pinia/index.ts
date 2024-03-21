@@ -10,10 +10,12 @@ import useBaseStore from "./base";
 import useUserStore from "./base/user";
 import usePageStore from "./design/page"
 import useCanvasStore from "./design/canvas"
+import useControlStore from './design/control'
 
 export {
   useBaseStore,
   useUserStore,
   usePageStore,
   useCanvasStore,
+  useControlStore
 }
