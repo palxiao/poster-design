@@ -28,6 +28,7 @@ export type TWQrcodeSetting = {
     minHeight: number
     dir: string
   }
+  cropEdit?: boolean
 }
 
 export const wQrcodeSetting: TWQrcodeSetting = {
