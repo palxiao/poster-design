@@ -291,6 +291,7 @@ export default {
     }
 
     store.dispatch('pushHistory', 'pasteWidget')
+    store.dispatch('copyWidget')
     store.dispatch('reChangeCanvas')
   },
   // TODO: 选中元件与取消选中
