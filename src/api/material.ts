@@ -73,6 +73,7 @@ export const getFontSub = (params: TGetFontSubParam, extra: TGetFontSubExtra = {
 
 type TGetImageListParams = {
   page?: number
+  pageSize?: number
   cate?: number
 }
 
