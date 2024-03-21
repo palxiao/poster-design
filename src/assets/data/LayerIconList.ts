@@ -6,12 +6,7 @@
  * @LastEditTime: 2024-03-01 20:55:51
  */
 
-export type LayerIconList = {
-  key: string
-  icon: string
-  tip: string
-  value: number
-}
+import { TIconItemSelectData } from "@/components/modules/settings/iconItemSelect.vue"
 
 export default [
   {
@@ -26,4 +21,4 @@ export default [
     tip: '下一层',
     value: -1,
   },
-] as LayerIconList[]
+] as TIconItemSelectData[]

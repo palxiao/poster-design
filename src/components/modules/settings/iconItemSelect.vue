@@ -22,20 +22,22 @@
 // 图标按钮选择组件
 // const NAME = 'icon-item-select'
 
-type TPropData = {
-  select: boolean,
-  extraIcon: boolean,
-  tip: string
+export type TIconItemSelectData = {
+  key?: string
+  select?: boolean,
+  extraIcon?: boolean,
+  tip?: string
   icon?: string
+  value?: string | number
 }
 
 type TProps = {
   label?: string
-  data: TPropData[]
+  data: TIconItemSelectData[]
 }
 
 type TEmits = {
-  (event: 'finish', data: TPropData): void
+  (event: 'finish', data: TIconItemSelectData): void
 }
 
 const props = withDefaults(defineProps<TProps>(), {
@@ -45,7 +47,7 @@ const props = withDefaults(defineProps<TProps>(), {
 const emit = defineEmits<TEmits>()
 
 
-function selectItem(item: TPropData) {
+function selectItem(item: TIconItemSelectData) {
   if (typeof item.select !== 'undefined') {
     item.select = !item.select
   }
