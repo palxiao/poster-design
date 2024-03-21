@@ -60,6 +60,9 @@ export type TwTextData = {
       y: number
     }
   }[]
+  width?: number
+  height?: number
+  degree?: number
 }
 
 export const wTextSetting: TwTextData = {

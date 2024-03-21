@@ -55,20 +55,6 @@ type TCurrentCategory = {
   id?: number
 }
 
-const selectImg = async (index, list) => {
-  const item = list ? list[index] : state.recommendImgList[index]
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
-  let setting = JSON.parse(JSON.stringify(wImageSetting))
-  const img = await setImageData(item) // await getImage(item.url)
-  setting.width = img.width
-  setting.height = img.height // parseInt(100 / item.value.ratio, 10)
-  setting.imgUrl = item.url
-  const { width: pW, height: pH } = dPage
-  setting.left = pW / 2 - img.width / 2
-  setting.top = pH / 2 - img.height / 2
-  store.dispatch('addWidget', setting)
-}
-
 const props = defineProps<TProps>()
 const store = useStore()
 const { dPage } = storeToRefs(usePageStore())

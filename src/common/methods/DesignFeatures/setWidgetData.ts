@@ -35,7 +35,7 @@ export default async function(type: string, item: TCommonItemData, data: Record<
     setting.mask = item.value.url
   }
   if (type === 'svg') {
-    setting = JSON.parse(JSON.stringify(wSvg.setting))
+    setting = JSON.parse(JSON.stringify(wSvgSetting))
     const img = await setImageData(item.value)
     setting.width = img.width
     setting.height = img.height // parseInt(100 / item.value.ratio, 10)

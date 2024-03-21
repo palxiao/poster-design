@@ -28,7 +28,7 @@ export type TIconItemSelectData = {
   extraIcon?: boolean,
   tip?: string
   icon?: string
-  value?: string | number
+  value?: string | number | number[] | string[]
 }
 
 type TProps = {

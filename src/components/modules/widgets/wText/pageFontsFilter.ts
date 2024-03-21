@@ -8,8 +8,8 @@
 import store from '@/store'
 import { toRaw } from 'vue'
 export default () => {
-  const collector = new Set()
-  const fonts: any = {}
+  const collector = new Set<string>()
+  const fonts: Record<string, any> = {}
   const { dWidgets: widgets } = store.getters
   for (let i = 0; i < widgets.length; i++) {
     const { type, fontClass } = widgets[i]
@@ -18,5 +18,5 @@ export default () => {
       fonts[fontClass.id] = toRaw(fontClass)
     }
   }
-  return Array.from(collector).map((id: any) => fonts[id])
+  return Array.from(collector).map((id: string) => fonts[id])
 }
