@@ -43,7 +43,8 @@ import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue'
 import api from '@/api'
 // import wImage from '../../widgets/wImage/wImage.vue'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
-import wSvg from '../../widgets/wSvg/wSvg.vue'
+// import wSvg from '../../widgets/wSvg/wSvg.vue'
+import { wSvgSetting } from '../../widgets/wSvg/wSvgSetting'
 import { mapActions, mapGetters } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
@@ -160,7 +161,7 @@ export default defineComponent({
         return
       }
       this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择
-      let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvg.setting)) : JSON.parse(JSON.stringify(wImageSetting))
+      let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvgSetting)) : JSON.parse(JSON.stringify(wImageSetting))
       const img: any = await setImageData(item)
 
       setting.width = img.width

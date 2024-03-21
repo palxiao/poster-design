@@ -4,10 +4,10 @@
 <template>
   <div
     :id="params.uuid"
-    ref="widget"
+    ref="widgetRef"
     class="w-svg"
     :style="{
-      position,
+      position: state.position,
       left: params.left - parent.left + 'px',
       top: params.top - parent.top + 'px',
       width: params.width + 'px',
@@ -17,300 +17,336 @@
   ></div>
 </template>
 
-<script>
+<script lang="ts" setup>
 // svg
-const NAME = 'w-svg'
+// const NAME = 'w-svg'
+import { mapGetters, mapActions, useStore } from 'vuex'
+import { TWSvgSetting } from './wSvgSetting'
+import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
-import { mapGetters, mapActions } from 'vuex'
+type TProps = {
+  params: TWSvgSetting
+  parent: {
+    left: number
+    top: number
+  }
+}
 
-export default {
-  name: NAME,
-  setting: {
-    name: '矢量图形',
-    type: NAME,
-    uuid: -1,
-    width: 100,
-    height: 100,
-    colors: [],
-    left: 0,
-    top: 0,
-    // zoom: 1.5,
-    transform: '',
-    radius: 0,
-    opacity: 1,
-    parent: '-1',
-    svgUrl: '',
-    setting: [],
-    record: {
-      width: 0,
-      height: 0,
-      minWidth: 10,
-      minHeight: 10,
-    },
+type TState = {
+  position: CSSProperties['position'], // 'absolute'relative
+  editBoxStyle: CSSProperties,
+  editBoxs: Record<string, any>,
+  editingKey: string,
+  cropWidgetXY: Record<string, any>, // 裁剪框移动作用
+  attrRecord: Record<string, any>, // 记录可更改的属性
+  svgImg: Record<string, any> | null
+}
+
+const props = defineProps<TProps>()
+const state = reactive<TState>({
+  position: 'absolute', // 'absolute'relative
+  editBoxStyle: {
+    transformOrigin: 'center',
   },
-  props: ['params', 'parent'],
-  data() {
-    return {
-      position: 'absolute', // 'absolute'relative
-      editBoxStyle: {
-        transformOrigin: 'center',
-      },
-      editBoxs: {},
-      editingKey: '',
-      cropWidgetXY: {}, // 裁剪框移动作用
-      attrRecord: {}, // 记录可更改的属性
+  editBoxs: {},
+  editingKey: '',
+  cropWidgetXY: {}, // 裁剪框移动作用
+  attrRecord: {}, // 记录可更改的属性
+  svgImg: null
+})
+const store = useStore()
+// ...mapGetters(['dActiveElement', 'dZoom', 'dMouseXY']),
+const {
+  dActiveElement, dZoom, dMouseXY
+} = useSetupMapGetters(['dActiveElement', 'dZoom', 'dMouseXY'])
+
+const widgetRef = ref<HTMLElement | null>(null)
+
+let svgElements: Record<string, any>[] | null = null
+let viewBox = { width: 0, height: 0 }
+
+const tZoom = computed(() => {
+  return props.params.zoom
+})
+const cropEdit = computed(() => {
+  return props.params.cropEdit
+})
+const imgChange = computed(() => {
+  return props.params.imgUrl
+})
+
+watch(
+  () => props.params,
+  () => {
+    attrsChange()
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => tZoom.value,
+  async () => {
+    await nextTick()
+    updateRecord()
+  }
+)
+
+watch(
+  () => imgChange.value,
+  () => {
+    if (!state.svgImg) return
+    state.svgImg.attr({
+      'xlink:href': props.params.imgUrl,
+    })
+  }
+)
+
+watch(
+  () => cropEdit.value,
+  (val) => {
+    const el = document.getElementById(props.params.uuid)
+    if (val) {
+      el?.addEventListener('mousedown', touchstart, false)
+    } else {
+      el?.removeEventListener('mousedown', touchstart, false)
     }
-  },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dZoom', 'dMouseXY']),
-    tZoom() {
-      return this.params.zoom
-    },
-    cropEdit() {
-      return this.params.cropEdit
-    },
-    imgChange() {
-      return this.params.imgUrl
-    },
-  },
-  watch: {
-    params: {
-      async handler(nval) {
-        this.attrsChange()
-      },
-      immediate: true,
-      deep: true,
-    },
-    async tZoom() {
-      await this.$nextTick()
-      this.updateRecord()
-    },
-    imgChange() {
-      // TODO 更新所有图片
-      this.svgImg.attr({
-        'xlink:href': this.params.imgUrl,
-      })
-    },
-    cropEdit(val) {
-      // TODO 移动事件绑定
-      if (val) {
-        document.getElementById(this.params.uuid).addEventListener('mousedown', this.touchstart, false)
-      } else {
-        document.getElementById(this.params.uuid).removeEventListener('mousedown', this.touchstart, false)
-      }
-    },
-  },
-  updated() {
-    this.updateRecord()
-    this.$store.commit('updateRect')
-  },
-  async mounted() {
-    await this.$nextTick()
-    await this.loadSvg()
-    this.updateRecord()
-    // document.getElementById(this.params.uuid).addEventListener('mousedown', this.touchstart, false)
-    document.addEventListener('mouseup', this.touchend, false)
-    this.params.transform && (this.$refs.widget.style.transform = this.params.transform)
-    this.params.rotate && (this.$refs.widget.style.transform += `rotate(${this.params.rotate})`)
-  },
-  beforeUnmount() {
-    document.removeEventListener('mouseup', this.touchend, false)
-  },
-  methods: {
-    ...mapActions(['updateWidgetData']),
-    touchstart(e) {
-      // TODO move start
-      // const imgKey = e.target.getAttribute('img-key')
-      // this.editingKey = imgKey
-      // this.editBoxs[this.editingKey] = {
-      //   transformOrigin: 'center',
-      // }
-      // const editBox = this.$refs[this.params.uuid + '_ebox_' + imgKey]
-      const editBox = this.$refs[this.params.uuid + '_ebox']
-      this.cropWidgetXY = {
-        x: Number(editBox.style.left.replace('px', '')) || 0,
-        y: Number(editBox.style.top.replace('px', '')) || 0,
-      }
-      // 绑定鼠标移动事件
-      document.addEventListener('mousemove', this.handlemousemove, true)
-    },
-    touchend() {
-      // 取消鼠标移动事件
-      document.removeEventListener('mousemove', this.handlemousemove, true)
-      // document.removeEventListener('mouseup', () => {}, true)
-    },
-    handlemousemove(e) {
-      e.stopPropagation()
-      e.preventDefault()
-      const { left, top } = this.move(e)
-      // TODO
-      this.editBoxStyle.left = left + 'px'
-      this.editBoxStyle.top = top + 'px'
-      // this.editBoxs[this.editingKey].left = left + 'px'
-      // this.editBoxs[this.editingKey].top = top + 'px'
-      const { width, height } = this.params
-      const { width: vWidth, height: vHeight } = this.viewBox
-      const params = {
-        x: left / (width / vWidth) / this.params.zoom,
-        y: top / (height / vHeight) / this.params.zoom,
-      }
-      // this.svgImg.attr(params)
-      this.changeFinish('x', params.x)
-      this.changeFinish('y', params.y)
-      // console.log('-----', left / (width / vWidth) / this.params.zoom)
-    },
-    loadSvg() {
-      // console.log(this.params)
-      const _this = this
-      const Snap = window.Snap
-      return new Promise((resolve) => {
-        Snap.load(
-          this.params.svgUrl,
-          function (svg) {
-            let svg2 = Snap(svg.node)
-            // let item = svg2.select('circle')
-            // item.attr({
-            //   fill: 'rgb(255, 0, 0)',
-            // })
-            // console.log(item.attr('fill'))
+  }
+)
 
-            let items = svg2.node.childNodes
-            svg2.node.removeAttribute('width')
-            svg2.node.removeAttribute('height')
-            svg2.node.setAttribute('style', 'height: inherit;width: inherit;')
-            // svg2.node.setAttribute('height', 'inherit')
-            _this.svgElements = []
-            const colorsObj = _this.color2obj()
+onUpdated(() => {
+  updateRecord()
+  store.commit('updateRect')
+})
 
-            deepElement(items)
+onMounted(async () => {
+  await nextTick()
+  await loadSvg()
+  updateRecord()
+  document.getElementById(props.params.uuid)?.addEventListener('mousedown', touchstart, false)
+  document.addEventListener('mouseup', touchend, false)
+  if (!widgetRef.value) return
+  props.params.transform && (widgetRef.value.style.transform = props.params.transform)
+  props.params.rotate && (widgetRef.value.style.transform += `rotate(${props.params.rotate})`)
+})
 
-            function deepElement(els) {
-              // 判断是NodeList对象则继续递归，否则进入元素处理工厂
-              if (els.item) {
-                els.forEach((element) => {
-                  elementFactory(element)
-                  if (element.childNodes.length > 0) {
-                    element.childNodes.forEach((element) => {
-                      deepElement(element)
-                    })
-                  }
-                })
-              } else {
-                elementFactory(els)
-              }
-            }
-            // 元素工厂: 遍历元素中是否存在可自定义的颜色属性
-            function elementFactory(element) {
-              const attrsColor = {}
-              try {
-                element.attributes.forEach((attr) => {
-                  if (colorsObj[attr.value]) {
-                    // console.log(attr.name, colorsObj[attr.value])
-                    attr.value = colorsObj[attr.value]
-                    attrsColor[attr.name] = _this.params.colors.findIndex((x) => x == attr.value)
-                  }
-                })
-              } catch (e) {}
-              if (JSON.stringify(attrsColor) !== '{}') {
-                _this.svgElements.push({
-                  item: element,
-                  attrsColor,
+onBeforeMount(() => {
+  // document.removeEventListener('mouseup', touchend, false)
+})
+
+// ...mapActions(['updateWidgetData'])
+
+function touchstart(e: MouseEvent) {
+  // TODO move start
+  // const imgKey = e.target.getAttribute('img-key')
+  // this.editingKey = imgKey
+  // this.editBoxs[this.editingKey] = {
+  //   transformOrigin: 'center',
+  // }
+  // const editBox = this.$refs[this.params.uuid + '_ebox_' + imgKey]
+  // const editBox = this.$refs[this.params.uuid + '_ebox']
+  const editBox = document.getElementById(props.params.uuid + '_ebox')
+  if (editBox) {
+    state.cropWidgetXY = {
+      x: Number(editBox.style.left.replace('px', '')) || 0,
+      y: Number(editBox.style.top.replace('px', '')) || 0,
+    }
+  }
+  // 绑定鼠标移动事件
+  document.addEventListener('mousemove', handlemousemove, true)
+}
+
+function touchend() {
+  // 取消鼠标移动事件
+  document.removeEventListener('mousemove', handlemousemove, true)
+  // document.removeEventListener('mouseup', () => {}, true)
+}
+
+function handlemousemove(e: MouseEvent) {
+  e.stopPropagation()
+  e.preventDefault()
+  const { left, top } = move(e)
+  // TODO
+  state.editBoxStyle.left = left + 'px'
+  state.editBoxStyle.top = top + 'px'
+  // this.editBoxs[this.editingKey].left = left + 'px'
+  // this.editBoxs[this.editingKey].top = top + 'px'
+  const { width, height } = props.params
+  const { width: vWidth, height: vHeight } = viewBox
+  const params = {
+    x: left / (width / vWidth) / (props.params.zoom || 0),
+    y: top / (height / vHeight) / (props.params.zoom || 0),
+  }
+  // this.svgImg.attr(params)
+  changeFinish('x', params.x)
+  changeFinish('y', params.y)
+  // console.log('-----', left / (width / vWidth) / this.params.zoom)
+}
+
+function loadSvg() {
+  // console.log(this.params)
+  const Snap = (window as any).Snap
+  return new Promise<void>((resolve) => {
+    Snap.load(
+      props.params.svgUrl,
+      function (svg: Record<string, any>) {
+        let svg2 = Snap(svg.node)
+        // let item = svg2.select('circle')
+        // item.attr({
+        //   fill: 'rgb(255, 0, 0)',
+        // })
+        // console.log(item.attr('fill'))
+
+        let items = svg2.node.childNodes
+        svg2.node.removeAttribute('width')
+        svg2.node.removeAttribute('height')
+        svg2.node.setAttribute('style', 'height: inherit;width: inherit;')
+        // svg2.node.setAttribute('height', 'inherit')
+        svgElements = []
+        const colorsObj = color2obj()
+
+        deepElement(items)
+
+        function deepElement(els: Record<string, any>) {
+          // 判断是NodeList对象则继续递归，否则进入元素处理工厂
+          if (els.item) {
+            els.forEach((element: Record<string, any>) => {
+              elementFactory(element)
+              if (element.childNodes.length > 0) {
+                element.childNodes.forEach((element: Record<string, any>) => {
+                  deepElement(element)
                 })
               }
-              // console.log(element.attributes, element.getAttribute('fill'), _this.params.colors)
-            }
-
-            // _this.viewBox = svg2.node.viewBox.baseVal
-            // _this.svgImg = img
-
-            // img.attr({
-            //   width: '100%',
-            //   height: '100%',
-            //   transform: '',
-            //   'xlink:href': _this.params.imgUrl || '',
-            // })
-            const el = this || _this.$refs.widget
-            // svg.node.classList.add('svg__box')
-            el.appendChild(svg.node)
-            resolve()
-          },
-          document.getElementById(this.params.uuid),
-        )
-      })
-    },
-    color2obj() {
-      const obj = {}
-      for (let i = 0; i < this.params.colors.length; i++) {
-        obj[`{{colors[${i}]}}`] = this.params.colors[i]
-      }
-      return obj
-    },
-    updateRecord() {
-      if (this.dActiveElement.uuid === this.params.uuid) {
-        let record = this.dActiveElement.record
-        record.width = this.$refs.widget.offsetWidth
-        record.height = this.$refs.widget.offsetHeight
-      }
-      this.updateZoom()
-    },
-    updateZoom() {
-      // TODO
-      this.editBoxStyle.transform = `scale(${this.params.zoom})`
-      // this.editingKey && (this.editBoxs[this.editingKey].transform = `scale(${this.params.zoom})`)
-      if (this.svgImg) {
-        const { x, y } = this.params
-        this.svgImg.attr({
-          x: x || 0,
-          y: y || 0,
-          style: `transform-origin: center;transform: scale(${this.params.zoom})`,
-        })
-        // 根据图片位置设置回editBox的位置
-        const { width, height } = this.params
-        const { width: vWidth, height: vHeight } = this.viewBox
-        const params = {
-          left: x * (width / vWidth) * this.params.zoom,
-          top: y * (height / vHeight) * this.params.zoom,
-        }
-        // TODO
-        this.editBoxStyle.left = params.left + 'px'
-        this.editBoxStyle.top = params.top + 'px'
-        // if (this.editingKey) {
-        //   this.editBoxs[this.editingKey].left = params.left + 'px'
-        //   this.editBoxs[this.editingKey].top = params.top + 'px'
-        // }
-      }
-    },
-    changeFinish(key, value) {
-      this.updateWidgetData({
-        uuid: this.params.uuid,
-        key: key,
-        value: value,
-        pushHistory: true,
-      })
-    },
-    move(payload) {
-      // const widgetXY = { x: this.cropWidgetXY.x / this.dZoom, y: this.cropWidgetXY.y / this.dZoom }
-      const widgetXY = { x: this.cropWidgetXY.x, y: this.cropWidgetXY.y }
-      const dx = Number(payload.pageX) - this.dMouseXY.x
-      const dy = Number(payload.pageY) - this.dMouseXY.y
-      let left = Number(widgetXY.x) + Math.floor((dx * 100) / this.dZoom)
-      let top = Number(widgetXY.y) + Math.floor((dy * 100) / this.dZoom)
-      return { left, top }
-    },
-    attrsChange() {
-      if (this.dActiveElement.uuid === this.params.uuid && this.svgElements) {
-        for (const element of this.svgElements) {
-          const { item, attrsColor } = element
-          for (const key in attrsColor) {
-            if (Object.hasOwnProperty.call(attrsColor, key)) {
-              const color = this.params.colors[attrsColor[key]]
-              item.setAttribute(key, color)
-            }
+            })
+          } else {
+            elementFactory(els)
           }
         }
+        // 元素工厂: 遍历元素中是否存在可自定义的颜色属性
+        function elementFactory(element: Record<string, any>) {
+          const attrsColor: Record<string, any> = {}
+          try {
+            element.attributes.forEach((attr: Record<string, any>) => {
+              if (colorsObj[attr.value]) {
+                // console.log(attr.name, colorsObj[attr.value])
+                attr.value = colorsObj[attr.value]
+                attrsColor[attr.name] = props.params.colors.findIndex((x) => x == attr.value)
+              }
+            })
+          } catch (e) {}
+          if (JSON.stringify(attrsColor) !== '{}' && svgElements) {
+            svgElements.push({
+              item: element,
+              attrsColor,
+            })
+          }
+          // console.log(element.attributes, element.getAttribute('fill'), _this.params.colors)
+        }
+
+        // _this.viewBox = svg2.node.viewBox.baseVal
+        // _this.svgImg = img
+
+        // img.attr({
+        //   width: '100%',
+        //   height: '100%',
+        //   transform: '',
+        //   'xlink:href': _this.params.imgUrl || '',
+        // })
+        if (widgetRef.value) {
+          // svg.node.classList.add('svg__box')
+          widgetRef.value.appendChild(svg.node)
+        }
+        resolve()
+      },
+      document.getElementById(props.params.uuid),
+    )
+  })
+}
+
+function color2obj() {
+  const obj: Record<string, any> = {}
+  for (let i = 0; i < props.params.colors.length; i++) {
+    obj[`{{colors[${i}]}}`] = props.params.colors[i]
+  }
+  return obj
+}
+
+function updateRecord() {
+  if (dActiveElement.value.uuid === props.params.uuid) {
+    let record = dActiveElement.value.record
+    if (widgetRef.value) {
+      record.width = widgetRef.value.offsetWidth
+      record.height = widgetRef.value.offsetHeight
+    }
+  }
+  updateZoom()
+}
+
+function updateZoom() {
+  // TODO
+  state.editBoxStyle.transform = `scale(${props.params.zoom})`
+  // this.editingKey && (this.editBoxs[this.editingKey].transform = `scale(${this.params.zoom})`)
+  if (state.svgImg) {
+    const { x = 0, y = 0 } = props.params
+    state.svgImg.attr({
+      x: x ?? 0,
+      y: y ?? 0,
+      style: `transform-origin: center;transform: scale(${props.params.zoom})`,
+    })
+    // 根据图片位置设置回editBox的位置
+    const { width, height } = props.params
+    const { width: vWidth, height: vHeight } = viewBox
+    const params = {
+      left: x * (width / vWidth) * (props.params.zoom || 0),
+      top: y * (height / vHeight) * (props.params.zoom || 0),
+    }
+    // TODO
+    state.editBoxStyle.left = params.left + 'px'
+    state.editBoxStyle.top = params.top + 'px'
+    // if (this.editingKey) {
+    //   this.editBoxs[this.editingKey].left = params.left + 'px'
+    //   this.editBoxs[this.editingKey].top = params.top + 'px'
+    // }
+  }
+}
+
+function changeFinish(key: string, value: number) {
+  store.dispatch("updateWidgetData", {
+    uuid: props.params.uuid,
+    key: key,
+    value: value,
+    pushHistory: true,
+  })
+  // this.updateWidgetData({
+  //   uuid: this.params.uuid,
+  //   key: key,
+  //   value: value,
+  //   pushHistory: true,
+  // })
+}
+
+function move(payload: Record<string, any>) {
+  // const widgetXY = { x: this.cropWidgetXY.x / this.dZoom, y: this.cropWidgetXY.y / this.dZoom }
+  const widgetXY = { x: state.cropWidgetXY.x, y: state.cropWidgetXY.y }
+  const dx = Number(payload.pageX) - dMouseXY.value.x
+  const dy = Number(payload.pageY) - dMouseXY.value.y
+  let left = Number(widgetXY.x) + Math.floor((dx * 100) / dZoom.value)
+  let top = Number(widgetXY.y) + Math.floor((dy * 100) / dZoom.value)
+  return { left, top }
+}
+
+function attrsChange() {
+  if (dActiveElement.value.uuid === props.params.uuid && svgElements) {
+    for (const element of svgElements) {
+      const { item, attrsColor } = element
+      for (const key in attrsColor) {
+        if (Object.hasOwnProperty.call(attrsColor, key)) {
+          const color = props.params.colors[attrsColor[key]]
+          item.setAttribute(key, color)
+        }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 
