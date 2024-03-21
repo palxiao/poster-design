@@ -42,7 +42,8 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import uploader from '@/components/common/Uploader'
 import api from '@/api'
-import wImage from '../../widgets/wImage/wImage.vue'
+// import wImage from '../../widgets/wImage/wImage.vue'
+import wImageSetting from '../../widgets/wImage/wImageSetting'
 import setImageData, { TItem2DataParam } from '@/common/methods/DesignFeatures/setImage'
 import useConfirm from '@/common/methods/confirm'
 import { TGetImageListResult, TMyPhotoResult } from '@/api/material'
@@ -158,7 +159,7 @@ onMounted(() => {
 const selectImg = async (index: number) => {
   const item = state.imgList[index]
   store.commit('setShowMoveable', false) // 清理掉上一次的选择
-  let setting = JSON.parse(JSON.stringify(wImage.setting))
+  let setting = JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item)
   setting.width = img.width
   setting.height = img.height // parseInt(100 / item.value.ratio, 10)

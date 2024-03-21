@@ -74,7 +74,7 @@ const load = async (init?: boolean) => {
   loading = true
   page += 1
   api.material.getMyPhoto({ page }).then(({ list }) => {
-    list.length <= 0 ? (state.isDone = true) : (state.imgList = state.imgList.concat(list))
+    list.length <= 0 ? (state.isDone = true) : (state.imgList = state.imgList.concat(list as TGetImageListResult[]))
     setTimeout(() => {
       loading = false
     }, 100)

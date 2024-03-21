@@ -3,7 +3,7 @@
  * @Date: 2021-08-02 19:10:06
  * @Description: 选项选择（未拆分字体选择器）
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-20 18:21:55
+ * @LastEditTime: 2024-03-15 17:34:00
 -->
 <template>
   <div ref="select" class="value-select" :style="{ width: inputWidth }">
@@ -65,7 +65,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue';
 
 type TProps = {
   label?: string
-  modelValue?: Record<string, any>
+  modelValue?: Record<string, any> | string | number
   suffix?: string
   data: Record<string, any>
   disable?: boolean
@@ -189,9 +189,8 @@ function down() {
 </style>
 
 <style lang="less" scoped>
-// Color variables (appears count calculates by raw css)
-@color0: #e1e1e1; // Appears 2 times
-@color1: #d1d1d1; // Appears 2 times
+@color0: #e1e1e1;
+@color1: #d1d1d1;
 
 .value-select {
   // height: 60px;
