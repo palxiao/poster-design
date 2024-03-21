@@ -21,6 +21,7 @@ import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 import eventBus from '@/utils/plugins/eventBus'
 import { usePageStore } from '@/pinia'
+// import wText from '@/components/modules/widgets/wText/wText.vue'
 
 export default () => {
   return new Promise<void>((resolve) => {

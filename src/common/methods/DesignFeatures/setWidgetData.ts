@@ -10,7 +10,8 @@
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 // import wText from '@/components/modules/widgets/wText/wText.vue'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import wImage from '@/components/modules/widgets/wImage/wImage.vue'
+// import wImage from '@/components/modules/widgets/wImage/wImage.vue'
+import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
 
 export default async function(type: string, item: TCommonItemData, data: Record<string, any>) {
@@ -23,11 +24,12 @@ export default async function(type: string, item: TCommonItemData, data: Record<
     setting.fontWeight = item.fontWeight
   }
   if (type === 'image' || type === 'mask') {
-    setting = JSON.parse(JSON.stringify(wImage.setting))
+    setting = JSON.parse(JSON.stringify(wImageSetting))
     const img = await setImageData(item.value)
     setting.width = img.width
     setting.height = img.height // parseInt(100 / item.value.ratio, 10)
     setting.imgUrl = item.value.url
+    console.log("setting", setting)
   }
   if (type === 'mask') {
     setting.mask = item.value.url
