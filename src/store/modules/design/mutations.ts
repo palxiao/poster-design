@@ -41,13 +41,13 @@ export default {
   //   state.dPage = e
   // },
   
-  setShowMoveable(state: Type.Object, show: any) {
-    state.showMoveable = show
-    // if (!show) {
-    //   // TODO: 失焦时设置面板也失去关联，但会导致某些失焦状态出错(如裁剪)
-    //   state.dActiveElement = state.dPage
-    // }
-  },
+  // setShowMoveable(state: Type.Object, show: any) {
+  //   state.showMoveable = show
+  //   // if (!show) {
+  //   //   // TODO: 失焦时设置面板也失去关联，但会导致某些失焦状态出错(如裁剪)
+  //   //   state.dActiveElement = state.dPage
+  //   // }
+  // },
   setShowRotatable(state: Type.Object, e: any) {
     state.showRotatable = e
   },
@@ -71,9 +71,9 @@ export default {
     // 设置正在裁剪or编辑的组件
     state.dCropUuid = uuid
   },
-  setDraging(state: Type.Object, drag: boolean) {
-    state.dDraging = drag
-  },
+  // setDraging(state: Type.Object, drag: boolean) {
+  //   state.dDraging = drag
+  // },
   // setDragInitData(state: Type.Object, data: any) {
   //   state.dDragInitData = data
   // },

@@ -12,11 +12,11 @@ const all = {
     //   width: 0, // 网格小格子的宽度
     //   height: 0, // 网格小格子的高度
     // },
-    guidelines: {
-      // moveable 标尺辅助线
-      verticalGuidelines: [],
-      horizontalGuidelines: [],
-    },
+    // guidelines: {
+    //   // moveable 标尺辅助线
+    //   verticalGuidelines: [],
+    //   horizontalGuidelines: [],
+    // },
     dActiveWidgetXY: {
       x: 0, // 选中组件的横向初始值
       y: 0, // 选中组件的纵向初始值
@@ -165,9 +165,9 @@ const all = {
     dDropOverUuid(state: any) {
       return state.dDropOverUuid
     },
-    guidelines(state: any) {
-      return state.guidelines
-    },
+    // guidelines(state: any) {
+    //   return state.guidelines
+    // },
     dCropUuid(state: any) {
       return state.dCropUuid
     },

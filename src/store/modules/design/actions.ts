@@ -544,9 +544,9 @@ export default {
   updateHoverUuid(store, uuid) {
     store.state.dHoverUuid = uuid
   },
-  showRefLine(store, show) {
-    store.state.dShowRefLine = show
-  },
+  // showRefLine(store, show) {
+  //   store.state.dShowRefLine = show
+  // },
   updateAlign(store: any, { align, uuid, group }: any) {
     const widgets = store.state.dWidgets
     const target = uuid ? widgets.find((item: any) => item.uuid === uuid) : store.state.dActiveElement
