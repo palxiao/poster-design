@@ -7,43 +7,43 @@
 -->
 <template>
   <div id="w-image-style">
-    <el-collapse v-model="activeNames">
+    <el-collapse v-model="state.activeNames">
       <el-collapse-item title="位置尺寸" name="1">
         <div class="line-layout">
-          <number-input v-model="innerElement.left" label="X" @finish="(value) => finish('left', value)" />
-          <number-input v-model="innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
-          <number-input v-model="innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
-          <number-input v-model="innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
+          <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
+          <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
+          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
+          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
       <el-collapse-item title="样式设计" name="2">
         <div style="flex-wrap: nowrap" class="line-layout">
-          <el-select v-model="innerElement.dotColorType">
+          <el-select v-model="state.innerElement.dotColorType">
             <el-option v-for="ctype in localization.dotColorTypes" :key="ctype.key" :label="ctype.value" :value="ctype.key" />
           </el-select>
-          <el-select v-model="innerElement.dotType" class="selector">
+          <el-select v-model="state.innerElement.dotType" class="selector">
             <el-option v-for="dtype in localization.dotTypes" :key="dtype.key" :label="dtype.value" :value="dtype.key" />
           </el-select>
         </div>
         <div style="flex-wrap: nowrap; margin-top: 1rem" class="line-layout">
-          <color-select v-model="innerElement.dotColor" @finish="(value) => finish('dotColor', value)" />
-          <color-select v-show="innerElement.dotColorType !== 'single'" v-model="innerElement.dotColor2" @finish="(value) => finish('dotColor2', value)" />
+          <color-select v-model="state.innerElement.dotColor" @finish="(value) => finish('dotColor', value)" />
+          <color-select v-show="state.innerElement.dotColorType !== 'single'" v-model="state.innerElement.dotColor2" @finish="(value) => finish('dotColor2', value)" />
         </div>
-        <number-slider v-show="innerElement.dotColorType !== 'single'" v-model="innerElement.dotRotation" style="margin-top: 8px" label="渐变角度" :step="1" :minValue="0" :maxValue="360" @finish="(value) => finish('dotRotation', value)" />
+        <number-slider v-show="state.innerElement.dotColorType !== 'single'" v-model="state.innerElement.dotRotation" style="margin-top: 8px" label="渐变角度" :step="1" :minValue="0" :maxValue="360" @finish="(value) => finish('dotRotation', value)" />
       </el-collapse-item>
       <el-collapse-item title="内容设置" name="3">
-        <text-input-area v-model="innerElement.value" :max="40" label="" @finish="(value) => finish('value', value)" />
+        <text-input-area v-model="state.innerElement.value" :max="40" label="" @finish="(value) => finish('value', value)" />
         <br />
         <div class="slide-wrap logo__layout">
-          <img v-show="innerElement.url" :src="innerElement.url" class="logo" />
+          <img v-show="state.innerElement.url" :src="state.innerElement.url" class="logo" />
           <uploader class="options__upload" @done="uploadImgDone">
-            <el-button size="small" plain>{{ innerElement.url ? '替换图片' : '上传 Logo' }}</el-button>
+            <el-button size="small" plain>{{ state.innerElement.url ? '替换图片' : '上传 Logo' }}</el-button>
           </uploader>
-          <el-button v-show="innerElement.url" size="small" link @click="finish('url', '')">删除</el-button>
+          <el-button v-show="state.innerElement.url" size="small" link @click="finish('url', '')">删除</el-button>
         </div>
         <br />
         <div class="slide-wrap">
-          <number-slider v-model="innerElement.opacity" label="不透明" :step="0.01" :maxValue="1" @finish="(value) => finish('opacity', value)" />
+          <number-slider v-model="state.innerElement.opacity" label="不透明" :step="0.01" :maxValue="1" @finish="(value) => finish('opacity', value)" />
         </div>
       </el-collapse-item>
       <br />
@@ -54,126 +54,171 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 // 图片组件样式
-const NAME = 'w-image-style'
-import { mapGetters, mapActions } from 'vuex'
+// const NAME = 'w-image-style'
+import { nextTick, reactive, watch } from 'vue'
+import { useStore } from 'vuex'
 import { ElSelect, ElOption } from 'element-plus'
 import numberInput from '../../settings/numberInput.vue'
-import iconItemSelect from '../../settings/iconItemSelect.vue'
+import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
 import numberSlider from '../../settings/numberSlider.vue'
 import textInputArea from '../../settings/textInputArea.vue'
 import colorSelect from '../../settings/colorSelect.vue'
 // import { getImage } from '@/common/methods/getImgDetail'
 import api from '@/api'
-import localization from '@/assets/data/QrCodeLocalization'
-import uploader from '@/components/common/Uploader/index.vue'
+import localization, { QrCodeLocalizationData } from '@/assets/data/QrCodeLocalization'
+import uploader, { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
+import { wQrcodeSetting, TWQrcodeSetting } from './wQrcodeSetting'
+import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 
-export default {
-  name: NAME,
-  components: { ElSelect, ElOption, numberInput, numberSlider, iconItemSelect, textInputArea, colorSelect, uploader },
-  data() {
-    return {
-      activeNames: ['2', '3', '4'],
-      innerElement: {},
-      tag: false,
-      ingoreKeys: ['left', 'top', 'name', 'width', 'height', 'radiusTopLeft', 'radiusTopRight', 'radiusBottomLeft', 'radiusBottomRight'],
-      layerIconList,
-      alignIconList,
-      localization,
+type TState = {
+  activeNames: string[]
+  innerElement: TWQrcodeSetting,
+  tag: boolean,
+  ingoreKeys: string[],
+  layerIconList: TIconItemSelectData[],
+  alignIconList: TIconItemSelectData[],
+  localization: QrCodeLocalizationData,
+}
+
+const state = reactive<TState>({
+  activeNames: ['2', '3', '4'],
+  innerElement: JSON.parse(JSON.stringify(wQrcodeSetting)),
+  tag: false,
+  ingoreKeys: ['left', 'top', 'name', 'width', 'height', 'radiusTopLeft', 'radiusTopRight', 'radiusBottomLeft', 'radiusBottomRight'],
+  layerIconList,
+  alignIconList,
+  localization,
+})
+const store = useStore()
+const {
+  dActiveElement, dMoving, dWidgets
+} = useSetupMapGetters(['dActiveElement', 'dMoving', 'dWidgets'])
+// ...mapGetters(['dActiveElement', 'dMoving', 'dWidgets'])
+
+let lastUuid: string | null = null
+
+watch(
+  () => dActiveElement.value,
+  (newValue, oldValue) => {
+    change()
+    // 失焦取消编辑模式
+    if (newValue.uuid == -1) {
+      state.innerElement.cropEdit = false
+      store.dispatch("updateWidgetData", {
+        uuid: lastUuid,
+        key: 'cropEdit',
+        value: false,
+      })
+      // this.updateWidgetData({
+      //   uuid: this.lastUuid,
+      //   key: 'cropEdit',
+      //   value: false,
+      // })
+    } else {
+      lastUuid = newValue.uuid
     }
   },
-  computed: {
-    ...mapGetters(['dActiveElement', 'dMoving', 'dWidgets']),
+  { deep: true }
+)
+
+watch(
+  () => state.innerElement,
+  (newValue, oldValue) => {
+    changeValue()
   },
-  watch: {
-    dActiveElement: {
-      handler(newValue, oldValue) {
-        this.change()
-        // 失焦取消编辑模式
-        if (newValue.uuid == -1) {
-          this.innerElement.cropEdit = false
-          this.updateWidgetData({
-            uuid: this.lastUuid,
-            key: 'cropEdit',
-            value: false,
-          })
-        } else {
-          this.lastUuid = newValue.uuid
-        }
-      },
-      deep: true,
-    },
-    innerElement: {
-      handler(newValue, oldValue) {
-        this.changeValue()
-      },
-      deep: true,
-    },
-  },
-  created() {
-    this.change()
-  },
-  methods: {
-    ...mapActions(['updateWidgetData', 'updateAlign', 'updateLayerIndex', 'addWidget']),
-    change() {
-      this.tag = true
-      this.innerElement = JSON.parse(JSON.stringify(this.dActiveElement))
-    },
-    changeValue() {
-      if (this.tag) {
-        this.tag = false
-        return
-      }
-      if (this.dMoving) {
-        return
-      }
-      for (let key in this.innerElement) {
-        if (this.ingoreKeys.indexOf(key) !== -1) {
-          this.dActiveElement[key] = this.innerElement[key]
-        } else if (key !== 'setting' && key !== 'record' && this.innerElement[key] !== this.dActiveElement[key]) {
-          this.updateWidgetData({
-            uuid: this.dActiveElement.uuid,
-            key: key,
-            value: this.innerElement[key],
-          })
-        }
-      }
-    },
-    finish(key, value) {
-      this.updateWidgetData({
-        uuid: this.dActiveElement.uuid,
+  { deep: true }
+)
+
+function created() {
+  change()
+}
+
+created()
+
+// ...mapActions(['updateWidgetData', 'updateAlign', 'updateLayerIndex', 'addWidget'])
+
+function change() {
+  state.tag = true
+  state.innerElement = JSON.parse(JSON.stringify(dActiveElement.value))
+}
+function changeValue() {
+  if (state.tag) {
+    state.tag = false
+    return
+  }
+  if (dMoving.value) {
+    return
+  }
+  for (let key in state.innerElement) {
+    const itemKey = key as keyof TWQrcodeSetting
+    if (state.ingoreKeys.indexOf(key) !== -1) {
+      dActiveElement.value[itemKey] = state.innerElement[itemKey]
+    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== dActiveElement.value[itemKey]) {
+      store.dispatch("updateWidgetData", {
+        uuid: dActiveElement.value.uuid,
         key: key,
-        value: value,
-        pushHistory: true,
+        value: state.innerElement[itemKey],
       })
-    },
-    layerAction(item) {
-      console.log(item)
-      this.updateLayerIndex({
-        uuid: this.dActiveElement.uuid,
-        value: item.value,
-      })
-    },
-    async alignAction(item) {
-      this.updateAlign({
-        align: item.value,
-        uuid: this.dActiveElement.uuid,
-      })
-      await this.$nextTick()
-      this.$store.commit('updateRect')
-    },
-    async uploadImgDone(img) {
-      this.$store.commit('setShowMoveable', false)
-      await api.material.addMyPhoto(img)
-      // this.innerElement.width = img.width
-      // this.innerElement.height = img.height * (this.innerElement.width / img.width)
-      this.innerElement.url = img.url
-      this.$store.commit('setShowMoveable', true)
-    },
-  },
+      // this.updateWidgetData({
+      //   uuid: this.dActiveElement.uuid,
+      //   key: key,
+      //   value: this.innerElement[key],
+      // })
+    }
+  }
+}
+
+function finish(key: string, value: number | number[] | string) {
+  store.dispatch("updateWidgetData", {
+    uuid: dActiveElement.value.uuid,
+    key: key,
+    value: value,
+    pushHistory: true,
+  })
+  // this.updateWidgetData({
+  //   uuid: this.dActiveElement.uuid,
+  //   key: key,
+  //   value: value,
+  //   pushHistory: true,
+  // })
+}
+
+function layerAction(item: TIconItemSelectData) {
+  console.log(item)
+  store.dispatch("updateLayerIndex", {
+    uuid: dActiveElement.value.uuid,
+    value: item.value,
+  })
+  // this.updateLayerIndex({
+  //   uuid: this.dActiveElement.uuid,
+  //   value: item.value,
+  // })
+}
+
+async function alignAction(item: TIconItemSelectData) {
+  store.dispatch("updateAlign", {
+    align: item.value,
+    uuid: dActiveElement.value.uuid,
+  })
+  // this.updateAlign({
+  //   align: item.value,
+  //   uuid: this.dActiveElement.uuid,
+  // })
+  await nextTick()
+  store.commit('updateRect')
+}
+
+async function uploadImgDone(img: TUploadDoneData) {
+  store.commit('setShowMoveable', false)
+  await api.material.addMyPhoto(img)
+  // this.innerElement.width = img.width
+  // this.innerElement.height = img.height * (this.innerElement.width / img.width)
+  state.innerElement.url = img.url
+  store.commit('setShowMoveable', true)
 }
 </script>
 
