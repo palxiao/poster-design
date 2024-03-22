@@ -50,6 +50,7 @@ const props = withDefaults(defineProps<TProps>(), {
 const emit = defineEmits<TEmits>()
 
 const innerValue = ref<number>(props.minValue)
+innerValue.value = props.modelValue
 
 watch(
   () => innerValue.value,
@@ -66,10 +67,6 @@ watch(
     innerValue.value = props.modelValue
   }
 )
-
-onMounted(() => {
-  innerValue.value = props.modelValue
-})
 
 function changeValue(value: number | number[]) {
   emit('finish', value)
