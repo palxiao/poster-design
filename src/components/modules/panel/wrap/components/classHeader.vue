@@ -27,7 +27,7 @@ export type TClassHeaderTypeData = {
 }
 
 type TProps = {
-  types: TClassHeaderTypeData[]
+  types?: TClassHeaderTypeData[]
   isBack?: boolean
 }
 
@@ -56,6 +56,11 @@ defineExpose({ select, back })
     height: 100%;
     overflow: auto;
     padding-bottom: 100px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+  &__wrap::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
   }
 }
 .types {

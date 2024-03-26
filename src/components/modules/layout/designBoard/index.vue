@@ -1,61 +1,61 @@
 <template>
-  <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px' }">
-    <!-- <el-scrollbar> -->
-    <div
-      id="out-page"
-      class="out-page"
-      :style="{
-        width: (dPage.width * dZoom) / 100 + 120 + 'px',
-        height: (dPage.height * dZoom) / 100 + 120 + 'px',
-        opacity: 1 - (dZoom < 100 ? dPage.tag : 0),
-      }"
-    >
-      <slot />
+  <div id="main">
+    <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + 120 + 'px' }" >
       <div
-        :id="pageDesignCanvasId"
-        class="design-canvas"
-        :data-type="dPage.type"
-        :data-uuid="dPage.uuid"
+        id="out-page"
+        class="out-page"
         :style="{
-          width: dPage.width + 'px',
-          height: dPage.height + 'px',
-          transform: 'scale(' + dZoom / 100 + ')',
-          transformOrigin: (dZoom >= 100 ? 'center' : 'left') + ' top',
-          backgroundColor: dPage.backgroundColor,
-          backgroundImage: `url(${dPage?.backgroundImage})`,
-          backgroundSize: dPage?.backgroundTransform?.x ? 'auto' : 'cover',
-          backgroundPositionX: (dPage?.backgroundTransform?.x || 0) + 'px',
-          backgroundPositionY: (dPage?.backgroundTransform?.y || 0) + 'px',
-          opacity: dPage.opacity + (dZoom < 100 ? dPage.tag : 0),
+          width: (dPage.width * dZoom) / 100 + 120 + 'px',
+          height: (dPage.height * dZoom) / 100 + 120 + 'px',
+          opacity: 1 - (dZoom < 100 ? dPage.tag : 0),
         }"
-        @mousemove="dropOver($event)"
-        @drop="drop($event)"
-        @mouseup="drop($event)"
       >
-        <!-- <grid-size /> -->
+        <slot />
+        <div
+          :id="pageDesignCanvasId"
+          class="design-canvas"
+          :data-type="dPage.type"
+          :data-uuid="dPage.uuid"
+          :style="{
+            width: dPage.width + 'px',
+            height: dPage.height + 'px',
+            transform: 'scale(' + dZoom / 100 + ')',
+            transformOrigin: (dZoom >= 100 ? 'center' : 'left') + ' top',
+            backgroundColor: dPage.backgroundColor,
+            backgroundImage: `url(${dPage?.backgroundImage})`,
+            backgroundSize: dPage?.backgroundTransform?.x ? 'auto' : 'cover',
+            backgroundPositionX: (dPage?.backgroundTransform?.x || 0) + 'px',
+            backgroundPositionY: (dPage?.backgroundTransform?.y || 0) + 'px',
+            opacity: dPage.opacity + (dZoom < 100 ? dPage.tag : 0),
+          }"
+          @mousemove="dropOver($event)"
+          @drop="drop($event)"
+          @mouseup="drop($event)"
+        >
+          <!-- <grid-size /> -->
 
-        <!-- :class="{
-            layer: true,
-            'layer-active': getIsActive(layer.uuid),
-            'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid,
-          }" -->
-        <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid, 'layer-no-hover': dActiveElement.uuid === layer.uuid }]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
-          <template v-if="layer.isContainer">
-            <!-- :class="{
-                layer: true,
-                'layer-active': getIsActive(widget.uuid),
-                'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent,
-                'layer-hover': widget.uuid === dHoverUuid,
-              }" -->
-            <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="['layer', { 'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
-          </template>
-        </component>
+          <!-- :class="{
+              layer: true,
+              'layer-active': getIsActive(layer.uuid),
+              'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid,
+            }" -->
+          <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid, 'layer-no-hover': dActiveElement.uuid === layer.uuid }]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
+            <template v-if="layer.isContainer">
+              <!-- :class="{
+                  layer: true,
+                  'layer-active': getIsActive(widget.uuid),
+                  'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent,
+                  'layer-hover': widget.uuid === dHoverUuid,
+                }" -->
+              <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="['layer', { 'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
+            </template>
+          </component>
 
-        <!-- <ref-line v-if="dSelectWidgets.length === 0" /> -->
-        <!-- <size-control v-if="dSelectWidgets.length === 0" /> -->
+          <!-- <ref-line v-if="dSelectWidgets.length === 0" /> -->
+          <!-- <size-control v-if="dSelectWidgets.length === 0" /> -->
+        </div>
       </div>
     </div>
-    <!-- </el-scrollbar> -->
   </div>
 </template>
 
@@ -338,13 +338,17 @@ function getChilds(uuid: string) {
 </script>
 
 <style lang="less" scoped>
+#main {
+  overflow: auto; position: relative;
+}
 #page-design {
-  height: 100%;
+  scrollbar-width: none;
+  min-height: 100%;
   // display: flex;
   // align-items: center;
   overflow: auto;
   position: relative;
-  width: 100%;
+  // width: 100%;
   .out-page {
     margin: 0 auto;
     padding: 60px;

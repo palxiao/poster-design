@@ -3,7 +3,7 @@
  * @Date: 2021-08-09 11:41:53
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-09 00:59:44
+ * @LastEditTime: 2024-03-22 16:14:48
 -->
 <template>
   <div id="w-image-style">
@@ -71,7 +71,7 @@
 <script lang="ts" setup>
 // 图片组件样式
 // const NAME = 'w-image-style'
-import { nextTick, reactive, ref, watch } from 'vue'
+import { nextTick, reactive, ref, watch, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
@@ -145,14 +145,18 @@ let lastUuid: string | undefined = undefined
 let tag: boolean
 let toolBarStyle: { left: string, top: string } | null = null
 
+onBeforeUnmount(() => {
+  imgCrop(false)
+  cropHandle()
+})
+
 watch(
   () => dActiveElement.value,
   (newValue, oldValue) => {
     change()
     // 失焦取消编辑模式
     if (newValue.uuid != lastUuid && typeof lastUuid !== 'undefined') {
-      state.innerElement.cropEdit = false
-      store.commit('setShowRotatable', true) // 失焦会导致大小变化锁定的错误
+      imgCrop(false)
     }
     lastUuid = newValue.uuid
   },

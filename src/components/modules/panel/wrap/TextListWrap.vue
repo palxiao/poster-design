@@ -11,7 +11,6 @@
         }"
         draggable="true"
         @click="selectBasicText(item)"
-        @dragstart="dragStart($event, item)"
       >
         {{ item.text }}
       </div>
@@ -26,7 +25,8 @@
 // const NAME = 'text-list-wrap'
 
 import { storeToRefs } from 'pinia';
-import wText from '../../widgets/wText/wText.vue'
+// import wText from '../../widgets/wText/wText.vue'
+import { wTextSetting } from '../../widgets/wText/wTextSetting'
 
 import { useStore } from 'vuex'
 import { usePageStore } from '@/pinia';
@@ -43,7 +43,7 @@ const { dPage } = storeToRefs(usePageStore())
 
 const selectBasicText = (item: TBasicTextData) => {
   store.commit('setShowMoveable', false) // 清理掉上一次的选择
-  let setting = JSON.parse(JSON.stringify(wText.setting))
+  let setting = JSON.parse(JSON.stringify(wTextSetting))
   setting.text = '双击编辑文字' // item.text
   setting.width = item.fontSize * setting.text.length
   setting.fontSize = item.fontSize
@@ -52,13 +52,12 @@ const selectBasicText = (item: TBasicTextData) => {
   setting.left = pW / 2 - item.fontSize * 3
   setting.top = pH / 2 - item.fontSize / 2
   store.dispatch('addWidget', setting)
-  // addWidget(setting)
 }
 
-const dragStart = (_: MouseEvent, item: any) => {
-  store.commit('setDraging', true)
-  store.commit('selectItem', { data: { value: item }, type: 'text' })
-}
+// const dragStart = (_: MouseEvent, item: any) => {
+//   store.commit('setDraging', true)
+//   store.commit('selectItem', { data: { value: item }, type: 'text' })
+// }
 
 const basicTextList: TBasicTextData[] = [
   // {
@@ -89,7 +88,6 @@ const basicTextList: TBasicTextData[] = [
 ]
 defineExpose({
   selectBasicText,
-  dragStart,
 })
 
 // ...mapActions(['addWidget'])
@@ -109,7 +107,7 @@ defineExpose({
     .basic-text-item {
       color: #33383e;
       background-color: #f1f2f4;
-      cursor: grab;
+      cursor: pointer;
       user-select: none;
       border-bottom: 1px solid rgba(255, 255, 255, 0);
       border-top: 1px solid rgba(255, 255, 255, 0);

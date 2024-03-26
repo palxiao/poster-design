@@ -26,8 +26,13 @@ body {
   border-style: solid;
   border-color: #e5e7eb;
   // font-size: 14px;
-  scrollbar-width: none; /* 火狐滚动条无法自定义宽度，只能通过此属性使滚动条宽度变细 */
+  // scrollbar-width: none; /* 火狐滚动条无法自定义宽度，只能通过此属性使滚动条宽度变细 */
   -ms-overflow-style: none; /* 隐藏滚动条（在IE和Edge两个浏览器中很难更改样式，固采取隐藏方式） */
+}
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: none;
+  }
 }
 // html ::-webkit-scrollbar {
 //   display: none; /* Chrome Safari */
@@ -40,12 +45,13 @@ body {
 }
 &::-webkit-scrollbar-thumb {
   border-radius: 3px;
-  background-color: #ccd4de;
+  background-color: #d9dcdf;
+  cursor: pointer;
   // box-shadow: 0 0 1px hsl(0deg 0% 100% / 50%);
 }
 &::-webkit-scrollbar-track {
-  background-color: #f0f1f3;
-  // background-color: transparent;
+  // background-color: #f0f1f3;
+  background-color: transparent;
   // border-radius: 3px;
 }
 
@@ -129,6 +135,7 @@ p {
   position: fixed;
   z-index: 99999;
   pointer-events: none;
+  opacity: .9;
 }
 .hide {
   opacity: 0 !important;

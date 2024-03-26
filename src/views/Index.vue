@@ -191,8 +191,8 @@ function loadData() {
   if (!optionsRef.value) return
   optionsRef.value.load(id, tempid, tempType, async () => {
     if (!zoomControlRef.value) return
-    zoomControlRef.value.screenChange()
-    await nextTick()
+    // await nextTick()
+    // zoomControlRef.value.screenChange()
     // 初始化激活的控件为page
     store.dispatch('selectWidget', { uuid: '-1' })
     // selectWidget({

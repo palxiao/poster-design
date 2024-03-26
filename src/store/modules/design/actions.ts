@@ -341,8 +341,7 @@ export default {
         store.state.dSelectWidgets = []
       }, 10)
     } else {
-      // TODO: 不清空会引起mask的bug，原因还不清楚..
-      store.state.dActiveElement = {}
+      // store.state.dActiveElement = {}
       setTimeout(() => {
         store.state.dActiveElement = widget
       }, 10)

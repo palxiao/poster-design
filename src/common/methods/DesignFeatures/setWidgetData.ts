@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-02-22 15:06:14
  * @Description: 设置元素时根据类型处理
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-03 10:10:53
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-03-22 16:00:17
  */
 // import store from '@/store'
 // import { getImage } from '../getImgDetail'
@@ -29,7 +29,6 @@ export default async function(type: string, item: TCommonItemData, data: Record<
     setting.width = img.width
     setting.height = img.height // parseInt(100 / item.value.ratio, 10)
     setting.imgUrl = item.value.url
-    console.log("setting", setting)
   }
   if (type === 'mask') {
     setting.mask = item.value.url
