@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-27 15:16:07
  * @Description: 模板列表
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-06 21:16:00
 -->
 <template>
@@ -11,7 +11,7 @@
     <el-divider v-show="state.title" style="margin-top: 1.7rem" content-position="left">
       <span style="font-weight: bold">{{ state.title }}</span>
     </el-divider>
-
+    
     <ul ref="listRef" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <img-water-fall :listData="state.list" @select="selectItem" />
       <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
@@ -192,6 +192,11 @@ defineExpose({
   height: 100%;
   margin-top: 1rem;
   padding-bottom: 150px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.infinite-list::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
 }
 // .list {
 //   width: 100%;

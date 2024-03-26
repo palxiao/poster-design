@@ -13,7 +13,7 @@ export default {
   // API_URL: isDev ? 'http://localhost:9998' : '${API}',
   API_URL: 'https://palxp.cn:8887', // 服务端地址
   SCREEN_URL: isDev ? 'http://localhost:7001' : '#{SCREEN_URL}', // 截图服务地址
-  IMG_URL: 'https://store.palxp.com/', // 七牛云资源地址
+  IMG_URL: 'https://store.palxp.cn/', // 七牛云资源地址
   // ICONFONT_URL: '//at.alicdn.com/t/font_3223711_74mlzj4jdue.css',
   ICONFONT_URL: '//at.alicdn.com/t/font_2717063_ypy8vprc3b.css?display=swap',
   ICONFONT_EXTRA: '//at.alicdn.com/t/c/font_3228074_42xym3extur.css',

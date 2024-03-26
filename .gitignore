@@ -2,6 +2,7 @@
 node_modules
 /dist
 config.json
+/.vite
 
 screenshot/node_modules/
 screenshot/dist/
