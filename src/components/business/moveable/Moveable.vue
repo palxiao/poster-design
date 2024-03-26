@@ -22,13 +22,13 @@ import { useCanvasStore, useControlStore } from '@/pinia'
 
 const {
   dSelectWidgets, dActiveElement, activeMouseEvent,
-  showRotatable, dWidgets,
+  dWidgets,
   updateRect, updateSelect,
-} = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect'])
+} = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'dWidgets', 'updateRect', 'updateSelect'])
 const store = useStore()
 const controlStore = useControlStore()
 const { guidelines } = storeToRefs(useCanvasStore())
-const { showMoveable } = storeToRefs(controlStore)
+const { showMoveable, showRotatable } = storeToRefs(controlStore)
 // computed: mapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showMoveable', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect', 'guidelines'])
 
 let _target: string = ""

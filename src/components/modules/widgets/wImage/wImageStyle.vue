@@ -136,7 +136,8 @@ const store = useStore()
 const {
   dActiveElement, dWidgets
 } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
-const { dMoving } = storeToRefs(useControlStore())
+const controlStore = useControlStore()
+const { dMoving } = storeToRefs(controlStore)
 // computed: {
 //   ...mapGetters(['dActiveElement', 'dMoving', 'dWidgets']),
 // },
@@ -319,7 +320,10 @@ function imgCrop(val: boolean) {
   const { left, top } = el.getBoundingClientRect()
   toolBarStyle = { left: left + 'px', top: top + 'px' }
   state.innerElement.cropEdit = val
-  store.commit('setShowRotatable', !val)
+
+  // store.commit('setShowRotatable', !val)
+  controlStore.setShowRotatable(!val)
+  
 }
 
 

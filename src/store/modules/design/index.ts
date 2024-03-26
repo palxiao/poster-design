@@ -76,7 +76,7 @@ const all = {
     selectItem: { data: null }, // 记录当前选择的元素, data
     activeMouseEvent: null, // 正在活动的鼠标事件
     // showMoveable: false, // 全局控制选择框的显示
-    showRotatable: true, // 是否显示moveable的旋转按钮
+    // showRotatable: true, // 是否显示moveable的旋转按钮
     zoomScreenChange: null, // 画布强制刷新适应度
     updateRect: null, // 强制刷新操作框
     updateSelect: null, // 强制设置选择元素
@@ -150,9 +150,9 @@ const all = {
     // showMoveable(state: any) {
     //   return state.showMoveable
     // },
-    showRotatable(state: any) {
-      return state.showRotatable
-    },
+    // showRotatable(state: any) {
+    //   return state.showRotatable
+    // },
     zoomScreenChange(state: any) {
       return state.zoomScreenChange
     },

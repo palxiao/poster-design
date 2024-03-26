@@ -48,9 +48,9 @@ export default {
   //   //   state.dActiveElement = state.dPage
   //   // }
   // },
-  setShowRotatable(state: Type.Object, e: any) {
-    state.showRotatable = e
-  },
+  // setShowRotatable(state: Type.Object, e: any) {
+  //   state.showRotatable = e
+  // },
   zoomScreenChange(state: Type.Object, e: any) {
     // 画布尺寸适应度强制刷新
     state.zoomScreenChange = Math.random()

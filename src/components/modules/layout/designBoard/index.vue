@@ -95,11 +95,11 @@ const { pageDesignCanvasId } = defineProps<TProps>()
 const {
   dWidgets,
   dActiveElement, dSelectWidgets, dAltDown,
-  dHoverUuid, showRotatable
-} = useSetupMapGetters(['dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown', 'showRotatable'])
+  dHoverUuid
+} = useSetupMapGetters(['dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown'])
 const { dPage } = storeToRefs(usePageStore())
 const { dZoom, dPaddingTop, dScreen } = storeToRefs(useCanvasStore())
-const { dDraging } = storeToRefs(useControlStore())
+const { dDraging, showRotatable } = storeToRefs(useControlStore())
 
 
 let _dropIn: string | null = ''
