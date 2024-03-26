@@ -29,7 +29,7 @@ import { storeToRefs } from 'pinia';
 import { wTextSetting } from '../../widgets/wText/wTextSetting'
 
 import { useStore } from 'vuex'
-import { usePageStore } from '@/pinia';
+import { useControlStore, usePageStore } from '@/pinia';
 
 type TBasicTextData = {
   text: string
@@ -38,11 +38,16 @@ type TBasicTextData = {
 }
 
 const store = useStore()
+const controlStore = useControlStore()
+
 const { dPage } = storeToRefs(usePageStore())
 
 
 const selectBasicText = (item: TBasicTextData) => {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = JSON.parse(JSON.stringify(wTextSetting))
   setting.text = '双击编辑文字' // item.text
   setting.width = item.fontSize * setting.text.length

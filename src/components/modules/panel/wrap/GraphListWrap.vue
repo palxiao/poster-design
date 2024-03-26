@@ -48,7 +48,7 @@ import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
 import { TGetListData } from '@/api/material'
-import { usePageStore } from '@/pinia'
+import { useControlStore, usePageStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
 
 type TProps = {
@@ -81,7 +81,10 @@ const dragHelper = new DragHelper()
 const props = defineProps<TProps>()
 
 const colors = ['#f8704b', '#5b89ff', '#2cc4cc', '#a8ba73', '#f8704b']
+
 const store = useStore()
+const controlStore = useControlStore()
+
 const { dPage } = storeToRefs(usePageStore())
 const state = reactive<TState>({
   loading: false,
@@ -186,8 +189,9 @@ async function selectItem(item: TGetListData) {
   if (isDrag) {
     return
   }
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
-  // this.$store.commit('setShowMoveable', false)
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvg.setting)) : JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item)
 

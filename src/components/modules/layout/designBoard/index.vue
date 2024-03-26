@@ -70,7 +70,7 @@ import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import { debounce } from 'throttle-debounce'
 import { move, moveInit } from '@/mixins/move'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useCanvasStore, usePageStore } from '@/pinia'
+import { useCanvasStore, useControlStore, usePageStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
 // 页面设计组件
 type TProps = {
@@ -90,14 +90,16 @@ type TSetting = {
 }
 
 const store = useStore()
+const controlStore = useControlStore()
 const { pageDesignCanvasId } = defineProps<TProps>()
 const {
   dWidgets,
-  dActiveElement, dSelectWidgets, dAltDown, dDraging,
+  dActiveElement, dSelectWidgets, dAltDown,
   dHoverUuid, showRotatable
-} = useSetupMapGetters(['dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown', 'dDraging', 'showRotatable'])
+} = useSetupMapGetters(['dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets', 'dAltDown', 'showRotatable'])
 const { dPage } = storeToRefs(usePageStore())
 const { dZoom, dPaddingTop, dScreen } = storeToRefs(useCanvasStore())
+const { dDraging } = storeToRefs(useControlStore())
 
 
 let _dropIn: string | null = ''
@@ -159,7 +161,10 @@ async function drop(e: MouseEvent) {
   const dropIn = _dropIn
   _dropIn = ''
   store.dispatch('setDropOver', '-1')
-  store.commit('setShowMoveable', false) // 清理上一次的选择
+
+  // store.commit('setShowMoveable', false) // 清理上一次的选择
+  controlStore.setShowMoveable(false) // 清理上一次的选择
+
   let lost = eventTarget.className !== 'design-canvas' // className === 'design-canvas' , id: "page-design-canvas"
   // e.stopPropagation()
   e.preventDefault()
@@ -215,7 +220,9 @@ async function drop(e: MouseEvent) {
     const uuid = target.getAttribute('data-uuid')
     if (targetType === 'w-mask') {
       // 容器
-      store.commit('setShowMoveable', true) // 恢复选择
+      // store.commit('setShowMoveable', true) // 恢复选择
+      controlStore.setShowMoveable(true) // 恢复选择
+
       const widget = dWidgets.value.find((item: {uuid: string}) => item.uuid === uuid)
       widget.imgUrl = item.value.url
       // if (e.target.className.baseVal) {
@@ -227,7 +234,10 @@ async function drop(e: MouseEvent) {
         const widget = dWidgets.value.find((item: {uuid: string}) => item.uuid == dropIn)
         widget.imgUrl = item.value.url
         console.log('加入+', widget)
-        store.commit('setShowMoveable', true) // 恢复选择
+
+        // store.commit('setShowMoveable', true) // 恢复选择
+        controlStore.setShowMoveable(true) // 恢复选择
+
       } else {
         store.dispatch('addWidget', setting) // 正常加入面板
         // addWidget(setting) // 正常加入面板

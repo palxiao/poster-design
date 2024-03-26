@@ -230,7 +230,7 @@ function finishSliceData(key: string, value: number | number[]) {
   }
 }
 
-function finish(key: string = "", value: number | number[] | string | null = "") {
+function finish(key: string = "", value: string | number | (string | number)[] | null = "") {
   store.dispatch('updateWidgetData', {
     uuid: dActiveElement.value.uuid,
     key: key,

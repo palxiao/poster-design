@@ -34,7 +34,7 @@ import api from '@/api'
 import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import { storeToRefs } from 'pinia'
-import { usePageStore } from '@/pinia'
+import { useControlStore, usePageStore } from '@/pinia'
 import { TGetImageListResult } from '@/api/material'
 
 type TProps = {
@@ -56,7 +56,10 @@ type TCurrentCategory = {
 }
 
 const props = defineProps<TProps>()
+
 const store = useStore()
+const controlStore = useControlStore()
+
 const { dPage } = storeToRefs(usePageStore())
 const state = reactive<TState>({
   recommendImgList: [],
@@ -81,7 +84,10 @@ onMounted(async () => {
 
 const selectImg = async (index: number, list: TGetImageListResult[]) => {
   const item = list ? list[index] : state.recommendImgList[index]
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item) // await getImage(item.url)
   setting.width = img.width

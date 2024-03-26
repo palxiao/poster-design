@@ -66,6 +66,8 @@ import effectWrap from '../../settings/EffectSelect/TextWrap.vue'
 import { useFontStore } from '@/common/methods/fonts'
 import usePageFontsFilter from './pageFontsFilter'
 import { wTextSetting ,TwTextData } from './wTextSetting';
+import { storeToRefs } from 'pinia';
+import { useControlStore } from '@/pinia';
 
 type TState = {
   activeNames: string[],
@@ -99,7 +101,9 @@ const state = reactive<TState>({
   alignIconList,
 })
 const dActiveElement = computed(() => store.getters.dActiveElement)
-const dMoving = computed(() => store.getters.dMoving)
+// const dMoving = computed(() => store.getters.dMoving)
+const { dMoving } = storeToRefs(useControlStore())
+
 // const isDraw = computed(() => route.name === 'Draw')
 
 watch(() => dActiveElement.value, () => {

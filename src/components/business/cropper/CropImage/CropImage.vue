@@ -26,6 +26,8 @@ import { ref, defineComponent, toRefs, reactive, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'
+import { storeToRefs } from 'pinia'
+import { useControlStore } from '@/pinia'
 
 export default defineComponent({
   components: { ElDialog },
@@ -36,6 +38,7 @@ export default defineComponent({
       loading: false,
       url: '',
     })
+    const controlStore = useControlStore()
     const dialogVisible = ref(false)
     const imgBox = ref<HTMLImageElement | any>()
     let cropData: any = null
@@ -49,7 +52,8 @@ export default defineComponent({
       item.rawImg = item.rawImg ? item.rawImg : item.imgUrl
       cropData = data
       state.url = item.rawImg
-      store.commit('setShowMoveable', false)
+      // store.commit('setShowMoveable', false)
+      controlStore.setShowMoveable(false)
       dialogVisible.value = true
       await nextTick()
       setEdit()
@@ -86,7 +90,8 @@ export default defineComponent({
     }
     
     const cancel = () => {
-      store.commit('setShowMoveable', true)
+      // store.commit('setShowMoveable', true)
+      controlStore.setShowMoveable(true)
       dialogVisible.value = false
       state.url = ''
       cropData = null

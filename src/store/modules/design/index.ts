@@ -25,10 +25,10 @@ const all = {
       x: 0, // 鼠标按下时的横坐标
       y: 0, // 鼠标按下时的纵坐标
     },
-    dMoving: false, // 是否正在移动组件
-    dDraging: false, // 是否正在抓取组件
-    dResizeing: false, // 是否正在调整组件宽高
-    dShowRefLine: true, // 是否显示参考线
+    // dMoving: false, // 是否正在移动组件
+    // dDraging: false, // 是否正在抓取组件
+    // dResizeing: false, // 是否正在调整组件宽高
+    // dShowRefLine: true, // 是否显示参考线
     dResizeWH: {
       // 初始化调整大小时组件的宽高
       width: 0,
@@ -75,7 +75,7 @@ const all = {
     dGroupJson: {}, // 组合的json数据
     selectItem: { data: null }, // 记录当前选择的元素, data
     activeMouseEvent: null, // 正在活动的鼠标事件
-    showMoveable: false, // 全局控制选择框的显示
+    // showMoveable: false, // 全局控制选择框的显示
     showRotatable: true, // 是否显示moveable的旋转按钮
     zoomScreenChange: null, // 画布强制刷新适应度
     updateRect: null, // 强制刷新操作框
@@ -105,12 +105,12 @@ const all = {
     dMouseXY(state) {
       return state.dMouseXY
     },
-    dMoving(state) {
-      return state.dMoving
-    },
-    dDraging(state) {
-      return state.dDraging
-    },
+    // dMoving(state) {
+    //   return state.dMoving
+    // },
+    // dDraging(state) {
+    //   return state.dDraging
+    // },
     dActiveElement(state) {
       return state.dActiveElement
     },
@@ -129,12 +129,12 @@ const all = {
     dHoverUuid(state) {
       return state.dHoverUuid
     },
-    dResizeing(state) {
-      return state.dResizeing
-    },
-    dShowRefLine(state) {
-      return state.dShowRefLine
-    },
+    // dResizeing(state) {
+    //   return state.dResizeing
+    // },
+    // dShowRefLine(state) {
+    //   return state.dShowRefLine
+    // },
     dCopyElement(state) {
       return state.dCopyElement
     },
@@ -147,9 +147,9 @@ const all = {
     activeMouseEvent(state: any) {
       return state.activeMouseEvent
     },
-    showMoveable(state: any) {
-      return state.showMoveable
-    },
+    // showMoveable(state: any) {
+    //   return state.showMoveable
+    // },
     showRotatable(state: any) {
       return state.showRotatable
     },

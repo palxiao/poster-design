@@ -20,12 +20,14 @@ import { getImage } from '@/common/methods/getImgDetail'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 import eventBus from '@/utils/plugins/eventBus'
-import { usePageStore } from '@/pinia'
+import { useControlStore, usePageStore } from '@/pinia'
 // import wText from '@/components/modules/widgets/wText/wText.vue'
 
 export default () => {
   return new Promise<void>((resolve) => {
     const pageStore = usePageStore()
+    const controlStore = useControlStore()
+
     navigator.clipboard
       .read()
       .then(async (dataTransfer: any) => {
@@ -46,7 +48,9 @@ export default () => {
             // 刷新用户列表
             eventBus.emit('refreshUserImages')
             // 添加图片到画布中
-            store.commit('setShowMoveable', false) // 清理掉上一次的选择
+            // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+            controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
             const setting = JSON.parse(JSON.stringify(wImageSetting))
             setting.width = width
             setting.height = height
@@ -67,7 +71,9 @@ export default () => {
             }, 100)
             break
           } else if (item.types.toString().indexOf('text') !== -1) {
-            store.commit('setShowMoveable', false) // 清理掉上一次的选择
+            // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+            controlStore.setShowMoveable(false) // 清理掉上一次的选择
+            
             const setting = JSON.parse(JSON.stringify(wTextSetting))
             setting.text = await navigator.clipboard.readText()
             store.dispatch('addWidget', setting)

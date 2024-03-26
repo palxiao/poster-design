@@ -22,11 +22,13 @@
 // const NAME = 'style-panel'
 import { useStore } from 'vuex'
 import alignIconList, { AlignListData } from '@/assets/data/AlignListData'
-import iconItemSelect from '../settings/iconItemSelect.vue'
+import iconItemSelect, { TIconItemSelectData } from '../settings/iconItemSelect.vue'
 import { ref, watch } from 'vue';
 import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { useControlStore } from '@/pinia';
 
 const store = useStore();
+const controlStore = useControlStore()
 
 const activeTab = ref(0)
 const iconList = ref<AlignListData[]>(alignIconList)
@@ -51,7 +53,7 @@ function handleCombine() {
 }
 
 // ...mapActions(['selectWidget', 'updateAlign', 'updateHoverUuid', 'getCombined', 'realCombined', 'ungroup', 'pushHistory']),
-function alignAction(item: AlignListData) {
+function alignAction(item: TIconItemSelectData) {
   const sWidgets = JSON.parse(JSON.stringify(dSelectWidgets.value))
   store.dispatch('getCombined').then((group) => {
     sWidgets.forEach((element: Record<string, any>) => {
@@ -72,7 +74,9 @@ function alignAction(item: AlignListData) {
 }
 function layerChange(newLayer: Record<string, any>[]) {
   store.commit('setDWidgets', newLayer.toReversed())
-  store.commit('setShowMoveable', false)
+
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
 }
 
 </script>

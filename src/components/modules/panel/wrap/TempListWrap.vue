@@ -32,7 +32,7 @@ import useConfirm from '@/common/methods/confirm'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
-import {usePageStore, useUserStore} from '@/pinia'
+import {useControlStore, usePageStore, useUserStore} from '@/pinia'
 
 type TState = {
   loading: boolean
@@ -52,7 +52,10 @@ type TPageOptions = {
 const listRef = ref<HTMLElement | null>(null)
 const route = useRoute()
 const router = useRouter()
+
 const store = useStore()
+const controlStore = useControlStore()
+
 const userStore = useUserStore()
 const pageStore = usePageStore()
 const state = reactive<TState>({
@@ -113,7 +116,10 @@ function checkHeight() {
 }
 // ...mapActions(['selectWidget', 'updatePageData', 'setTemplate', 'pushHistory']),
 async function selectItem(item: IGetTempListData) {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
+
   if (dHistoryParams.value.length > 0) {
     const isPass = await useConfirm('提示', '使用模板后，当前页面将会被替换，是否继续', 'warning')
     if (!isPass) {

@@ -5,10 +5,13 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2023-11-30 10:09:55
  */
+import { useControlStore } from '@/pinia'
 import store from '@/store'
 
 export default function keyCodeOptions(e: any, params: any) {
   const { f } = params
+  const controlStore = useControlStore()
+
   switch (e.keyCode) {
     case 38:
       udlr('top', -1 * f, e)
@@ -34,7 +37,7 @@ export default function keyCodeOptions(e: any, params: any) {
 
         if (type === 'w-text') {
           // 不在编辑状态则执行删除
-          !editable && store.getters.showMoveable && store.dispatch('deleteWidget')
+          !editable && controlStore.showMoveable && store.dispatch('deleteWidget')
         } else store.dispatch('deleteWidget')
       }
       break

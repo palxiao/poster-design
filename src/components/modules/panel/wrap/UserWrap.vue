@@ -53,7 +53,7 @@ import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 import eventBus from '@/utils/plugins/eventBus'
 import { storeToRefs } from 'pinia'
-import { usePageStore } from '@/pinia'
+import { useControlStore, usePageStore } from '@/pinia'
 
 type TProps = {
   active?: number
@@ -72,7 +72,10 @@ type TState = {
 const props = defineProps<TProps>()
 
 const router = useRouter()
+
 const store = useStore()
+const controlStore = useControlStore()
+
 const { dPage } = storeToRefs(usePageStore())
 const listRef = ref<HTMLElement | null>(null)
 const imgListRef = ref<typeof photoList | null>(null)
@@ -162,7 +165,10 @@ onMounted(() => {
 
 const selectImg = async (index: number) => {
   const item = state.imgList[index]
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item)
   setting.width = img.width
@@ -180,7 +186,10 @@ type controlImgParam = {
 }
 
 const deleteImg = async ({ i, item }: controlImgParam) => {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
+
   const isPass = await useConfirm('警告', '删除后不可找回，已引用资源将会失效，请谨慎操作', 'warning')
   if (!isPass) {
     return false

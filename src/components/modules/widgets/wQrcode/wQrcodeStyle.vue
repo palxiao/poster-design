@@ -73,6 +73,8 @@ import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import { wQrcodeSetting, TWQrcodeSetting } from './wQrcodeSetting'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { storeToRefs } from 'pinia'
+import { useControlStore } from '@/pinia'
 
 type TState = {
   activeNames: string[]
@@ -93,10 +95,15 @@ const state = reactive<TState>({
   alignIconList,
   localization,
 })
+
 const store = useStore()
+const controlStore = useControlStore()
+
+
 const {
-  dActiveElement, dMoving, dWidgets
-} = useSetupMapGetters(['dActiveElement', 'dMoving', 'dWidgets'])
+  dActiveElement, dWidgets
+} = useSetupMapGetters(['dActiveElement', 'dWidgets'])
+const { dMoving } = storeToRefs(useControlStore())
 // ...mapGetters(['dActiveElement', 'dMoving', 'dWidgets'])
 
 let lastUuid: string | null = null
@@ -213,12 +220,16 @@ async function alignAction(item: TIconItemSelectData) {
 }
 
 async function uploadImgDone(img: TUploadDoneData) {
-  store.commit('setShowMoveable', false)
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
+
   await api.material.addMyPhoto(img)
   // this.innerElement.width = img.width
   // this.innerElement.height = img.height * (this.innerElement.width / img.width)
   state.innerElement.url = img.url
-  store.commit('setShowMoveable', true)
+  
+  // store.commit('setShowMoveable', true)
+  controlStore.setShowMoveable(true)
 }
 </script>
 

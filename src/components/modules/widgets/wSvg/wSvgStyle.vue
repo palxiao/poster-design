@@ -46,6 +46,8 @@ import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import { TWSvgSetting, wSvgSetting } from './wSvgSetting'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { storeToRefs } from 'pinia'
+import { useControlStore } from '@/pinia'
 
 type TState = {
   activeNames: string[]
@@ -66,8 +68,9 @@ const state = reactive<TState>({
 })
 const store = useStore()
 const {
-  dActiveElement, dMoving
-} = useSetupMapGetters(['dActiveElement', 'dMoving'])
+  dActiveElement
+} = useSetupMapGetters(['dActiveElement'])
+const { dMoving } = storeToRefs(useControlStore())
 
 // ...mapGetters(['dActiveElement', 'dMoving']),
 

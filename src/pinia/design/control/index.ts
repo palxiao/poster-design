@@ -16,7 +16,12 @@ type TControlState = {
 }
 
 type TControlAction = {
-
+  setdMoving: (isMoving: boolean) => void
+  setDraging: (isDraging: boolean) => void
+  setdResizeing: (isResizing: boolean) => void
+  showRefLine: (isRefLine: boolean) => void
+  setShowMoveable: (isShowMoveable: boolean) => void
+  setShowRotatable: (isShowRotatable: boolean) => void
 }
 
 export default defineStore<"controlStore", TControlState, {}, TControlAction>("controlStore", {

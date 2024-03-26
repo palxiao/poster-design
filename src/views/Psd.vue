@@ -73,7 +73,7 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { processPSD2Page } from '@/utils/plugins/psd'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import { useCanvasStore, usePageStore } from '@/pinia'
+import { useCanvasStore, useControlStore, usePageStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
 
 type TState = {
@@ -93,6 +93,8 @@ const state = reactive<TState>({
   cancelText: '',
 })
 const store = useStore()
+const controlStore = useControlStore()
+
 const route = useRoute()
 
 // const { dZoom } = useSetupMapGetters(['dZoom'])
@@ -158,7 +160,9 @@ async function clear() {
   pageStore.setDPage(Object.assign(pageStore.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
   // store.commit('setDPage', Object.assign(store.getters.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
   
-  store.commit('setShowMoveable', false)
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
+  
   await nextTick()
   state.isDone = false
 }

@@ -42,7 +42,7 @@ import PointImg from '@/utils/plugins/pointImg'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore } from '@/pinia'
+import { useCanvasStore, useControlStore } from '@/pinia'
 
 type TProps = {
   params: typeof setting
@@ -82,7 +82,10 @@ const state = reactive<TState>({
   }
 })
 const route = useRoute()
+
 const store = useStore()
+const controlStore = useControlStore()
+
 const widgetRef = ref<HTMLElement | null>(null)
 const targetRef = ref<HTMLImageElement | null>(null)
 
@@ -296,9 +299,11 @@ function fixRotate() {
     flipTemp = props.params.flip
     props.params.flip = null
   }
-  store.commit('setShowMoveable', false)
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
   setTimeout(() => {
-    store.commit('setShowMoveable', true)
+    // store.commit('setShowMoveable', true)
+    controlStore.setShowMoveable(true)
   }, 100)
 }
 

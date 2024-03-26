@@ -18,18 +18,19 @@ import { mapGetters, mapActions, useStore } from 'vuex'
 import useSelecto from './Selecto'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore } from '@/pinia'
+import { useCanvasStore, useControlStore } from '@/pinia'
 
 const {
   dSelectWidgets, dActiveElement, activeMouseEvent,
-  showMoveable, showRotatable, dWidgets,
+  showRotatable, dWidgets,
   updateRect, updateSelect,
-} = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showMoveable', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect'])
+} = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect'])
 const store = useStore()
+const controlStore = useControlStore()
 const { guidelines } = storeToRefs(useCanvasStore())
-
-
+const { showMoveable } = storeToRefs(controlStore)
 // computed: mapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showMoveable', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect', 'guidelines'])
+
 let _target: string = ""
 let moveable: Moveable | null = null 
 let holdPosition: { left: number, top: number } | null = null 
@@ -79,7 +80,9 @@ watch(
         }
       })
       // // End
-      store.commit('setShowMoveable', true)
+      // controlStore.setShowMoveable(true)
+      controlStore.setShowMoveable(true)
+
       // 参考线设置
       if (!moveable.elementGuidelines?.includes(target)) {
         moveable.elementGuidelines?.push(target)
