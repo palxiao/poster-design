@@ -248,10 +248,9 @@ async function autoFixTop() {
   const presetPadding = 60
   const el = document.getElementById('out-page')
   if (!el) return
-  // const clientHeight = document.body.clientHeight - 54
-  
-  const parentHeight = (el.offsetParent as HTMLElement).offsetHeight - 54
-  let padding = (parentHeight - el.offsetHeight) / 2
+  const clientHeight = window.innerHeight - 54
+  // const parentHeight = (el.offsetParent as HTMLElement).offsetHeight - 54
+  let padding = (clientHeight - el.offsetHeight) / 2
   if (typeof curAction.value === 'undefined') {
     padding += presetPadding / 2
   }

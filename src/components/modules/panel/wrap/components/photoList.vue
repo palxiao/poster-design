@@ -218,6 +218,11 @@ defineExpose({
 .img-list-wrap {
   height: 100%;
   overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.img-list-wrap::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
 }
 .img {
   transform-origin: center;

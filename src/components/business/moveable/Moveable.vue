@@ -364,10 +364,13 @@ export default defineComponent({
         if (this.resizeTempData) {
           this.$store.commit('resize', this.resizeTempData)
           this.resizeTempData = null
-          setTimeout(async () => {
-            await this.$nextTick()
-            this.moveable.updateRect()
-          }, 10)
+          // await this.$nextTick()
+          this.moveable.updateRect()
+          // 临时处理缩放后细线问题
+          this.$store.commit('setShowMoveable', false)
+          setTimeout(() => {
+            this.$store.commit('setShowMoveable', true)
+          }, 10);
         }
         try {
           if (this.dActiveElement.type === 'w-text') {

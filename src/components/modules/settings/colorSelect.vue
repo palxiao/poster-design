@@ -65,9 +65,7 @@ let first = true
     // })
 
 onMounted(() => {
-  if (props.modelValue) {
-    state.innerColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
-  }
+  checkColorLength()
 })
 
 const dropColor = async (color: string) => {
@@ -90,6 +88,7 @@ watch(
   () => props.modelValue,
   (val) => {
     val !== state.innerColor && (state.innerColor = val)
+    checkColorLength()
   },
 )
 
@@ -105,12 +104,12 @@ const onChange = () => {
   emit('finish', state.innerColor)
 }
 
-// const addHistory = debounce(300, false, async (value) => {
-//   store.dispatch('pushColorToHistory', value)
-// })
-// const colorChange = debounce(150, false, async (e) => {
-//   state.innerColor = e + (e.length === 7 ? 'ff' : '')
-// })
+function checkColorLength() {
+  if (!props.modelValue) {
+    return
+  }
+  state.innerColor = props.modelValue + (props.modelValue.length === 7 ? 'ff' : '')
+}
 
 const inputBlur = (color: string) => {
   state.innerColor = color
