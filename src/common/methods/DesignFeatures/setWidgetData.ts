@@ -12,7 +12,7 @@ import setImageData from '@/common/methods/DesignFeatures/setImage'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 // import wImage from '@/components/modules/widgets/wImage/wImage.vue'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
-import { wSvgSetting } from '@/components/modules/widgets/wSvgSetting'
+import { wSvgSetting } from '@/components/modules/widgets/wSvg/wSvgSetting'
 
 export default async function(type: string, item: TCommonItemData, data: Record<string, any>) {
   let setting = data
