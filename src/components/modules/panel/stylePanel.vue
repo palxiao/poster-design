@@ -78,23 +78,23 @@ function layerChange(newLayer: Record<string, any>[]) {
 </script>
 
 <style lang="less" scoped>
-@color0: #ffffff; // Appears 5 times
-@color1: #999999; // Appears 3 times
-@color2: #d7d7d7; // Appears 2 times
+@color0: #ffffff;
+@color1: #999999;
+@background-color-transparent: rgba(0,0,0,.08);
 
 #style-panel ::-webkit-scrollbar {
   display: none; /* Chrome Safari */
 }
 #style-panel {
   background-color: @color0;
-  border-left: 1px solid @color2;
+  border-left: 1px solid @background-color-transparent;
   display: flex;
   flex-direction: column;
   height: 100%;
   position: relative;
   width: 280px;
   .style-tab {
-    box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: row;
     text-align: center;

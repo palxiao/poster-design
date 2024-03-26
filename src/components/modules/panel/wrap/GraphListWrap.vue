@@ -209,6 +209,11 @@ export default defineComponent({
 .infinite-list {
   height: 100%;
   padding-bottom: 150px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.infinite-list::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
 }
 .list {
   width: 100%;
