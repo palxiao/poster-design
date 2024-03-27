@@ -308,8 +308,11 @@ function openCropper() {
 // }
 
 
-function selectDone(img: TGetImageListResult) {
+async function selectDone(img: TGetImageListResult) {
   state.innerElement.imgUrl = img.url
+  const loadImg = await getImage(img.url)
+  state.innerElement.width = loadImg.width * store.getters.dZoom / 100
+  state.innerElement.height = loadImg.height * store.getters.dZoom / 100
   // this.imgCrop(true)
 }
 

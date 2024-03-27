@@ -240,7 +240,6 @@ async function drop(e: MouseEvent) {
 
       } else {
         store.dispatch('addWidget', setting) // 正常加入面板
-        // addWidget(setting) // 正常加入面板
       }
     }
   } else if (type === 'bg') {
@@ -248,7 +247,6 @@ async function drop(e: MouseEvent) {
   } else if (type !== 'group') {
     console.log(setting)
     store.dispatch('addWidget', setting) // 正常加入面板
-    // addWidget(setting) // 正常加入面板
   }
   // 清除临时数据
   // this.$store.commit('selectItem', {})

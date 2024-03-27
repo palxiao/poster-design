@@ -10,13 +10,12 @@
     <div class="list">
       <div
         v-for="(item, i) in state.list" :key="i + 'i'"
-        :style="{ width: item.listWidth + 'px', marginRight: item.gap + 'px' }"
+        :style="{ width: item.listWidth + 'px', marginRight: item.gap + 'px', cursor: canDrag ? 'grab' : 'pointer' }"
         class="list__img" draggable="false"
         @mousedown="dragStart($event, i)"
         @mousemove="mousemove"
         @mouseup="mouseup"
         @click.stop="select(i)"
-        @dragstart="dragStart($event, i)"
       >
         <edit-model v-if="props.edit" :options="props.edit" :data="{ item, i }">
           <div v-if="item.isDelect" class="list__mask">已删除</div>
@@ -49,13 +48,13 @@ type TProps = {
   edit?: Record<string, any>
   isDone?: boolean
   isShort?: boolean
+  canDrag?: boolean
 }
 
 type TEmits = {
   (event: 'load'): void
   (event: 'select', data: number): void
   (event: 'drag', data: number): void
-
 }
 
 type TState = {
@@ -65,6 +64,7 @@ type TState = {
 
 const props = withDefaults(defineProps<TProps>(), {
   isShort: false,
+  canDrag: true,
   listData: () => ([])
 })
 const emit = defineEmits<TEmits>()
@@ -176,6 +176,9 @@ const select = (i: number) => {
 
 const dragStart = async (e: Event | any, i: number) => {
   e.preventDefault()
+  if (!props.canDrag) {
+    return
+  }
   startPoint = { x: e.x, y: e.y }
   if (!state.list[i].isDelect) {
     const setImageParams: TItem2DataParam = {
@@ -242,7 +245,6 @@ defineExpose({
   &__img {
     // background: #f1f2f4;
     display: inline-block;
-    cursor: grab;
     // margin: 0 6px 2px 0;
     margin-bottom: 3px;
     border-radius: 2px;

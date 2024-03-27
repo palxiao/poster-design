@@ -57,7 +57,6 @@ import _config from '../config'
 import {
   CSSProperties, computed, nextTick,
   onBeforeUnmount, onMounted, reactive, ref,
-  getCurrentInstance
 } from 'vue'
 import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
@@ -65,7 +64,6 @@ import Moveable from '@/components/business/moveable/Moveable.vue'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import lineGuides from '@/components/modules/layout/lineGuides.vue'
-
 import shortcuts from '@/mixins/shortcuts'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
@@ -84,16 +82,6 @@ type TState = {
   APP_NAME: string
   showLineGuides: boolean
 }
-
-const beforeUnload = function (e: Event): string {
-  const confirmationMessage: string = '系统不会自动保存您未修改的内容';
-
-  (e || window.event).returnValue = (confirmationMessage as any) // Gecko and Trident
-  return confirmationMessage // Gecko and WebKit
-}
-
-// mixins: [shortcuts],
-!_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
 const {
   dActiveElement, dHistoryParams, dCopyElement
@@ -118,9 +106,15 @@ const zoomControlRef = ref<typeof zoomControl | null>(null)
 const store = useStore()
 const route = useRoute()
 
-// const draw = () => {
-//   state.openDraw = true
-// }
+const beforeUnload = function (e: Event): any {
+  if (store.getters.dHistoryParams.length > 0) {
+    const confirmationMessage: string = '系统不会自动保存您未修改的内容';
+    (e || window.event).returnValue = (confirmationMessage as any) // Gecko and Trident
+    return confirmationMessage // Gecko and WebKit
+  } else return false
+}
+
+!_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
 function jump2home() {
   // const fullPath = window.location.href.split('/')
@@ -141,32 +135,40 @@ const undoable = computed(() => {
 const redoable = computed(() => {
   return !(dHistoryParams.value.index === dHistoryParams.value.length - 1)
 })
-// watch: {
-//   $route() {
-//     console.log('change route', this.$route.query)
-//     this.loadData()
-//   },
-// },
+
+function zoomSub() {
+  if (!zoomControlRef.value) return
+  zoomControlRef.value.sub()
+}
+
+function zoomAdd() {
+  if (!zoomControlRef.value) return
+  zoomControlRef.value.add()
+}
+
+function save() {
+  if (!optionsRef.value) return
+  optionsRef.value.save()
+}
 
 const { handleKeydowm, handleKeyup, dealCtrl } = shortcuts.methods
 let checkCtrl: number | undefined
+const instanceFn = { save, zoomAdd, zoomSub }
 
 onMounted(() => {
   store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
   // initGroupJson(JSON.stringify(wGroup.setting))
   window.addEventListener('scroll', fixTopBarScroll)
   // window.addEventListener('click', this.clickListener)
-  const instance = getCurrentInstance()
-  document.addEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
+  document.addEventListener('keydown', handleKeydowm(store, checkCtrl, instanceFn, dealCtrl), false)
   document.addEventListener('keyup', handleKeyup(store, checkCtrl), false)
   loadData()
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', fixTopBarScroll)
-  const instance = getCurrentInstance()
   // window.removeEventListener('click', this.clickListener)
-  document.removeEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
+  document.removeEventListener('keydown', handleKeydowm(store, checkCtrl, instanceFn, dealCtrl), false)
   document.removeEventListener('keyup', handleKeyup(store, checkCtrl), false)
   document.oncontextmenu = null
 })
@@ -201,29 +203,14 @@ function loadData() {
   })
 }
 
-function zoomSub() {
-  if (!zoomControlRef.value) return
-  zoomControlRef.value.sub()
-}
-
-function zoomAdd() {
-  if (!zoomControlRef.value) return
-  zoomControlRef.value.add()
-}
-
-function save() {
-  if (!optionsRef.value) return
-  optionsRef.value.save()
-}
-
 function fixTopBarScroll() {
   const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
   state.style.left = `-${scrollLeft}px`
 }
 
-function clickListener(e: Event) {
-  console.log('click listener', e)
-}
+// function clickListener(e: Event) {
+//   console.log('click listener', e)
+// }
 
 function optionsChange({ downloadPercent, downloadText }: { downloadPercent: number, downloadText: string }) {
   state.downloadPercent = downloadPercent

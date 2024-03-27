@@ -13,7 +13,7 @@
 ### 特点
 
 - 丝滑的页面操作体验，丰富的交互细节，基础功能完善
-- 采用服务端生成图片，能确保多端出图统一性，支持各种 CSS 特性
+- 采用服务端生成图片，确保多端出图统一性，支持各种 HTML5 特性
 - 简易 AI 抠图工具，上传图片一键去除背景
 - 技术栈：Vue3 、Vite5 、Vuex 、ElementPlus，开发体验畅快
 - 图片生成：Puppeteer、Express
@@ -54,13 +54,9 @@ npm run dev
 
 后端需要自己开发，目前本项目演示 Demo 中的后端接口参考：[接口 API 文档](https://xp.palxp.cn/apidoc/index.html)。
 
-## 其它
+## 交流群
 
-我们尝试沉淀一个高质量内容社区，形成可持续学习的平台，同时解决开发者在项目中遇到的疑难和困惑，帮大家少走一些弯路。
-
-<img style="width: 380px;" src="https://github.com/palxiao/poster-design/assets/21021314/643dcc8b-ef73-4c76-a78c-a7c377b5f268" />
-
-也欢迎关注公众号：品味前端，回复“加群”进行交流。
+关注公众号：品味前端，回复 “加群” 获取二维码，更新公告不错过。
 
 <img style="width: 380px;" src="https://xp.palxp.cn/images/2024-3-1-1709306365949.png" />
 

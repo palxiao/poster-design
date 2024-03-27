@@ -78,11 +78,11 @@ export default () => {
             setting.text = await navigator.clipboard.readText()
             store.dispatch('addWidget', setting)
             break
-          }
+          } else resolve()
         }
       })
       .catch((error) => {
-        // 剪贴板内容为空
+        // 剪贴板内容为空, 直接返回
         resolve()
       })
   })

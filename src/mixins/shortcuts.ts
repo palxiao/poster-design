@@ -6,11 +6,8 @@
  * @LastEditTime: 2023-09-19 17:29:06
  */
 import store from '@/store'
-const _this: any = {}
-_this.dHistoryParams = store.getters.dHistoryParams
-// _this.dActiveElement = store.getters.dActiveElement
-// _this.dPage = store.getters.dPage
-// _this.handleHistory = store.dispatch.ha
+// const _this: any = {}
+// _this.dHistoryParams = store.getters.dHistoryParams
 
 import keyCodeOptions from './methods/keyCodeOptions'
 import dealWithCtrl from './methods/dealWithCtrl'

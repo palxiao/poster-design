@@ -157,9 +157,9 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-@color0: #ffffff; // Appears 5 times
-@color1: #999999; // Appears 3 times
-@color2: rgba(0, 0, 0, 0.05); // Appears 2 times
+@color0: #ffffff;
+@color1: #999999;
+@color2: rgba(0, 0, 0, 0.05);
 
 .widget-list {
   width: 100%;

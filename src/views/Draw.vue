@@ -28,7 +28,6 @@ type TState = {
   style: StyleValue
 }
 
-// mixins: [shortcuts],
 const store = useStore()
 const route = useRoute()
 const state = reactive<TState>({
@@ -48,8 +47,8 @@ onMounted(() => {
   })
 })
 
-// ...mapActions(['initGroupJson', 'setTemplate', 'addGroup']),
 async function load() {
+  let backgroundImage = ''
   let loadFlag = false
   const { id, tempid, tempType: type  } = route.query 
   if (id || tempid) {
@@ -70,6 +69,10 @@ async function load() {
     } else {
       pageStore.setDPage(content.page)
       // store.commit('setDPage', content.page)
+      // 移除背景图，作为独立事件
+      backgroundImage = content.page?.backgroundImage
+      backgroundImage && delete content.page.backgroundImage
+      store.commit('setDPage', content.page)
       if (id) {
         store.commit('setDWidgets', widgets)
       } else {
@@ -111,10 +114,11 @@ async function load() {
         }
       } catch (e) {}
     })
-    // TODO优化: 背景图无法检测是否加载完毕，考虑应该将设置背景作为独立事件
-    if (content.page?.backgroundImage) {
-      const preloadBg = new Preload([content.page.backgroundImage])
+    // 背景图无法检测是否加载完毕，所以单独做判断
+    if (backgroundImage) {
+      const preloadBg = new Preload([backgroundImage])
       await preloadBg.imgs()
+      store.commit('setDPage', {...content.page, ...{backgroundImage}})
     }
     try {
       fontWithDraw && (await font2style(fontContent, fontData))
