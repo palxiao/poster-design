@@ -59,29 +59,13 @@ watch(
   },
 )
 
-// const { proxy } = getCurrentInstance() as ComponentInternalInstance
-// watch(
-//   () => state.active,
-//   () => {
-//     let screen = document.getElementById('page-design')
-//     nextTick(() => {
-//       proxy?.updateScreen({
-//         width: screen.offsetWidth,
-//         height: screen.offsetHeight,
-//       })
-//     })
-//   },
-// )
-
 defineExpose({
   clickClassify
 })
-//   ...mapActions(['updateScreen']),
 </script>
 
 <style lang="less" scoped>
-// Color variables (appears count calculates by raw css)
-@color1: #3e4651; // Appears 2 times
+@color1: #3e4651;
 
 #widget-panel {
   transition: all 1s;

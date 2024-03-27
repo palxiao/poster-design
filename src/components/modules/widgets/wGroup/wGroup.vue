@@ -133,6 +133,7 @@ function updateRecord(tempScale ?: number) {
       // TODO DOM Change
       // this.dActiveElement.scale = this.ratio
       if (widget.value) {
+        // 缩放原点在左上角，旋转原点在中心
         widget.value.style.transformOrigin = 'left top' // 设置scale的原点
         setTransformAttribute(widget.value, 'scale', ratio.value)
       }
@@ -180,7 +181,7 @@ function touchend() {
     setTimeout(() => {
       if (!widget.value) return
       widget.value.style.opacity = `${props.params.opacity}`
-      // this.$refs.widget.style.transformOrigin = 'center' // 设置scale的原点
+      // widget.value.style.transformOrigin = 'center' // 设置scale的原点
     }, 100)
 
     // const opacity = this.$refs.widget.style.opacity

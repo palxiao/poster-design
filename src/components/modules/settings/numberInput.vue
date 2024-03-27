@@ -173,8 +173,8 @@ function blurInput() {
 </script>
 
 <style lang="less" scoped>
-@color0: #e1e1e1; // Appears 2 times
-@color1: #d1d1d1; // Appears 2 times
+@color0: #e1e1e1;
+@color1: #d1d1d1;
 
 .number-input {
   height: 60px;
