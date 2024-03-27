@@ -17,16 +17,19 @@ import { mapGetters, mapActions, useStore } from 'vuex'
 // import { setTransformAttribute } from '@/common/methods/handleTransform'
 import useSelecto from './Selecto'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { storeToRefs } from 'pinia'
+import { useCanvasStore, useControlStore } from '@/pinia'
 
 const store = useStore()
 //  computed: mapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showMoveable', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect', 'guidelines']),
 const {
-  dSelectWidgets, dActiveElement, activeMouseEvent, showMoveable, showRotatable, dWidgets, updateRect, updateSelect, guidelines
-} = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showMoveable', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect', 'guidelines'])
+  dSelectWidgets, dActiveElement, activeMouseEvent, dWidgets, updateRect, updateSelect
+} = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'dWidgets', 'updateRect', 'updateSelect'])
+const controlStore = useControlStore()
+const { guidelines } = storeToRefs(useCanvasStore())
+const { showMoveable, showRotatable } = storeToRefs(controlStore)
 
 let _target: string | null = null
-
-
 
 watch(
   () => dActiveElement.value,
