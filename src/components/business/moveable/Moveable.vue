@@ -22,6 +22,10 @@ export default defineComponent({
   computed: mapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showMoveable', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect', 'guidelines']),
   watch: {
     async dActiveElement(val) {
+      setTimeout(async () => {
+        await nextTick()
+        this.checkMouseEvent()
+      }, 10);
       if (!val.record) {
         return
       }
@@ -50,11 +54,7 @@ export default defineComponent({
         // // Set Move Auto
         this.moveable.setState({ target: this._target }, () => {
           // 当出现mouseevent时进行即刻选中
-          if (this.activeMouseEvent) {
-            this.moveable.dragStart(this.activeMouseEvent)
-            // TODO 使用后销毁mouseevent
-            this.$store.commit('setMouseEvent', null)
-          }
+          this.checkMouseEvent()
         })
         // // End
         this.$store.commit('setShowMoveable', true)
@@ -84,7 +84,7 @@ export default defineComponent({
       // TODO: 这里是通过旋转来判断是否可以操作
       this.moveable.renderDirections = val ? ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'] : []
       this.moveable.resizable = val
-      this.moveable.scalable = val
+      // this.moveable.scalable = val
       document.getElementsByClassName('moveable-rotation')[0].style.display = val ? 'block' : 'none'
     },
     updateRect(val) {
@@ -366,7 +366,7 @@ export default defineComponent({
           this.resizeTempData = null
           // await this.$nextTick()
           this.moveable.updateRect()
-          // 临时处理缩放后细线问题
+          // 临时处理缩放后细线问题 https://github.com/palxiao/poster-design/issues/75
           this.$store.commit('setShowMoveable', false)
           setTimeout(() => {
             this.$store.commit('setShowMoveable', true)
@@ -486,7 +486,7 @@ export default defineComponent({
   },
   async created() {
     await nextTick()
-    const Ele = document.getElementById('page-design')
+    const Ele = document.getElementById('main')
     // 后续可能加个节流 TODO
     Ele?.addEventListener('scroll', () => {
       this.moveable.updateRect()
@@ -494,6 +494,13 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(['updateWidgetData', 'updateWidgetMultiple', 'pushHistory']),
+    checkMouseEvent() {
+      if (this.activeMouseEvent) {
+        this.moveable.dragStart(this.activeMouseEvent)
+        // 使用后销毁mouseevent
+        this.$store.commit('setMouseEvent', null)
+      }
+    }
   },
 })
 </script>

@@ -259,7 +259,9 @@ async function autoFixTop() {
 }
 
 defineExpose({
-  screenChange
+  screenChange,
+  add,
+  sub
 })
 
 </script>
@@ -267,7 +269,7 @@ defineExpose({
 <style lang="less" scoped>
 @color-select: #1b1634;
 @color1: #ffffff; // 选项板背景
-@color2: #ffffff; // Appears 3 times
+@color2: #ffffff;
 @color3: #666666; // 文字主颜色
 @color4: #c2c2c2; // 禁用
 @color5: rgba(0, 0, 0, 0.12); // 高亮选项背景
