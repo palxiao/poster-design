@@ -5,6 +5,7 @@
  * @LastEditors: ShawnPhang <site: book.palxp.com>
  * @LastEditTime: 2023-07-31 09:31:52
  */
+import { useControlStore } from '@/pinia'
 import store from '@/store'
 
 const move = {
@@ -49,7 +50,8 @@ const move = {
 const moveInit = {
   methods: {
     initmovement(e: MouseEvent) {
-      if (!store.getters.dAltDown) {
+      const controlStore = useControlStore()
+      if (!controlStore.dAltDown) {
         // 设置mouseevent给moveable初始
         // 在组合操作时排除
         store.commit('setMouseEvent', e)

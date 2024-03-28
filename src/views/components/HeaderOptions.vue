@@ -40,7 +40,7 @@ import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useControlStore, usePageStore, useUserStore } from '@/pinia/index'
+import { useControlStore, useHistoryStore, usePageStore, useUserStore } from '@/pinia/index'
 import { storeToRefs } from 'pinia'
 
 type TProps = {
@@ -66,12 +66,13 @@ const store = useStore()
 const userStore = useUserStore()
 const canvasImage = ref<typeof SaveImage | null>(null)
 const {
-  dWidgets, tempEditing, dHistory, dPageHistory
-} = useSetupMapGetters(['dWidgets', 'tempEditing', 'dHistory', 'dPageHistory'])
+  dWidgets, tempEditing
+} = useSetupMapGetters(['dWidgets', 'tempEditing'])
 const pageStore = usePageStore()
 const controlStore = useControlStore()
 
 const { dPage } = storeToRefs(pageStore)
+const { dHistory, dPageHistory } = storeToRefs(useHistoryStore())
 
 
 const state = reactive<TState>({

@@ -6,9 +6,9 @@
  * @LastEditTime: 2024-03-18 21:00:00
  */
 
-import { defineStore } from 'pinia'
+import { Store, defineStore } from 'pinia'
 
-export type TPageStore = {
+export type TPageState = {
   name: string
   type: string
   uuid: string
@@ -39,21 +39,22 @@ export type TPageStore = {
 }
 
 type TPageGetter = {
-  dPage(state: TPageStore): TPageStore
+  dPage(state: TPageState): TPageState
 }
 
 type TPageActions = {
   /** 更新Page数据 */
-  updatePageData<T extends keyof TPageStore>(data: {
+  updatePageData<T extends keyof TPageState>(data: {
     key: T
-    value: TPageStore[T]
+    value: TPageState[T]
     pushHistory?: boolean
   }): void
   /** 设置dPage */
-  setDPage(data: TPageStore): void
+  setDPage(data: TPageState): void
 }
 
-export default defineStore<"pageStore", TPageStore, TPageGetter, TPageActions>("pageStore", {
+/** 页面全局配置 */
+const PageStore = defineStore<"pageStore", TPageState, TPageGetter, TPageActions>("pageStore", {
   state: () => ({
     name: '背景页面',
     type: 'page',
@@ -82,7 +83,7 @@ export default defineStore<"pageStore", TPageStore, TPageGetter, TPageActions>("
   actions: {
     /** 更新Page数据 */
     updatePageData({ key, value, pushHistory }) {
-      const data = this as TPageStore
+      const data = this as TPageState
       if (data[key] !== value || pushHistory) {
         data[key] = value
         // 画布修改先不压入历史栈，因为替换模板后会重复压栈
@@ -90,12 +91,16 @@ export default defineStore<"pageStore", TPageStore, TPageGetter, TPageActions>("
       }
     },
     /** 设置dPage */
-    setDPage(data: TPageStore) {
+    setDPage(data: TPageState) {
       const cur = this as Record<string, any>
-      const keys = Object.keys(data) as (keyof TPageStore)[];
+      const keys = Object.keys(data) as (keyof TPageState)[];
       keys.forEach(val => {
         cur[val] = data[val]
       })
     }
   }
 })
+
+export type TPageStore = Store<"pageStore", TPageState, TPageGetter, TPageActions>
+
+export default PageStore

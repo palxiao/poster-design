@@ -61,16 +61,16 @@ const all = {
     //   record: {},
     // },
     dWidgets: [], // 已使用的组件
-    dHistory: [], // 记录历史操作（保存整个画布的json数据）
-    dActiveUuidHistory: [], // 记录历史操作对应的激活的组件的uuid
-    dPageHistory: [], // 记录历史操作对应的page
-    dHistoryParams: {
-      index: -1,
-      length: 0,
-      maxLength: 20,
-    },
-    dColorHistory: [], // 记录历史选择的颜色
-    dAltDown: false, // 记录是否按下alt键 / 或ctrl
+    // dHistory: [], // 记录历史操作（保存整个画布的json数据）
+    // dActiveUuidHistory: [], // 记录历史操作对应的激活的组件的uuid
+    // dPageHistory: [], // 记录历史操作对应的page
+    // dHistoryParams: {
+    //   index: -1,
+    //   length: 0,
+    //   maxLength: 20,
+    // },
+    // dColorHistory: [], // 记录历史选择的颜色
+    // dAltDown: false, // 记录是否按下alt键 / 或ctrl
     dSelectWidgets: [], // 记录多选的组件
     dGroupJson: {}, // 组合的json数据
     selectItem: { data: null }, // 记录当前选择的元素, data
@@ -120,12 +120,12 @@ const all = {
     dWidgets(state) {
       return state.dWidgets
     },
-    dHistoryParams(state) {
-      return state.dHistoryParams
-    },
-    dColorHistory(state) {
-      return state.dColorHistory
-    },
+    // dHistoryParams(state) {
+    //   return state.dHistoryParams
+    // },
+    // dColorHistory(state) {
+    //   return state.dColorHistory
+    // },
     dHoverUuid(state) {
       return state.dHoverUuid
     },
@@ -138,9 +138,9 @@ const all = {
     dCopyElement(state) {
       return state.dCopyElement
     },
-    dAltDown(state) {
-      return state.dAltDown
-    },
+    // dAltDown(state) {
+    //   return state.dAltDown
+    // },
     dSelectWidgets(state) {
       return state.dSelectWidgets
     },
@@ -171,12 +171,12 @@ const all = {
     dCropUuid(state: any) {
       return state.dCropUuid
     },
-    dPageHistory(state: any) {
-      return state.dPageHistory
-    },
-    dHistory(state: any) {
-      return state.dHistory
-    },
+    // dPageHistory(state: any) {
+    //   return state.dPageHistory
+    // },
+    // dHistory(state: any) {
+    //   return state.dHistory
+    // },
     // dDragInitData(state: any) {
     //   return state.dDragInitData
     // },

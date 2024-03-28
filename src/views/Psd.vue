@@ -187,15 +187,15 @@ let checkCtrl: number | undefined
 
 onMounted(() => {
   const instance = getCurrentInstance()
-  document.addEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
-  document.addEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  document.addEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instance, dealCtrl), false)
+  document.addEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   loadJS()
 })
 
 onBeforeMount(() => {
   const instance = getCurrentInstance()
-  document.removeEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
-  document.removeEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  document.removeEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instance, dealCtrl), false)
+  document.removeEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   document.oncontextmenu = null
 })
 // ...mapActions(['selectWidget']),

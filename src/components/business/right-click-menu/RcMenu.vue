@@ -19,6 +19,8 @@ import {
 } from './rcMenuData'
 import { getTarget } from '@/common/methods/target'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { storeToRefs } from 'pinia';
+import { useControlStore } from '@/pinia';
 
 const store = useStore()
 const menuListData = ref<TMenuItemData>({...menu})
@@ -26,7 +28,9 @@ const showMenuBg = ref<boolean>(false)
 const widgetMenu = ref<TWidgetItemData[]>({...widget})
 const pageMenu = ref<TWidgetItemData[]>({...page})
 
-const {dActiveElement, dAltDown, dWidgets, dCopyElement} = useSetupMapGetters(['dActiveElement', 'dAltDown', 'dWidgets', 'dCopyElement'])
+const {dActiveElement, dWidgets, dCopyElement} = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dCopyElement'])
+const { dAltDown } = storeToRefs(useControlStore())
+
 
 const styleObj = computed(() => {
   return {
@@ -52,7 +56,7 @@ async function mouseRightClick(e: MouseEvent) {
   if (type) {
     let uuid = target.getAttribute('data-uuid') // 设置选中元素
 
-    if (uuid !== '-1' && !dAltDown) {
+    if (uuid !== '-1' && !dAltDown.value) {
       let widget = dWidgets.value.find((item: any) => item.uuid === uuid)
       if (
         widget.parent !== '-1' && 

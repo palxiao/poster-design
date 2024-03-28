@@ -5,6 +5,7 @@
  * @LastEditors: ShawnPhang <site: book.palxp.com>, Jeremy Yu <https://github.com/JeremyYu-cn>
  * @LastEditTime: 2024-03-02 11:50:00
  */
+import { useControlStore } from '@/pinia'
 import store from '@/store'
 
 type TAddEventCb = (e: Event) => void
@@ -14,6 +15,7 @@ type TAddEventObj = {
 
 export default function(el: HTMLElement | string, cb: Function, altLimit: boolean = true) {
   const box = typeof el === 'string' ? document.getElementById(el) : el
+  const controlStore = useControlStore()
   if (!box) return;
   addEvent(box, 'mousewheel', (e: any) => {
     const ev = e || window.event
@@ -23,7 +25,7 @@ export default function(el: HTMLElement | string, cb: Function, altLimit: boolea
     // } else {
     //   console.log('鼠标滚轮向上++++++++++')
     // }
-    if ((altLimit && store.getters.dAltDown) || !altLimit) {
+    if ((altLimit && controlStore.dAltDown) || !altLimit) {
       ev.preventDefault()
       cb(down)
     }

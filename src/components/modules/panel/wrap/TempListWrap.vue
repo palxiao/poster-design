@@ -32,7 +32,8 @@ import useConfirm from '@/common/methods/confirm'
 import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
-import {useControlStore, usePageStore, useUserStore} from '@/pinia'
+import {useControlStore, usePageStore, useUserStore, useHistoryStore} from '@/pinia'
+import { storeToRefs } from 'pinia'
 
 type TState = {
   loading: boolean
@@ -66,7 +67,8 @@ const state = reactive<TState>({
   searchKeyword: '',
 })
 
-const { tempEditing, dHistoryParams } = useSetupMapGetters(['tempEditing', 'dHistoryParams'])
+const { tempEditing } = useSetupMapGetters(['tempEditing'])
+const { dHistoryParams } = storeToRefs(useHistoryStore())
 
 const pageOptions: TPageOptions = { page: 0, pageSize: 20, cate: 1 }
 const { cate, edit } = route.query

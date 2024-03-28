@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-18 21:00:00
  */
 
-import { defineStore } from 'pinia'
+import { Store, defineStore } from 'pinia'
 
 // import actions from './actions'
 // import _config from '@/config'
@@ -45,6 +45,8 @@ const useBaseStore = defineStore<'base', TStoreBaseState, {}, TUserAction>('base
     },
   }
 })
+
+export type TBaseStore = Store<'base', TStoreBaseState, {}, TUserAction>
 
 export default useBaseStore
 

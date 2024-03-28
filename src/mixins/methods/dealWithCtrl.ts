@@ -7,6 +7,7 @@
  */
 import store from '@/store'
 import handlePaste from './handlePaste'
+import { useHistoryStore } from '@/pinia'
 
 export default function dealWithCtrl(e: any, _this: any) {
   switch (e.keyCode) {
@@ -77,13 +78,14 @@ function paste() {
  * 撤销
  */
 function undo(shiftKey: any) {
+  const historyStore = useHistoryStore()
   if (shiftKey) {
-    if (!(store.getters.dHistoryParams.index === store.getters.dHistoryParams.length - 1)) {
-      // this.handleHistory('redo')
-      store.dispatch('handleHistory', 'redo')
+    if (!(historyStore.dHistoryParams.index === historyStore.dHistoryParams.length - 1)) {
+      historyStore.handleHistory("redo")
+      // store.dispatch('handleHistory', 'redo')
     }
-  } else if (!(store.getters.dHistoryParams.index === -1 || (store.getters.dHistoryParams === 0 && store.getters.dHistoryParams.length === 10))) {
-    // this.handleHistory('undo')
-    store.dispatch('handleHistory', 'undo')
+  } else if (!(historyStore.dHistoryParams.index === -1 || (historyStore.dHistoryParams.index === 0 && historyStore.dHistoryParams.length === 10))) {
+    historyStore.handleHistory("undo")
+    // store.dispatch('handleHistory', 'undo')
   }
 }

@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-18 21:00:00
  */
 
-import { defineStore } from "pinia"
+import { Store, defineStore } from "pinia"
 
 type TUserStoreState = {
   /** 登录状态 */
@@ -55,5 +55,7 @@ const useUserStore = defineStore<'userStore', TUserStoreState, {}, TUserAction>(
     
   }
 })
+
+export type TUserStore = Store<'userStore', TUserStoreState, {}, TUserAction>
 
 export default useUserStore

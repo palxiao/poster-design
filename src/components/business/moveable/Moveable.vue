@@ -27,7 +27,7 @@ const {
 } = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'dWidgets', 'updateRect', 'updateSelect'])
 const controlStore = useControlStore()
 const { guidelines } = storeToRefs(useCanvasStore())
-const { showMoveable, showRotatable } = storeToRefs(controlStore)
+const { showMoveable, showRotatable, dAltDown } = storeToRefs(controlStore)
 
 let _target: string | null = null
 
@@ -153,7 +153,7 @@ watch(
   () => dSelectWidgets.value,
   (items) => {
     if (!moveable) return
-    const alt = store.getters.dAltDown
+    const alt = dAltDown.value
     // if (items.length > 1) {
     //   console.log('打开组合面板')
     // }

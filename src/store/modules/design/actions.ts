@@ -1,8 +1,8 @@
 // import { nextTick } from 'vue'
 import { customAlphabet } from 'nanoid/non-secure'
 const nanoid = customAlphabet('1234567890abcdef', 12)
-import pushHistory from './methods/pushHistory'
-import handleHistory from './methods/handleHistory'
+// import pushHistory from './methods/pushHistory'
+// import handleHistory from './methods/handleHistory'
 
 export default {
   /**
@@ -10,19 +10,19 @@ export default {
    * 修改数据、移动完成后都会自动保存
    * 同时会保存当前激活的组件的uuid，方便撤回时自动激活
    */
-  pushHistory(store: any, msg: string) {
-    pushHistory(store, msg)
-  },
+  // pushHistory(store: any, msg: string) {
+  //   pushHistory(store, msg)
+  // },
   /**
    * 操作历史记录
    * action为undo表示撤销
    * action为redo表示重做
    */
-  handleHistory(store: any, action: any) {
-    handleHistory(store, action)
-    // 激活组件默认为page
-    store.state.dActiveElement = store.state.dPage
-  },
+  // handleHistory(store: any, action: any) {
+  //   handleHistory(store, action)
+  //   // 激活组件默认为page
+  //   store.state.dActiveElement = store.state.dPage
+  // },
   
   // updateZoom(store, zoom) {
   //   store.state.dZoom = zoom
@@ -523,21 +523,21 @@ export default {
     // const tag = store.state.dPage.tag
     // store.state.dPage.tag = tag === 0 ? 0.01 : 0
   },
-  pushColorToHistory(store, color) {
-    const history = store.state.dColorHistory
-    // 如果已经存在就提到前面来，避免重复
-    const index = history.indexOf(color)
-    if (index !== -1) {
-      history.splice(index, 1)
-    }
-    // 最多保存3种颜色
-    if (history.length === 4) {
-      history.splice(history.length - 1, 1)
-    }
-    // 把最新的颜色放在头部
-    const head = [color]
-    store.state.dColorHistory = head.concat(history)
-  },
+  // pushColorToHistory(store, color) {
+  //   const history = store.state.dColorHistory
+  //   // 如果已经存在就提到前面来，避免重复
+  //   const index = history.indexOf(color)
+  //   if (index !== -1) {
+  //     history.splice(index, 1)
+  //   }
+  //   // 最多保存3种颜色
+  //   if (history.length === 4) {
+  //     history.splice(history.length - 1, 1)
+  //   }
+  //   // 把最新的颜色放在头部
+  //   const head = [color]
+  //   store.state.dColorHistory = head.concat(history)
+  // },
   updateHoverUuid(store, uuid) {
     store.state.dHoverUuid = uuid
   },
@@ -614,10 +614,10 @@ export default {
     return page
   },
   // TODO 组合操作
-  updateAltDown(store, value) {
-    store.state.dAltDown = value
-    console.log('控制组合按键, 成组功能为: realCombined')
-  },
+  // updateAltDown(store, value) {
+  //   store.state.dAltDown = value
+  //   console.log('控制组合按键, 成组功能为: realCombined')
+  // },
   realCombined(store: any) {
     const selectWidgets = store.state.dSelectWidgets
     if (selectWidgets.length > 1) {

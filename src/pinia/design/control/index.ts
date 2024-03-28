@@ -1,4 +1,13 @@
-import { defineStore } from "pinia";
+
+/*
+ * @Author: Jeremy Yu
+ * @Date: 2024-03-18 21:00:00
+ * @Description:
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-03-18 21:00:00
+ */
+
+import { Store, defineStore } from "pinia";
 
 type TControlState = {
   /** 是否正在移动组件 */
@@ -13,6 +22,8 @@ type TControlState = {
   showMoveable: boolean
   /** 是否显示moveable的旋转按钮 */
   showRotatable: boolean
+  /** 记录是否按下alt键 / 或ctrl */
+  dAltDown: boolean
 }
 
 type TControlAction = {
@@ -22,9 +33,11 @@ type TControlAction = {
   showRefLine: (isRefLine: boolean) => void
   setShowMoveable: (isShowMoveable: boolean) => void
   setShowRotatable: (isShowRotatable: boolean) => void
+  updateAltDown: (isPressAltDown: boolean) => void
 }
 
-export default defineStore<"controlStore", TControlState, {}, TControlAction>("controlStore", {
+/** 全局控制配置 */
+const ControlStore =  defineStore<"controlStore", TControlState, {}, TControlAction>("controlStore", {
   state: () => ({
     dMoving: false, // 是否正在移动组件
     dDraging: false, // 是否正在抓取组件
@@ -32,6 +45,7 @@ export default defineStore<"controlStore", TControlState, {}, TControlAction>("c
     dShowRefLine: true, // 是否显示参考线
     showMoveable: false, // 全局控制选择框的显示
     showRotatable: true, // 是否显示moveable的旋转按钮
+    dAltDown: false, // 记录是否按下alt键 / 或ctrl
   }),
   getters: {},
   actions: {
@@ -57,5 +71,14 @@ export default defineStore<"controlStore", TControlState, {}, TControlAction>("c
     setShowRotatable(e: boolean) {
       this.showRotatable = e
     },
+    /** TODO 组合操作 */
+    updateAltDown(e: boolean) {
+      this.dAltDown = e
+      console.log('控制组合按键, 成组功能为: realCombined')
+    }
   }
 })
+
+export type TControlStore = Store<"controlStore", TControlState, {}, TControlAction>
+
+export default ControlStore
