@@ -164,8 +164,7 @@ function updateRecord() {
 }
 
 function updateText(e?: Event) {
-  const value = e && e.target ? (e.target as HTMLElement).innerHTML : props.params.text.replace(/\n/g, '<br/>')
-  // const value = (e ? e.target.innerText : props.params.text).replace(/<br\/>/g, '\r\n').replace(/&nbsp;/g, ' ')
+  const value = e && e.target ? (e.target as HTMLElement).innerHTML : props.params.text//.replace(/\n/g, '<br/>')
   if (value !== props.params.text) {
     store.dispatch('updateWidgetData', {
       uuid: props.params.uuid,
@@ -242,7 +241,7 @@ defineExpose({
 .edit-text {
   outline: none;
   word-break: break-word;
-  // white-space: pre;
+  white-space: pre-wrap;
   margin: 0;
 }
 .effect-text {

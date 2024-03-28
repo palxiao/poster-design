@@ -77,12 +77,14 @@ function paste() {
  * 撤销
  */
 function undo(shiftKey: any) {
+  console.log(store.getters.dHistoryParams);
+  
   if (shiftKey) {
     if (!(store.getters.dHistoryParams.index === store.getters.dHistoryParams.length - 1)) {
       // this.handleHistory('redo')
       store.dispatch('handleHistory', 'redo')
     }
-  } else if (!(store.getters.dHistoryParams.index === -1 || (store.getters.dHistoryParams === 0 && store.getters.dHistoryParams.length === 10))) {
+  } else if (store.getters.dHistoryParams.index !== -1) {
     // this.handleHistory('undo')
     store.dispatch('handleHistory', 'undo')
   }
