@@ -79,13 +79,15 @@ function paste() {
  */
 function undo(shiftKey: any) {
   const historyStore = useHistoryStore()
+  console.log(store.getters.dHistoryParams);
+  
   if (shiftKey) {
     if (!(historyStore.dHistoryParams.index === historyStore.dHistoryParams.length - 1)) {
       historyStore.handleHistory("redo")
       // store.dispatch('handleHistory', 'redo')
     }
-  } else if (!(historyStore.dHistoryParams.index === -1 || (historyStore.dHistoryParams.index === 0 && historyStore.dHistoryParams.length === 10))) {
-    historyStore.handleHistory("undo")
-    // store.dispatch('handleHistory', 'undo')
+  } else if (historyStore.dHistoryParams.index !== -1) {
+    // this.handleHistory('undo')
+    store.dispatch('handleHistory', 'undo')
   }
 }
