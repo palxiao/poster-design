@@ -48,6 +48,8 @@ type TStoreAction = {
   updateScreen: (data: TScreeData) => void
   /** 修改标尺线 */
   updateGuidelines: (lines: TGuidelinesData) => void
+  /** 强制重绘画布 */
+  reChangeCanvas: () => void
 }
 
 /** 画布全局设置 */
@@ -92,7 +94,12 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, TStoreGetter, TStor
     /** 修改标尺线 */
     updateGuidelines(lines: TGuidelinesData) {
       this.guidelines = { ...this.guidelines, ...lines }
-    }
+    },
+    /** 强制重绘画布 */
+    reChangeCanvas() {
+      // const tag = this.dPage.tag
+      // this.dPage.tag = tag === 0 ? 0.01 : 0
+    },
   }
 })
 

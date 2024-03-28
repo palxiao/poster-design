@@ -6,15 +6,16 @@
  * @LastEditTime: 2024-03-27 21:00:00
  */
 
-import { usePageStore } from "@/pinia"
+import { usePageStore, useWidgetStore } from "@/pinia"
 import { THistoryStore } from ".."
 
 /** push操作历史记录 */
 export function pushHistory(store: THistoryStore, msg: string) {
   const pageStore = usePageStore()
+  const selectStore = useWidgetStore()
   console.log('history压栈', '来源: ' + msg)
   // 如果有上一次记录，并且与新纪录相同，那么不继续操作
-  if (store.dHistory[history.length - 1] && store.dHistory[history.length - 1] === JSON.stringify(store.state.dWidgets)) {
+  if (store.dHistory[history.length - 1] && store.dHistory[history.length - 1] === JSON.stringify(selectStore.dWidgets)) {
     return
   }
   if (store.dHistoryParams.index < history.length - 1) {
@@ -25,7 +26,7 @@ export function pushHistory(store: THistoryStore, msg: string) {
     store.dHistoryParams.length = history.length
     store.dHistoryParams.index = history.length - 1
   }
-  store.dHistory.push(JSON.stringify(store.state.dWidgets))
+  store.dHistory.push(JSON.stringify(selectStore.dWidgets))
   store.dPageHistory.push(JSON.stringify(pageStore.dPage))
   store.dHistoryParams.index = history.length - 1
   store.dHistoryParams.length = history.length

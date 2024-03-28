@@ -9,6 +9,7 @@
 import { Store, defineStore } from "pinia"
 import {pushHistory, pushColorToHistory} from "./actions/pushHistory"
 import handleHistory from "./actions/handleHistory"
+import { usePageStore, useWidgetStore } from "@/pinia"
 
 export type THistoryParamData = {
   index: number
@@ -63,9 +64,11 @@ const HistoryStore = defineStore<"historyStore", THistoryState, {}, THistoryActi
       pushHistory(this, msg)
     },
     handleHistory(action) {
+      const selectStore = useWidgetStore()
+      const pageStore = usePageStore()
       handleHistory(this, action)
       // 激活组件默认为page
-      store.state.dActiveElement = store.state.dPage
+      selectStore.dActiveElement = pageStore.dPage
     },
     pushColorToHistory(color) {
       pushColorToHistory(this, color)
