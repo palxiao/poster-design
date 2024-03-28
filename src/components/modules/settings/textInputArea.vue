@@ -67,7 +67,8 @@ function blurInput() {
   }
 }
 function getValue(value: string) {
-  return value.replace(/\n|\r\n/g, '<br/>').replace(/ /g, '&nbsp;')
+  return value
+  // return value.replace(/\n|\r\n/g, '<br/>').replace(/ /g, '&nbsp;')
 }
 </script>
 
