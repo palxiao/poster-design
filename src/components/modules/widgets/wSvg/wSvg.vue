@@ -131,7 +131,7 @@ onMounted(async () => {
   await nextTick()
   await loadSvg()
   updateRecord()
-  document.getElementById(props.params.uuid)?.addEventListener('mousedown', touchstart, false)
+  // document.getElementById(props.params.uuid)?.addEventListener('mousedown', touchstart, false)
   document.addEventListener('mouseup', touchend, false)
   if (!widgetRef.value) return
   props.params.transform && (widgetRef.value.style.transform = props.params.transform)
