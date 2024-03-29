@@ -6,7 +6,7 @@
  * @LastEditTime: 2023-11-22 18:11:15
  */
 
-import { useControlStore, useWidgetStore } from "@/pinia"
+import { useControlStore, useWidgetStore } from "@/store"
 
 // import store from '@/store'
 

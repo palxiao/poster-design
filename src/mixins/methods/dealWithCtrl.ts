@@ -7,7 +7,7 @@
  */
 // import store from '@/store'
 import handlePaste from './handlePaste'
-import { useGroupStore, useHistoryStore, useWidgetStore } from '@/pinia'
+import { useGroupStore, useHistoryStore, useWidgetStore } from '@/store'
 
 export default function dealWithCtrl(e: KeyboardEvent, _this: any) {
   const groupStore = useGroupStore()

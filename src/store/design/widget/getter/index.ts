@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { usePageStore } from "@/pinia"
+import { usePageStore } from "@/store"
 import { TWidgetState, TdWidgetData } from ".."
 import { TPageState } from "../../page"
 

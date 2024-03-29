@@ -40,7 +40,7 @@ import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useBaseStore, useControlStore, useHistoryStore, usePageStore, useUserStore, useWidgetStore } from '@/pinia/index'
+import { useBaseStore, useControlStore, useHistoryStore, usePageStore, useUserStore, useWidgetStore } from '@/store/index'
 import { storeToRefs } from 'pinia'
 
 type TProps = {

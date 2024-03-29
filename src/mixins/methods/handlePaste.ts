@@ -20,7 +20,7 @@ import { getImage } from '@/common/methods/getImgDetail'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 import eventBus from '@/utils/plugins/eventBus'
-import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 // import wText from '@/components/modules/widgets/wText/wText.vue'
 
 export default () => {

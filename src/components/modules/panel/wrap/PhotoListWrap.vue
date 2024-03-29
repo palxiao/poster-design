@@ -34,7 +34,7 @@ import api from '@/api'
 // import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 import { TGetImageListResult } from '@/api/material'
 
 type TProps = {

@@ -89,10 +89,10 @@ import imageCutout from '@/components/business/image-cutout'
 import wImageSetting, { TImageSetting } from './wImageSetting'
 import { TGetImageListResult } from '@/api/material'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '@/pinia'
-import { TUpdateWidgetPayload } from '@/pinia/design/widget/actions/widget'
-import { TupdateLayerIndexData } from '@/pinia/design/widget/actions/layer'
-import { TUpdateAlignData } from '@/pinia/design/widget/actions/align'
+import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '@/store'
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
+import { TupdateLayerIndexData } from '@/store/design/widget/actions/layer'
+import { TUpdateAlignData } from '@/store/design/widget/actions/align'
 
 type TState = {
   picBoxShow: boolean

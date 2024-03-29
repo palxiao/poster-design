@@ -48,7 +48,7 @@ import wSvg from '../../widgets/wSvg/wSvg.vue'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
 import { TGetListData } from '@/api/material'
-import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 type TProps = {

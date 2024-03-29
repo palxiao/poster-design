@@ -42,7 +42,7 @@ import PointImg from '@/utils/plugins/pointImg'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '@/pinia'
+import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '@/store'
 
 type TProps = {
   params: typeof setting

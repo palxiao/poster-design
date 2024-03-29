@@ -18,7 +18,7 @@ import MoveableHelper from 'moveable-helper'
 import useSelecto from './Selecto'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore, useControlStore, useWidgetStore, useForceStore, useHistoryStore } from '@/pinia'
+import { useCanvasStore, useControlStore, useWidgetStore, useForceStore, useHistoryStore } from '@/store'
 
 // const store = useStore()
 const widgetStore = useWidgetStore()

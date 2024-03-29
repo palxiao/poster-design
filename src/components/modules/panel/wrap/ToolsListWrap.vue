@@ -33,7 +33,7 @@ import imageCutout from '@/components/business/image-cutout'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wQrcodeSetting } from '../../widgets/wQrcode/wQrcodeSetting'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 
 // const store = useStore()
 const controlStore = useControlStore()

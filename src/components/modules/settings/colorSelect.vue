@@ -19,7 +19,7 @@
 import {reactive, onMounted, watch } from 'vue'
 // import { useStore } from 'vuex'
 import colorPicker from '@palxp/color-picker'
-import { useControlStore } from '@/pinia';
+import { useControlStore } from '@/store';
 
 type TProps = {
   label?: string

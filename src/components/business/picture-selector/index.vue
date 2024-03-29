@@ -36,7 +36,7 @@ import { reactive } from 'vue'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import api from '@/api'
 import { TGetImageListResult } from '@/api/material'
-import { useControlStore } from '@/pinia'
+import { useControlStore } from '@/store'
 
 type TEmits = (event: 'select', data: TGetImageListResult) => void
 

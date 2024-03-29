@@ -48,7 +48,7 @@ import uploader from '@/components/common/Uploader/index.vue'
 import _dl from '@/common/methods/download'
 import ImageExtraction from '../ImageExtraction/index.vue'
 import { selectImageFile, uploadCutPhotoToCloud } from './method'
-import { useControlStore } from '@/pinia'
+import { useControlStore } from '@/store'
 
 export type TImageCutoutState = {
     show: boolean;

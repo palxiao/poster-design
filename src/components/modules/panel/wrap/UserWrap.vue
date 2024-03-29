@@ -53,7 +53,7 @@ import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 import eventBus from '@/utils/plugins/eventBus'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 
 type TProps = {
   active?: number

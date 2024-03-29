@@ -8,7 +8,7 @@
 
 import { customAlphabet } from 'nanoid/non-secure'
 import { TGroupStore } from '..'
-import { useHistoryStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useHistoryStore, usePageStore, useWidgetStore } from '@/store'
 import { TdWidgetData } from '../../widget'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 

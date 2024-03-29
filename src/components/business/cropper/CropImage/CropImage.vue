@@ -26,7 +26,7 @@ import { ref, defineComponent, toRefs, reactive, nextTick } from 'vue'
 // import { useStore } from 'vuex'
 import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'
-import { useControlStore } from '@/pinia'
+import { useControlStore } from '@/store'
 
 export default defineComponent({
   components: { ElDialog },

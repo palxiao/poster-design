@@ -28,7 +28,7 @@ const NAME = 'w-group'
 import { nextTick, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
 // import { useStore } from 'vuex'
 import { setTransformAttribute } from '@/common/methods/handleTransform'
-import { useWidgetStore } from '@/pinia';
+import { useWidgetStore } from '@/store';
 import { storeToRefs } from 'pinia';
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 

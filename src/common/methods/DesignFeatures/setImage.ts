@@ -7,7 +7,7 @@
  */
 // import store from '@/store'
 import { getImage } from '../getImgDetail'
-import { useCanvasStore, usePageStore } from '@/pinia'
+import { useCanvasStore, usePageStore } from '@/store'
 
 export type TItem2DataParam = {
   id?: string | number

@@ -1,7 +1,7 @@
 import Selecto from 'selecto'
 import Moveable, { getElementInfo } from 'moveable'
 // import store from '@/store'
-import { useWidgetStore } from '@/pinia'
+import { useWidgetStore } from '@/store'
 
 export default function(moveable: Moveable) {
   const widgetStore = useWidgetStore()

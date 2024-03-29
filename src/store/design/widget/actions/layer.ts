@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { useForceStore } from "@/pinia"
+import { useForceStore } from "@/store"
 import { TWidgetStore, TdWidgetData } from ".."
 
 export type TupdateLayerIndexData = {

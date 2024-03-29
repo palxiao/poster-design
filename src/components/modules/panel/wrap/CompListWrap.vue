@@ -60,7 +60,7 @@ import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
 import setItem2Data from '@/common/methods/DesignFeatures/setImage'
 import { TGetCompListResult, TGetTempDetail, TTempDetail } from '@/api/home'
-import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 
 type TState = {
   loading: boolean

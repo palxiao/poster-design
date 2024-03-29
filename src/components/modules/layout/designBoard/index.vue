@@ -84,9 +84,9 @@ import PointImg from '@/utils/plugins/pointImg'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import { debounce } from 'throttle-debounce'
 import { move, moveInit } from '@/mixins/move'
-import { useCanvasStore, useControlStore, useGroupStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useCanvasStore, useControlStore, useGroupStore, usePageStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { TPageState } from '@/pinia/design/page'
+import { TPageState } from '@/store/design/page'
 // 页面设计组件
 type TProps = {
   pageDesignCanvasId: string

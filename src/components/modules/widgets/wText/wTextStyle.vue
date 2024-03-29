@@ -67,9 +67,9 @@ import { useFontStore } from '@/common/methods/fonts'
 import usePageFontsFilter from './pageFontsFilter'
 import { wTextSetting ,TwTextData } from './wTextSetting';
 import { storeToRefs } from 'pinia';
-import { useControlStore, useForceStore, useWidgetStore } from '@/pinia';
-import { TUpdateWidgetPayload } from '@/pinia/design/widget/actions/widget';
-import { TUpdateAlignData } from '@/pinia/design/widget/actions/align';
+import { useControlStore, useForceStore, useWidgetStore } from '@/store';
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget';
+import { TUpdateAlignData } from '@/store/design/widget/actions/align';
 
 type TState = {
   activeNames: string[],

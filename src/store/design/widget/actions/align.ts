@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { useCanvasStore, useHistoryStore, usePageStore } from "@/pinia"
+import { useCanvasStore, useHistoryStore, usePageStore } from "@/store"
 import { TWidgetStore, TdWidgetData } from ".."
 
 type TAlign = 'left' | 'ch' | 'right' | 'top' | 'cv' | 'bottom'

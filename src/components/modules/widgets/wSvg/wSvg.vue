@@ -21,11 +21,11 @@
 // svg
 // const NAME = 'w-svg'
 // import { mapGetters, mapActions, useStore } from 'vuex'
-import { useCanvasStore, useForceStore, useWidgetStore } from '@/pinia';
+import { useCanvasStore, useForceStore, useWidgetStore } from '@/store';
 import { TWSvgSetting } from './wSvgSetting'
 import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { TUpdateWidgetPayload } from '@/pinia/design/widget/actions/widget';
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget';
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
 type TProps = {

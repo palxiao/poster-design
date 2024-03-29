@@ -1,4 +1,4 @@
-import { useControlStore, useHistoryStore, usePageStore } from "@/pinia"
+import { useControlStore, useHistoryStore, usePageStore } from "@/store"
 import { TWidgetStore } from ".."
 import { proxyToObject } from "@/utils/utils"
 

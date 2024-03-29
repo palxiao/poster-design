@@ -25,7 +25,7 @@ import {
 import { getTarget } from '@/common/methods/target'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { storeToRefs } from 'pinia';
-import { useControlStore, useWidgetStore } from '@/pinia';
+import { useControlStore, useWidgetStore } from '@/store';
 
 // const store = useStore()
 const menuListData = ref<TMenuItemData>({...menu})

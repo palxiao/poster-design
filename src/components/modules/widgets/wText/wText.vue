@@ -65,7 +65,7 @@ import { useRoute } from 'vue-router'
 import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg'
 import { wTextSetting } from './wTextSetting'
-import { useForceStore, useHistoryStore, useWidgetStore } from '@/pinia'
+import { useForceStore, useHistoryStore, useWidgetStore } from '@/store'
 
 export type TwTextParams = {
   rotate?: number

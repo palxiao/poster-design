@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-27 21:00:00
  */
 
-import { useControlStore, usePageStore } from "@/pinia"
+import { useControlStore, usePageStore } from "@/store"
 import { THistoryStore } from ".."
 
 export default function handleHistory(store: THistoryStore, action: "undo" | "redo") {

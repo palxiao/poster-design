@@ -5,7 +5,7 @@
  * @LastEditors: ShawnPhang <site: book.palxp.com>
  * @LastEditTime: 2023-07-31 09:31:52
  */
-import { useControlStore, useWidgetStore } from '@/pinia'
+import { useControlStore, useWidgetStore } from '@/store'
 // import store from '@/store'
 
 const move = {

@@ -22,7 +22,7 @@ import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
-import { useGroupStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useGroupStore, usePageStore, useWidgetStore } from '@/store'
 
 type TState = {
   style: StyleValue

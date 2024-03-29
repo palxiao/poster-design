@@ -29,7 +29,7 @@ import { storeToRefs } from 'pinia';
 import { wTextSetting } from '../../widgets/wText/wTextSetting'
 
 // import { useStore } from 'vuex'
-import { useControlStore, usePageStore, useWidgetStore } from '@/pinia';
+import { useControlStore, usePageStore, useWidgetStore } from '@/store';
 
 type TBasicTextData = {
   text: string

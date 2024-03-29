@@ -15,7 +15,7 @@ import html2canvas from 'html2canvas'
 import Qiniu from '@/common/methods/QiNiu'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia';
-import { useCanvasStore, useWidgetStore } from '@/pinia';
+import { useCanvasStore, useWidgetStore } from '@/store';
 
 // const store = useStore();
 // const { dZoom } = useSetupMapGetters(['dZoom'])

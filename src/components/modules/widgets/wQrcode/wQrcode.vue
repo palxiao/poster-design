@@ -41,7 +41,7 @@ import { TWQrcodeSetting } from './wQrcodeSetting';
 import { computed, nextTick, onMounted, onUpdated, reactive, ref, watch } from 'vue';
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { Options } from 'qr-code-styling';
-import { useForceStore, useWidgetStore } from '@/pinia';
+import { useForceStore, useWidgetStore } from '@/store';
 import { storeToRefs } from 'pinia';
 
 type TProps = {

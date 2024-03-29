@@ -13,7 +13,7 @@
 import { watch } from 'vue'
 // import { useStore } from 'vuex'
 import Guides, { GuideOptions } from '@scena/guides'
-import { useCanvasStore } from '@/pinia';
+import { useCanvasStore } from '@/store';
 
 type TProps = {
   show: boolean

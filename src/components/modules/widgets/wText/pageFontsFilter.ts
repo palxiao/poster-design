@@ -6,7 +6,7 @@
  * @LastEditTime: 2023-10-14 20:29:26
  */
 // import store from '@/store'
-import { useWidgetStore } from '@/pinia'
+import { useWidgetStore } from '@/store'
 import { toRaw } from 'vue'
 export default () => {
   const widgetStore = useWidgetStore()

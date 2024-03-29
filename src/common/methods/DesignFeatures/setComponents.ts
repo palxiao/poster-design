@@ -5,8 +5,8 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
  * @LastEditTime: 2024-03-02 11:50:00
  */
-import { useCanvasStore, usePageStore } from '@/pinia'
-import { TdWidgetData } from '@/pinia/design/widget'
+import { useCanvasStore, usePageStore } from '@/store'
+import { TdWidgetData } from '@/store/design/widget'
 // import store from '@/store'
 
 export default async function setCompData(item: TdWidgetData[] | string) {

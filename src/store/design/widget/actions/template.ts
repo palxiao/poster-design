@@ -9,7 +9,7 @@
 
 import { customAlphabet } from 'nanoid/non-secure'
 import { TWidgetStore, TdWidgetData } from '..'
-import { useCanvasStore, useHistoryStore } from '@/pinia'
+import { useCanvasStore, useHistoryStore } from '@/store'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
 // TODO: 选择模板

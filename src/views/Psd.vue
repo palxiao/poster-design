@@ -73,7 +73,7 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { processPSD2Page } from '@/utils/plugins/psd'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import { useCanvasStore, useControlStore, usePageStore, useWidgetStore } from '@/pinia'
+import { useCanvasStore, useControlStore, usePageStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 type TState = {

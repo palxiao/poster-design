@@ -27,7 +27,7 @@ import { OtherList, TZoomData, ZoomList } from './data';
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useCanvasStore, useForceStore, usePageStore } from '@/pinia';
+import { useCanvasStore, useForceStore, usePageStore } from '@/store';
 
 const route = useRoute()
 // const store = useStore()

@@ -28,7 +28,7 @@ import api from '@/api'
 // import { useStore } from 'vuex'
 import { ElImage } from 'element-plus'
 import { TGetImageListResult } from '@/api/material';
-import { usePageStore, useWidgetStore } from '@/pinia';
+import { usePageStore, useWidgetStore } from '@/store';
 
 type TCommonPanelData = {
   color: string

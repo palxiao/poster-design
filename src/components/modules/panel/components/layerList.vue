@@ -39,8 +39,8 @@
 </template>
 
 <script lang="ts">
-import { useWidgetStore } from '@/pinia'
-import { TdWidgetData } from '@/pinia/design/widget'
+import { useWidgetStore } from '@/store'
+import { TdWidgetData } from '@/store/design/widget'
 import { defineComponent, computed, reactive, ref, toRefs } from 'vue'
 // import { useStore } from 'vuex'
 import draggable from 'vuedraggable'

@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { useCanvasStore, useControlStore, usePageStore } from "@/pinia"
+import { useCanvasStore, useControlStore, usePageStore } from "@/store"
 import { TWidgetStore } from ".."
 
 export type TInidDMovePayload = {

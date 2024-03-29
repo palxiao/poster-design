@@ -26,7 +26,7 @@ import { ref, reactive, nextTick, toRefs } from 'vue'
 // import { useStore } from 'vuex'
 import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'
-import { useControlStore } from '@/pinia'
+import { useControlStore } from '@/store'
 
 type TDoneParams = {
   newImg: string,

@@ -25,10 +25,10 @@ import alignIconList, { AlignListData } from '@/assets/data/AlignListData'
 import iconItemSelect, { TIconItemSelectData } from '../settings/iconItemSelect.vue'
 import { ref, watch } from 'vue';
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
-import { useControlStore, useGroupStore, useHistoryStore, useWidgetStore } from '@/pinia';
+import { useControlStore, useGroupStore, useHistoryStore, useWidgetStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { TdWidgetData } from '@/pinia/design/widget';
-import type { TUpdateAlignData } from '@/pinia/design/widget/actions/align'
+import { TdWidgetData } from '@/store/design/widget';
+import type { TUpdateAlignData } from '@/store/design/widget/actions/align'
 
 // const store = useStore();
 const widgetStore = useWidgetStore()

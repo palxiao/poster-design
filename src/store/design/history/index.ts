@@ -9,7 +9,7 @@
 import { Store, defineStore } from "pinia"
 import {pushHistory, pushColorToHistory} from "./actions/pushHistory"
 import handleHistory from "./actions/handleHistory"
-import { usePageStore, useWidgetStore } from "@/pinia"
+import { usePageStore, useWidgetStore } from "@/store"
 
 export type THistoryParamData = {
   index: number

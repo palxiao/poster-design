@@ -47,9 +47,9 @@ import alignIconList from '@/assets/data/AlignListData'
 import { TWSvgSetting, wSvgSetting } from './wSvgSetting'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia'
-import { useControlStore, useWidgetStore } from '@/pinia'
-import { TUpdateWidgetPayload } from '@/pinia/design/widget/actions/widget'
-import { TUpdateAlignData } from '@/pinia/design/widget/actions/align'
+import { useControlStore, useWidgetStore } from '@/store'
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
+import { TUpdateAlignData } from '@/store/design/widget/actions/align'
 
 type TState = {
   activeNames: string[]

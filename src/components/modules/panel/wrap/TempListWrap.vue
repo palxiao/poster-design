@@ -32,7 +32,7 @@ import useConfirm from '@/common/methods/confirm'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
-import {useControlStore, usePageStore, useUserStore, useHistoryStore, useWidgetStore, useForceStore} from '@/pinia'
+import {useControlStore, usePageStore, useUserStore, useHistoryStore, useWidgetStore, useForceStore} from '@/store'
 import { storeToRefs } from 'pinia'
 
 type TState = {

@@ -5,8 +5,8 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2023-11-30 10:09:55
  */
-import { useControlStore, useWidgetStore } from '@/pinia'
-import { TdWidgetData } from '@/pinia/design/widget'
+import { useControlStore, useWidgetStore } from '@/store'
+import { TdWidgetData } from '@/store/design/widget'
 // import store from '@/store'
 
 export default function keyCodeOptions(e: any, params: any) {
