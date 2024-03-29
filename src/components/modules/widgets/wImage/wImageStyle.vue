@@ -28,8 +28,7 @@
           </uploader> -->
           <el-button size="small" disabled plain @click="openCropper">美化</el-button>
         </div>
-        <!-- <container-wrap @change="changeContainer" />
-        <br /> -->
+        <container-wrap @change="changeContainer" />
         <div class="slide-wrap">
           <number-slider v-model="state.innerElement.opacity" style="font-size: 14px" label="不透明" :step="0.05" :maxValue="1" @finish="(value) => finish('opacity', value)" />
           <number-slider v-model="state.innerElement.radius" style="font-size: 14px" label="圆角" :maxValue="Math.min(Number(state.innerElement.record?.width), Number(state.innerElement.record?.height))" @finish="(value) => finish('radius', value)" />
@@ -78,7 +77,7 @@ import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSele
 import numberSlider from '../../settings/numberSlider.vue'
 // import textInput from '../../settings/textInput.vue'
 // import CropImage from '@/components/business/cropper/CropImage.vue'
-// import ContainerWrap from '../../settings/EffectSelect/ContainerWrap.vue'
+import ContainerWrap from '../../settings/EffectSelect/ContainerWrap.vue'
 // import uploader from '@/components/common/Uploader/index.vue'
 import { getImage } from '@/common/methods/getImgDetail'
 import api from '@/api'
@@ -282,17 +281,18 @@ function openCropper() {
 // }
 
 
-// async function changeContainer(setting) {
-//   const index = this.dWidgets.findIndex((x) => x.uuid == this.innerElement.uuid)
-//   const img = await getImage(setting.svgUrl)
-//   setting.width = this.innerElement.width
-//   setting.height = img.height * (this.innerElement.width / img.width)
-//   setting.left = this.innerElement.left
-//   setting.top = this.innerElement.top
-//   setting.imgUrl = this.innerElement.imgUrl
-//   this.dWidgets.splice(index, 1)
-//   this.addWidget(setting)
-// }
+async function changeContainer(setting: any) {
+  state.innerElement.mask = setting.svgUrl
+  // const index = this.dWidgets.findIndex((x) => x.uuid == this.innerElement.uuid)
+  // const img = await getImage(setting.svgUrl)
+  // setting.width = this.innerElement.width
+  // setting.height = img.height * (this.innerElement.width / img.width)
+  // setting.left = this.innerElement.left
+  // setting.top = this.innerElement.top
+  // setting.imgUrl = this.innerElement.imgUrl
+  // this.dWidgets.splice(index, 1)
+  // this.addWidget(setting)
+}
 
 // async function uploadImgDone(img) {
 //   this.$store.commit('setShowMoveable', false)

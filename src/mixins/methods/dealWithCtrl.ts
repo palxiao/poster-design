@@ -77,8 +77,6 @@ function paste() {
  * 撤销
  */
 function undo(shiftKey: any) {
-  console.log(store.getters.dHistoryParams);
-  
   if (shiftKey) {
     if (!(store.getters.dHistoryParams.index === store.getters.dHistoryParams.length - 1)) {
       // this.handleHistory('redo')
