@@ -51,6 +51,7 @@ import TabPanel from '@palxp/color-picker/comps/TabPanel.vue'
 import { usePageStore, useWidgetStore } from '@/pinia'
 import { TPageState, } from '@/pinia/design/page'
 import { storeToRefs } from 'pinia'
+import { proxyToObject } from '@/utils/utils'
 
 type TState = {
   activeNames: string[]
@@ -120,7 +121,7 @@ function onChangeMode(value: string) {
 function change() {
   state.mode = state.modes[0]
   state.tag = true
-  state.innerElement = JSON.parse(JSON.stringify(dActiveElement.value))
+  state.innerElement = proxyToObject(dActiveElement.value || {})
   state.innerElement.backgroundImage && (state.mode = state.modes[1])
 }
 function changeValue() {

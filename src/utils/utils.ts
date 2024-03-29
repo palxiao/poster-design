@@ -99,7 +99,10 @@ export const proxyToObject = <P extends Record<string, any>>(proxy: P, seen = ne
     seen.set(proxy, obj);
     for (let key in proxy) {
       if (proxy.hasOwnProperty(key)) {
-        obj[key] = proxyToObject(proxy[key], seen);
+        const value = proxyToObject(proxy[key], seen);
+        if (value !== '[Circular Reference]') {
+          obj[key] = value;
+        }
       }
     }
   }
