@@ -18,17 +18,35 @@
         <Tabs :value="state.mode" @update:value="onChangeMode">
           <TabPanel v-for="label in state.modes" :key="label" :label="label"></TabPanel>
         </Tabs>
-        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色']" @change="colorChange" @finish="(value) => finish('backgroundColor', value)" />
-        <!-- <bg-img-select :img="innerElement.backgroundImage"/> -->
-        <div v-if="state.mode === '图片' && state.innerElement.backgroundImage" style="margin-top: 2rem">
-          <el-image style="max-height: 428px" :src="state.innerElement.backgroundImage" fit="contain"></el-image>
-          <el-button class="btn-wrap" size="small" @click="deleteBg">删除</el-button>
+        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色','渐变']" @change="colorChange" @finish="(value) => finish('backgroundColor', value)" />
+        <div v-if="state.mode === '图片' && state.innerElement.backgroundImage" style="margin-top: 1.2rem">
+          <div class="backgroud-wrap">
+            <el-image style="height: 100%" :src="state.innerElement.backgroundImage" fit="contain"></el-image>
+            <div class="bg-control">
+              <div class="btns">
+                <uploader style="width: 47%;" @done="uploadImgDone">
+                  <el-button style="width: 100%;" plain>上传图片</el-button>
+                </uploader>
+                <el-button style="width: 47%;" @click="state.showBgLib = true" plain>背景库</el-button>
+              </div>
+            </div>
+            <div class="bg-options">
+              <el-tooltip :show-after="300" :hide-after="0" effect="dark" content="下载图片" placement="top">
+                <div @click="downloadBG" class="btn-item"><icon-download width="16" /></div>
+              </el-tooltip>
+              <el-tooltip :show-after="300" :hide-after="0" effect="dark" content="删除" placement="top">
+                <div @click="deleteBg" class="btn-item"><icon-delete width="16" /></div>
+              </el-tooltip>
+            </div>
+          </div>
+          <!-- <el-image style="max-height: 428px" :src="state.innerElement.backgroundImage" fit="contain"></el-image> -->
+          <!-- <el-button class="btn-wrap" size="small" @click="deleteBg">删除</el-button> -->
         </div>
-        <uploader v-show="state.mode === '图片'" class="btn-wrap" @done="uploadImgDone">
-          <el-button style="width: 100%" plain>{{ state.innerElement.backgroundImage ? '更换背景' : '上传背景' }}图</el-button>
+        <uploader v-show="state.mode === '图片' && !state.innerElement.backgroundImage" class="btn-wrap" @done="uploadImgDone">
+          <el-button style="width: 100%" plain>上传背景图</el-button>
         </uploader>
-        <el-button v-show="state.mode === '图片' && state.innerElement.backgroundImage" class="btn-wrap" size="small" @click="downloadBG">{{ state.downP ? state.downP + ' %' : '下载背景图' }}</el-button>
-
+        <!-- <el-button v-show="state.mode === '图片' && state.innerElement.backgroundImage" class="btn-wrap" size="small" @click="downloadBG">{{ state.downP ? state.downP + ' %' : '下载背景图' }}</el-button> -->
+        <el-button v-show="state.mode === '图片' && state.innerElement.backgroundImage" class="btn-wrap" @click="shiftOut">将背景分离为图层</el-button>
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -52,6 +70,9 @@ import { usePageStore, useWidgetStore } from '@/pinia'
 import { TPageState, } from '@/pinia/design/page'
 import { storeToRefs } from 'pinia'
 import { proxyToObject } from '@/utils/utils'
+import { Delete as iconDelete, Download as iconDownload } from '@element-plus/icons-vue'
+import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
+// import setImageData from '@/common/methods/DesignFeatures/setImage'
 
 type TState = {
   activeNames: string[]
@@ -103,6 +124,8 @@ onMounted(() => {
 
 function colorChange(e: colorChangeData) {
   if (e.mode === '渐变') {
+    console.log('渐变背景');
+    
     // setTimeout(() => {
     //   console.log(1, e)
     //   this.finish('backgroundImage', e.color)
@@ -176,26 +199,25 @@ async function downloadBG() {
     state.downP = p < 99 ? p / 100 : 0
   })
 }
-</script>
 
-<style>
-/* :deep(.el-collapse-item__header) {
-  padding: 0;
-  font-size: 14px;
-  color: #666666;
-} */
-.el-collapse-item__header {
-  padding: 0 !important;
-  font-size: 14px !important;
-  color: #666666 !important;
+// 分离背景图，添加到画布中
+async function shiftOut() {
+  let setting = JSON.parse(JSON.stringify(wImageSetting))
+  setting.width = state.innerElement.width
+  setting.height = state.innerElement.height
+  setting.imgUrl = state.innerElement.backgroundImage
+  // store.dispatch('addWidget', setting)
+  setting.uuid = `bg-${(new Date()).getTime()}`
+  widgetStore.dWidgets.unshift(setting)
+  widgetStore.selectWidget({
+    uuid: widgetStore.dWidgets[0].uuid,
+  })
+  // store.dispatch('selectWidget', {
+  //   uuid: store.getters.dWidgets[0].uuid,
+  // })
+  deleteBg()
 }
-.el-collapse-item__wrap {
-  padding: 0 !important;
-}
-.el-collapse-item__content {
-  padding-bottom: 18px !important;
-}
-</style>
+</script>
 
 <style lang="less" scoped>
 #page-style {
@@ -214,7 +236,7 @@ async function downloadBG() {
   margin-bottom: 10px;
 }
 .btn-wrap {
-  width: 100%; margin-top: 0.7rem;
+  width: 100%; margin-top: 1.2rem;
 }
 .header {
   &-back {
@@ -233,5 +255,57 @@ async function downloadBG() {
         transform: rotate(180deg);
       }
     }
+}
+
+.backgroud-wrap {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+  padding: 16px;
+  background-color: #f1f2f4;
+  border-radius: 8px;
+  .bg-options {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+  }
+  .btn-item {
+    margin-left: 5px;
+    cursor: pointer;
+    background-color: #ffffff;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 14px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.08), 0px 4px 12px 0px rgba(0, 0, 0, 0.04);
+  }
+  .bg-control {
+    transition: all 0.3s;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.07);
+    .btns {
+      padding: 0 2%;
+      position: absolute;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      bottom: 12px;
+    }
+  }
+  .bg-control:hover {
+    opacity: 1;
+  }
 }
 </style>
