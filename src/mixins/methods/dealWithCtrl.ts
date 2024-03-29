@@ -47,7 +47,7 @@ export default function dealWithCtrl(e: KeyboardEvent, _this: any) {
 function checkGroupChild(pid: number | string, key: any) {
   const widgetStore = useWidgetStore()
   let itHas = false
-  const childs = widgetStore.dWidgets.filter((x: any) => x.parent === pid) || []
+  const childs = widgetStore.dWidgets.filter((x) => x.parent === pid) || []
   childs.forEach((element: any) => {
     element[key] && (itHas = true)
   })
