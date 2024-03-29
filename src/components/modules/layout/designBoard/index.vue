@@ -331,7 +331,7 @@ async function handleSelection(e: MouseEvent) {
     // this.$store.commit('setMoveable', false)
     if (showRotatable.value !== false) {
       widgetStore.selectWidget({
-        uuid: uuid || " -1",
+        uuid: uuid ?? " -1",
       })
       // store.dispatch('selectWidget', {
       //   uuid: uuid,

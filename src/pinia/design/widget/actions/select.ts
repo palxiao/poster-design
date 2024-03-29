@@ -1,5 +1,6 @@
 import { useControlStore, useHistoryStore, usePageStore } from "@/pinia"
 import { TWidgetStore } from ".."
+import { proxyToObject } from "@/utils/utils"
 
 export type TSelectWidgetData = {
   uuid: string
@@ -14,10 +15,9 @@ export function selectWidget(store: TWidgetStore, { uuid }: TSelectWidgetData) {
   const alt = controlStore.dAltDown
   const selectWidgets = store.dSelectWidgets
   const widget = store.dWidgets.find((item) => item.uuid === uuid)
-  
 
-  if (!widget) return
   if (alt) {
+    if (!widget) return
     if (uuid !== '-1' && widget.parent === '-1') {
       // && !widget.isContainer
       if (selectWidgets.length === 0) {
@@ -45,16 +45,19 @@ export function selectWidget(store: TWidgetStore, { uuid }: TSelectWidgetData) {
     return
   }
   store.dSelectWidgets = []
+  console.log("uuid", uuid);
+  
   if (uuid === '-1') {
     store.dActiveElement = pageStore.dPage
     const pageHistory = historyStore.dPageHistory
     if (pageHistory.length === 0) {
-      pageHistory.push(JSON.stringify(pageStore.dPage))
+      pageHistory.push(JSON.stringify(proxyToObject(pageStore.dPage)))
     }
     setTimeout(() => {
       store.dSelectWidgets = []
     }, 10)
   } else {
+    if (!widget) return
     // store.state.dActiveElement = {}
     setTimeout(() => {
       store.dActiveElement = widget
