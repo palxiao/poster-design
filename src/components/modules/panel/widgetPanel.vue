@@ -2,7 +2,7 @@
   <div id="widget-panel">
     <div class="widget-classify">
       <ul class="classify-wrap">
-        <li v-for="(item, index) in state.widgetClassifyList" :key="index" :class="['classify-item', { 'active-classify-item': state.activeWidgetClassify === index }]" @click="clickClassify(index)">
+        <li v-for="(item, index) in state.widgetClassifyList" :key="index" :class="['classify-item', { 'active-classify-item': state.activeWidgetClassify === index && state.active }]" @click="clickClassify(index)">
           <div class="icon-box"><i :class="['iconfont', 'icon', item.icon]" :style="item.style" /></div>
           <p>{{ item.name }}</p>
         </li>
@@ -16,9 +16,9 @@
     </div>
     <!-- <div v-show="active" class="side-wrap"><div class="pack__up" @click="active = false">&lt;</div></div> -->
     <div v-show="state.active" class="side-wrap">
-      <!-- <el-tooltip effect="dark" content="收起侧边栏" placement="right"> -->
+      <el-tooltip :show-after="300" :hide-after="0" effect="dark" content="关闭侧边栏" placement="right">
         <div class="pack__up" @click="state.active = false"></div>
-      <!-- </el-tooltip> -->
+      </el-tooltip>
     </div>
   </div>
 </template>
@@ -142,6 +142,7 @@ defineExpose({
   }
   .widget-wrap {
     width: 328px;
+    transition: all .3s;
     background-color: @color-white;
     flex: 1;
     height: 100%;
