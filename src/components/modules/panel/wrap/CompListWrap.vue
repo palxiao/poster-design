@@ -55,12 +55,12 @@
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
 import api from '@/api'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
 import setItem2Data from '@/common/methods/DesignFeatures/setImage'
 import { TGetCompListResult, TGetTempDetail, TTempDetail } from '@/api/home'
-import { useControlStore, usePageStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
 
 type TState = {
   loading: boolean
@@ -88,8 +88,9 @@ const state = reactive<TState>({
   types: [],
   showList: [],
 })
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
 const dPage = usePageStore().dPage
 const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
@@ -188,9 +189,11 @@ const dragStart = async (e: MouseEvent, { id, width, height, cover }: TGetCompLi
   dragHelper.start(e, img.canvasWidth)
   tempDetail = await getCompDetail({ id, type: 1 })
   if (Array.isArray(JSON.parse(tempDetail.data))) {
-    store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
+    widgetStore.setSelectItem({ data: JSON.parse(tempDetail.data), type: 'group' })
+    // store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'group' })
   } else {
-    store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
+    widgetStore.setSelectItem({ data: JSON.parse(tempDetail.data), type: 'text' })
+    // store.commit('selectItem', { data: JSON.parse(tempDetail.data), type: 'text' })
   }
 }
 
@@ -216,26 +219,28 @@ const selectItem = async (item: TGetCompListResult) => {
       element.left += (pW - parent.width) / 2
       element.top += (pH - parent.height) / 2
     })
-    store.dispatch('addGroup', group)
+    widgetStore.addGroup(group)
+    // store.dispatch('addGroup', group)
   } else {
     group.text && (group.text = decodeURIComponent(group.text))
     group.left = pW / 2 - group.fontSize * (group.text.length / 2)
     group.top = pH / 2 - group.fontSize / 2
-    store.dispatch('addWidget', group)
+    widgetStore.addGroup(group)
+    // store.dispatch('addWidget', group)
   }
 }
 
-    function getCompDetail(params: TGetTempDetail): Promise<TTempDetail> {
-      // 有缓存则直接返回组件数据，否则请求获取数据
-      return new Promise((resolve) => {
-        if (compsCache[params.id]) {
-          resolve(compsCache[params.id])
-        } else api.home.getTempDetail(params).then((res: any) => {
-          resolve(res)
-          compsCache[params.id] = res // 缓存请求的组件数据
-        })
-      })
-    }
+function getCompDetail(params: TGetTempDetail): Promise<TTempDetail> {
+  // 有缓存则直接返回组件数据，否则请求获取数据
+  return new Promise((resolve) => {
+    if (compsCache[params.id]) {
+      resolve(compsCache[params.id])
+    } else api.home.getTempDetail(params).then((res: any) => {
+      resolve(res)
+      compsCache[params.id] = res // 缓存请求的组件数据
+    })
+  })
+}
 
 defineExpose({
   load,

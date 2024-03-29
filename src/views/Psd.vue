@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { reactive, onMounted, nextTick, onBeforeMount, ref, getCurrentInstance } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import shortcuts from '@/mixins/shortcuts'
@@ -71,9 +71,9 @@ import HeaderOptions, { TEmitChangeData } from './components/UploadTemplate.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 // import MyWorker from '@/utils/plugins/webWorker'
 import { processPSD2Page } from '@/utils/plugins/psd'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import { useCanvasStore, useControlStore, usePageStore } from '@/pinia'
+import { useCanvasStore, useControlStore, usePageStore, useWidgetStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
 
 type TState = {
@@ -92,7 +92,8 @@ const state = reactive<TState>({
   downloadMsg: '',
   cancelText: '',
 })
-const store = useStore()
+// const store = useStore()
+const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 
 const route = useRoute()
@@ -142,7 +143,8 @@ async function loadPSD(file: File) {
       const rawData = JSON.parse(JSON.stringify(types[x.type])) || {}
       delete x.type
       x.src && (x.imgUrl = x.src) && delete x.src
-      store.dispatch('addWidget', Object.assign(rawData, x))
+      widgetStore.addWidget(Object.assign(rawData, x))
+      // store.dispatch('addWidget', Object.assign(rawData, x))
     }
 
     const { width, height, background: bg } = data
@@ -155,7 +157,8 @@ async function loadPSD(file: File) {
 }
 
 async function clear() {
-  store.commit('setDWidgets', [])
+  widgetStore.setDWidgets([])
+  // store.commit('setDWidgets', [])
 
   pageStore.setDPage(Object.assign(pageStore.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
   // store.commit('setDPage', Object.assign(store.getters.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
@@ -205,7 +208,8 @@ async function loadDone() {
   if (!zoomControlRef.value) return
   zoomControlRef.value.screenChange()
   setTimeout(() => {
-    store.dispatch('selectWidget', { uuid: '-1' })
+    widgetStore.selectWidget({ uuid: '-1' })
+    // store.dispatch('selectWidget', { uuid: '-1' })
     // selectWidget({
     //   uuid: '-1',
     // })

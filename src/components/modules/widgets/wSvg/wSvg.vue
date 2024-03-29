@@ -20,10 +20,13 @@
 <script lang="ts" setup>
 // svg
 // const NAME = 'w-svg'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
+import { useCanvasStore, useForceStore, useWidgetStore } from '@/pinia';
 import { TWSvgSetting } from './wSvgSetting'
 import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue';
-import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { storeToRefs } from 'pinia';
+import { TUpdateWidgetPayload } from '@/pinia/design/widget/actions/widget';
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
 type TProps = {
   params: TWSvgSetting
@@ -55,11 +58,15 @@ const state = reactive<TState>({
   attrRecord: {}, // 记录可更改的属性
   svgImg: null
 })
-const store = useStore()
-// ...mapGetters(['dActiveElement', 'dZoom', 'dMouseXY']),
-const {
-  dActiveElement, dZoom, dMouseXY
-} = useSetupMapGetters(['dActiveElement', 'dZoom', 'dMouseXY'])
+// const store = useStore()
+const widgetStore = useWidgetStore()
+const canvasStore = useCanvasStore()
+const forceStore = useForceStore()
+// const {
+//   dActiveElement, dZoom, dMouseXY
+// } = useSetupMapGetters(['dActiveElement', 'dZoom', 'dMouseXY'])
+const { dZoom } = storeToRefs(canvasStore)
+const { dActiveElement, dMouseXY } = storeToRefs(widgetStore)
 
 const widgetRef = ref<HTMLElement | null>(null)
 
@@ -116,7 +123,8 @@ watch(
 
 onUpdated(() => {
   updateRecord()
-  store.commit('updateRect')
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 })
 
 onMounted(async () => {
@@ -272,7 +280,7 @@ function color2obj() {
 }
 
 function updateRecord() {
-  if (dActiveElement.value.uuid === props.params.uuid) {
+  if (dActiveElement.value?.uuid === props.params.uuid) {
     let record = dActiveElement.value.record
     if (widgetRef.value) {
       record.width = widgetRef.value.offsetWidth
@@ -311,14 +319,14 @@ function updateZoom() {
 }
 
 function changeFinish(key: string, value: number) {
-  store.dispatch("updateWidgetData", {
+  widgetStore.updateWidgetData({
     uuid: props.params.uuid,
-    key: key,
+    key: key as TUpdateWidgetPayload['key'],
     value: value,
     pushHistory: true,
   })
-  // this.updateWidgetData({
-  //   uuid: this.params.uuid,
+  // store.dispatch("updateWidgetData", {
+  //   uuid: props.params.uuid,
   //   key: key,
   //   value: value,
   //   pushHistory: true,
@@ -336,7 +344,7 @@ function move(payload: Record<string, any>) {
 }
 
 function attrsChange() {
-  if (dActiveElement.value.uuid === props.params.uuid && svgElements) {
+  if (dActiveElement.value?.uuid === props.params.uuid && svgElements) {
     for (const element of svgElements) {
       const { item, attrsColor } = element
       for (const key in attrsColor) {

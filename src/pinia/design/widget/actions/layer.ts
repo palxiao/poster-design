@@ -12,7 +12,7 @@ import { TWidgetStore, TdWidgetData } from ".."
 export type TupdateLayerIndexData = {
   uuid: string
   value: number
-  isGroup: boolean
+  isGroup?: boolean
 }
 
 export function updateLayerIndex(store: TWidgetStore, { uuid, value, isGroup }: TupdateLayerIndexData) {

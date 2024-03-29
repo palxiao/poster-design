@@ -72,7 +72,7 @@
 // 图片组件样式
 // const NAME = 'w-image-style'
 import { nextTick, reactive, ref, watch, onBeforeUnmount } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
 import numberSlider from '../../settings/numberSlider.vue'
@@ -86,11 +86,14 @@ import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import picBox from '@/components/business/picture-selector'
 import imageCutout from '@/components/business/image-cutout'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import wImageSetting, { TImageSetting } from './wImageSetting'
 import { TGetImageListResult } from '@/api/material'
 import { storeToRefs } from 'pinia'
-import { useControlStore } from '@/pinia'
+import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '@/pinia'
+import { TUpdateWidgetPayload } from '@/pinia/design/widget/actions/widget'
+import { TupdateLayerIndexData } from '@/pinia/design/widget/actions/layer'
+import { TUpdateAlignData } from '@/pinia/design/widget/actions/align'
 
 type TState = {
   picBoxShow: boolean
@@ -132,15 +135,17 @@ const state = reactive<TState>({
 const picBoxRef = ref<typeof picBox | null>(null)
 const imageCutoutRef = ref<typeof imageCutout | null>(null)
 
-const store = useStore()
-const {
-  dActiveElement, dWidgets
-} = useSetupMapGetters(['dActiveElement', 'dWidgets'])
+// const store = useStore()
+const widgetStore = useWidgetStore()
+const forceStore = useForceStore()
+const canvasStore = useCanvasStore()
+// const {
+//   dActiveElement, dWidgets
+// } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
 const controlStore = useControlStore()
 const { dMoving } = storeToRefs(controlStore)
-// computed: {
-//   ...mapGetters(['dActiveElement', 'dMoving', 'dWidgets']),
-// },
+const { dActiveElement, dWidgets } = storeToRefs(widgetStore)
+
 
 let lastUuid: string | undefined = undefined
 let tag: boolean
@@ -155,6 +160,7 @@ watch(
   () => dActiveElement.value,
   (newValue, oldValue) => {
     change()
+    if (!newValue) return
     // 失焦取消编辑模式
     if (newValue.uuid != lastUuid && typeof lastUuid !== 'undefined') {
       imgCrop(false)
@@ -196,34 +202,38 @@ function changeValue() {
   }
   for (let key in state.innerElement) {
     if (state.ingoreKeys.indexOf(key) !== -1) {
-      dActiveElement.value[key] = state.innerElement[(key as keyof TImageSetting)]
-    } else if (key !== 'cropEdit' && key !== 'record' && state.innerElement[(key as keyof TImageSetting)] !== dActiveElement.value[key]) {
-      store.dispatch('updateWidgetData', {
-        uuid: dActiveElement.value.uuid,
-        key: key,
-        value: state.innerElement[(key as keyof TImageSetting)],
+      (dActiveElement.value as Record<string, any>)[key] = state.innerElement[(key as keyof TImageSetting)]
+    } else if (
+      key !== 'cropEdit' && key !== 'record' &&
+      state.innerElement[(key as keyof TImageSetting)] !== (dActiveElement.value as Record<string, any>)[key]
+    ) {
+      widgetStore.updateWidgetData({
+        uuid: dActiveElement.value?.uuid || "",
+        key: (key as TUpdateWidgetPayload['key']),
+        value: (state.innerElement[(key as keyof TImageSetting)] as TUpdateWidgetPayload['value']),
       })
-      // updateWidgetData({
-      //   uuid: this.dActiveElement.uuid,
+      // store.dispatch('updateWidgetData', {
+      //   uuid: dActiveElement.value.uuid,
       //   key: key,
-      //   value: this.innerElement[key],
+      //   value: state.innerElement[(key as keyof TImageSetting)],
       // })
     }
   }
 }
 
 function finishSliceData(key: string, value: number | number[]) {
+  if (!dActiveElement.value) return
   const data = dActiveElement.value.sliceData
   if (data) {
     data[key] = value
-    store.dispatch('updateWidgetData', {
+    widgetStore.updateWidgetData({
       uuid: dActiveElement.value.uuid,
       key: 'sliceData',
       value: data,
       pushHistory: true,
     })
-    // updateWidgetData({
-    //   uuid: dActiveElement.uuid,
+    // store.dispatch('updateWidgetData', {
+    //   uuid: dActiveElement.value.uuid,
     //   key: 'sliceData',
     //   value: data,
     //   pushHistory: true,
@@ -232,14 +242,14 @@ function finishSliceData(key: string, value: number | number[]) {
 }
 
 function finish(key: string = "", value: string | number | (string | number)[] | null = "") {
-  store.dispatch('updateWidgetData', {
-    uuid: dActiveElement.value.uuid,
-    key: key,
-    value: value,
+  widgetStore.updateWidgetData({
+    uuid: dActiveElement.value?.uuid || "",
+    key: (key as TUpdateWidgetPayload['key']),
+    value: value as TUpdateWidgetPayload['value'],
     pushHistory: true,
   })
-  // this.updateWidgetData({
-  //   uuid: this.dActiveElement.uuid,
+  // store.dispatch('updateWidgetData', {
+  //   uuid: dActiveElement.value.uuid,
   //   key: key,
   //   value: value,
   //   pushHistory: true,
@@ -248,30 +258,31 @@ function finish(key: string = "", value: string | number | (string | number)[] |
 
 function layerAction(item: TIconItemSelectData) {
   if (item.key === 'zIndex') {
-    store.dispatch("updateLayerIndex", {
-      uuid: dActiveElement.value.uuid,
-      value: item.value,
+    widgetStore.updateLayerIndex({
+      uuid: dActiveElement.value?.uuid || "",
+      value: (item.value as TupdateLayerIndexData['value']),
     })
-    // this.updateLayerIndex({
-    //   uuid: this.dActiveElement.uuid,
+    // store.dispatch("updateLayerIndex", {
+    //   uuid: dActiveElement.value.uuid,
     //   value: item.value,
     // })
   } else {
-    finish(item.key || "", item.value === dActiveElement.value.flip ? null : item.value)
+    finish(item.key || "", item.value === dActiveElement.value?.flip ? null : item.value)
   }
 }
 
 async function alignAction(item: TIconItemSelectData) {
-  store.dispatch("updateAlign", {
-    align: item.value,
-    uuid: dActiveElement.value.uuid,
+  widgetStore.updateAlign({
+    align: (item.value as TUpdateAlignData['align']),
+    uuid: dActiveElement.value?.uuid || "",
   })
-  // this.updateAlign({
+  // store.dispatch("updateAlign", {
   //   align: item.value,
-  //   uuid: this.dActiveElement.uuid,
+  //   uuid: dActiveElement.value.uuid,
   // })
   await nextTick()
-  store.commit('updateRect')
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 }
 
 function openCropper() {
@@ -311,8 +322,8 @@ function openCropper() {
 async function selectDone(img: TGetImageListResult) {
   state.innerElement.imgUrl = img.url
   const loadImg = await getImage(img.url)
-  state.innerElement.width = loadImg.width * store.getters.dZoom / 100
-  state.innerElement.height = loadImg.height * store.getters.dZoom / 100
+  state.innerElement.width = loadImg.width * canvasStore.dZoom / 100
+  state.innerElement.height = loadImg.height * canvasStore.dZoom / 100
   // this.imgCrop(true)
 }
 
@@ -331,7 +342,8 @@ function imgCrop(val: boolean) {
 
 
 function cropHandle() {
-  store.commit('setCropUuid', state.innerElement.cropEdit ? state.innerElement.uuid : -1)
+  controlStore.setCropUuid(state.innerElement.cropEdit ? state.innerElement.uuid : '-1')
+  // store.commit('setCropUuid', state.innerElement.cropEdit ? state.innerElement.uuid : -1)
 }
 
 // 图库选择器

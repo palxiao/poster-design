@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import api from '@/api'
 import { reactive, toRefs, ref } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import _dl from '@/common/methods/download'
 import useNotification from '@/common/methods/notification'
@@ -39,8 +39,8 @@ import copyRight from './CopyRight.vue'
 import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useControlStore, useHistoryStore, usePageStore, useUserStore } from '@/pinia/index'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { useBaseStore, useControlStore, useHistoryStore, usePageStore, useUserStore, useWidgetStore } from '@/pinia/index'
 import { storeToRefs } from 'pinia'
 
 type TProps = {
@@ -62,16 +62,23 @@ const props = defineProps<TProps>()
 const emit = defineEmits<TEmits>()
 const route = useRoute()
 const router = useRouter()
-const store = useStore()
+// const store = useStore()
 const userStore = useUserStore()
+const widgetStore = useWidgetStore()
+
 const canvasImage = ref<typeof SaveImage | null>(null)
-const {
-  dWidgets, tempEditing
-} = useSetupMapGetters(['dWidgets', 'tempEditing'])
+
+// const {
+//   dWidgets, tempEditing
+// } = useSetupMapGetters(['dWidgets', 'tempEditing'])
+
 const pageStore = usePageStore()
 const controlStore = useControlStore()
+const historyStore = useHistoryStore()
 
 const { dPage } = storeToRefs(pageStore)
+const { tempEditing } = storeToRefs(userStore)
+const { dWidgets } = storeToRefs(widgetStore)
 const { dHistory, dPageHistory } = storeToRefs(useHistoryStore())
 
 
@@ -111,6 +118,7 @@ async function saveTemp() {
     // 保存组件，组合元素要保证在最后一位，才能默认选中
     if (dWidgets.value[0].type === 'w-group') {
       const group = dWidgets.value.shift()
+      if (!group) return
       group.record.width = 0
       group.record.height = 0
       dWidgets.value.push(group)
@@ -203,15 +211,18 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
       // 加载文字组合组件
       dPage.value.width = width
       dPage.value.height = height
-      store.dispatch('addGroup', data)
+      widgetStore.addGroup(data)
+      // store.dispatch('addGroup', data)
       // addGroup(data)
     } else {
       pageStore.setDPage(data.page)
       // store.commit('setDPage', data.page)
-      id ? store.commit('setDWidgets', data.widgets) : store.dispatch('setTemplate', data.widgets)
+      id ? widgetStore.setDWidgets(data.widgets) : widgetStore.setTemplate(data.widgets)
+      // id ? store.commit('setDWidgets', data.widgets) : store.dispatch('setTemplate', data.widgets)
     }
     cb()
-    store.dispatch('pushHistory', '请求加载load')
+    historyStore.pushHistory('请求加载load')
+    // store.dispatch('pushHistory', '请求加载load')
     // pushHistory('请求加载load')
   }
 }

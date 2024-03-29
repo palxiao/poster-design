@@ -26,22 +26,23 @@
 // const NAME = 'tool-list-wrap'
 // import api from '@/api'
 import { ref, onMounted } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 // import wQrcode from '../../widgets/wQrcode/wQrcode.vue'
 import imageCutout from '@/components/business/image-cutout'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wQrcodeSetting } from '../../widgets/wQrcode/wQrcodeSetting'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
 
 const route = useRoute()
 
 const loadDone = ref(false)
 const imageCutoutRef = ref<typeof imageCutout | null>(null)
+const widgetStore = useWidgetStore()
 const { dPage } = storeToRefs(usePageStore())
 
 onMounted(() => {
@@ -70,7 +71,9 @@ function addQrcode() {
   const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - setting.width / 2
   setting.top = pH / 2 - setting.height / 2
-  store.dispatch('addWidget', setting)
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
   // addWidget(setting)
 }
 

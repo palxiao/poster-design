@@ -23,7 +23,7 @@
 import api from '@/api'
 import { ElDialog } from 'element-plus'
 import { ref, reactive, nextTick, toRefs } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'
 import { useControlStore } from '@/pinia'
@@ -41,7 +41,7 @@ type TOpenItem = {
   imgUrl: string
 }
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
 const state = reactive({
   loading: false,

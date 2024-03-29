@@ -35,12 +35,14 @@
 // 图片组件
 // const NAME = 'w-qrcode'
 
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import QRCode from '@/components/business/qrcode'
 import { TWQrcodeSetting } from './wQrcodeSetting';
 import { computed, nextTick, onMounted, onUpdated, reactive, ref, watch } from 'vue';
-import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { Options } from 'qr-code-styling';
+import { useForceStore, useWidgetStore } from '@/pinia';
+import { storeToRefs } from 'pinia';
 
 type TProps = {
   params: TWQrcodeSetting & {
@@ -57,12 +59,15 @@ type TState = {
   qrCodeOptions: Options
 }
 
-const store = useStore()
+// const store = useStore()
+const forceStore = useForceStore()
+const widgetStore = useWidgetStore()
 const props = defineProps<TProps>()
 const state = reactive<TState>({
   qrCodeOptions: {}
 })
-const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+// const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+const { dActiveElement } = storeToRefs(widgetStore)
 const width = computed(() => Number(props.params.width))
 const widgetRef = ref<HTMLElement | null>(null)
 
@@ -76,7 +81,8 @@ watch(
 
 onUpdated(() => {
   updateRecord()
-  store.commit('updateRect')
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 })
 
 onMounted(async () => {
@@ -88,8 +94,8 @@ onMounted(async () => {
 })
 // ...mapActions(['updateWidgetData']),
 function updateRecord() {
-  if (dActiveElement.value.uuid === props.params.uuid) {
-    let record = dActiveElement.value.record
+  if (dActiveElement.value?.uuid === props.params.uuid) {
+    let record = dActiveElement.value?.record
     if (!widgetRef.value) return
     record.width = widgetRef.value.offsetWidth
     record.height = widgetRef.value.offsetHeight

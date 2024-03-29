@@ -31,10 +31,10 @@ import { toRefs, reactive, computed, onMounted } from 'vue'
 // import wImage from '../../widgets/wImage/wImage.vue'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
 import api from '@/api'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
 import { TGetImageListResult } from '@/api/material'
 
 type TProps = {
@@ -57,8 +57,9 @@ type TCurrentCategory = {
 
 const props = defineProps<TProps>()
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
 
 const { dPage } = storeToRefs(usePageStore())
 const state = reactive<TState>({
@@ -96,7 +97,9 @@ const selectImg = async (index: number, list: TGetImageListResult[]) => {
   const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - img.width / 2
   setting.top = pH / 2 - img.height / 2
-  store.dispatch('addWidget', setting)
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
 
 const getDataList = async () => {
@@ -114,7 +117,9 @@ const getDataList = async () => {
 
 const dragStart = (index: number, list: TGetImageListResult[]) => {
   const item = list ? list[index] : state.recommendImgList[index]
-  store.commit('selectItem', { data: { value: item }, type: 'image' })
+
+  widgetStore.setSelectItem({ data: { value: item }, type: 'image' })
+  // store.commit('selectItem', { data: { value: item }, type: 'image' })
 }
 
 const searchChange = (e: Event) => {

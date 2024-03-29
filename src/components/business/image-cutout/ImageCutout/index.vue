@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 import { reactive, nextTick, ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { ElProgress } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import uploader from '@/components/common/Uploader/index.vue'
@@ -62,7 +62,7 @@ export type TImageCutoutState = {
     loading: boolean;
 }
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
 const state = reactive<TImageCutoutState>({
   show: false,

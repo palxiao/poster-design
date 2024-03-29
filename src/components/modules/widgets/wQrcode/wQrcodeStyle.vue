@@ -58,7 +58,7 @@
 // 图片组件样式
 // const NAME = 'w-image-style'
 import { nextTick, reactive, watch } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { ElSelect, ElOption } from 'element-plus'
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
@@ -72,9 +72,11 @@ import uploader, { TUploadDoneData } from '@/components/common/Uploader/index.vu
 import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import { wQrcodeSetting, TWQrcodeSetting } from './wQrcodeSetting'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia'
-import { useControlStore } from '@/pinia'
+import { useControlStore, useForceStore, useWidgetStore } from '@/pinia'
+import { TUpdateWidgetPayload } from '@/pinia/design/widget/actions/widget'
+import { TUpdateAlignData } from '@/pinia/design/widget/actions/align'
 
 type TState = {
   activeNames: string[]
@@ -96,15 +98,17 @@ const state = reactive<TState>({
   localization,
 })
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
+const forceStore = useForceStore()
 
 
-const {
-  dActiveElement, dWidgets
-} = useSetupMapGetters(['dActiveElement', 'dWidgets'])
+// const {
+//   dActiveElement, dWidgets
+// } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
 const { dMoving } = storeToRefs(useControlStore())
-// ...mapGetters(['dActiveElement', 'dMoving', 'dWidgets'])
+const { dActiveElement, dWidgets } = storeToRefs(widgetStore)
 
 let lastUuid: string | null = null
 
@@ -112,16 +116,17 @@ watch(
   () => dActiveElement.value,
   (newValue, oldValue) => {
     change()
+    if (!newValue) return
     // 失焦取消编辑模式
-    if (newValue.uuid == -1) {
+    if (Number(newValue.uuid) == -1) {
       state.innerElement.cropEdit = false
-      store.dispatch("updateWidgetData", {
-        uuid: lastUuid,
+      widgetStore.updateWidgetData({
+        uuid: lastUuid ?? "",
         key: 'cropEdit',
         value: false,
       })
-      // this.updateWidgetData({
-      //   uuid: this.lastUuid,
+      // store.dispatch("updateWidgetData", {
+      //   uuid: lastUuid,
       //   key: 'cropEdit',
       //   value: false,
       // })
@@ -163,31 +168,34 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof TWQrcodeSetting
     if (state.ingoreKeys.indexOf(key) !== -1) {
-      dActiveElement.value[itemKey] = state.innerElement[itemKey]
-    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== dActiveElement.value[itemKey]) {
-      store.dispatch("updateWidgetData", {
-        uuid: dActiveElement.value.uuid,
-        key: key,
-        value: state.innerElement[itemKey],
+      (dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
+    } else if (
+      key !== 'setting' && key !== 'record' &&
+      state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]
+    ) {
+      widgetStore.updateWidgetData({
+        uuid: dActiveElement.value?.uuid || "",
+        key: key as TUpdateWidgetPayload['key'],
+        value: state.innerElement[itemKey] as TUpdateWidgetPayload['value'],
       })
-      // this.updateWidgetData({
-      //   uuid: this.dActiveElement.uuid,
+      // store.dispatch("updateWidgetData", {
+      //   uuid: dActiveElement.value.uuid,
       //   key: key,
-      //   value: this.innerElement[key],
+      //   value: state.innerElement[itemKey],
       // })
     }
   }
 }
 
 function finish(key: string, value: number | number[] | string) {
-  store.dispatch("updateWidgetData", {
-    uuid: dActiveElement.value.uuid,
-    key: key,
+  widgetStore.updateWidgetData({
+    uuid: dActiveElement.value?.uuid || '',
+    key: key as TUpdateWidgetPayload['key'],
     value: value,
     pushHistory: true,
   })
-  // this.updateWidgetData({
-  //   uuid: this.dActiveElement.uuid,
+  // store.dispatch("updateWidgetData", {
+  //   uuid: dActiveElement.value.uuid,
   //   key: key,
   //   value: value,
   //   pushHistory: true,
@@ -196,27 +204,29 @@ function finish(key: string, value: number | number[] | string) {
 
 function layerAction(item: TIconItemSelectData) {
   console.log(item)
-  store.dispatch("updateLayerIndex", {
-    uuid: dActiveElement.value.uuid,
-    value: item.value,
+  widgetStore.updateLayerIndex({
+    uuid: dActiveElement.value?.uuid || "",
+    value: item.value as number,
   })
-  // this.updateLayerIndex({
-  //   uuid: this.dActiveElement.uuid,
+  // store.dispatch("updateLayerIndex", {
+  //   uuid: dActiveElement.value.uuid,
   //   value: item.value,
   // })
 }
 
 async function alignAction(item: TIconItemSelectData) {
-  store.dispatch("updateAlign", {
-    align: item.value,
-    uuid: dActiveElement.value.uuid,
+  widgetStore.updateAlign({
+    align: item.value as TUpdateAlignData['align'],
+    uuid: dActiveElement.value?.uuid || "",
   })
-  // this.updateAlign({
+  // store.dispatch("updateAlign", {
   //   align: item.value,
-  //   uuid: this.dActiveElement.uuid,
+  //   uuid: dActiveElement.value.uuid,
   // })
+
   await nextTick()
-  store.commit('updateRect')
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 }
 
 async function uploadImgDone(img: TUploadDoneData) {

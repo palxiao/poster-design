@@ -39,7 +39,7 @@
 import { reactive, toRefs, watch, nextTick, ref, onMounted } from 'vue'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import uploader from '@/components/common/Uploader'
 import api from '@/api'
 // import wImage from '../../widgets/wImage/wImage.vue'
@@ -53,7 +53,7 @@ import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 import eventBus from '@/utils/plugins/eventBus'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
 
 type TProps = {
   active?: number
@@ -73,8 +73,9 @@ const props = defineProps<TProps>()
 
 const router = useRouter()
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
 
 const { dPage } = storeToRefs(usePageStore())
 const listRef = ref<HTMLElement | null>(null)
@@ -177,7 +178,9 @@ const selectImg = async (index: number) => {
   const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - img.width / 2
   setting.top = pH / 2 - img.height / 2
-  store.dispatch('addWidget', setting)
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
 
 type controlImgParam = {
@@ -228,7 +231,8 @@ state.editOptions = {
 
 const dragStart = (index: number) => {
   const item = state.imgList[index]
-  store.commit('selectItem', { data: { value: item }, type: 'image' })
+  widgetStore.setSelectItem({ data: { value: item }, type: 'image' })
+  // store.commit('selectItem', { data: { value: item }, type: 'image' })
 }
 const uploadDone = async (res: TUploadDoneData) => {
   await api.material.addMyPhoto(res)

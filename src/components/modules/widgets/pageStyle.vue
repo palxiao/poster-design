@@ -38,7 +38,7 @@
 // 画布组件样式
 // const NAME = 'page-style'
 import { nextTick, onMounted, reactive, watch } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import numberInput from '../settings/numberInput.vue'
 import colorSelect, { colorChangeData } from '../settings/colorSelect.vue'
 import uploader, { TUploadDoneData } from '@/components/common/Uploader/index.vue'
@@ -47,9 +47,10 @@ import _dl from '@/common/methods/download'
 // import ColorPipette from '@/utils/plugins/color-pipette'
 import Tabs from '@palxp/color-picker/comps/Tabs.vue'
 import TabPanel from '@palxp/color-picker/comps/TabPanel.vue'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { usePageStore } from '@/pinia'
-import { TPageStore } from '@/pinia/design/page'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { usePageStore, useWidgetStore } from '@/pinia'
+import { TPageState, } from '@/pinia/design/page'
+import { storeToRefs } from 'pinia'
 
 type TState = {
   activeNames: string[]
@@ -62,8 +63,9 @@ type TState = {
   showBgLib: boolean
 }
 
-const store = useStore()
+// const store = useStore()
 const pageStore = usePageStore()
+const widgetStore = useWidgetStore()
 const state = reactive<TState>({
   activeNames: ['1', '2', '3', '4'],
   innerElement: {},
@@ -74,7 +76,8 @@ const state = reactive<TState>({
   modes: ['颜色', '图片'],
   showBgLib: false
 })
-const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+// const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+const { dActiveElement } = storeToRefs(widgetStore)
 let _localTempBG: string | null = null
 
 watch(
@@ -126,12 +129,15 @@ function changeValue() {
     return
   }
   for (let key in state.innerElement) {
-    if (key !== 'setting' && key !== 'record' && state.innerElement[key] !== dActiveElement.value[key]) {
+    if (
+      key !== 'setting' && key !== 'record' &&
+      state.innerElement[key] !== (dActiveElement.value as Record<string, any>)[key]
+    ) {
       if (state.ingoreKeys.indexOf(key) !== -1) {
-        dActiveElement.value[key] = state.innerElement[key]
+        (dActiveElement.value as Record<string, any>)[key] = state.innerElement[key]
       } else {
         pageStore.updatePageData({
-          key: key as keyof TPageStore,
+          key: key as keyof TPageState,
           value: state.innerElement[key],
         })
       }
@@ -139,7 +145,7 @@ function changeValue() {
   }
 }
 
-function finish(key: keyof TPageStore, value: string | number) {
+function finish(key: keyof TPageState, value: string | number) {
   pageStore.updatePageData({
     key: key,
     value: value,

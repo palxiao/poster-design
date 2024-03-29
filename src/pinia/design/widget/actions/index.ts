@@ -25,7 +25,7 @@ export function initDMove(store: TWidgetStore, payload: TInidDMovePayload) {
 }
 
 export type TMovePayload = {
-  donotMove: boolean
+  donotMove?: boolean
   x: number
   y: number
 }
@@ -120,6 +120,6 @@ export function setDropOver(store: TWidgetStore, uuid: string) {
   store.dDropOverUuid = uuid
 }
 
-export function setMouseEvent(state: TWidgetStore, e: Event | null) {
+export function setMouseEvent(state: TWidgetStore, e: MouseEvent | null) {
   state.activeMouseEvent = e
 }

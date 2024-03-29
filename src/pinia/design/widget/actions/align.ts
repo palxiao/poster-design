@@ -14,7 +14,7 @@ type TAlign = 'left' | 'ch' | 'right' | 'top' | 'cv' | 'bottom'
 export type TUpdateAlignData = {
   align: TAlign
   uuid: string
-  group: TdWidgetData
+  group?: TdWidgetData
 }
 
 export function updateAlign(store: TWidgetStore, { align, uuid, group }: TUpdateAlignData) {

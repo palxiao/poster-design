@@ -10,17 +10,18 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import html2canvas from 'html2canvas'
 import Qiniu from '@/common/methods/QiNiu'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia';
-import { useCanvasStore } from '@/pinia';
+import { useCanvasStore, useWidgetStore } from '@/pinia';
 
-const store = useStore();
-
+// const store = useStore();
 // const { dZoom } = useSetupMapGetters(['dZoom'])
+
 const canvasStore = useCanvasStore()
+const widgetStore = useWidgetStore()
 const { dZoom } = storeToRefs(canvasStore)
 
 
@@ -30,9 +31,13 @@ const { dZoom } = storeToRefs(canvasStore)
 async function createCover(cb: any) {
   const nowZoom = dZoom.value
   // 取消选中元素
-  store.dispatch('selectWidget', {
-    uuid: '-1',
+  widgetStore.selectWidget({
+    uuid: '-1'
   })
+  // store.dispatch('selectWidget', {
+  //   uuid: '-1',
+  // })
+
   canvasStore.updateZoom(100)
   // store.dispatch('updateZoom', 100)
 

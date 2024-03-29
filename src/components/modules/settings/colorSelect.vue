@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import {reactive, onMounted, watch } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import colorPicker from '@palxp/color-picker'
 import { useControlStore } from '@/pinia';
 
@@ -53,7 +53,7 @@ const props = withDefaults(defineProps<TProps>(), {
 
 const emit = defineEmits<TEmits>()
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
 
 const state = reactive<TState>({

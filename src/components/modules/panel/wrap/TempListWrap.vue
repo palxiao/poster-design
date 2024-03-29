@@ -23,16 +23,16 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import api from '@/api'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { LocationQueryValue, useRoute, useRouter } from 'vue-router'
 // import chooseType from './components/chooseType.vue'
 // import editModel from './components/editModel.vue'
 import searchHeader from './components/searchHeader.vue'
 import useConfirm from '@/common/methods/confirm'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
-import {useControlStore, usePageStore, useUserStore, useHistoryStore} from '@/pinia'
+import {useControlStore, usePageStore, useUserStore, useHistoryStore, useWidgetStore, useForceStore} from '@/pinia'
 import { storeToRefs } from 'pinia'
 
 type TState = {
@@ -54,11 +54,13 @@ const listRef = ref<HTMLElement | null>(null)
 const route = useRoute()
 const router = useRouter()
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
 
 const userStore = useUserStore()
 const pageStore = usePageStore()
+const widgetStore = useWidgetStore()
+const forceStore = useForceStore()
 const state = reactive<TState>({
   loading: false,
   loadDone: false,
@@ -67,7 +69,7 @@ const state = reactive<TState>({
   searchKeyword: '',
 })
 
-const { tempEditing } = useSetupMapGetters(['tempEditing'])
+// const { tempEditing } = useSetupMapGetters(['tempEditing'])
 const { dHistoryParams } = storeToRefs(useHistoryStore())
 
 const pageOptions: TPageOptions = { page: 0, pageSize: 20, cate: 1 }
@@ -130,7 +132,9 @@ async function selectItem(item: IGetTempListData) {
   }
   // store.commit('managerEdit', false)
   userStore.managerEdit(false)
-  store.commit('setDWidgets', [])
+
+  widgetStore.setDWidgets([])
+  // store.commit('setDWidgets', [])
 
   setTempId(item.id)
 
@@ -146,15 +150,19 @@ async function selectItem(item: IGetTempListData) {
 
   pageStore.setDPage(page)
   // store.commit('setDPage', page)
-  
-  store.dispatch('setTemplate', widgets)
+  widgetStore.setTemplate(widgets)
+  // store.dispatch('setTemplate', widgets)
   // setTemplate(widgets)
   setTimeout(() => {
-    store.commit('zoomScreenChange')
+    forceStore.setZoomScreenChange()
+    // store.commit('zoomScreenChange')
   }, 300)
-  store.dispatch('selectWidget', {
+  widgetStore.selectWidget({
     uuid: '-1'
   })
+  // store.dispatch('selectWidget', {
+  //   uuid: '-1'
+  // })
   // selectWidget({
   //   uuid: '-1',
   // })

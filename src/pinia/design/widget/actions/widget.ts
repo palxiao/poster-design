@@ -11,13 +11,13 @@ import { TWidgetStore, TdWidgetData } from ".."
 import { customAlphabet } from 'nanoid/non-secure'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
-type TUpdateWidgetKey =  'width' | 'height' | 'left' | 'top'
+type TUpdateWidgetKey = keyof TdWidgetData
 
 export type TUpdateWidgetPayload = {
   uuid: string
   key: TUpdateWidgetKey
-  value: number
-  pushHistory: boolean
+  value: number | string | boolean | Record<string, any>
+  pushHistory?: boolean
 }
 
 /** 更新组件数据 */
@@ -38,8 +38,8 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
       case 'left':
       case 'top':
         if (widget.isContainer) {
-          let dLeft = widget.left - value
-          let dTop = widget.top - value
+          let dLeft = widget.left - Number(value)
+          let dTop = widget.top - Number(value)
           if (key === 'left') {
             dTop = 0
           }
@@ -57,7 +57,7 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
         }
         break
     }
-    widget[key] = value
+    (widget[key] as TUpdateWidgetPayload['value']) = value
     if (pushHistory) {
       const historyStore = useHistoryStore()
       setTimeout(() => {
@@ -75,7 +75,7 @@ export type TUpdateWidgetMultiplePayload = {
     key: TUpdateWidgetKey
     value: number
   }[]
-  pushHistory: boolean
+  pushHistory?: boolean
 }
 
 /** 一次更新多个widget */
@@ -107,7 +107,7 @@ export function updateWidgetMultiple(store: TWidgetStore, { uuid, data, pushHist
           }
           break
       }
-      widget[key] = value
+      (widget[key] as number | string) = value
     }
   }
   setTimeout(() => {

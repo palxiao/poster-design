@@ -9,25 +9,26 @@
   <div id="empty" class="moveable__remove-item zk-moveable-style"></div>
 </template>
 <script lang="ts" setup>
-import { defineComponent, nextTick, onMounted, watch } from 'vue'
+import { nextTick, onMounted, watch } from 'vue'
 
 import Moveable, { EVENTS } from 'moveable' // PROPERTIES, METHODS,
 import MoveableHelper from 'moveable-helper'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 // import { setTransformAttribute } from '@/common/methods/handleTransform'
 import useSelecto from './Selecto'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore, useControlStore } from '@/pinia'
+import { useCanvasStore, useControlStore, useWidgetStore, useForceStore, useHistoryStore } from '@/pinia'
 
-const store = useStore()
-//  computed: mapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'showMoveable', 'showRotatable', 'dWidgets', 'updateRect', 'updateSelect', 'guidelines']),
-const {
-  dSelectWidgets, dActiveElement, activeMouseEvent, dWidgets, updateRect, updateSelect
-} = useSetupMapGetters(['dSelectWidgets', 'dActiveElement', 'activeMouseEvent', 'dWidgets', 'updateRect', 'updateSelect'])
+// const store = useStore()
+const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
+const forceStore = useForceStore()
+const historyStore = useHistoryStore()
 const { guidelines } = storeToRefs(useCanvasStore())
 const { showMoveable, showRotatable, dAltDown } = storeToRefs(controlStore)
+const { dSelectWidgets, dActiveElement, activeMouseEvent, dWidgets } = storeToRefs(widgetStore)
+const { updateRect, updateSelect } = storeToRefs(forceStore)
 
 let _target: string | null = null
 
@@ -38,12 +39,12 @@ watch(
       await nextTick()
       checkMouseEvent()
     }, 10);
-    if (!val.record) {
+    if (!val || !val.record) {
       return
     }
     if (!moveable) return
     // 选中非面板 并且不是组合内的元素
-    if (val.uuid != -1) {
+    if (Number(val.uuid) != -1) {
       await nextTick()
       const target = `[id="${val.uuid}"]`
       _target = `[id="${val.uuid}"]`
@@ -70,7 +71,8 @@ watch(
         checkMouseEvent()
       })
       // // End
-      store.commit('setShowMoveable', true)
+      controlStore.setShowMoveable(true)
+      // store.commit('setShowMoveable', true)
       // 参考线设置
       if (moveable.elementGuidelines && !moveable.elementGuidelines.includes(target)) {
         moveable.elementGuidelines.push(target)
@@ -126,7 +128,7 @@ watch(
 watch(
   () => updateSelect.value,
   () => {
-    const items = store.getters.dSelectWidgets
+    const items = widgetStore.dSelectWidgets
     setTimeout(async () => {
       if (!moveable) return
       moveable.updateRect()
@@ -299,6 +301,7 @@ onMounted(() => {
 
   moveable
   .on('dragStart', ({ inputEvent, target, stop }) => {
+    if (!dActiveElement.value) return
     if (inputEvent.target.nodeName === 'PRE') {
       dActiveElement.value.editable && stop()
     }
@@ -313,25 +316,39 @@ onMounted(() => {
   .on('dragEnd', ({ target, isDrag, inputEvent }) => {
     // console.log('onDragEnd', inputEvent)
     // TODO 清理mouseevent
-    store.commit('setMouseEvent', null)
+    widgetStore.setMouseEvent(null)
+    // store.commit('setMouseEvent', null)
+
     inputEvent.stopPropagation()
     inputEvent.preventDefault()
     // console.log(this.holdPosition, inputEvent.pageX, inputEvent.pageY)
     if (holdPosition) {
-      store.dispatch("updateWidgetData", {
-        uuid: dActiveElement.value.uuid,
+      widgetStore.updateWidgetData({
+        uuid: dActiveElement.value?.uuid || "",
         key: 'left',
         value: Number(holdPosition?.left),
       })
-      store.dispatch("updateWidgetData", {
-        uuid: dActiveElement.value.uuid,
+      // store.dispatch("updateWidgetData", {
+      //   uuid: dActiveElement.value.uuid,
+      //   key: 'left',
+      //   value: Number(holdPosition?.left),
+      // })
+
+      widgetStore.updateWidgetData({
+        uuid: dActiveElement.value?.uuid || "",
         key: 'top',
         value: Number(holdPosition?.top),
       })
+      // store.dispatch("updateWidgetData", {
+      //   uuid: dActiveElement.value.uuid,
+      //   key: 'top',
+      //   value: Number(holdPosition?.top),
+      // })
+
       holdPosition = null // important
       setTimeout(() => {
-        store.dispatch("pushHistory")
-        // pushHistory()
+        historyStore.pushHistory()
+        // store.dispatch("pushHistory")
       }, 100)
     }
   })
@@ -352,19 +369,25 @@ onMounted(() => {
       const half = tf.substring(index + 1)
       rotate = half.slice(0, half.indexOf(')'))
     }
-    rotate &&
-      store.dispatch("updateWidgetData", {
-        uuid: dActiveElement.value.uuid,
-        key: 'rotate',
-        value: rotate,
-      })
+    rotate && widgetStore.updateWidgetData({
+      uuid: dActiveElement.value?.uuid || "",
+      key: 'rotate',
+      value: rotate,
+    })
+
+    // rotate &&
+    //   store.dispatch("updateWidgetData", {
+    //     uuid: dActiveElement.value.uuid,
+    //     key: 'rotate',
+    //     value: rotate,
+    //   })
   })
   .on('resizeStart', (args) => {
     console.log(args.target.style.transform)
     if (!moveable) return
     
     moveable.snappable = false
-    if (dActiveElement.value.type === 'w-text') {
+    if (dActiveElement.value?.type === 'w-text') {
       if (String(args.direction) === '1,0') {
         moveable.keepRatio = false
         moveable.scalable = false
@@ -376,7 +399,7 @@ onMounted(() => {
         startLS = Number(args.target!.style.letterSpacing.replace('px', ''))
         resetRatio = 1
       }
-    } else if (dActiveElement.value.type === 'w-image' || dActiveElement.value.type === 'w-qrcode' || dActiveElement.value.type === 'w-svg') {
+    } else if (dActiveElement.value?.type === 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg') {
       const dirs = ['1,0', '0,-1', '-1,0', '0,1']
       dirs.includes(String(args.direction)) && (moveable.keepRatio = false)
     }
@@ -384,10 +407,10 @@ onMounted(() => {
   .on('resize', (args: any) => {
     const { target, width, height, dist, delta, clientX, clientY, direction } = args
     console.log(2, args)
-    if (dActiveElement.value.type === 'w-text') {
+    if (dActiveElement.value?.type === 'w-text') {
       if (String(direction) === '1,1') {
         resetRatio = width / resizeStartWidth
-        target!.style.fontSize = dActiveElement.value.fontSize * resetRatio + 'px'
+        target!.style.fontSize = (dActiveElement.value?.fontSize || 0) * resetRatio + 'px'
         target!.style.letterSpacing = startLS * resetRatio + 'px'
         target!.style.lineHeight = startHL * resetRatio + 'px'
       }
@@ -397,19 +420,23 @@ onMounted(() => {
       // moveable.updateRect()
       target.style.backgroundImage = 'none'
       // moveable.keepRatio !== this.resetRatio > 1 && (moveable.keepRatio = this.resetRatio > 1)
-    } else if (dActiveElement.value.type == 'w-image' || dActiveElement.value.type === 'w-qrcode' || dActiveElement.value.type === 'w-svg') {
+    } else if (dActiveElement.value?.type == 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg') {
       resizeTempData = { width, height }
-    } else if (dActiveElement.value.type == 'w-group') {
+    } else if (dActiveElement.value?.type == 'w-group') {
       // let record = this.dActiveElement.record
       // this.dActiveElement.tempScale = width / record.width
-      store.commit('resize', { width: width, height: height })
+
+      widgetStore.resize({ width: width, height: height })
+      // store.commit('resize', { width: width, height: height })
+
       // this.resizeTempData = { width, height }
       // let record = this.dActiveElement.record
       // setTransformAttribute(target, 'scale', width / record.width)
     } else {
-      store.commit('resize', { width: width, height: height })
+      widgetStore.resize({ width: width, height: height })
+      // store.commit('resize', { width: width, height: height })
     }
-    dActiveElement.value.rotate && (target!.style.transform = target!.style.transform.replace('(0deg', `(${dActiveElement.value.rotate}`))
+    dActiveElement.value?.rotate && (target!.style.transform = target!.style.transform.replace('(0deg', `(${dActiveElement.value?.rotate}`))
   })
   .on('resizeEnd', (e: any) => {
     if (!moveable) return
@@ -435,19 +462,32 @@ onMounted(() => {
       // }
       const left = e.lastEvent.drag.translate[0]
       const top = e.lastEvent.drag.translate[1]
-      store.dispatch("updateWidgetMultiple", {
-        uuid: dActiveElement.value.uuid,
+      widgetStore.updateWidgetMultiple({
+        uuid: dActiveElement.value?.uuid || "",
         data: [
           {
             key: 'left',
-            value: Number(dActiveElement.value.left) + left,
+            value: Number(dActiveElement.value?.left) + left,
           },
           {
             key: 'top',
-            value: Number(dActiveElement.value.top) + top,
+            value: Number(dActiveElement.value?.top) + top,
           },
         ],
       })
+      // store.dispatch("updateWidgetMultiple", {
+      //   uuid: dActiveElement.value.uuid,
+      //   data: [
+      //     {
+      //       key: 'left',
+      //       value: Number(dActiveElement.value.left) + left,
+      //     },
+      //     {
+      //       key: 'top',
+      //       value: Number(dActiveElement.value.top) + top,
+      //     },
+      //   ],
+      // })
       // 重置translate
       const tf = e.target.style.transform
       const iof = tf.indexOf('translate')
@@ -459,26 +499,30 @@ onMounted(() => {
       // }, 10)
     }
     if (resizeTempData) {
-      store.commit('resize', resizeTempData)
+      widgetStore.resize(resizeTempData)
+      // store.commit('resize', resizeTempData)
+
       resizeTempData = null
       // await this.$nextTick()
       moveable.updateRect()
       // 临时处理缩放后细线问题 https://github.com/palxiao/poster-design/issues/75
-      store.commit('setShowMoveable', false)
+      controlStore.setShowMoveable(false)
+      // store.commit('setShowMoveable', false)
       setTimeout(() => {
-        store.commit('setShowMoveable', true)
+        controlStore.setShowMoveable(true)
+        // store.commit('setShowMoveable', true)
       }, 10);
     }
     try {
-      if (dActiveElement.value.type === 'w-text') {
+      if (dActiveElement.value?.type === 'w-text') {
         const d = e.direction || e.lastEvent.direction
-        String(d) === '1,1' && (dActiveElement.value.fontSize = dActiveElement.value.fontSize * resetRatio)
+        String(d) === '1,1' && (dActiveElement.value.fontSize = Number(dActiveElement.value?.fontSize) * resetRatio)
       }
     } catch (err) {}
     moveable.keepRatio = true
   })
   .on('scaleStart', (e) => {
-    if (dActiveElement.value.type === 'w-text') {
+    if (dActiveElement.value?.type === 'w-text') {
       startHL = Number(e.target!.style.lineHeight.replace('px', ''))
       startLS = Number(e.target!.style.letterSpacing.replace('px', ''))
       resetRatio = 1
@@ -493,7 +537,7 @@ onMounted(() => {
     const { target, scale, transform } = e
     resetRatio = scale[0]
     target!.style.transform = transform
-    dActiveElement.value.rotate && (target!.style.transform = target!.style.transform.replace('0deg', dActiveElement.value.rotate))
+    dActiveElement.value?.rotate && (target!.style.transform = target!.style.transform.replace('0deg', dActiveElement.value.rotate))
   })
   .on('scaleEnd', (e: any) => {
     if (!moveable) return
@@ -502,9 +546,9 @@ onMounted(() => {
     moveable.keepRatio = true
     console.log(e.target.style.transform)
     try {
-      if (dActiveElement.value.type === 'w-text') {
+      if (dActiveElement.value?.type === 'w-text') {
         const d = e.direction || e.lastEvent.direction
-        String(d) === '1,1' && (dActiveElement.value.fontSize = dActiveElement.value.fontSize * resetRatio)
+        String(d) === '1,1' && (dActiveElement.value.fontSize = Number(dActiveElement.value.fontSize) * resetRatio)
       }
     } catch (err) {}
   })
@@ -516,13 +560,13 @@ onMounted(() => {
     for (let i = 0; i < events.length; i++) {
       const ev = events[i]
       const currentWidget = dWidgets.value.find((item: any) => item.uuid === ev.target.getAttribute('data-uuid'))
-      const left = Number(currentWidget.left) + ev.beforeTranslate[0]
+      const left = Number(currentWidget?.left) + ev.beforeTranslate[0]
       // debug -- start --
       if (i === 1) {
-        console.log(Number(currentWidget.left), ev.beforeTranslate[0])
+        console.log(Number(currentWidget?.left), ev.beforeTranslate[0])
       }
       // debug -- end --
-      const top = Number(currentWidget.top) + ev.beforeTranslate[1]
+      const top = Number(currentWidget?.top) + ev.beforeTranslate[1]
       ev.target.style.left = `${left}px`
       ev.target.style.top = `${top}px`
       holdGroupPosition[`${ev.target.getAttribute('data-uuid')}`] = { left, top }
@@ -532,16 +576,27 @@ onMounted(() => {
     for (const key in holdGroupPosition) {
       if (Object.prototype.hasOwnProperty.call(holdGroupPosition, key)) {
         const item = holdGroupPosition[key]
-        store.dispatch("updateWidgetData", {
+        widgetStore.updateWidgetData({
           uuid: key,
           key: 'left',
           value: item.left,
         })
-        store.dispatch("updateWidgetData", {
+        // store.dispatch("updateWidgetData", {
+        //   uuid: key,
+        //   key: 'left',
+        //   value: item.left,
+        // })
+
+        widgetStore.updateWidgetData({
           uuid: key,
           key: 'top',
           value: item.top,
         })
+        // store.dispatch("updateWidgetData", {
+        //   uuid: key,
+        //   key: 'top',
+        //   value: item.top,
+        // })
       }
     }
     holdGroupPosition = null
@@ -603,7 +658,8 @@ function checkMouseEvent() {
   if (activeMouseEvent.value && moveable) {
     moveable.dragStart(activeMouseEvent.value)
     // 使用后销毁mouseevent
-    store.commit('setMouseEvent', null)
+    widgetStore.setMouseEvent(null)
+    // store.commit('setMouseEvent', null)
   }
 }
 </script>

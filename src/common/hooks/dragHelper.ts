@@ -6,7 +6,9 @@
  * @LastEditTime: 2023-11-22 18:11:15
  */
 
-import store from '@/store'
+import { useControlStore, useWidgetStore } from "@/pinia"
+
+// import store from '@/store'
 
 type TInitial = {
   offsetX: number
@@ -71,7 +73,10 @@ export default class DragHelper {
    */
   public start(e: MouseEvent, finallySize: number) {
     if (!this.cloneEl) {
-      store.commit('setDraging', true)
+      const controlStore = useControlStore()
+      controlStore.setDraging(true)
+      // store.commit('setDraging', true)
+
       const app = window.document.getElementById('app')
       if (!app || !e) return
       app.classList.add('drag_active') // 整个鼠标全局变成抓取
@@ -134,12 +139,19 @@ export default class DragHelper {
   }
   // 结束/完成处理（动画）
   private finish(done = false) {
+    
     if (!this.dragging) {
       return
     }
+
+    const controlStore = useControlStore()
+    const widgetStore = useWidgetStore()
     this.dragging = false
-    store.commit('setDraging', false)
-    store.commit('selectItem', {})
+    controlStore.setDraging(false)
+    // store.commit('setDraging', false)
+
+    widgetStore.setSelectItem({})
+    // store.commit('selectItem', {})
 
     if (!done) {
       const { pageX, offsetX, pageY, offsetY } = this.initial as TInitial

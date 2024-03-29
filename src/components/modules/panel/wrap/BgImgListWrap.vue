@@ -25,10 +25,10 @@
 <script lang="ts" setup>
 import { reactive, computed } from 'vue'
 import api from '@/api'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { ElImage } from 'element-plus'
 import { TGetImageListResult } from '@/api/material';
-import { usePageStore } from '@/pinia';
+import { usePageStore, useWidgetStore } from '@/pinia';
 
 type TCommonPanelData = {
   color: string
@@ -56,8 +56,9 @@ type TState = {
 const { model } = defineProps<TProps>()
 
 
-const store = useStore()
+// const store = useStore()
 const pageStore = usePageStore()
+const widgetStore = useWidgetStore()
 
 const state = reactive<TState>({
   loading: false,
@@ -125,9 +126,12 @@ function setBGcolor(color: string) {
     value: color,
     pushHistory: true
   })
-  store.dispatch('selectWidget', {
-    uuid: '-1',
+  widgetStore.selectWidget({
+    uuid: '-1'
   })
+  // store.dispatch('selectWidget', {
+  //   uuid: '-1',
+  // })
 }
 
 async function selectItem(item: TGetImageListResult) {
@@ -141,13 +145,17 @@ async function selectItem(item: TGetImageListResult) {
     value: item.url,
     pushHistory: true,
   })
-  store.dispatch('selectWidget', {
-    uuid: '-1',
+  widgetStore.selectWidget({
+    uuid: '-1'
   })
+  // store.dispatch('selectWidget', {
+  //   uuid: '-1',
+  // })
 }
 
 function dragStart(_: MouseEvent, _item: TGetImageListResult) {
-  store.commit('selectItem', { data: {}, type: 'bg' })
+  widgetStore.setSelectItem({ data: {}, type: 'bg' })
+  // store.commit('selectItem', { data: {}, type: 'bg' })
 }
 
 

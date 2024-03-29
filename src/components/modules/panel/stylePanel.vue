@@ -9,7 +9,7 @@
         <el-button plain type="primary" class="gounp__btn" @click="handleCombine">成组</el-button>
         <icon-item-select label="" :data="iconList" @finish="alignAction" />
       </div>
-      <component :is="dActiveElement.type + '-style'" v-show="!showGroupCombined" v-if="dActiveElement.type" />
+      <component :is="dActiveElement?.type + '-style'" v-show="!showGroupCombined" v-if="dActiveElement?.type" />
     </div>
     <div v-show="activeTab === 1" class="layer-wrap">
       <layer-list :data="dWidgets" @change="layerChange" />
@@ -20,21 +20,28 @@
 <script setup lang="ts">
 // 样式设置面板
 // const NAME = 'style-panel'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import alignIconList, { AlignListData } from '@/assets/data/AlignListData'
 import iconItemSelect, { TIconItemSelectData } from '../settings/iconItemSelect.vue'
 import { ref, watch } from 'vue';
-import { useSetupMapGetters } from '@/common/hooks/mapGetters';
-import { useControlStore } from '@/pinia';
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { useControlStore, useGroupStore, useHistoryStore, useWidgetStore } from '@/pinia';
+import { storeToRefs } from 'pinia';
+import { TdWidgetData } from '@/pinia/design/widget';
+import type { TUpdateAlignData } from '@/pinia/design/widget/actions/align'
 
-const store = useStore();
+// const store = useStore();
+const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
+const groupStore = useGroupStore()
+const historyStore = useHistoryStore()
 
 const activeTab = ref(0)
 const iconList = ref<AlignListData[]>(alignIconList)
 const showGroupCombined = ref(false)
 
-const { dActiveElement, dWidgets, dSelectWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dSelectWidgets'])
+// const { dActiveElement, dWidgets, dSelectWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dSelectWidgets'])
+const { dActiveElement, dWidgets, dSelectWidgets } = storeToRefs(widgetStore)
 
 watch(
   dSelectWidgets,
@@ -49,31 +56,50 @@ watch(
 )
 
 function handleCombine() {
-  store.dispatch('realCombined')
+  groupStore.realCombined()
+  // store.dispatch('realCombined')
 }
 
 // ...mapActions(['selectWidget', 'updateAlign', 'updateHoverUuid', 'getCombined', 'realCombined', 'ungroup', 'pushHistory']),
 function alignAction(item: TIconItemSelectData) {
-  const sWidgets = JSON.parse(JSON.stringify(dSelectWidgets.value))
-  store.dispatch('getCombined').then((group) => {
-    sWidgets.forEach((element: Record<string, any>) => {
-      store.dispatch('updateAlign', {
-        align: item.value,
+  const sWidgets: TdWidgetData[] = JSON.parse(JSON.stringify(dSelectWidgets.value))
+  groupStore.getCombined().then(group => {
+    sWidgets.forEach((element) => {
+      widgetStore.updateAlign({
+        align: (item.value as TUpdateAlignData['align']),
         uuid: element.uuid,
         group,
       })
-      // updateAlign({
+      // store.dispatch('updateAlign', {
       //   align: item.value,
       //   uuid: element.uuid,
       //   group,
       // })
     });
-    store.dispatch('pushHistory')
+    historyStore.pushHistory()
+    // store.dispatch('pushHistory')
     // pushHistory()
   })
+  // store.dispatch('getCombined').then((group) => {
+  //   sWidgets.forEach((element: Record<string, any>) => {
+  //     store.dispatch('updateAlign', {
+  //       align: item.value,
+  //       uuid: element.uuid,
+  //       group,
+  //     })
+  //     // updateAlign({
+  //     //   align: item.value,
+  //     //   uuid: element.uuid,
+  //     //   group,
+  //     // })
+  //   });
+  //   store.dispatch('pushHistory')
+  //   // pushHistory()
+  // })
 }
-function layerChange(newLayer: Record<string, any>[]) {
-  store.commit('setDWidgets', newLayer.toReversed())
+function layerChange(newLayer: TdWidgetData[]) {
+  widgetStore.setDWidgets(newLayer.toReversed())
+  // store.commit('setDWidgets', newLayer.toReversed())
 
   // store.commit('setShowMoveable', false)
   controlStore.setShowMoveable(false)

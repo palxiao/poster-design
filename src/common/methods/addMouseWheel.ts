@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-02 11:50:00
  */
 import { useControlStore } from '@/pinia'
-import store from '@/store'
+// import store from '@/store'
 
 type TAddEventCb = (e: Event) => void
 type TAddEventObj = {

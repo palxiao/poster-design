@@ -39,7 +39,15 @@
               'layer-active': getIsActive(layer.uuid),
               'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid,
             }" -->
-          <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid, 'layer-no-hover': dActiveElement.uuid === layer.uuid }]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
+          <component
+            :is="layer.type"
+            v-for="layer in getlayers()"
+            :id="layer.uuid" :key="layer.uuid" 
+            :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }]"
+            :data-title="layer.type" :params="layer"
+            :parent="dPage" :data-type="layer.type"
+            :data-uuid="layer.uuid"
+          >
             <template v-if="layer.isContainer">
               <!-- :class="{
                   layer: true,
@@ -47,7 +55,14 @@
                   'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent,
                   'layer-hover': widget.uuid === dHoverUuid,
                 }" -->
-              <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="['layer', { 'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
+              <component
+                :is="widget.type"
+                v-for="widget in getChilds(layer.uuid)"
+                :key="widget.uuid" child :class="['layer', { 'layer-no-hover':dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]"
+                :data-title="widget.type" :params="widget"
+                :parent="layer" :data-type="widget.type"
+                :data-uuid="widget.uuid"
+              />
             </template>
           </component>
 
@@ -60,8 +75,8 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, ref } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+import { onMounted } from 'vue'
+// import {useStore } from 'vuex'
 import { getTarget } from '@/common/methods/target'
 // import { ElScrollbar } from 'element-plus'
 import setWidgetData from '@/common/methods/DesignFeatures/setWidgetData'
@@ -69,9 +84,9 @@ import PointImg from '@/utils/plugins/pointImg'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import { debounce } from 'throttle-debounce'
 import { move, moveInit } from '@/mixins/move'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useCanvasStore, useControlStore, usePageStore } from '@/pinia'
+import { useCanvasStore, useControlStore, useGroupStore, usePageStore, useWidgetStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
+import { TPageState } from '@/pinia/design/page'
 // 页面设计组件
 type TProps = {
   pageDesignCanvasId: string
@@ -82,24 +97,19 @@ type TParentData = {
   height?: number
 }
 
-type TSetting = {
-  width?: number
-  height?: number
-  top?: number
-  left?: number
-}
+type TSetting = Partial<TPageState>
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
+const canvasStore = useCanvasStore()
+
 const { pageDesignCanvasId } = defineProps<TProps>()
-const {
-  dWidgets,
-  dActiveElement, dSelectWidgets,
-  dHoverUuid
-} = useSetupMapGetters(['dWidgets', 'dActiveElement', 'dHoverUuid', 'dSelectWidgets'])
+
 const { dPage } = storeToRefs(usePageStore())
-const { dZoom, dPaddingTop, dScreen } = storeToRefs(useCanvasStore())
-const { dDraging, showRotatable, dAltDown } = storeToRefs(useControlStore())
+const { dZoom, dPaddingTop, dScreen } = storeToRefs(canvasStore)
+const { dDraging, showRotatable, dAltDown } = storeToRefs(controlStore)
+const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid } = storeToRefs(widgetStore)
 
 
 let _dropIn: string | null = ''
@@ -123,11 +133,13 @@ onMounted(() => {
     // },
 
 async function dropOver(e: MouseEvent) {
+  if (!dActiveElement.value) return
   if (dActiveElement.value.editable || dActiveElement.value.lock) {
     return false
   }
   e.preventDefault()
-  let { data, type } = store.getters.selectItem
+  let { data, type } = widgetStore.selectItem
+  if (!data) return
   if (type !== 'image') {
     return
   }
@@ -136,7 +148,9 @@ async function dropOver(e: MouseEvent) {
   const target = await getTarget(eventTarget)
   if (!target) return
   const uuid = target.getAttribute('data-uuid')
-  store.dispatch('setDropOver', uuid)
+
+  widgetStore.setDropOver(uuid ?? "-1")
+  // store.dispatch('setDropOver', uuid)
 
   const imgEl = target?.firstElementChild?.firstElementChild as HTMLImageElement
   if (eventTarget.getAttribute('putIn')) {
@@ -157,10 +171,15 @@ async function drop(e: MouseEvent) {
   }
   if (!e || !e.target) return
   const eventTarget = e.target as HTMLElement
-  store.commit('setDraging', false)
+
+  controlStore.setDraging(false)
+  // store.commit('setDraging', false)
+
   const dropIn = _dropIn
   _dropIn = ''
-  store.dispatch('setDropOver', '-1')
+
+  widgetStore.setDropOver("-1")
+  // store.dispatch('setDropOver', '-1')
 
   // store.commit('setShowMoveable', false) // 清理上一次的选择
   controlStore.setShowMoveable(false) // 清理上一次的选择
@@ -168,9 +187,11 @@ async function drop(e: MouseEvent) {
   let lost = eventTarget.className !== 'design-canvas' // className === 'design-canvas' , id: "page-design-canvas"
   // e.stopPropagation()
   e.preventDefault()
-  let { data: item, type } = JSON.parse(JSON.stringify(store.getters.selectItem))
+  let { data: item, type } = JSON.parse(JSON.stringify(widgetStore.selectItem))
   // 清除临时数据
-  store.commit('selectItem', {})
+  widgetStore.setSelectItem({})
+  // store.commit('selectItem', {})
+
   let setting: TSetting = {}
   if (!type) {
     return
@@ -201,7 +222,8 @@ async function drop(e: MouseEvent) {
       element.left += (lost ? lostX - half.x : e.layerX - half.x) * (100 / dZoom.value)
       element.top += (lost ? lostY - half.y : e.layerY - half.y) * (100 / dZoom.value)
     })
-    store.dispatch('addGroup', componentItem)
+    widgetStore.addGroup(componentItem)
+    // store.dispatch('addGroup', componentItem)
     // addGroup(item)
   }
   // 设置坐标
@@ -224,6 +246,7 @@ async function drop(e: MouseEvent) {
       controlStore.setShowMoveable(true) // 恢复选择
 
       const widget = dWidgets.value.find((item: {uuid: string}) => item.uuid === uuid)
+      if (!widget) return
       widget.imgUrl = item.value.url
       // if (e.target.className.baseVal) {
       //   !widget.imgs && (widget.imgs = {})
@@ -232,6 +255,7 @@ async function drop(e: MouseEvent) {
     } else {
       if (dropIn) {
         const widget = dWidgets.value.find((item: {uuid: string}) => item.uuid == dropIn)
+        if (!widget) return
         widget.imgUrl = item.value.url
         console.log('加入+', widget)
 
@@ -239,14 +263,16 @@ async function drop(e: MouseEvent) {
         controlStore.setShowMoveable(true) // 恢复选择
 
       } else {
-        store.dispatch('addWidget', setting) // 正常加入面板
+        widgetStore.addWidget(setting as Required<TPageState>)
+        // store.dispatch('addWidget', setting) // 正常加入面板
       }
     }
   } else if (type === 'bg') {
     console.log('背景图片放置')
   } else if (type !== 'group') {
     console.log(setting)
-    store.dispatch('addWidget', setting) // 正常加入面板
+    widgetStore.addWidget(setting as Required<TPageState>)
+    // store.dispatch('addWidget', setting) // 正常加入面板
   }
   // 清除临时数据
   // this.$store.commit('selectItem', {})
@@ -255,11 +281,11 @@ async function drop(e: MouseEvent) {
 function getScreen() {
   const pageDesignEl = document.getElementById('page-design')
   if (!pageDesignEl) return
-  store.dispatch('updateScreen', {
+  canvasStore.updateScreen({
     width: pageDesignEl.offsetWidth,
     height: pageDesignEl.offsetHeight,
   })
-  // updateScreen({
+  // store.dispatch('updateScreen', {
   //   width: pageDesignEl.offsetWidth,
   //   height: pageDesignEl.offsetHeight,
   // })
@@ -295,18 +321,19 @@ async function handleSelection(e: MouseEvent) {
     let uuid = target.getAttribute('data-uuid')
     if (uuid !== '-1' && !dAltDown.value) {
       let widget = dWidgets.value.find((item: {uuid: string}) => item.uuid === uuid)
+      if (!widget || !dActiveElement.value) return
       if (widget.parent !== '-1' && widget.parent !== dActiveElement.value.uuid && widget.parent !== dActiveElement.value.parent) {
-        uuid = widget.parent
+        uuid = widget.parent || null
       }
     }
 
     // 设置选中元素
     // this.$store.commit('setMoveable', false)
     if (showRotatable.value !== false) {
-      store.dispatch('selectWidget', {
-        uuid: uuid,
+      widgetStore.selectWidget({
+        uuid: uuid || " -1",
       })
-      // selectWidget({
+      // store.dispatch('selectWidget', {
       //   uuid: uuid,
       // })
     }
@@ -316,21 +343,21 @@ async function handleSelection(e: MouseEvent) {
     }
   } else {
     // 取消选中元素
-    store.dispatch('selectWidget', {
-      uuid: '-1',
+    widgetStore.selectWidget({
+      uuid: "-1"
     })
-    // selectWidget({
+    // store.dispatch('selectWidget', {
     //   uuid: '-1',
     // })
   }
 }
 
 function getlayers() {
-  return dWidgets.value.filter((item: { parent: string }) => item.parent === dPage.value.uuid)
+  return dWidgets.value.filter((item) => item.parent === dPage.value.uuid)
 }
 
 function getChilds(uuid: string) {
-  return dWidgets.value.filter((item: { parent: string }) => item.parent === uuid)
+  return dWidgets.value.filter((item) => item.parent === uuid)
 }
     // getIsActive(uuid) {
     //   if (this.dSelectWidgets.length > 0) {

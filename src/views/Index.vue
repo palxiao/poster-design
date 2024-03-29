@@ -58,7 +58,7 @@ import {
   CSSProperties, computed, nextTick,
   onBeforeUnmount, onMounted, reactive, ref,
 } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
@@ -68,11 +68,11 @@ import shortcuts from '@/mixins/shortcuts'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore, useControlStore, usePageStore, useHistoryStore } from '@/pinia'
+import { useCanvasStore, useControlStore, usePageStore, useHistoryStore, useWidgetStore, useGroupStore } from '@/pinia'
 
 type TState = {
   style: CSSProperties
@@ -83,13 +83,16 @@ type TState = {
   showLineGuides: boolean
 }
 
-const {
-  dActiveElement, dCopyElement
-} = useSetupMapGetters(['dActiveElement', 'dCopyElement'])
+// const {
+//   dActiveElement, dCopyElement
+// } = useSetupMapGetters(['dActiveElement', 'dCopyElement'])
+const widgetStore = useWidgetStore()
 const historyStore = useHistoryStore()
+const groupStore = useGroupStore()
 const { dPage } = storeToRefs(usePageStore())
 const { dZoom } = storeToRefs(useCanvasStore())
 const { dHistoryParams } = storeToRefs(useHistoryStore())
+const { dActiveElement, dCopyElement } = storeToRefs(widgetStore)
 
 
 const state = reactive<TState>({
@@ -105,7 +108,7 @@ const state = reactive<TState>({
 })
 const optionsRef = ref<typeof HeaderOptions | null>(null)
 const zoomControlRef = ref<typeof zoomControl | null>(null)
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
 const route = useRoute()
 
@@ -159,7 +162,8 @@ let checkCtrl: number | undefined
 const instanceFn = { save, zoomAdd, zoomSub }
 
 onMounted(() => {
-  store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
+  groupStore.initGroupJson(JSON.stringify(wGroupSetting))
+  // store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
   // initGroupJson(JSON.stringify(wGroup.setting))
   window.addEventListener('scroll', fixTopBarScroll)
   // window.addEventListener('click', this.clickListener)
@@ -199,11 +203,10 @@ function loadData() {
     if (!zoomControlRef.value) return
     // await nextTick()
     // zoomControlRef.value.screenChange()
+    
     // 初始化激活的控件为page
-    store.dispatch('selectWidget', { uuid: '-1' })
-    // selectWidget({
-    //   uuid: '-1',
-    // })
+    widgetStore.selectWidget({ uuid: '-1' })
+    // store.dispatch('selectWidget', { uuid: '-1' })
   })
 }
 

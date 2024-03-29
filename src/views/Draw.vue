@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { StyleValue, onMounted, reactive, nextTick } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import api from '@/api'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import Preload from '@/utils/plugins/preload'
@@ -18,17 +18,17 @@ import FontFaceObserver from 'fontfaceobserver'
 import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
-import { usePageStore } from '@/pinia'
+import { useGroupStore, usePageStore, useWidgetStore } from '@/pinia'
 
 type TState = {
   style: StyleValue
 }
 
-const store = useStore()
+// const store = useStore()
 const route = useRoute()
 const state = reactive<TState>({
   style: {
@@ -36,11 +36,14 @@ const state = reactive<TState>({
   },
 })
 const pageStore = usePageStore()
+const groupStore = useGroupStore()
+const widgetStore = useWidgetStore()
 const { dPage } = storeToRefs(pageStore)
 // const { dPage } = useSetupMapGetters(['dPage'])
 
 onMounted(() => {
-  store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
+  groupStore.initGroupJson(JSON.stringify(wGroupSetting))
+  // store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
   // initGroupJson(JSON.stringify(wGroup.setting))
   nextTick(() => {
     load()
@@ -64,7 +67,8 @@ async function load() {
       dPage.value.width = width
       dPage.value.height = height
       dPage.value.backgroundColor = '#ffffff00'
-      store.dispatch('addGroup', content)
+      widgetStore.addGroup(content)
+      // store.dispatch('addGroup', content)
       // addGroup(content)
     } else {
       pageStore.setDPage(content.page)
@@ -72,11 +76,14 @@ async function load() {
       // 移除背景图，作为独立事件
       backgroundImage = content.page?.backgroundImage
       backgroundImage && delete content.page.backgroundImage
-      store.commit('setDPage', content.page)
+      pageStore.setDPage(content.page)
+      // store.commit('setDPage', content.page)
       if (id) {
-        store.commit('setDWidgets', widgets)
+        widgetStore.setDWidgets(widgets)
+        // store.commit('setDWidgets', widgets)
       } else {
-        store.dispatch('setTemplate', widgets)
+        widgetStore.setTemplate(widgets)
+        // store.dispatch('setTemplate', widgets)
       }
     }
 
@@ -118,7 +125,8 @@ async function load() {
     if (backgroundImage) {
       const preloadBg = new Preload([backgroundImage])
       await preloadBg.imgs()
-      store.commit('setDPage', {...content.page, ...{backgroundImage}})
+      pageStore.setDPage({...content.page, ...{backgroundImage}})
+      // store.commit('setDPage', {...content.page, ...{backgroundImage}})
     }
     try {
       fontWithDraw && (await font2style(fontContent, fontData))

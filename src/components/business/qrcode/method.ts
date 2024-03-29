@@ -37,7 +37,7 @@ export function generateOption(props: TQrcodeProps): Options {
       ...props.dotsOptions,
     },
     cornersSquareOptions: {
-      color: props.dotsOptions.color,
+      color: props.dotsOptions?.color,
       // type: '',
       // type: 'extra-rounded' as CornerSquareType,
       // gradient: {
@@ -47,7 +47,7 @@ export function generateOption(props: TQrcodeProps): Options {
       // },
     },
     cornersDotOptions: {
-      color: props.dotsOptions.color,
+      color: props.dotsOptions?.color,
       type: 'square' as CornerDotType,
       // gradient: {
       //   type: 'linear', // 'radial'

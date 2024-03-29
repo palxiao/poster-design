@@ -28,8 +28,8 @@ import { storeToRefs } from 'pinia';
 // import wText from '../../widgets/wText/wText.vue'
 import { wTextSetting } from '../../widgets/wText/wTextSetting'
 
-import { useStore } from 'vuex'
-import { useControlStore, usePageStore } from '@/pinia';
+// import { useStore } from 'vuex'
+import { useControlStore, usePageStore, useWidgetStore } from '@/pinia';
 
 type TBasicTextData = {
   text: string
@@ -37,8 +37,9 @@ type TBasicTextData = {
   fontWeight: string
 }
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
 
 const { dPage } = storeToRefs(usePageStore())
 
@@ -56,7 +57,9 @@ const selectBasicText = (item: TBasicTextData) => {
   const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - item.fontSize * 3
   setting.top = pH / 2 - item.fontSize / 2
-  store.dispatch('addWidget', setting)
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
 
 // const dragStart = (_: MouseEvent, item: any) => {

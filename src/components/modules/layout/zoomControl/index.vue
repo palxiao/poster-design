@@ -20,17 +20,17 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import addMouseWheel from '@/common/methods/addMouseWheel'
 import { OtherList, TZoomData, ZoomList } from './data';
-import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useCanvasStore, usePageStore } from '@/pinia';
+import { useCanvasStore, useForceStore, usePageStore } from '@/pinia';
 
 const route = useRoute()
-const store = useStore()
+// const store = useStore()
 
 // 组件大小控制器
 let holder: number | undefined
@@ -48,9 +48,10 @@ const otherIndex = ref(-1)
 const bestZoom = ref(0)
 const curAction = ref('')
 
-const { zoomScreenChange } = useSetupMapGetters(['zoomScreenChange'])
+// const { zoomScreenChange } = useSetupMapGetters(['zoomScreenChange'])
 const canvasStore = useCanvasStore()
 const { dPage } = storeToRefs(usePageStore())
+const { zoomScreenChange } = storeToRefs(useForceStore())
 const { dZoom, dScreen } = storeToRefs(canvasStore)
 
 
@@ -141,11 +142,11 @@ function changeScreen() {
   holder = setTimeout(() => {
     const screen = document.getElementById('page-design')
     if (!screen) return
-    store.dispatch('updateScreen', {
+    canvasStore.updateScreen({
       width: screen.offsetWidth,
       height: screen.offsetHeight,
     })
-    // updateScreen({
+    // store.dispatch('updateScreen', {
     //   width: screen.offsetWidth,
     //   height: screen.offsetHeight,
     // })
@@ -264,7 +265,9 @@ async function autoFixTop() {
     padding += presetPadding / 2
   }
   curAction.value === 'add' && (padding -= presetPadding)
-  store.commit('updatePaddingTop', padding > 0 ? padding : 0)
+
+  canvasStore.updatePaddingTop(padding > 0 ? padding : 0)
+  // store.commit('updatePaddingTop', padding > 0 ? padding : 0)
 }
 
 defineExpose({

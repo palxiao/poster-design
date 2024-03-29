@@ -20,7 +20,7 @@ export function realCombined(store: TGroupStore) {
   const selectWidgets = widgetStore.dSelectWidgets
   if (selectWidgets.length > 1) {
     const widgets = widgetStore.dWidgets
-    const group: TdWidgetData = JSON.parse(JSON.stringify(store.dGroupJson))
+    const group: TdWidgetData = JSON.parse(store.dGroupJson)
     group.uuid = nanoid()
     widgets.push(group)
     let left = Number(pageStore.dPage.width)

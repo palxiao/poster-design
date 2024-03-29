@@ -94,8 +94,8 @@ export function selectWidgetsInOut(store: TWidgetStore, { uuid }: TSelectWidgetD
 }
 
 export type TselectItem = {
-  data: Record<string, any>
-  type: string
+  data?: Record<string, any>
+  type?: string
 }
 
 export function selectItem(state: TWidgetStore, { data, type }: TselectItem) {

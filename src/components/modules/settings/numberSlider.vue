@@ -21,7 +21,6 @@
 <script lang="ts" setup>
 // const NAME = 'number-slider'
 import { watch, ref, onMounted } from 'vue';
-import { mapActions } from 'vuex'
 
 type TProps = {
   label?: string

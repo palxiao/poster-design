@@ -5,12 +5,14 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2023-11-30 10:09:55
  */
-import { useControlStore } from '@/pinia'
-import store from '@/store'
+import { useControlStore, useWidgetStore } from '@/pinia'
+import { TdWidgetData } from '@/pinia/design/widget'
+// import store from '@/store'
 
 export default function keyCodeOptions(e: any, params: any) {
   const { f } = params
   const controlStore = useControlStore()
+  const widgetStore = useWidgetStore()
 
   switch (e.keyCode) {
     case 38:
@@ -28,17 +30,22 @@ export default function keyCodeOptions(e: any, params: any) {
     case 46:
     case 8:
       {
-        if (store.getters.dActiveElement.isContainer) {
-          if (checkGroupChild(store.getters.dActiveElement.uuid, 'editable')) {
+        if (widgetStore.dActiveElement?.isContainer) {
+          if (checkGroupChild(widgetStore.dActiveElement?.uuid, 'editable')) {
             return
           }
         }
-        const { type, editable }: any = store.getters.dActiveElement
+        if (!widgetStore.dActiveElement) return
+        const { type, editable } = widgetStore.dActiveElement
 
         if (type === 'w-text') {
           // 不在编辑状态则执行删除
-          !editable && controlStore.showMoveable && store.dispatch('deleteWidget')
-        } else store.dispatch('deleteWidget')
+          !editable && controlStore.showMoveable && widgetStore.deleteWidget()
+          // !editable && controlStore.showMoveable && store.dispatch('deleteWidget')
+        } else {
+          widgetStore.deleteWidget()
+          // store.dispatch('deleteWidget')
+        }
       }
       break
   }
@@ -46,10 +53,11 @@ export default function keyCodeOptions(e: any, params: any) {
 /**
  * 对组合的子元素某个值进行判断
  */
-function checkGroupChild(pid: number | string, key: any) {
+function checkGroupChild(pid: number | string, key: keyof TdWidgetData) {
+  const widgetStore = useWidgetStore()
   let itHas = false
-  const childs = store.getters.dWidgets.filter((x: any) => x.parent === pid) || []
-  childs.forEach((element: any) => {
+  const childs = widgetStore.dWidgets.filter((x) => x.parent === pid) || []
+  childs.forEach((element) => {
     element[key] && (itHas = true)
   })
   return itHas
@@ -57,20 +65,28 @@ function checkGroupChild(pid: number | string, key: any) {
 /**
  * TODO 键盘操作上下左右移动组件
  */
-function udlr(type: any, value: any, event: any) {
-  if (store.getters.dActiveElement.uuid != -1) {
-    if (store.getters.dActiveElement.editable) {
+function udlr(type: keyof TdWidgetData, value: any, event: any) {
+  const widgetStore = useWidgetStore()
+  if (!widgetStore.dActiveElement) return
+  if (Number(widgetStore.dActiveElement.uuid) != -1) {
+    if (widgetStore.dActiveElement.editable) {
       return
-    } else if (store.getters.dActiveElement.isContainer && checkGroupChild(store.getters.dActiveElement.uuid, 'editable')) {
+    } else if (widgetStore.dActiveElement.isContainer && checkGroupChild(widgetStore.dActiveElement.uuid, 'editable')) {
       return
     }
     event.preventDefault()
-    const result = Number(store.getters.dActiveElement[type]) + value
-    store.dispatch('updateWidgetData', {
-      uuid: store.getters.dActiveElement.uuid,
+    const result = Number(widgetStore.dActiveElement[type]) + value
+    widgetStore.updateWidgetData({
+      uuid: widgetStore.dActiveElement.uuid,
       key: type,
       value: result,
     })
+    // store.dispatch('updateWidgetData', {
+    //   uuid: store.getters.dActiveElement.uuid,
+    //   key: type,
+    //   value: result,
+    // })
+
     // TODO: 键盘移位需要防抖入栈
     // timer = setTimeout(() => {
     //   this.pushHistory()

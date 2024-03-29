@@ -46,9 +46,9 @@ type TState = {
   show: boolean;
   showMatting: boolean;
   isErasing: boolean;
-  radius: number | string;
+  radius: number;
   brushSize: string;
-  hardness: number | string;
+  hardness: number;
   hardnessText: string;
   constants: MattingType['constants'] | null;
 }
@@ -83,8 +83,8 @@ let mattingParam: MattingType | null
 const mattingStart = (mattingOptions: MattingType) => {
   mattingOptions.initLoadImages(props.raw, props.result)
   state.isErasing = mattingOptions.isErasing
-  state.radius = mattingOptions.radius
-  state.hardness = mattingOptions.hardness
+  state.radius = Number(mattingOptions.radius)
+  state.hardness = Number(mattingOptions.hardness)
   state.constants = mattingOptions.constants
   mattingParam = mattingOptions
 }

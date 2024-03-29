@@ -8,9 +8,10 @@
 
 import { usePageStore, useWidgetStore } from "@/pinia"
 import { THistoryStore } from ".."
+import { proxyToObject } from "@/utils/utils"
 
 /** push操作历史记录 */
-export function pushHistory(store: THistoryStore, msg: string) {
+export function pushHistory(store: THistoryStore, msg: string = "") {
   const pageStore = usePageStore()
   const selectStore = useWidgetStore()
   console.log('history压栈', '来源: ' + msg)
@@ -27,7 +28,7 @@ export function pushHistory(store: THistoryStore, msg: string) {
     store.dHistoryParams.index = history.length - 1
   }
   store.dHistory.push(JSON.stringify(selectStore.dWidgets))
-  store.dPageHistory.push(JSON.stringify(pageStore.dPage))
+  store.dPageHistory.push(JSON.stringify(proxyToObject(pageStore.dPage)))
   store.dHistoryParams.index = history.length - 1
   store.dHistoryParams.length = history.length
 }

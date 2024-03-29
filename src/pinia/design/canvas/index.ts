@@ -32,13 +32,6 @@ type TCanvasState = {
   guidelines: TGuidelinesData
 }
 
-type TStoreGetter = {
-  dZoom: (state: TCanvasState) => number
-  dPaddingTop: (state: TCanvasState) => number
-  dScreen: (state: TCanvasState) => TScreeData
-  guidelines: (state: TCanvasState) => TGuidelinesData
-}
-
 type TStoreAction = {
   /** 更新画布缩放百分比 */
   updateZoom: (zoom: number) => void
@@ -53,7 +46,7 @@ type TStoreAction = {
 }
 
 /** 画布全局设置 */
-const CanvasStore = defineStore<"canvasStore", TCanvasState, TStoreGetter, TStoreAction>("canvasStore", {
+const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("canvasStore", {
   state: () => ({
     dZoom: 0, // 画布缩放百分比
     dPaddingTop: 0, // 画布垂直居中修正值
@@ -71,12 +64,6 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, TStoreGetter, TStor
       horizontalGuidelines: [],
     },
   }),
-  getters: {
-    dZoom: state => state.dZoom,
-    dPaddingTop: state => state.dPaddingTop,
-    dScreen: state => state.dScreen,
-    guidelines: state => state.guidelines
-  },
   actions: {
     /** 更新画布缩放百分比 */
     updateZoom(zoom: number) {
@@ -88,6 +75,7 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, TStoreGetter, TStor
     },
     /** 更新编辑界面的宽高 */
     updateScreen({ width, height }: TScreeData) {
+      console.log(this.dScreen)
       this.dScreen.width = width
       this.dScreen.height = height
     },
@@ -103,6 +91,6 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, TStoreGetter, TStor
   }
 })
 
-export type TCanvasStore = Store<"canvasStore", TCanvasState, TStoreGetter, TStoreAction>
+export type TCanvasStore = Store<"canvasStore", TCanvasState, {}, TStoreAction>
 
 export default CanvasStore

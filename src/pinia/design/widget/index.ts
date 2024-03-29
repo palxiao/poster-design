@@ -19,10 +19,20 @@ import { TUpdateAlignData, updateAlign } from "./actions/align";
 import { TWidgetJsonData, widgetJsonData } from "./getter";
 import { TupdateLayerIndexData, ungroup, updateLayerIndex } from "./actions/layer";
 
-export type TdWidgetData = TPageState & {
+export type TdWidgetData = TPageState & Partial<TCommonItemData> & {
   parent?: string
   isContainer?: boolean
   text?: string
+  editable?: boolean
+  lock?: boolean
+  imgUrl?: string
+  rotate?: string
+  transform?: string
+  sliceData?: Record<string, any>
+  flip?: boolean
+  cropEdit?: boolean
+  fontClass?: Record<string, any>
+  writingMode?: string
 }
 
 export type TWidgetState = {
@@ -54,11 +64,11 @@ export type TWidgetState = {
   /** 记录多选的组件 */
   dSelectWidgets: TdWidgetData[]
   /** 复制的组件（可能是单个也可能是数组） */
-  dCopyElement: TdWidgetData[] | TdWidgetData
+  dCopyElement: TdWidgetData[]
   /** 记录当前选择的元素, data */
-  selectItem: { data: Record<string, any> | null, type?: string }
+  selectItem: { data?: Record<string, any> | null, type?: string }
   /** 正在活动的鼠标事件 */
-  activeMouseEvent: Event | null
+  activeMouseEvent: MouseEvent | null
 }
 
 type TGetter = {
@@ -80,7 +90,7 @@ type TAction = {
   /** 一次更新多个widget */
   updateWidgetMultiple: (payload: TUpdateWidgetMultiplePayload) => void
   /** addWidget */
-  addWidget: (setting: TPageState) => void
+  addWidget: (setting: TdWidgetData) => void
   /** addGroup */
   addGroup: (group: TdWidgetData[]) => void
   /** setTemplate */
@@ -102,11 +112,11 @@ type TAction = {
   ungroup: (uuid: string) => void
   /** 设置拖拽时在哪个图层 */
   setDropOver: (uuid: string) => void
-  selectItem: (data: TselectItem) => void
+  setSelectItem: (data: TselectItem) => void
   resize: (data: TResize) => void
   setWidgetStyle: (data: TsetWidgetStyleData) => void
   setDWidgets: (data: TdWidgetData[]) => void
-  setMouseEvent: (e: Event | null) => void
+  setMouseEvent: (e: MouseEvent | null) => void
 }
 
 const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("widgetStore", {
@@ -161,7 +171,7 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     updateLayerIndex(data) { updateLayerIndex(this, data) },
     ungroup(uuid) { ungroup(this, uuid) },
     setDropOver(uuid) { setDropOver(this, uuid) },
-    selectItem(data: TselectItem) { selectItem(this, data) },
+    setSelectItem(data: TselectItem) { selectItem(this, data) },
     resize(data) { resize(this, data) },
     setWidgetStyle(data) { setWidgetStyle(this, data) },
     setDWidgets(data) { setDWidgets(this, data) },

@@ -35,7 +35,7 @@ type THistoryAction = {
    * 修改数据、移动完成后都会自动保存
    * 同时会保存当前激活的组件的uuid，方便撤回时自动激活
    */
-  pushHistory: (msg: string) => void
+  pushHistory: (msg?: string) => void
   /**
    * 操作历史记录
    * action为undo表示撤销

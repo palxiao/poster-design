@@ -44,11 +44,11 @@ import api from '@/api'
 // import wImage from '../../widgets/wImage/wImage.vue'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
 import wSvg from '../../widgets/wSvg/wSvg.vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
 import { TGetListData } from '@/api/material'
-import { useControlStore, usePageStore } from '@/pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/pinia'
 import { storeToRefs } from 'pinia'
 
 type TProps = {
@@ -82,8 +82,9 @@ const props = defineProps<TProps>()
 
 const colors = ['#f8704b', '#5b89ff', '#2cc4cc', '#a8ba73', '#f8704b']
 
-const store = useStore()
+// const store = useStore()
 const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
 
 const { dPage } = storeToRefs(usePageStore())
 const state = reactive<TState>({
@@ -213,15 +214,17 @@ async function selectItem(item: TGetListData) {
   if (item.type === 'mask') {
     setting.mask = item.url
   }
-  store.dispatch('addWidget', setting)
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
 async function dragStart(e: MouseEvent, item: TGetListData) {
   startPoint = { x: e.x, y: e.y }
   const { width, height, thumb, url } = item
   const img = await setImageData({ width, height, url: thumb || url })
   dragHelper.start(e, img.canvasWidth)
-  store.commit('selectItem', { data: { value: item }, type: item.type })
-  // this.$store.commit('selectItem', { data: { value: item }, type: item.type })
+
+  widgetStore.setSelectItem({ data: { value: item }, type: item.type })
+  // store.commit('selectItem', { data: { value: item }, type: item.type })
 }
 </script>
 

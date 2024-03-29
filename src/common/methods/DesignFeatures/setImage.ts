@@ -5,8 +5,9 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
  * @LastEditTime: 2024-03-01 20:55:51
  */
-import store from '@/store'
+// import store from '@/store'
 import { getImage } from '../getImgDetail'
+import { useCanvasStore, usePageStore } from '@/pinia'
 
 export type TItem2DataParam = {
   id?: string | number
@@ -24,8 +25,10 @@ export type TItem2DataResult = {
 }
 
 export default async function setItem2Data(item: TItem2DataParam): Promise<Required<TItem2DataParam>> {
+  const canvasStore = useCanvasStore()
+  const pageStore = usePageStore()
   const cloneItem = JSON.parse(JSON.stringify(item))
-  const { width: screenWidth, height: screenHeight } = store.getters.dPage
+  const { width: screenWidth, height: screenHeight } = pageStore.dPage
   let { width: imgWidth, height: imgHeight } = item
   if (!imgWidth || !imgHeight) {
     const actual = await getImage(item.url)
@@ -39,11 +42,11 @@ export default async function setItem2Data(item: TItem2DataParam): Promise<Requi
   }
   // 根据画布缩放比例再进行一次调整
   if (ratio < 1) {
-    cloneItem.width = cloneItem.width * ratio * (store.getters.dZoom / 100)
-    cloneItem.height = cloneItem.height * ratio * (store.getters.dZoom / 100)
+    cloneItem.width = cloneItem.width * ratio * (canvasStore.dZoom / 100)
+    cloneItem.height = cloneItem.height * ratio * (canvasStore.dZoom / 100)
   }
 
-  cloneItem.canvasWidth = cloneItem.width * (store.getters.dZoom / 100)
+  cloneItem.canvasWidth = cloneItem.width * (canvasStore.dZoom / 100)
   // cloneItem.canvasHeight = cloneItem.height * (store.getters.dZoom / 100)
   return cloneItem
 }
