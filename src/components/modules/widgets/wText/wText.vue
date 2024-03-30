@@ -60,11 +60,12 @@
 // const NAME = 'w-text'
 
 import { reactive, toRefs, computed, onUpdated, watch, onMounted, ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg'
 import { wTextSetting } from './wTextSetting'
+import { useForceStore, useHistoryStore, useWidgetStore } from '@/store'
 
 export type TwTextParams = {
   rotate?: number
@@ -83,7 +84,10 @@ type TProps = {
 
 const props = defineProps<TProps>()
 
-const store = useStore()
+// const store = useStore()
+const widgetStore = useWidgetStore()
+const forceStore = useForceStore()
+const historyStore = useHistoryStore()
 const route = useRoute()
 const state = reactive({
   loading: false,
@@ -93,7 +97,7 @@ const state = reactive({
 const widget = ref<HTMLElement | null>(null)
 const editWrap = ref<HTMLElement | null>(null)
 
-const dActiveElement = computed(() => store.getters.dActiveElement)
+const dActiveElement = computed(() => widgetStore.dActiveElement)
 const isDraw = computed(() => route.name === 'Draw' && fontWithDraw)
 
 onUpdated(() => {
@@ -142,18 +146,24 @@ watch(
 watch(
   () => state.editable,
   (value) => {
-    store.dispatch('updateWidgetData', {
-      uuid: props.params.uuid,
+    widgetStore.updateWidgetData({
+      uuid: String(props.params.uuid),
       key: 'editable',
       value,
       pushHistory: false,
     })
+    // store.dispatch('updateWidgetData', {
+    //   uuid: props.params.uuid,
+    //   key: 'editable',
+    //   value,
+    //   pushHistory: false,
+    // })
   },
 )
 
 function updateRecord() {
   if (!widget.value) return
-  if (dActiveElement.value.uuid === props.params.uuid) {
+  if (dActiveElement.value && dActiveElement.value.uuid === String(props.params.uuid)) {
     let record = dActiveElement.value.record
     record.width = widget.value.offsetWidth
     record.height = widget.value.offsetHeight
@@ -166,12 +176,18 @@ function updateRecord() {
 function updateText(e?: Event) {
   const value = e && e.target ? (e.target as HTMLElement).innerHTML : props.params.text//.replace(/\n/g, '<br/>')
   if (value !== props.params.text) {
-    store.dispatch('updateWidgetData', {
-      uuid: props.params.uuid,
+    widgetStore.updateWidgetData({
+      uuid: String(props.params.uuid),
       key: 'text',
       value,
       pushHistory: false,
     })
+    // store.dispatch('updateWidgetData', {
+    //   uuid: props.params.uuid,
+    //   key: 'text',
+    //   value,
+    //   pushHistory: false,
+    // })
   }
 }
 
@@ -180,19 +196,27 @@ function writingText(e?: Event) {
   // TODO: 修正文字选框高度
   const el = editWrap.value || widget.value
   if (!el) return
-  store.dispatch('updateWidgetData', {
-    uuid: props.params.uuid,
+  widgetStore.updateWidgetData({
+    uuid: String(props.params.uuid),
     key: 'height',
     value: el.offsetHeight,
     pushHistory: false,
   })
-  store.commit('updateRect')
+  // store.dispatch('updateWidgetData', {
+  //   uuid: props.params.uuid,
+  //   key: 'height',
+  //   value: el.offsetHeight,
+  //   pushHistory: false,
+  // })
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 }
 
 function writeDone(e: Event) {
   state.editable = false
   setTimeout(() => {
-    store.dispatch('pushHistory', '文字修改')
+    historyStore.pushHistory("文字修改")
+    // store.dispatch('pushHistory', '文字修改')
   }, 100)
   updateText(e)
 }

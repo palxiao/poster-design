@@ -1,7 +1,12 @@
 <template>
   <div v-show="showMenuBg" id="menu-bg" class="menu-bg" @click="closeMenu">
     <ul ref="menuList" class="menu-list" :style="styleObj">
-      <li v-for="(item, index) in menuListData.list" :key="index" :class="{ 'menu-item': true, 'disable-menu': dCopyElement.length === 0 && item.type === 'paste' }" @click.stop="selectMenu(item.type)">
+      <li
+        v-for="(item, index) in menuListData.list"
+        :key="index"
+        :class="{ 'menu-item': true, 'disable-menu': dCopyElement.length === 0 && item.type === 'paste' }"
+        @click.stop="selectMenu(item.type)"
+      >
         {{ item.text }}
       </li>
     </ul>
@@ -10,7 +15,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { 
   widgetMenu as widget, 
   pageMenu as page,
@@ -18,15 +23,22 @@ import {
   TMenuItemData, TWidgetItemData, 
 } from './rcMenuData'
 import { getTarget } from '@/common/methods/target'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { storeToRefs } from 'pinia';
+import { useControlStore, useWidgetStore } from '@/store';
 
-const store = useStore()
+// const store = useStore()
 const menuListData = ref<TMenuItemData>({...menu})
 const showMenuBg = ref<boolean>(false)
 const widgetMenu = ref<TWidgetItemData[]>({...widget})
 const pageMenu = ref<TWidgetItemData[]>({...page})
 
-const {dActiveElement, dAltDown, dWidgets, dCopyElement} = useSetupMapGetters(['dActiveElement', 'dAltDown', 'dWidgets', 'dCopyElement'])
+const widgetStore = useWidgetStore()
+// const {dActiveElement, dWidgets, dCopyElement} = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dCopyElement'])
+
+const {dActiveElement, dWidgets, dCopyElement} = storeToRefs(widgetStore)
+const { dAltDown } = storeToRefs(useControlStore())
+
 
 const styleObj = computed(() => {
   return {
@@ -52,27 +64,30 @@ async function mouseRightClick(e: MouseEvent) {
   if (type) {
     let uuid = target.getAttribute('data-uuid') // 设置选中元素
 
-    if (uuid !== '-1' && !dAltDown) {
+    if (uuid !== '-1' && !dAltDown.value) {
       let widget = dWidgets.value.find((item: any) => item.uuid === uuid)
       if (
-        widget.parent !== '-1' && 
-        widget.parent !== dActiveElement.value.uuid &&
-        widget.parent !== dActiveElement.value.parent
+        widget?.parent !== '-1' && 
+        widget?.parent !== dActiveElement.value?.uuid &&
+        widget?.parent !== dActiveElement.value?.parent
       ) {
-        uuid = widget.parent
+        uuid = widget?.parent || ""
       }
     }
-    store.dispatch('selectWidget', {
+    widgetStore.selectWidget({
       uuid: uuid ?? '-1',
     })
+    // store.dispatch('selectWidget', {
+    //   uuid: uuid ?? '-1',
+    // })
     showMenu(e)
   }
 }
 
 function showMenu(e: MouseEvent) {
-  let isPage = dActiveElement.value.uuid === '-1'
+  let isPage = dActiveElement.value?.uuid === '-1'
   menuListData.value.list = isPage ? pageMenu.value : widgetMenu.value
-  if (dActiveElement.value.isContainer) {
+  if (dActiveElement.value?.isContainer) {
     let ungroup: TWidgetItemData[] = [
       {
         type: 'ungroup',
@@ -105,33 +120,47 @@ function closeMenu() {
 function selectMenu(type: TWidgetItemData['type']) {
   switch (type) {
     case 'copy':
-      store.dispatch('copyWidget')
+      widgetStore.copyWidget()
+      // store.dispatch('copyWidget')
       break
     case 'paste':
       if (dCopyElement.value.length === 0) {
         return
       }
-      store.dispatch('pasteWidget')
+      widgetStore.pasteWidget()
+      // store.dispatch('pasteWidget')
       break
     case 'index-up':
-      store.dispatch('updateLayerIndex', {
-        uuid: dActiveElement.value.uuid,
+      widgetStore.updateLayerIndex({
+        uuid: dActiveElement.value?.uuid || "",
         value: 1,
-        isGroup: dActiveElement.value.isContainer,
+        isGroup: dActiveElement.value?.isContainer,
       })
+      // store.dispatch('updateLayerIndex', {
+      //   uuid: dActiveElement.value.uuid,
+      //   value: 1,
+      //   isGroup: dActiveElement.value.isContainer,
+      // })
       break
     case 'index-down':
-      store.dispatch('updateLayerIndex', {
-        uuid: dActiveElement.value.uuid,
+      widgetStore.updateLayerIndex({
+        uuid: dActiveElement.value?.uuid || "",
         value: -1,
-        isGroup: dActiveElement.value.isContainer,
+        isGroup: dActiveElement.value?.isContainer,
       })
+      // store.dispatch('updateLayerIndex', {
+      //   uuid: dActiveElement.value.uuid,
+      //   value: -1,
+      //   isGroup: dActiveElement.value.isContainer,
+      // })
       break
     case 'del':
-      store.dispatch('deleteWidget')
+      widgetStore.deleteWidget()
+      // store.dispatch('deleteWidget')
       break
     case 'ungroup':
-      store.dispatch('ungroup', dActiveElement.value.uuid)
+      widgetStore.ungroup(dActiveElement.value?.uuid || "")
+      // store.dispatch('ungroup', dActiveElement.value.uuid)
       break
   }
   closeMenu()

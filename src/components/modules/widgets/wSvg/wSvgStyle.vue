@@ -37,7 +37,7 @@
 // 图片组件样式
 // const NAME = 'w-image-style'
 import { reactive, watch } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
 import numberSlider from '../../settings/numberSlider.vue'
@@ -45,7 +45,11 @@ import colorSelect from '../../settings/colorSelect.vue'
 import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import { TWSvgSetting, wSvgSetting } from './wSvgSetting'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { storeToRefs } from 'pinia'
+import { useControlStore, useWidgetStore } from '@/store'
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
+import { TUpdateAlignData } from '@/store/design/widget/actions/align'
 
 type TState = {
   activeNames: string[]
@@ -64,10 +68,13 @@ const state = reactive<TState>({
   layerIconList,
   alignIconList,
 })
-const store = useStore()
-const {
-  dActiveElement, dMoving
-} = useSetupMapGetters(['dActiveElement', 'dMoving'])
+// const store = useStore()
+const widgetStore = useWidgetStore()
+// const {
+//   dActiveElement
+// } = useSetupMapGetters(['dActiveElement'])
+const { dMoving } = storeToRefs(useControlStore())
+const { dActiveElement } = storeToRefs(widgetStore)
 
 // ...mapGetters(['dActiveElement', 'dMoving']),
 
@@ -111,17 +118,20 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof TWSvgSetting
     if (state.ingoreKeys.indexOf(itemKey) !== -1) {
-      dActiveElement.value[key] = state.innerElement[itemKey]
-    } else if (itemKey !== 'setting' && itemKey !== 'record' && state.innerElement[itemKey] !== dActiveElement.value[itemKey]) {
-      store.dispatch("updateWidgetData", {
-        uuid: dActiveElement.value.uuid,
-        key: key,
-        value: state.innerElement[itemKey],
+      (dActiveElement.value as Record<string, any>)[key] = state.innerElement[itemKey]
+    } else if (
+      itemKey !== 'setting' && itemKey !== 'record' &&
+      state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]
+    ) {
+      widgetStore.updateWidgetData({
+        uuid: dActiveElement.value?.uuid || "",
+        key: key as TUpdateWidgetPayload['key'],
+        value: state.innerElement[itemKey] as TUpdateWidgetPayload['value'],
       })
-      // this.updateWidgetData({
-      //   uuid: this.dActiveElement.uuid,
+      // store.dispatch("updateWidgetData", {
+      //   uuid: dActiveElement.value.uuid,
       //   key: key,
-      //   value: this.innerElement[key],
+      //   value: state.innerElement[itemKey],
       // })
     }
   }
@@ -132,14 +142,14 @@ function colorFinish(key: keyof TWSvgSetting) {
 }
 
 function finish(key: string, value: any) {
-  store.dispatch("updateWidgetData", {
-    uuid: dActiveElement.value.uuid,
-    key: key,
+  widgetStore.updateWidgetData({
+    uuid: dActiveElement.value?.uuid || '',
+    key: key as TUpdateWidgetPayload['key'],
     value: value,
     pushHistory: true,
   })
-  // this.updateWidgetData({
-  //   uuid: this.dActiveElement.uuid,
+  // store.dispatch("updateWidgetData", {
+  //   uuid: dActiveElement.value.uuid,
   //   key: key,
   //   value: value,
   //   pushHistory: true,
@@ -147,24 +157,24 @@ function finish(key: string, value: any) {
 }
 
 function layerAction(item: TIconItemSelectData) {
-  store.dispatch("updateLayerIndex", {
-    uuid: dActiveElement.value.uuid,
-    value: item.value,
+  widgetStore.updateLayerIndex({
+    uuid: dActiveElement.value?.uuid || '',
+    value: Number(item.value),
   })
-  // this.updateLayerIndex({
-  //   uuid: this.dActiveElement.uuid,
+  // store.dispatch("updateLayerIndex", {
+  //   uuid: dActiveElement.value.uuid,
   //   value: item.value,
   // })
 }
 
 function alignAction(item: TIconItemSelectData) {
-  store.dispatch("updateAlign", {
-    align: item.value,
-    uuid: dActiveElement.value.uuid,
+  widgetStore.updateAlign({
+    align: item.value as TUpdateAlignData['align'],
+    uuid: dActiveElement.value?.uuid || '',
   })
-  // this.updateAlign({
+  // store.dispatch("updateAlign", {
   //   align: item.value,
-  //   uuid: this.dActiveElement.uuid,
+  //   uuid: dActiveElement.value.uuid,
   // })
 }
 </script>

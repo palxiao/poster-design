@@ -39,7 +39,7 @@
         <div :class="['input-wrap', { active: state.inputBorder }]" :style="{ width: inputWidth }">
           <!-- <img v-if="innerPreview" class="preview" :src="innerPreview" /> -->
           <input
-            :style="{ fontFamily: modelValue.value }"
+            :style="{ fontFamily: (modelValue as Record<string, any>).value }"
             :class="['real-input', { disable: !disable }]"
             :readonly="readonly" type="text"
             :value="showValue"

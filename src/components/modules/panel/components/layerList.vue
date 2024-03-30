@@ -39,8 +39,10 @@
 </template>
 
 <script lang="ts">
+import { useWidgetStore } from '@/store'
+import { TdWidgetData } from '@/store/design/widget'
 import { defineComponent, computed, reactive, ref, toRefs } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default defineComponent({
@@ -48,8 +50,9 @@ export default defineComponent({
   props: ['data'],
   emits: ['change'],
   setup(props, context) {
-    let widgets: any = ref([])
-    const state: any = reactive({
+    const widgetStore = useWidgetStore()
+    let widgets = ref<TdWidgetData[]>([])
+    const state = reactive<{drag: boolean}>({
       drag: false,
     })
     const dragOptions = computed(() => {
@@ -61,7 +64,7 @@ export default defineComponent({
       }
     })
 
-    const store = useStore()
+    // const store = useStore()
     // const dPage = computed(() => {
     //   return store.getters.dPage
     // })
@@ -98,24 +101,26 @@ export default defineComponent({
       return widgets
     }
 
-    const getIsActive = (uuid: number) => {
-      if (store.getters.dSelectWidgets.length > 0) {
-        let widget = store.getters.dSelectWidgets.find((item: any) => item.uuid === uuid)
+    const getIsActive = (uuid: string) => {
+      if (widgetStore.dSelectWidgets.length > 0) {
+        let widget = widgetStore.dSelectWidgets.find((item) => item.uuid === uuid)
         if (widget) {
           return true
         }
         return false
       } else {
-        return uuid === store.getters.dActiveElement.uuid
+        return uuid === widgetStore.dActiveElement?.uuid
       }
     }
 
     const selectLayer = (widget: any) => {
       // console.log(widget)
-      store.dispatch('selectWidget', { uuid: widget.uuid })
+      widgetStore.selectWidget({ uuid: widget.uuid })
+      // store.dispatch('selectWidget', { uuid: widget.uuid })
     }
     const hoverLayer = ({ uuid, parent }: any) => {
-      store.dispatch('updateHoverUuid', uuid)
+      widgetStore.updateHoverUuid(uuid)
+      // store.dispatch('updateHoverUuid', uuid)
     }
 
     const onMove = ({ relatedContext, draggedContext }: any) => {
@@ -133,12 +138,18 @@ export default defineComponent({
     }
     // 锁定图层
     const lockLayer = (item: any) => {
-      store.dispatch('updateWidgetData', {
+      widgetStore.updateWidgetData({
         uuid: item.uuid,
         key: 'lock',
         value: typeof item.lock === 'undefined' ? true : !item.lock,
         pushHistory: false,
       })
+      // store.dispatch('updateWidgetData', {
+      //   uuid: item.uuid,
+      //   key: 'lock',
+      //   value: typeof item.lock === 'undefined' ? true : !item.lock,
+      //   pushHistory: false,
+      // })
       // item.lock = typeof item.lock === 'undefined' ? true : !item.lock
     }
 

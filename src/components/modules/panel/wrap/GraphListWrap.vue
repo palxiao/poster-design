@@ -39,28 +39,56 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, toRefs, onMounted } from 'vue'
 import api from '@/api'
 // import wImage from '../../widgets/wImage/wImage.vue'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
-// import wSvg from '../../widgets/wSvg/wSvg.vue'
 import { wSvgSetting } from '../../widgets/wSvg/wSvgSetting'
-import { useStore } from 'vuex'
+// import wSvg from '../../widgets/wSvg/wSvg.vue'
+// import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { TGetListData } from '@/api/material'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 type TProps = {
   active?: boolean
+}
+
+type TState = {
+  loading: boolean
+  loadDone: boolean
+  sub: []
+  list: TGetListData[]
+  currentType: Number
+  currentCheck:number
+  colors: string[]
+  currentCategory: TCurrentCategory | null
+  types: []
+  showList: TGetListData[][]
+  searchKeyword: string
+}
+
+type TCurrentCategory = {
+  name: string
+  id?: number
 }
 
 let isDrag = false
 let startPoint = { x: 99999, y: 99999 }
 const dragHelper = new DragHelper()
 
-const prpos = defineProps<TProps>()
+const props = defineProps<TProps>()
+
 const colors = ['#f8704b', '#5b89ff', '#2cc4cc', '#a8ba73', '#f8704b']
-const state: any = reactive({
+
+// const store = useStore()
+const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
+
+const { dPage } = storeToRefs(usePageStore())
+const state = reactive<TState>({
   loading: false,
   loadDone: false,
   sub: [],
@@ -74,10 +102,6 @@ const state: any = reactive({
   searchKeyword: '',
 })
 const pageOptions = { page: 0, pageSize: 20 }
-const store = useStore()
-const {
-  dPage
-} = useSetupMapGetters(['dPage'])
 
 onMounted(async () => {
   if (state.types.length <= 0) {
@@ -92,17 +116,19 @@ onMounted(async () => {
     }
   }
 })
+
 // const dragHelper = new DragHelper()
 // let isDrag = false
 // let startPoint = { x: 99999, y: 99999 }
-const mouseup = (e: any) => {
+const mouseup = (e: MouseEvent) => {
   e.preventDefault()
   setTimeout(() => {
     isDrag = false
     startPoint = { x: 99999, y: 99999 }
   }, 10)
 }
-const mousemove = (e: any) => {
+
+const mousemove = (e: MouseEvent) => {
   e.preventDefault()
   if (e.x - startPoint.x > 2 || e.y - startPoint.y > 2) {
     isDrag = true
@@ -134,12 +160,12 @@ const load = async (init: boolean = false) => {
   }, 100)
 }
 
-const searchChange = (e: any) => {
+const searchChange = (_: Event) => {
   state.currentCategory = { name: '搜索结果' }
   load(true)
 }
 
-const selectTypes = (item: any) => {
+const selectTypes = (item: TCurrentCategory) => {
   state.currentCategory = item
   load(true)
 }
@@ -156,17 +182,20 @@ defineExpose({
   mousemove,
 })
 
-// ...mapGetters(['dPage'])
 
-// ...mapActions(['addWidget'])
-
-async function selectItem(item: any) {
+// computed: {
+//   ...mapGetters(['dPage']),
+// }
+// ...mapActions(['addWidget']),
+async function selectItem(item: TGetListData) {
   if (isDrag) {
     return
   }
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvgSetting)) : JSON.parse(JSON.stringify(wImageSetting))
-  const img: any = await setImageData(item)
+  const img = await setImageData(item)
 
   setting.width = img.width
   setting.height = img.height // parseInt(100 / item.value.ratio, 10)
@@ -186,15 +215,17 @@ async function selectItem(item: any) {
   if (item.type === 'mask') {
     setting.mask = item.url
   }
-  store.dispatch("addWidget", setting)
-  // addWidget(setting)
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
-async function dragStart(e: any, item: any) {
+async function dragStart(e: MouseEvent, item: TGetListData) {
   startPoint = { x: e.x, y: e.y }
   const { width, height, thumb, url } = item
   const img = await setImageData({ width, height, url: thumb || url })
   dragHelper.start(e, img.canvasWidth)
-  store.commit('selectItem', { data: { value: item }, type: item.type })
+
+  widgetStore.setSelectItem({ data: { value: item }, type: item.type })
+  // store.commit('selectItem', { data: { value: item }, type: item.type })
 }
 </script>
 

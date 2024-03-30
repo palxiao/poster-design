@@ -3,7 +3,7 @@
  * @Date: 2022-02-11 18:48:23
  * @Description: 照片图库 Form:Unsplash无版权图片
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-04 19:04:39
+ * @LastEditTime: 2024-03-19 10:04:39
 -->
 <template>
   <div class="wrap">
@@ -24,16 +24,18 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 // 图片列表
-const NAME = 'img-list-wrap'
+// const NAME = 'img-list-wrap'
 import { toRefs, reactive, computed, onMounted } from 'vue'
 // import wImage from '../../widgets/wImage/wImage.vue'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
 import api from '@/api'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
-import { TGetImageListResult } from '@/api/material';
+import { storeToRefs } from 'pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { TGetImageListResult } from '@/api/material'
 
 type TProps = {
   active?: boolean
@@ -41,16 +43,25 @@ type TProps = {
 
 type TState = {
   recommendImgList: TGetImageListResult[],
-  loadDone: boolean,
-  page: 0,
-  currentCategory: null | Record<string, any>,
+  loadDone: boolean
+  page: number
+  currentCategory: TCurrentCategory | null,
   types: [],
   showList: TGetImageListResult[][],
 }
 
+type TCurrentCategory = {
+  name: string
+  id?: number
+}
+
 const props = defineProps<TProps>()
 
-const store = useStore()
+// const store = useStore()
+const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
+
+const { dPage } = storeToRefs(usePageStore())
 const state = reactive<TState>({
   recommendImgList: [],
   loadDone: false,
@@ -59,7 +70,6 @@ const state = reactive<TState>({
   types: [],
   showList: [],
 })
-const dPage = computed(() => store.getters.dPage)
 let loading = false
 
 onMounted(async () => {
@@ -75,7 +85,10 @@ onMounted(async () => {
 
 const selectImg = async (index: number, list: TGetImageListResult[]) => {
   const item = list ? list[index] : state.recommendImgList[index]
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item) // await getImage(item.url)
   setting.width = img.width
@@ -84,7 +97,9 @@ const selectImg = async (index: number, list: TGetImageListResult[]) => {
   const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - img.width / 2
   setting.top = pH / 2 - img.height / 2
-  store.dispatch('addWidget', setting)
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
 
 const getDataList = async () => {
@@ -93,27 +108,29 @@ const getDataList = async () => {
   }
   loading = true
   state.page += 1
-  if (!state.currentCategory) return
-  let { list = [], total } = await api.material.getImagesList({ cate: state.currentCategory.id, page: state.page, pageSize: 30 })
+  let { list = [], total } = await api.material.getImagesList({ cate: state.currentCategory?.id, page: state.page, pageSize: 30 })
   list.length <= 0 ? (state.loadDone = true) : (state.recommendImgList = state.recommendImgList.concat(list))
   setTimeout(() => {
     loading = false
   }, 100)
 }
 
-const dragStart = (index: number, list?: TGetImageListResult[]) => {
+const dragStart = (index: number, list: TGetImageListResult[]) => {
   const item = list ? list[index] : state.recommendImgList[index]
-  store.commit('selectItem', { data: { value: item }, type: 'image' })
+
+  widgetStore.setSelectItem({ data: { value: item }, type: 'image' })
+  // store.commit('selectItem', { data: { value: item }, type: 'image' })
 }
 
-const searchChange = (e: Record<string, any>) => {
+const searchChange = (e: Event) => {
   console.log(e)
 }
 
-const selectTypes = (item: Record<string, any>) => {
+const selectTypes = (item: TCurrentCategory) => {
   state.currentCategory = item
   getDataList()
 }
+
 const back = () => {
   state.currentCategory = null
   state.page = 0

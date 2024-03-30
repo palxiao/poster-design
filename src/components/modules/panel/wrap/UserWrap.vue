@@ -39,7 +39,7 @@
 import { reactive, toRefs, watch, nextTick, ref, onMounted } from 'vue'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import uploader from '@/components/common/Uploader'
 import api from '@/api'
 // import wImage from '../../widgets/wImage/wImage.vue'
@@ -52,6 +52,8 @@ import imgWaterFall from './components/imgWaterFall.vue'
 import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 import eventBus from '@/utils/plugins/eventBus'
+import { storeToRefs } from 'pinia'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 
 type TProps = {
   active?: number
@@ -70,7 +72,12 @@ type TState = {
 const props = defineProps<TProps>()
 
 const router = useRouter()
-const store = useStore()
+
+// const store = useStore()
+const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
+
+const { dPage } = storeToRefs(usePageStore())
 const listRef = ref<HTMLElement | null>(null)
 const imgListRef = ref<typeof photoList | null>(null)
 
@@ -159,16 +166,21 @@ onMounted(() => {
 
 const selectImg = async (index: number) => {
   const item = state.imgList[index]
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item)
   setting.width = img.width
   setting.height = img.height // parseInt(100 / item.value.ratio, 10)
   setting.imgUrl = item.url
-  const { width: pW, height: pH } = store.getters.dPage
+  const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - img.width / 2
   setting.top = pH / 2 - img.height / 2
-  store.dispatch('addWidget', setting)
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
 
 type controlImgParam = {
@@ -177,7 +189,10 @@ type controlImgParam = {
 }
 
 const deleteImg = async ({ i, item }: controlImgParam) => {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
+
   const isPass = await useConfirm('警告', '删除后不可找回，已引用资源将会失效，请谨慎操作', 'warning')
   if (!isPass) {
     return false
@@ -216,7 +231,8 @@ state.editOptions = {
 
 const dragStart = (index: number) => {
   const item = state.imgList[index]
-  store.commit('selectItem', { data: { value: item }, type: 'image' })
+  widgetStore.setSelectItem({ data: { value: item }, type: 'image' })
+  // store.commit('selectItem', { data: { value: item }, type: 'image' })
 }
 const uploadDone = async (res: TUploadDoneData) => {
   await api.material.addMyPhoto(res)

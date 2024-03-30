@@ -17,8 +17,13 @@
         </div>
       </el-collapse-item>
       <el-collapse-item title="样式设置" name="2">
-        <el-button plain type="primary" class="block-btn" @click="store.dispatch('ungroup', state.innerElement.uuid)">取消组合</el-button>
-        <!-- <div class="ungroup style-item" @click="ungroup(innerElement.uuid)">取消组合</div> -->
+        <!-- <el-button plain type="primary" class="block-btn" @click="store.dispatch('ungroup', state.innerElement.uuid)">取消组合</el-button> -->
+        <div
+          class="ungroup style-item"
+          @click="widgetStore.ungroup(String(state.innerElement.uuid))"
+        >
+          取消组合
+        </div>
         <number-slider v-model="state.innerElement.opacity" class="style-item" label="不透明" :step="0.05" :maxValue="1" @finish="(value) => finish('opacity', value)" />
         <br />
         <icon-item-select class="style-item" label="" :data="layerIconList" @finish="layerAction" />
@@ -32,14 +37,19 @@
 // 组合组件样式
 // const NAME = 'w-group-style'
 import { reactive, watch } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
 import numberSlider from '../../settings/numberSlider.vue'
 import layerIconList from '@/assets/data/LayerIconList'
 import alignIconList from '@/assets/data/AlignListData'
 import { wGroupSetting } from './groupSetting'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { useWidgetStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
+import { TupdateLayerIndexData } from '@/store/design/widget/actions/layer'
+import { TUpdateAlignData } from '@/store/design/widget/actions/align'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 
 type TState = {
   activeNames: string[],
@@ -60,8 +70,10 @@ const state = reactive<TState>({
   layerIconList,
   alignIconList,
 })
-const store = useStore()
-const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+// const store = useStore()
+const widgetStore = useWidgetStore()
+// const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+const { dActiveElement } = storeToRefs(widgetStore)
 
 let dMoving = false
 
@@ -109,17 +121,17 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof typeof wGroupSetting
     if (state.ingoreKeys.indexOf(itemKey) !== -1) {
-      dActiveElement.value[itemKey] = state.innerElement[itemKey]
-    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== dActiveElement.value[itemKey]) {
-      store.dispatch("updateWidgetData", {
-        uuid: dActiveElement.value.uuid,
-        key: key,
-        value: state.innerElement[itemKey],
+      (dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
+    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]) {
+      widgetStore.updateWidgetData({
+        uuid: dActiveElement.value?.uuid || "",
+        key: (key as TUpdateWidgetPayload['key']),
+        value: (state.innerElement[itemKey] as TUpdateWidgetPayload['value']),
       })
-      // this.updateWidgetData({
-      //   uuid: this.dActiveElement.uuid,
+      // store.dispatch("updateWidgetData", {
+      //   uuid: dActiveElement.value?.uuid,
       //   key: key,
-      //   value: this.innerElement[key],
+      //   value: state.innerElement[itemKey],
       // })
     }
   }
@@ -127,14 +139,14 @@ function changeValue() {
 
 
 function finish(key: string, value: string | number | number[]) {
-  store.dispatch("updateWidgetData", {
-    uuid: dActiveElement.value.uuid,
-    key: key,
-    value: value,
+  widgetStore.updateWidgetData({
+    uuid: dActiveElement.value?.uuid || "",
+    key: key as TUpdateWidgetPayload['key'],
+    value: value  as TUpdateWidgetPayload['value'],
     pushHistory: true,
   })
-  // this.updateWidgetData({
-  //   uuid: this.dActiveElement.uuid,
+  // store.dispatch("updateWidgetData", {
+  //   uuid: dActiveElement.value.uuid,
   //   key: key,
   //   value: value,
   //   pushHistory: true,
@@ -142,23 +154,27 @@ function finish(key: string, value: string | number | number[]) {
 }
 
 function layerAction(item: TIconItemSelectData) {
-  store.dispatch("updateLayerIndex", {
-    uuid: dActiveElement.value.uuid,
-    value: item.value,
+  widgetStore.updateLayerIndex({
+    uuid: dActiveElement.value?.uuid || "",
+    value: (item.value as TupdateLayerIndexData['value']),
     isGroup: true,
   })
-  // this.updateLayerIndex({
-  //   uuid: this.dActiveElement.uuid,
+  // store.dispatch("updateLayerIndex", {
+  //   uuid: dActiveElement.value.uuid,
   //   value: item.value,
   //   isGroup: true,
   // })
 }
 
 function alignAction(item: TIconItemSelectData) {
-  store.dispatch("updateAlign", {
-    align: item.value,
-    uuid: dActiveElement.value.uuid,
+  widgetStore.updateAlign({
+    align: (item.value as TUpdateAlignData['align']),
+    uuid: dActiveElement.value?.uuid || "",
   })
+  // store.dispatch("updateAlign", {
+  //   align: item.value,
+  //   uuid: dActiveElement.value.uuid,
+  // })
 }
 </script>
 

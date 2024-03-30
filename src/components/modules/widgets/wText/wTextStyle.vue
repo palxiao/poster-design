@@ -52,7 +52,7 @@
 // 文本组件样式
 const NAME = 'w-text-style'
 import { defineComponent, reactive, toRefs, computed, watch, nextTick, onMounted } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { styleIconList1, styleIconList2, alignIconList, TStyleIconData, TStyleIconData2 } from '@/assets/data/TextIconsData'
 import layerIconList from '@/assets/data/LayerIconList'
@@ -66,6 +66,10 @@ import effectWrap from '../../settings/EffectSelect/TextWrap.vue'
 import { useFontStore } from '@/common/methods/fonts'
 import usePageFontsFilter from './pageFontsFilter'
 import { wTextSetting ,TwTextData } from './wTextSetting';
+import { storeToRefs } from 'pinia';
+import { useControlStore, useForceStore, useWidgetStore } from '@/store';
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget';
+import { TUpdateAlignData } from '@/store/design/widget/actions/align';
 
 type TState = {
   activeNames: string[],
@@ -82,7 +86,9 @@ type TState = {
   alignIconList: TIconItemSelectData[],
 }
 
-const store = useStore()
+// const store = useStore()
+const widgetStore = useWidgetStore()
+const forceStore = useForceStore()
 const route = useRoute()
 const state = reactive<TState>({
   activeNames: [],
@@ -98,8 +104,10 @@ const state = reactive<TState>({
   styleIconList2,
   alignIconList,
 })
-const dActiveElement = computed(() => store.getters.dActiveElement)
-const dMoving = computed(() => store.getters.dMoving)
+const dActiveElement = computed(() => widgetStore.dActiveElement)
+// const dMoving = computed(() => store.getters.dMoving)
+const { dMoving } = storeToRefs(useControlStore())
+
 // const isDraw = computed(() => route.name === 'Draw')
 
 watch(() => dActiveElement.value, () => {
@@ -144,22 +152,32 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof TwTextData
     if (state.ingoreKeys.indexOf(itemKey) !== -1) {
-      dActiveElement.value[itemKey] = state.innerElement[itemKey]
-    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== dActiveElement.value[itemKey]) {
+      (dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
+    } else if (
+      key !== 'setting' && key !== 'record' &&
+      state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]
+    ) {
       // const pushHistory = !['textEffects', 'transformData', 'fontClass'].includes(key)
-      store.dispatch('updateWidgetData', {
-        uuid: dActiveElement.value.uuid,
-        key,
+      widgetStore.updateWidgetData({
+        uuid: dActiveElement.value?.uuid || '',
+        key: key as TUpdateWidgetPayload['key'],
         value: state.innerElement[itemKey],
         pushHistory: false,
       })
+      // store.dispatch('updateWidgetData', {
+      //   uuid: dActiveElement.value.uuid,
+      //   key,
+      //   value: state.innerElement[itemKey],
+      //   pushHistory: false,
+      // })
     }
   }
 }
 
 function selectTextEffect({ key, value, style }: any) {
-  const uuid = dActiveElement.value.uuid
-  store.commit('setWidgetStyle', { uuid, key, value })
+  const uuid = dActiveElement.value?.uuid || ''
+  widgetStore.setWidgetStyle({ uuid, key, value })
+  // store.commit('setWidgetStyle', { uuid, key, value })
   if (style) {
     finish('color', style.color || '')
   }
@@ -178,22 +196,32 @@ function loadFonts() {
 }
 
 function finish(key: string, value: number | Record<string, any> | string) {
-  store.dispatch('updateWidgetData', {
-    uuid: dActiveElement.value.uuid,
-    key,
+  widgetStore.updateWidgetData({
+    uuid: dActiveElement.value?.uuid || '',
+    key: key as TUpdateWidgetPayload['key'],
     value,
     pushHistory: false,
   })
+  // store.dispatch('updateWidgetData', {
+  //   uuid: dActiveElement.value.uuid,
+  //   key,
+  //   value,
+  //   pushHistory: false,
+  // })
   setTimeout(() => {
     key === 'fontClass' && (state.fontClassList['当前页面'] = usePageFontsFilter())
   }, 300)
 }
 
 function layerAction(item: TIconItemSelectData) {
-  store.dispatch('updateLayerIndex', {
-    uuid: dActiveElement.value.uuid,
-    value: item.value,
+  widgetStore.updateLayerIndex({
+    uuid: dActiveElement.value?.uuid || '',
+    value: Number(item.value),
   })
+  // store.dispatch('updateLayerIndex', {
+  //   uuid: dActiveElement.value.uuid,
+  //   value: item.value,
+  // })
 }
 
 async function textStyleAction(item: TIconItemSelectData) {
@@ -202,16 +230,22 @@ async function textStyleAction(item: TIconItemSelectData) {
   // TODO: 对竖版文字的特殊处理
   item.key === 'writingMode' && relationChange()
   await nextTick()
-  store.commit('updateRect')
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 }
 
 async function alignAction(item: TIconItemSelectData) {
-  store.dispatch('updateAlign', {
-    align: item.value,
-    uuid: dActiveElement.value.uuid,
+  widgetStore.updateAlign({
+    align: item.value as TUpdateAlignData['align'],
+    uuid: dActiveElement.value?.uuid || '',
   })
+  // store.dispatch('updateAlign', {
+  //   align: item.value,
+  //   uuid: dActiveElement.value.uuid,
+  // })
   await nextTick()
-  store.commit('updateRect')
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 }
 
 function changeStyleIconList() {
@@ -246,7 +280,7 @@ function changeStyleIconList() {
 
 function relationChange() {
   setTimeout(() => {
-    if (dActiveElement.value.writingMode) {
+    if (dActiveElement.value && dActiveElement.value.writingMode) {
       const w_record = dActiveElement.value.width
       state.innerElement.width = dActiveElement.value.height
       state.innerElement.height = w_record

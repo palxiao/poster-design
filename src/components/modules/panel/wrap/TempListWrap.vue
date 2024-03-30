@@ -23,15 +23,17 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import api from '@/api'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { LocationQueryValue, useRoute, useRouter } from 'vue-router'
 // import chooseType from './components/chooseType.vue'
 // import editModel from './components/editModel.vue'
 import searchHeader from './components/searchHeader.vue'
 import useConfirm from '@/common/methods/confirm'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
+import {useControlStore, usePageStore, useUserStore, useHistoryStore, useWidgetStore, useForceStore} from '@/store'
+import { storeToRefs } from 'pinia'
 
 type TState = {
   loading: boolean
@@ -51,7 +53,14 @@ type TPageOptions = {
 const listRef = ref<HTMLElement | null>(null)
 const route = useRoute()
 const router = useRouter()
-const store = useStore()
+
+// const store = useStore()
+const controlStore = useControlStore()
+
+const userStore = useUserStore()
+const pageStore = usePageStore()
+const widgetStore = useWidgetStore()
+const forceStore = useForceStore()
 const state = reactive<TState>({
   loading: false,
   loadDone: false,
@@ -60,12 +69,14 @@ const state = reactive<TState>({
   searchKeyword: '',
 })
 
-const { tempEditing, dHistoryParams } = useSetupMapGetters(['tempEditing', 'dHistoryParams'])
+// const { tempEditing } = useSetupMapGetters(['tempEditing'])
+const { dHistoryParams } = storeToRefs(useHistoryStore())
 
 const pageOptions: TPageOptions = { page: 0, pageSize: 20, cate: 1 }
 const { cate, edit } = route.query
-cate && (pageOptions.cate = (cate as LocationQueryValue) || 1)
-edit && store.commit('managerEdit', true)
+cate && (pageOptions.cate = (cate as LocationQueryValue) ?? 1)
+// edit && store.commit('managerEdit', true)
+edit && userStore.managerEdit(true)
 
 // onMounted(async () => {})
 
@@ -109,15 +120,21 @@ function checkHeight() {
 }
 // ...mapActions(['selectWidget', 'updatePageData', 'setTemplate', 'pushHistory']),
 async function selectItem(item: IGetTempListData) {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
+
   if (dHistoryParams.value.length > 0) {
     const isPass = await useConfirm('提示', '使用模板后，当前页面将会被替换，是否继续', 'warning')
     if (!isPass) {
       return false
     }
   }
-  store.commit('managerEdit', false)
-  store.commit('setDWidgets', [])
+  // store.commit('managerEdit', false)
+  userStore.managerEdit(false)
+
+  widgetStore.setDWidgets([])
+  // store.commit('setDWidgets', [])
 
   setTempId(item.id)
 
@@ -131,15 +148,21 @@ async function selectItem(item: IGetTempListData) {
   const { page, widgets } = result
   console.log(widgets)
 
-  store.commit('setDPage', page)
-  store.dispatch('setTemplate', widgets)
+  pageStore.setDPage(page)
+  // store.commit('setDPage', page)
+  widgetStore.setTemplate(widgets)
+  // store.dispatch('setTemplate', widgets)
   // setTemplate(widgets)
   setTimeout(() => {
-    store.commit('zoomScreenChange')
+    forceStore.setZoomScreenChange()
+    // store.commit('zoomScreenChange')
   }, 300)
-  store.dispatch('selectWidget', {
+  widgetStore.selectWidget({
     uuid: '-1'
   })
+  // store.dispatch('selectWidget', {
+  //   uuid: '-1'
+  // })
   // selectWidget({
   //   uuid: '-1',
   // })

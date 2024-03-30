@@ -25,9 +25,10 @@
 <script lang="ts" setup>
 import { reactive, computed } from 'vue'
 import api from '@/api'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { ElImage } from 'element-plus'
 import { TGetImageListResult } from '@/api/material';
+import { usePageStore, useWidgetStore } from '@/store';
 
 type TCommonPanelData = {
   color: string
@@ -55,7 +56,10 @@ type TState = {
 const { model } = defineProps<TProps>()
 
 
-const store = useStore()
+// const store = useStore()
+const pageStore = usePageStore()
+const widgetStore = useWidgetStore()
+
 const state = reactive<TState>({
   loading: false,
   loadDone: false,
@@ -113,51 +117,45 @@ const load = async (init: boolean = false) => {
 }
 
 function setBGcolor(color: string) {
-  store.dispatch('updatePageData', {
-    key: 'backgroundImage',
-    value: '',
+  pageStore.updatePageData({
+    key: "backgroundImage",
+    value: ''
   })
-  store.dispatch('updatePageData', {
+  pageStore.updatePageData({
     key: 'backgroundColor',
     value: color,
-    pushHistory: true,
+    pushHistory: true
   })
-  store.dispatch('selectWidget', {
-    uuid: '-1',
+  widgetStore.selectWidget({
+    uuid: '-1'
   })
+  // store.dispatch('selectWidget', {
+  //   uuid: '-1',
+  // })
 }
 
-// ...mapActions(['selectWidget', 'updatePageData']),
 async function selectItem(item: TGetImageListResult) {
   // this.$store.commit('setShowMoveable', false) // 清理掉上一次的选择
-  store.dispatch('updatePageData', {
+  pageStore.updatePageData({
     key: 'backgroundTransform',
     value: {},
   })
-  store.dispatch('updatePageData', {
+  pageStore.updatePageData({
     key: 'backgroundImage',
     value: item.url,
     pushHistory: true,
   })
-  store.dispatch('selectWidget', {
-    uuid: '-1',
+  widgetStore.selectWidget({
+    uuid: '-1'
   })
-  // this.updatePageData({
-  //   key: 'backgroundTransform',
-  //   value: {},
-  // })
-  // this.updatePageData({
-  //   key: 'backgroundImage',
-  //   value: item.url,
-  //   pushHistory: true,
-  // })
-  // this.selectWidget({
+  // store.dispatch('selectWidget', {
   //   uuid: '-1',
   // })
 }
 
 function dragStart(_: MouseEvent, _item: TGetImageListResult) {
-  store.commit('selectItem', { data: {}, type: 'bg' })
+  widgetStore.setSelectItem({ data: {}, type: 'bg' })
+  // store.commit('selectItem', { data: {}, type: 'bg' })
 }
 
 

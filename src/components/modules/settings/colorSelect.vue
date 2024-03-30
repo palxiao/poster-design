@@ -17,8 +17,9 @@
 
 <script lang="ts" setup>
 import {reactive, onMounted, watch } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import colorPicker from '@palxp/color-picker'
+import { useControlStore } from '@/store';
 
 type TProps = {
   label?: string
@@ -52,7 +53,9 @@ const props = withDefaults(defineProps<TProps>(), {
 
 const emit = defineEmits<TEmits>()
 
-const store = useStore()
+// const store = useStore()
+const controlStore = useControlStore()
+
 const state = reactive<TState>({
   innerColor: '',
   // colorLength: 0,
@@ -116,11 +119,13 @@ const inputBlur = (color: string) => {
 }
 
 const enter = () => {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
 }
 
 const hide = () => {
-  store.commit('setShowMoveable', true) // 恢复上一次的选择框
+  // store.commit('setShowMoveable', true) // 恢复上一次的选择框
+  controlStore.setShowMoveable(true) // 恢复上一次的选择框
 }
 
 

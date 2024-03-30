@@ -56,7 +56,7 @@
 // 画布组件样式
 // const NAME = 'page-style'
 import { nextTick, onMounted, reactive, watch } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import numberInput from '../settings/numberInput.vue'
 import colorSelect, { colorChangeData } from '../settings/colorSelect.vue'
 import uploader, { TUploadDoneData } from '@/components/common/Uploader/index.vue'
@@ -65,7 +65,11 @@ import _dl from '@/common/methods/download'
 // import ColorPipette from '@/utils/plugins/color-pipette'
 import Tabs from '@palxp/color-picker/comps/Tabs.vue'
 import TabPanel from '@palxp/color-picker/comps/TabPanel.vue'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { usePageStore, useWidgetStore } from '@/store'
+import { TPageState, } from '@/store/design/page'
+import { storeToRefs } from 'pinia'
+import { proxyToObject } from '@/utils/utils'
 import { Delete as iconDelete, Download as iconDownload } from '@element-plus/icons-vue'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 // import setImageData from '@/common/methods/DesignFeatures/setImage'
@@ -81,7 +85,9 @@ type TState = {
   showBgLib: boolean
 }
 
-const store = useStore()
+// const store = useStore()
+const pageStore = usePageStore()
+const widgetStore = useWidgetStore()
 const state = reactive<TState>({
   activeNames: ['1', '2', '3', '4'],
   innerElement: {},
@@ -92,7 +98,8 @@ const state = reactive<TState>({
   modes: ['颜色', '图片'],
   showBgLib: false
 })
-const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+// const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
+const { dActiveElement } = storeToRefs(widgetStore)
 let _localTempBG: string | null = null
 
 watch(
@@ -115,7 +122,6 @@ onMounted(() => {
   change()
 })
 
-// ...mapActions(['updatePageData']),
 function colorChange(e: colorChangeData) {
   if (e.mode === '渐变') {
     console.log('渐变背景');
@@ -138,7 +144,7 @@ function onChangeMode(value: string) {
 function change() {
   state.mode = state.modes[0]
   state.tag = true
-  state.innerElement = JSON.parse(JSON.stringify(dActiveElement.value))
+  state.innerElement = proxyToObject(dActiveElement.value || {})
   state.innerElement.backgroundImage && (state.mode = state.modes[1])
 }
 function changeValue() {
@@ -147,25 +153,24 @@ function changeValue() {
     return
   }
   for (let key in state.innerElement) {
-    if (key !== 'setting' && key !== 'record' && state.innerElement[key] !== dActiveElement.value[key]) {
+    if (
+      key !== 'setting' && key !== 'record' &&
+      state.innerElement[key] !== (dActiveElement.value as Record<string, any>)[key]
+    ) {
       if (state.ingoreKeys.indexOf(key) !== -1) {
-        dActiveElement.value[key] = state.innerElement[key]
+        (dActiveElement.value as Record<string, any>)[key] = state.innerElement[key]
       } else {
-        store.dispatch('updatePageData', {
-          key: key,
+        pageStore.updatePageData({
+          key: key as keyof TPageState,
           value: state.innerElement[key],
         })
-        // updatePageData({
-        //   key: key,
-        //   value: this.innerElement[key],
-        // })
       }
     }
   }
 }
 
-function finish(key: string, value: string | number) {
-  store.dispatch('updatePageData', {
+function finish(key: keyof TPageState, value: string | number) {
+  pageStore.updatePageData({
     key: key,
     value: value,
     pushHistory: true,
@@ -173,7 +178,7 @@ function finish(key: string, value: string | number) {
 }
 async function uploadImgDone(img: TUploadDoneData) {
   await api.material.addMyPhoto(img)
-  store.dispatch('updatePageData', {
+  pageStore.updatePageData({
     key: 'backgroundTransform',
     value: {},
   })
@@ -181,7 +186,7 @@ async function uploadImgDone(img: TUploadDoneData) {
 }
 async function deleteBg() {
   _localTempBG = null
-  store.dispatch('updatePageData', {
+  pageStore.updatePageData({
     key: 'backgroundImage',
     value: '',
     pushHistory: true,
@@ -203,10 +208,13 @@ async function shiftOut() {
   setting.imgUrl = state.innerElement.backgroundImage
   // store.dispatch('addWidget', setting)
   setting.uuid = `bg-${(new Date()).getTime()}`
-  store.getters.dWidgets.unshift(setting)
-  store.dispatch('selectWidget', {
-    uuid: store.getters.dWidgets[0].uuid,
+  widgetStore.dWidgets.unshift(setting)
+  widgetStore.selectWidget({
+    uuid: widgetStore.dWidgets[0].uuid,
   })
+  // store.dispatch('selectWidget', {
+  //   uuid: store.getters.dWidgets[0].uuid,
+  // })
   deleteBg()
 }
 </script>

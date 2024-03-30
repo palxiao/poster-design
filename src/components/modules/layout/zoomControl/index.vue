@@ -20,15 +20,17 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import addMouseWheel from '@/common/methods/addMouseWheel'
 import { OtherList, TZoomData, ZoomList } from './data';
-import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useCanvasStore, useForceStore, usePageStore } from '@/store';
 
 const route = useRoute()
-const store = useStore()
+// const store = useStore()
 
 // 组件大小控制器
 let holder: number | undefined
@@ -46,7 +48,12 @@ const otherIndex = ref(-1)
 const bestZoom = ref(0)
 const curAction = ref('')
 
-const { dPage, dScreen, zoomScreenChange, dZoom } = useSetupMapGetters(['dPage', 'dScreen', 'zoomScreenChange', 'dZoom'])
+// const { zoomScreenChange } = useSetupMapGetters(['zoomScreenChange'])
+const canvasStore = useCanvasStore()
+const { dPage } = storeToRefs(usePageStore())
+const { zoomScreenChange } = storeToRefs(useForceStore())
+const { dZoom, dScreen } = storeToRefs(canvasStore)
+
 
 watch(
   activezoomIndex,
@@ -75,7 +82,8 @@ watch(
     if (realValue === -1) {
       realValue = calcZoom()
     }
-    store.dispatch('updateZoom', realValue)
+    canvasStore.updateZoom(realValue)
+    // store.dispatch('updateZoom', realValue)
     // updateZoom(realValue)
     autoFixTop()
   }
@@ -134,11 +142,11 @@ function changeScreen() {
   holder = setTimeout(() => {
     const screen = document.getElementById('page-design')
     if (!screen) return
-    store.dispatch('updateScreen', {
+    canvasStore.updateScreen({
       width: screen.offsetWidth,
       height: screen.offsetHeight,
     })
-    // updateScreen({
+    // store.dispatch('updateScreen', {
     //   width: screen.offsetWidth,
     //   height: screen.offsetHeight,
     // })
@@ -148,7 +156,8 @@ function changeScreen() {
 function screenChange() {
   // 弹性尺寸即时修改
   if (activezoomIndex.value === zoomList.value.length - 1) {
-    store.dispatch('updateZoom', calcZoom())
+    canvasStore.updateZoom(calcZoom())
+    // store.dispatch('updateZoom', calcZoom())
     // this.updateZoom(this.calcZoom())
     autoFixTop()
   }
@@ -217,7 +226,8 @@ function sub() {
 function mousewheelZoom(down: boolean) {
   const value = Number(dZoom.value.toFixed(0))
   if (down && value <= 1) return
-  store.dispatch('updateZoom', down ? value - 1 : value + 1)
+  canvasStore.updateZoom(down ? value - 1 : value + 1)
+  // store.dispatch('updateZoom', down ? value - 1 : value + 1)
   // updateZoom(down ? value - 1 : value + 1)
   zoom.value.text = (value + '%') as any
   autoFixTop()
@@ -255,7 +265,9 @@ async function autoFixTop() {
     padding += presetPadding / 2
   }
   curAction.value === 'add' && (padding -= presetPadding)
-  store.commit('updatePaddingTop', padding > 0 ? padding : 0)
+
+  canvasStore.updatePaddingTop(padding > 0 ? padding : 0)
+  // store.commit('updatePaddingTop', padding > 0 ? padding : 0)
 }
 
 defineExpose({

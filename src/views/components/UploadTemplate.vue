@@ -14,14 +14,17 @@
 <script lang="ts" setup>
 import api from '@/api'
 import { reactive, ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import useNotification from '@/common/methods/notification'
 import SaveImage from '@/components/business/save-download/CreateCover.vue'
 import { useFontStore } from '@/common/methods/fonts'
 import _config from '@/config'
 import github from '@/api/github'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { TdWidgetData } from '@/store/design/widget'
 
 type TProps = {
   modelValue?: string
@@ -46,14 +49,19 @@ type TState = {
   loading: false,
 }
 
-const { dPage, dWidgets } = useSetupMapGetters(['dPage', 'dWidgets'])
+// const { dWidgets } = useSetupMapGetters(['dWidgets'])
+const { dPage } = storeToRefs(usePageStore())
 
 const props = defineProps<TProps>()
 const emit = defineEmits<TEmits>()
 
 const route = useRoute()
 const router = useRouter()
-const store = useStore()
+
+// const store = useStore()
+const widgetStore = useWidgetStore()
+const controlStore = useControlStore()
+const { dWidgets } = storeToRefs(widgetStore)
 
 const canvasImage = ref<typeof SaveImage | null>(null)
 const state = reactive<TState>({
@@ -80,12 +88,14 @@ const draw = () => {
 let addition = 0 // 累加大小
 let lenCount = 0 // 全部大小
 let lens = 0 // 任务数
-const queue: { type: string, imgUrl: string }[] = [] // 队列
-let widgets: { type: string, imgUrl: string }[] = []
+const queue: TdWidgetData[] = [] // 队列
+let widgets: TdWidgetData[] = []
 let page: Record<string, any> = {}
 
 async function prepare() {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
+
   addition = 0
   lenCount = 0
   widgets = dWidgets.value
@@ -98,7 +108,7 @@ async function prepare() {
 
   for (const item of widgets) {
     if (item.type === 'w-image') {
-      lenCount += item.imgUrl.length
+      lenCount += (item.imgUrl?.length || 0)
       queue.push(item)
     }
   }
@@ -110,8 +120,8 @@ async function uploadImgs() {
   if (queue.length > 0) {
     const item = queue.pop()
     if (!item) return
-    const url = await github.putPic(item.imgUrl.split(',')[1])
-    addition += item.imgUrl.length
+    const url = await github.putPic((item?.imgUrl || '').split(',')[1])
+    addition += (item.imgUrl?.length || 0)
     let downloadPercent: number | null = (addition / lenCount) * 100
     downloadPercent >= 100 && (downloadPercent = null)
     emit('change', { downloadPercent, downloadText: '上传资源中', downloadMsg: `已完成：${lens - queue.length} / ${lens}` })

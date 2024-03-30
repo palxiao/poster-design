@@ -26,11 +26,13 @@
 // 组合组件
 const NAME = 'w-group'
 import { nextTick, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { setTransformAttribute } from '@/common/methods/handleTransform'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters';
+import { useWidgetStore } from '@/store';
+import { storeToRefs } from 'pinia';
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
-type TParamsData = {
+export type TParamsData = {
   left: number
   top: number
   width: number
@@ -50,7 +52,9 @@ const props = withDefaults(defineProps<TProps>(), {
   params: () => ({}),
   parent: () => ({})
 })
-const store = useStore();
+// const store = useStore();
+const widgetStore = useWidgetStore()
+
 const widget = ref<HTMLElement | null>(null)
 const ratio = ref(0)
 const temp = ref<Record<string, any>>({})
@@ -77,7 +81,8 @@ const compWidgetsRecord = ref<Record<string, any>>({})
 // }
 
 const timer = ref<number | null>(null)
-const { dActiveElement, dWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
+// const { dActiveElement, dWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
+const { dActiveElement, dWidgets } = storeToRefs(widgetStore)
 
 // watch: {
 //   params: {
@@ -111,19 +116,19 @@ onBeforeUnmount(() => {
 // ...mapActions(['updateWidgetData']),
 
 function updateRecord(tempScale ?: number) {
-  if (dActiveElement.value.uuid === props.params.uuid) {
+  if (dActiveElement.value?.uuid === props.params.uuid) {
     // clearTimeout(this.timer)
-    let record = dActiveElement.value.record
-    if (record.width <= 0) {
+    let record = dActiveElement.value?.record
+    if (record?.width <= 0) {
       touchend()
     }
     // if (this.tempRecord && this.tempRecord.width && this.tempRecord.width != record.width) {
     //   return
     // }
-    ratio.value = tempScale || (props.params.width || 0) / record.width
+    ratio.value = tempScale || (props.params.width || 0) / record?.width
 
     if (ratio.value != 1) {
-      if (record.width != 0) {
+      if (record?.width != 0) {
         for (let i = dWidgets.value.length - 1; i >= 0; --i) {
           if (dWidgets.value[i].parent === props.params.uuid) {
             temp.value[dWidgets.value[i].uuid] = { width: dWidgets.value[i].width * ratio.value, height: dWidgets.value[i].height * ratio.value, raw: dWidgets.value[i] }
@@ -145,7 +150,7 @@ function updateRecord(tempScale ?: number) {
 }
 
 function touchstart() {
-  if (dActiveElement.value.uuid !== props.params.uuid) {
+  if (dActiveElement.value?.uuid !== props.params.uuid) {
     return
   }
   const tempRecord = {
@@ -167,7 +172,7 @@ function touchstart() {
 }
 
 function touchend() {
-  if (dActiveElement.value.uuid !== props.params.uuid) {
+  if (dActiveElement.value?.uuid !== props.params.uuid) {
     return
   }
   // const opacity = this.$refs.widget.style.opacity
@@ -204,9 +209,9 @@ function touchend() {
     }
     // this.$refs.widget.style.opacity = opacity
     temp.value = {}
-
+    if (!dActiveElement.value) return
     if (dActiveElement.value.uuid === props.params.uuid) {
-      let record = dActiveElement.value.record
+      let record = dActiveElement.value?.record
       record.width = widget.value?.offsetWidth
       record.height = widget.value?.offsetHeight
       dActiveElement.value.width = widget.value?.offsetWidth
@@ -215,13 +220,13 @@ function touchend() {
   }, 10)
 }
 function keyChange(uuid: string, key: keyof TParamsData, value: number) {
-  store.dispatch('updateWidgetData', {
+  widgetStore.updateWidgetData({
     uuid,
     key,
     value,
     pushHistory: false,
   })
-  // updateWidgetData({
+  // store.dispatch('updateWidgetData', {
   //   uuid,
   //   key,
   //   value,
@@ -231,8 +236,9 @@ function keyChange(uuid: string, key: keyof TParamsData, value: number) {
 
 function keySetValue(uuid: string, key: keyof TParamsData, value: number) {
   setTimeout(() => {
-    const widget = dWidgets.value.find((item: TParamsData) => item.uuid === uuid)
-    widget[key] = value + Number(props.params[key] || '')
+    const widget = dWidgets.value.find((item) => item.uuid === uuid)
+    if (!widget) return
+    (widget[key] as Number) = value + Number(props.params[key] || '')
   }, 10)
 }
 
