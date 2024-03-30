@@ -15,7 +15,7 @@
 - 丝滑的页面操作体验，丰富的交互细节，基础功能完善
 - 采用服务端生成图片，确保多端出图统一性，支持各种 HTML5 特性
 - 简易 AI 抠图工具，上传图片一键去除背景
-- 技术栈：Vue3 、Vite5 、Vuex 、ElementPlus，开发体验畅快
+- 技术栈：Vue3 、Vite5 、Pinia 、ElementPlus
 - 图片生成：Puppeteer、Express
 
 ### 支持功能
@@ -54,17 +54,15 @@ npm run dev
 
 后端需要自己开发，目前本项目演示 Demo 中的后端接口参考：[接口 API 文档](https://xp.palxp.cn/apidoc/index.html)。
 
-## 交流群
+### 其它
+
+一些问题修改与记录[点击这里查看](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)，项目持续迭代中，还有很多不足，可以将你遇到的问题在 Issues 中提出，或者提交 Pull Request 帮助完善。
+
+### 交流群
 
 关注公众号：品味前端，回复 “加群” 获取二维码，更新公告不错过。
 
 <img style="width: 380px;" src="https://xp.palxp.cn/images/2024-3-1-1709306365949.png" />
-
------
-
-本项目最早使用 Vue2 开发，现改用 Vue3 重构中。[一些迭代计划记录](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92).
-
-目前开源版仍在持续迭代中，还有很多的不足，可以将你遇到的问题在 Issues 中提出，或者提交 Pull Request 帮助完善。
 
 ### 感谢
 
