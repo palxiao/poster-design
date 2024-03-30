@@ -64,11 +64,11 @@ const HistoryStore = defineStore<"historyStore", THistoryState, {}, THistoryActi
       pushHistory(this, msg)
     },
     handleHistory(action) {
-      const selectStore = useWidgetStore()
+      const widgetStore = useWidgetStore()
       const pageStore = usePageStore()
       handleHistory(this, action)
       // 激活组件默认为page
-      selectStore.dActiveElement = pageStore.dPage
+      widgetStore.setdActiveElement(pageStore.dPage)
     },
     pushColorToHistory(color) {
       pushColorToHistory(this, color)

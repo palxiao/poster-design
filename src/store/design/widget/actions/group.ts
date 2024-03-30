@@ -12,15 +12,16 @@ import { customAlphabet } from 'nanoid/non-secure'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
 
-export function addGroup(store: TWidgetStore, group: TdWidgetData[]) {
+export function addGroup(store: TWidgetStore, group: TdWidgetData[] | TdWidgetData) {
   const historyStore = useHistoryStore()
   const canvasStore = useCanvasStore()
   let parent: TdWidgetData | null = null
-  group.forEach((item) => {
+  const tmpGroup: TdWidgetData[] = !Array.isArray(group) ? [group] : group
+  tmpGroup.forEach((item) => {
     item.uuid = nanoid() // 重设id
     item.type === 'w-group' && (parent = item) // 找出父组件
   })
-  group.forEach((item) => {
+  tmpGroup.forEach((item) => {
     !item.isContainer && parent && (item.parent = parent.uuid) // 重设父id
     item.text && (item.text = decodeURIComponent(item.text))
     store.dWidgets.push(item)

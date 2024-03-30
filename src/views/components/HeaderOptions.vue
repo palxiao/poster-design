@@ -203,8 +203,7 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
     const data = JSON.parse(content)
     state.stateBollean = !!_state
     state.title = title
-    // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
-    controlStore.setShowMoveable(false)
+    controlStore.setShowMoveable(false) // 清理掉上一次的选择框
     
     // this.$store.commit('setDWidgets', [])
     if (type == 1) {
@@ -212,18 +211,12 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
       dPage.value.width = width
       dPage.value.height = height
       widgetStore.addGroup(data)
-      // store.dispatch('addGroup', data)
-      // addGroup(data)
     } else {
       pageStore.setDPage(data.page)
-      // store.commit('setDPage', data.page)
       id ? widgetStore.setDWidgets(data.widgets) : widgetStore.setTemplate(data.widgets)
-      // id ? store.commit('setDWidgets', data.widgets) : store.dispatch('setTemplate', data.widgets)
     }
     cb()
     historyStore.pushHistory('请求加载load')
-    // store.dispatch('pushHistory', '请求加载load')
-    // pushHistory('请求加载load')
   }
 }
 
