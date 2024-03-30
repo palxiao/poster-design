@@ -225,7 +225,7 @@ const selectItem = async (item: TGetCompListResult) => {
     group.text && (group.text = decodeURIComponent(group.text))
     group.left = pW / 2 - group.fontSize * (group.text.length / 2)
     group.top = pH / 2 - group.fontSize / 2
-    widgetStore.addGroup(group)
+    widgetStore.addWidget(group)
     // store.dispatch('addWidget', group)
   }
 }
