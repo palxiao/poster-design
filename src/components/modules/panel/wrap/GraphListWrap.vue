@@ -43,7 +43,8 @@ import { reactive, toRefs, onMounted } from 'vue'
 import api from '@/api'
 // import wImage from '../../widgets/wImage/wImage.vue'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
-import wSvg from '../../widgets/wSvg/wSvg.vue'
+import { wSvgSetting } from '../../widgets/wSvg/wSvgSetting'
+// import wSvg from '../../widgets/wSvg/wSvg.vue'
 // import { useStore } from 'vuex'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
@@ -193,7 +194,7 @@ async function selectItem(item: TGetListData) {
   // store.commit('setShowMoveable', false) // 清理掉上一次的选择
   controlStore.setShowMoveable(false) // 清理掉上一次的选择
 
-  let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvg.setting)) : JSON.parse(JSON.stringify(wImageSetting))
+  let setting = item.type === 'svg' ? JSON.parse(JSON.stringify(wSvgSetting)) : JSON.parse(JSON.stringify(wImageSetting))
   const img = await setImageData(item)
 
   setting.width = img.width
