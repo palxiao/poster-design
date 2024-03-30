@@ -7,7 +7,7 @@
  */
 
 import { Store, defineStore } from "pinia";
-import { TInidDMovePayload, TMovePayload, dMove, initDMove, setDropOver, setMouseEvent, updateGroupSize, updateHoverUuid } from "./actions";
+import { TInidDMovePayload, TMovePayload, dMove, initDMove, setDropOver, setMouseEvent, setdActiveElement, updateGroupSize, updateHoverUuid } from "./actions";
 import { TPageState } from "../page";
 import { TInitResize, TResize, TdResizePayload, dResize, initDResize, resize } from "./actions/resize";
 import { TUpdateWidgetMultiplePayload, TUpdateWidgetPayload, TsetWidgetStyleData, addWidget, deleteWidget, setDWidgets, setWidgetStyle, updateWidgetData, updateWidgetMultiple } from "./actions/widget";
@@ -117,6 +117,7 @@ type TAction = {
   setWidgetStyle: (data: TsetWidgetStyleData) => void
   setDWidgets: (data: TdWidgetData[]) => void
   setMouseEvent: (e: MouseEvent | null) => void
+  setdActiveElement: (data: TdWidgetData) => void
 }
 
 const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("widgetStore", {
@@ -175,7 +176,8 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     resize(data) { resize(this, data) },
     setWidgetStyle(data) { setWidgetStyle(this, data) },
     setDWidgets(data) { setDWidgets(this, data) },
-    setMouseEvent(event) { setMouseEvent(this, event) }
+    setMouseEvent(event) { setMouseEvent(this, event) },
+    setdActiveElement(data) { setdActiveElement(this, data) },
   }
 })
 
