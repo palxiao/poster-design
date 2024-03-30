@@ -41,13 +41,14 @@
 
 <script lang="ts" setup>
 import { reactive, nextTick, ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { ElProgress } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import uploader from '@/components/common/Uploader/index.vue'
 import _dl from '@/common/methods/download'
 import ImageExtraction from '../ImageExtraction/index.vue'
 import { selectImageFile, uploadCutPhotoToCloud } from './method'
+import { useControlStore } from '@/store'
 
 export type TImageCutoutState = {
     show: boolean;
@@ -61,7 +62,8 @@ export type TImageCutoutState = {
     loading: boolean;
 }
 
-const store = useStore()
+// const store = useStore()
+const controlStore = useControlStore()
 const state = reactive<TImageCutoutState>({
   show: false,
   rawImage: '',
@@ -87,7 +89,8 @@ const matting = ref<typeof ImageExtraction | null>(null)
 const open = (file: File) => {
   state.loading = false
   state.show = true
-  store.commit('setShowMoveable', false)
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
   nextTick(() => {
     if (file) {
       handleUploaderLoad(file)
@@ -111,7 +114,8 @@ const handleUploaderLoad = (file: File) => {
 }
 
 const handleClose = () => {
-  store.commit('setShowMoveable', true)
+  // store.commit('setShowMoveable', true)
+  controlStore.setShowMoveable(true)
 }
 
 const mousemove = (e: MouseEvent) => {

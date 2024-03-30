@@ -24,9 +24,12 @@
 <script lang="ts" setup>
 // const NAME = 'text-list-wrap'
 
+import { storeToRefs } from 'pinia';
+// import wText from '../../widgets/wText/wText.vue'
 import { wTextSetting } from '../../widgets/wText/wTextSetting'
 
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
+import { useControlStore, usePageStore, useWidgetStore } from '@/store';
 
 type TBasicTextData = {
   text: string
@@ -34,20 +37,29 @@ type TBasicTextData = {
   fontWeight: string
 }
 
-const store = useStore()
+// const store = useStore()
+const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
+
+const { dPage } = storeToRefs(usePageStore())
 
 
 const selectBasicText = (item: TBasicTextData) => {
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择
+
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+
   let setting = JSON.parse(JSON.stringify(wTextSetting))
   setting.text = '双击编辑文字' // item.text
   setting.width = item.fontSize * setting.text.length
   setting.fontSize = item.fontSize
   setting.fontWeight = item.fontWeight
-  const { width: pW, height: pH } = store.getters.dPage
+  const { width: pW, height: pH } = dPage.value
   setting.left = pW / 2 - item.fontSize * 3
   setting.top = pH / 2 - item.fontSize / 2
-  store.dispatch('addWidget', setting)
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
 }
 
 // const dragStart = (_: MouseEvent, item: any) => {

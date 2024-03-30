@@ -12,7 +12,8 @@
       <span style="color: #999; font-size: 14px; margin-right: 0.5rem">{{ state.stateBollean ? '启用' : '停用' }}</span> <el-switch v-model="state.stateBollean" @change="stateChange" />
       <div class="divide__line">|</div>
       <el-button plain type="primary" @click="saveTemp">保存模板</el-button>
-      <el-button @click="$store.commit('managerEdit', false)">取消</el-button>
+      <el-button @click="userStore.managerEdit(false)">取消</el-button>
+      <!-- <el-button @click="$store.commit('managerEdit', false)">取消</el-button> -->
       <div class="divide__line">|</div>
     </template>
     <!-- <el-button @click="draw">绘制(测试)</el-button> -->
@@ -28,7 +29,7 @@
 <script lang="ts" setup>
 import api from '@/api'
 import { reactive, toRefs, ref } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import _dl from '@/common/methods/download'
 import useNotification from '@/common/methods/notification'
@@ -38,7 +39,9 @@ import copyRight from './CopyRight.vue'
 import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { useBaseStore, useControlStore, useHistoryStore, usePageStore, useUserStore, useWidgetStore } from '@/store/index'
+import { storeToRefs } from 'pinia'
 
 type TProps = {
   modelValue?: boolean
@@ -59,11 +62,25 @@ const props = defineProps<TProps>()
 const emit = defineEmits<TEmits>()
 const route = useRoute()
 const router = useRouter()
-const store = useStore()
+// const store = useStore()
+const userStore = useUserStore()
+const widgetStore = useWidgetStore()
+
 const canvasImage = ref<typeof SaveImage | null>(null)
-const {
-  dPage, dWidgets, tempEditing, dHistory, dPageHistory
-} = useSetupMapGetters(['dPage', 'dWidgets', 'tempEditing', 'dHistory', 'dPageHistory'])
+
+// const {
+//   dWidgets, tempEditing
+// } = useSetupMapGetters(['dWidgets', 'tempEditing'])
+
+const pageStore = usePageStore()
+const controlStore = useControlStore()
+const historyStore = useHistoryStore()
+
+const { dPage } = storeToRefs(pageStore)
+const { tempEditing } = storeToRefs(userStore)
+const { dWidgets } = storeToRefs(widgetStore)
+const { dHistory, dPageHistory } = storeToRefs(useHistoryStore())
+
 
 const state = reactive<TState>({
   stateBollean: false,
@@ -77,7 +94,10 @@ async function save(hasCover: boolean = false) {
   if (dHistory.value.length <= 0) {
     return
   }
-  store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  
+  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
+
   // console.log(proxy?.dPage, proxy?.dWidgets)
   const { id, tempid } = route.query
   const cover = hasCover ? await draw() : undefined
@@ -85,7 +105,9 @@ async function save(hasCover: boolean = false) {
   const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id: (id as string), title: state.title || '未命名设计', data: JSON.stringify({ page: dPage.value, widgets }), temp_id: (tempid as string), width: dPage.value.width, height: dPage.value.height })
   stat !== 0 ? useNotification('保存成功', '可在"我的作品"中查看') : useNotification('保存失败', msg, { type: 'error' })
   !id && router.push({ path: '/home', query: { id: newId }, replace: true })
-  store.commit('setShowMoveable', true)
+  
+  // store.commit('setShowMoveable', true)
+  controlStore.setShowMoveable(true)
 }
 
     // 保存模板
@@ -96,6 +118,7 @@ async function saveTemp() {
     // 保存组件，组合元素要保证在最后一位，才能默认选中
     if (dWidgets.value[0].type === 'w-group') {
       const group = dWidgets.value.shift()
+      if (!group) return
       group.record.width = 0
       group.record.height = 0
       dWidgets.value.push(group)
@@ -180,20 +203,26 @@ async function load(id: number, tempId: number, type: number, cb: () => void) {
     const data = JSON.parse(content)
     state.stateBollean = !!_state
     state.title = title
-    store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+    // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+    controlStore.setShowMoveable(false)
+    
     // this.$store.commit('setDWidgets', [])
     if (type == 1) {
       // 加载文字组合组件
       dPage.value.width = width
       dPage.value.height = height
-      store.dispatch('addGroup', data)
+      widgetStore.addGroup(data)
+      // store.dispatch('addGroup', data)
       // addGroup(data)
     } else {
-      store.commit('setDPage', data.page)
-      id ? store.commit('setDWidgets', data.widgets) : store.dispatch('setTemplate', data.widgets)
+      pageStore.setDPage(data.page)
+      // store.commit('setDPage', data.page)
+      id ? widgetStore.setDWidgets(data.widgets) : widgetStore.setTemplate(data.widgets)
+      // id ? store.commit('setDWidgets', data.widgets) : store.dispatch('setTemplate', data.widgets)
     }
     cb()
-    store.dispatch('pushHistory', '请求加载load')
+    historyStore.pushHistory('请求加载load')
+    // store.dispatch('pushHistory', '请求加载load')
     // pushHistory('请求加载load')
   }
 }

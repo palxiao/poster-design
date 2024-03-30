@@ -78,4 +78,35 @@ export const rndNum = (n: number, m: number) => {
   return random
 }
 
+/** Proxy 转 Object */
+export const proxyToObject = <P extends Record<string, any>>(proxy: P, seen = new WeakMap()): P => {
+  if (proxy === null || typeof proxy !== 'object') {
+    return proxy;
+  }
+
+  // 检查是否已经处理过该对象
+  if (seen.has(proxy)) {
+    return '[Circular Reference]' as any;
+  }
+
+  let obj: Record<string, any>;
+
+  if (Array.isArray(proxy)) {
+    obj = proxy.map(val => proxyToObject(val, seen)) as any;
+  } else {
+    obj = {};
+    // 将当前对象添加到已处理对象集合
+    seen.set(proxy, obj);
+    for (let key in proxy) {
+      if (proxy.hasOwnProperty(key)) {
+        const value = proxyToObject(proxy[key], seen);
+        if (value !== '[Circular Reference]') {
+          obj[key] = value;
+        }
+      }
+    }
+  }
+  return obj as P;
+};
+
 export default {}

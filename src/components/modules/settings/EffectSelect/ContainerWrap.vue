@@ -37,7 +37,8 @@
 import api from '@/api'
 import { toRefs, reactive, watch, onMounted, nextTick } from 'vue'
 import { ElRadioGroup, ElRadioButton } from 'element-plus'
-import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
+// import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
+import {wSvgSetting} from '@/components/modules/widgets/wSvg/wSvgSetting'
 import { TGetListResult } from '@/api/material';
 
 type TProps = {
@@ -69,7 +70,7 @@ const state = reactive<TState>({
 
 const select = (value: string = '') => {
   state.visiable = false
-  const setting = JSON.parse(JSON.stringify(wSvg.setting))
+  const setting = JSON.parse(JSON.stringify(wSvgSetting))
   setting.svgUrl = value
   emit('change', setting)
 }

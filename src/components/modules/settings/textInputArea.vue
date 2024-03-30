@@ -28,7 +28,7 @@ type TProps = {
   label?: string
   modelValue?: string
   editable?: boolean
-  max?: string
+  max?: string | number
 }
 
 type TEmits = {

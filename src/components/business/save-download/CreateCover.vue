@@ -10,14 +10,19 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import html2canvas from 'html2canvas'
 import Qiniu from '@/common/methods/QiNiu'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+import { storeToRefs } from 'pinia';
+import { useCanvasStore, useWidgetStore } from '@/store';
 
-const store = useStore();
+// const store = useStore();
+// const { dZoom } = useSetupMapGetters(['dZoom'])
 
-const { dZoom } = useSetupMapGetters(['dZoom'])
+const canvasStore = useCanvasStore()
+const widgetStore = useWidgetStore()
+const { dZoom } = storeToRefs(canvasStore)
 
 
 // props: ['modelValue'], 
@@ -26,10 +31,15 @@ const { dZoom } = useSetupMapGetters(['dZoom'])
 async function createCover(cb: any) {
   const nowZoom = dZoom.value
   // 取消选中元素
-  store.dispatch('selectWidget', {
-    uuid: '-1',
+  widgetStore.selectWidget({
+    uuid: '-1'
   })
-  store.dispatch('updateZoom', 100)
+  // store.dispatch('selectWidget', {
+  //   uuid: '-1',
+  // })
+
+  canvasStore.updateZoom(100)
+  // store.dispatch('updateZoom', 100)
 
   const opts = {
     useCORS: true, // 跨域图片
@@ -51,7 +61,8 @@ async function createCover(cb: any) {
         'image/jpeg',
         0.15,
       )
-      store.dispatch('updateZoom', nowZoom)
+      canvasStore.updateZoom(nowZoom)
+      // store.dispatch('updateZoom', nowZoom)
       clonePage.remove()
     })
   }, 10)

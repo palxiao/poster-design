@@ -58,7 +58,7 @@ import {
   CSSProperties, computed, nextTick,
   onBeforeUnmount, onMounted, reactive, ref,
 } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
@@ -68,9 +68,11 @@ import shortcuts from '@/mixins/shortcuts'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
+import { storeToRefs } from 'pinia'
+import { useCanvasStore, useControlStore, usePageStore, useHistoryStore, useWidgetStore, useGroupStore } from '@/store'
 
 type TState = {
   style: CSSProperties
@@ -81,9 +83,17 @@ type TState = {
   showLineGuides: boolean
 }
 
-const {
-  dActiveElement, dHistoryParams, dCopyElement, dPage, dZoom
-} = useSetupMapGetters(['dActiveElement', 'dHistoryParams', 'dCopyElement', 'dPage', 'dZoom'])
+// const {
+//   dActiveElement, dCopyElement
+// } = useSetupMapGetters(['dActiveElement', 'dCopyElement'])
+const widgetStore = useWidgetStore()
+const historyStore = useHistoryStore()
+const groupStore = useGroupStore()
+const { dPage } = storeToRefs(usePageStore())
+const { dZoom } = storeToRefs(useCanvasStore())
+const { dHistoryParams } = storeToRefs(useHistoryStore())
+const { dActiveElement, dCopyElement } = storeToRefs(widgetStore)
+
 
 const state = reactive<TState>({
   style: {
@@ -98,11 +108,12 @@ const state = reactive<TState>({
 })
 const optionsRef = ref<typeof HeaderOptions | null>(null)
 const zoomControlRef = ref<typeof zoomControl | null>(null)
-const store = useStore()
+// const store = useStore()
+const controlStore = useControlStore()
 const route = useRoute()
 
 const beforeUnload = function (e: Event): any {
-  if (store.getters.dHistoryParams.length > 0) {
+  if (dHistoryParams.value.length > 0) {
     const confirmationMessage: string = '系统不会自动保存您未修改的内容';
     (e || window.event).returnValue = (confirmationMessage as any) // Gecko and Trident
     return confirmationMessage // Gecko and WebKit
@@ -124,7 +135,7 @@ defineExpose({
 const undoable = computed(() => {
   return !(
     dHistoryParams.value.index === -1 || 
-    (dHistoryParams.value === 0 && dHistoryParams.value.length === dHistoryParams.value.maxLength))
+    (dHistoryParams.value.index === 0 && dHistoryParams.value.length === dHistoryParams.value.maxLength))
 })
 
 const redoable = computed(() => {
@@ -151,26 +162,28 @@ let checkCtrl: number | undefined
 const instanceFn = { save, zoomAdd, zoomSub }
 
 onMounted(() => {
-  store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
+  groupStore.initGroupJson(JSON.stringify(wGroupSetting))
+  // store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
   // initGroupJson(JSON.stringify(wGroup.setting))
   window.addEventListener('scroll', fixTopBarScroll)
   // window.addEventListener('click', this.clickListener)
-  document.addEventListener('keydown', handleKeydowm(store, checkCtrl, instanceFn, dealCtrl), false)
-  document.addEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  document.addEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instanceFn, dealCtrl), false)
+  document.addEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   loadData()
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', fixTopBarScroll)
   // window.removeEventListener('click', this.clickListener)
-  document.removeEventListener('keydown', handleKeydowm(store, checkCtrl, instanceFn, dealCtrl), false)
-  document.removeEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  document.removeEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instanceFn, dealCtrl), false)
+  document.removeEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   document.oncontextmenu = null
 })
     // ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
 
-function handleHistory(data: string) {
-  store.dispatch('handleHistory', data)
+function handleHistory(data: "undo" | "redo") {
+  historyStore.handleHistory(data)
+  // store.dispatch('handleHistory', data)
 }
 
 function changeLineGuides() {
@@ -190,11 +203,10 @@ function loadData() {
     if (!zoomControlRef.value) return
     // await nextTick()
     // zoomControlRef.value.screenChange()
+    
     // 初始化激活的控件为page
-    store.dispatch('selectWidget', { uuid: '-1' })
-    // selectWidget({
-    //   uuid: '-1',
-    // })
+    widgetStore.selectWidget({ uuid: '-1' })
+    // store.dispatch('selectWidget', { uuid: '-1' })
   })
 }
 

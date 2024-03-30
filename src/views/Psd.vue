@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { reactive, onMounted, nextTick, onBeforeMount, ref, getCurrentInstance } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import shortcuts from '@/mixins/shortcuts'
@@ -71,8 +71,10 @@ import HeaderOptions, { TEmitChangeData } from './components/UploadTemplate.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 // import MyWorker from '@/utils/plugins/webWorker'
 import { processPSD2Page } from '@/utils/plugins/psd'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
+import { useCanvasStore, useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 type TState = {
   isDone: boolean
@@ -90,10 +92,17 @@ const state = reactive<TState>({
   downloadMsg: '',
   cancelText: '',
 })
-const store = useStore()
+// const store = useStore()
+const widgetStore = useWidgetStore()
+const controlStore = useControlStore()
+
 const route = useRoute()
 
-const { dPage, dZoom } = useSetupMapGetters(['dPage', 'dZoom'])
+// const { dZoom } = useSetupMapGetters(['dZoom'])
+const pageStore = usePageStore()
+const { dPage } = storeToRefs(pageStore)
+const { dZoom } = storeToRefs(useCanvasStore())
+
 const zoomControlRef = ref<typeof zoomControl | null>()
 
 let loading: ReturnType<typeof useLoading> | null = null
@@ -134,19 +143,29 @@ async function loadPSD(file: File) {
       const rawData = JSON.parse(JSON.stringify(types[x.type])) || {}
       delete x.type
       x.src && (x.imgUrl = x.src) && delete x.src
-      store.dispatch('addWidget', Object.assign(rawData, x))
+      widgetStore.addWidget(Object.assign(rawData, x))
+      // store.dispatch('addWidget', Object.assign(rawData, x))
     }
 
     const { width, height, background: bg } = data
-    store.commit('setDPage', Object.assign(store.getters.dPage, { width, height, backgroundColor: bg.color, backgroundImage: bg.image }))
+
+    pageStore.setDPage(Object.assign(pageStore.dPage, { width, height, backgroundColor: bg.color, backgroundImage: bg.image }))
+    // store.commit('setDPage', Object.assign(store.getters.dPage, { width, height, backgroundColor: bg.color, backgroundImage: bg.image }))
+    
     await loadDone()
   }, 10)
 }
 
 async function clear() {
-  store.commit('setDWidgets', [])
-  store.commit('setDPage', Object.assign(store.getters.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
-  store.commit('setShowMoveable', false)
+  widgetStore.setDWidgets([])
+  // store.commit('setDWidgets', [])
+
+  pageStore.setDPage(Object.assign(pageStore.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
+  // store.commit('setDPage', Object.assign(store.getters.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
+  
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
+  
   await nextTick()
   state.isDone = false
 }
@@ -171,15 +190,15 @@ let checkCtrl: number | undefined
 
 onMounted(() => {
   const instance = getCurrentInstance()
-  document.addEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
-  document.addEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  document.addEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instance, dealCtrl), false)
+  document.addEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   loadJS()
 })
 
 onBeforeMount(() => {
   const instance = getCurrentInstance()
-  document.removeEventListener('keydown', handleKeydowm(store, checkCtrl, instance, dealCtrl), false)
-  document.removeEventListener('keyup', handleKeyup(store, checkCtrl), false)
+  document.removeEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instance, dealCtrl), false)
+  document.removeEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   document.oncontextmenu = null
 })
 // ...mapActions(['selectWidget']),
@@ -189,7 +208,8 @@ async function loadDone() {
   if (!zoomControlRef.value) return
   zoomControlRef.value.screenChange()
   setTimeout(() => {
-    store.dispatch('selectWidget', { uuid: '-1' })
+    widgetStore.selectWidget({ uuid: '-1' })
+    // store.dispatch('selectWidget', { uuid: '-1' })
     // selectWidget({
     //   uuid: '-1',
     // })

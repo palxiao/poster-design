@@ -32,10 +32,11 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import api from '@/api'
 import { TGetImageListResult } from '@/api/material'
+import { useControlStore } from '@/store'
 
 type TEmits = (event: 'select', data: TGetImageListResult) => void
 
@@ -49,7 +50,9 @@ type TState = {
 
 const emits = defineEmits<TEmits>()
 
-const store = useStore()
+// const store = useStore()
+const controlStore = useControlStore()
+
 const state = reactive<TState>({
   dialogVisible: false,
   imgList: [],
@@ -101,11 +104,13 @@ const loadPic = (init?: boolean) => {
 const open = () => {
   state.dialogVisible = true
   load()
-  store.commit('setShowMoveable', false)
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
 }
 
 const close = () => {
-  store.commit('setShowMoveable', true)
+  // store.commit('setShowMoveable', true)
+  controlStore.setShowMoveable(true)
 }
 
 const selectImg = (index: number, list: TGetImageListResult[]) => {

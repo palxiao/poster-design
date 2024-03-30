@@ -11,8 +11,9 @@
 
 <script lang="ts" setup>
 import { watch } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import Guides, { GuideOptions } from '@scena/guides'
+import { useCanvasStore } from '@/store';
 
 type TProps = {
   show: boolean
@@ -34,7 +35,8 @@ const props = withDefaults(defineProps<TProps>(), {
   show: false
 })
 
-const store = useStore()
+// const store = useStore()
+const canvasStore = useCanvasStore()
 const container = 'page-design' // page-design out-page
 let guidesTop: TGuidesData | null = null
 let guidesLeft: TGuidesData | null = null
@@ -47,7 +49,7 @@ watch(
 )
 
 watch(
-  () => store.getters.dZoom,
+  () => canvasStore.dZoom,
   () => {
     changeScroll()
   },
@@ -113,7 +115,7 @@ function render() {
 
 function changeScroll() {
   if (guidesTop && guidesLeft) {
-    const zoom = store.getters.dZoom / 100
+    const zoom = canvasStore.dZoom / 100
     guidesTop.zoom = zoom
     guidesLeft.zoom = zoom
     if (zoom < 0.9) {

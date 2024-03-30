@@ -5,13 +5,14 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2023-09-19 17:29:06
  */
-import store from '@/store'
+// import store from '@/store'
 // const _this: any = {}
 // _this.dHistoryParams = store.getters.dHistoryParams
 
 import keyCodeOptions from './methods/keyCodeOptions'
 import dealWithCtrl from './methods/dealWithCtrl'
 import { useStore, Store } from 'vuex'
+import { TControlStore } from '@/store/design/control'
 
 const ignoreNode = ['INPUT', 'TEXTAREA']
 
@@ -34,7 +35,7 @@ let hadDown = false
 
 const shortcuts = {
   methods: {
-    handleKeydowm(store: Store<any>, checkCtrl: number | undefined, instance: any, dealCtrl: (e: any, instance: any) => void) {
+    handleKeydowm(store: TControlStore, checkCtrl: number | undefined, instance: any, dealCtrl: (e: any, instance: any) => void) {
       return (e: any) => {
         const nodeName = e.target.nodeName
         if (ignoreNode.indexOf(nodeName) !== -1 || (nodeName === 'DIV' && e.target.contentEditable === 'true')) {
@@ -55,14 +56,16 @@ const shortcuts = {
         //   hadDown = false
         // }
         if (shift || ctrl) {
-          store.dispatch('updateAltDown', true)
+          store.updateAltDown(true)
+          // store.dispatch('updateAltDown', true)
           clearInterval(checkCtrl)
           checkCtrl = setInterval(() => {
             // TODO: 防止组合键导致页面失焦无法操作
             if (!document.hasFocus()) {
               clearInterval(checkCtrl)
               hadDown = false
-              store.dispatch('updateAltDown', false)
+              store.updateAltDown(false)
+              // store.dispatch('updateAltDown', false)
             }
           }, 500)
         }
@@ -114,13 +117,14 @@ const shortcuts = {
         keyCodeOptions(e, { f })
       }
     },
-    handleKeyup(store: Store<any>, checkCtrl: number | undefined) {
+    handleKeyup(store: TControlStore, checkCtrl: number | undefined) {
       return (e: any) => {
         console.log(e)
         clearInterval(checkCtrl)
         hadDown = false
         if (e.key === 'Alt' || e.key === 'Shift' || e.key === 'Control' || e.key === 'Meta') {
-          store.dispatch('updateAltDown', false)
+          store.updateAltDown(false)
+          // store.dispatch('updateAltDown', false)
         }
       }
     },

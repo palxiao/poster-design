@@ -35,14 +35,14 @@
 // 图片组件
 // const NAME = 'w-image'
 import { CSSProperties, StyleValue, computed, nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, watch } from 'vue'
-import { mapGetters, mapActions, useStore } from 'vuex'
+// import { mapGetters, mapActions, useStore } from 'vuex'
 import { getMatrix } from '@/common/methods/handleTransform'
 import setting from "./wImageSetting"
 import PointImg from '@/utils/plugins/pointImg'
-import { useSetupMapGetters } from '@/common/hooks/mapGetters'
+// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
-// import { storeToRefs } from 'pinia'
-// import { useCanvasStore } from '@/pinia'
+import { storeToRefs } from 'pinia'
+import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '@/store'
 
 type TProps = {
   params: typeof setting
@@ -82,19 +82,27 @@ const state = reactive<TState>({
   }
 })
 const route = useRoute()
-const store = useStore()
+
+// const store = useStore()
+const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
+const forceStore = useForceStore()
+
 const widgetRef = ref<HTMLElement | null>(null)
 const targetRef = ref<HTMLImageElement | null>(null)
 
 let rotateTemp: number | null = null
 let flipTemp: string | null = null
-let locksTemp: string[] | null = null
+let locksTemp: boolean[] | null = null
 
+// const {
+//   dActiveElement, dWidgets, dMouseXY, dDropOverUuid, dCropUuid
+// } = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dMouseXY', 'dDropOverUuid', 'dCropUuid'])
+const { dZoom } = storeToRefs(useCanvasStore())
 const {
-  dZoom,
-  dActiveElement, dWidgets, dMouseXY, dDropOverUuid, dCropUuid
-} = useSetupMapGetters(['dZoom', 'dActiveElement', 'dWidgets', 'dMouseXY', 'dDropOverUuid', 'dCropUuid'])
-// const { dZoom } = storeToRefs(useCanvasStore())
+  dActiveElement, dWidgets, dMouseXY, dDropOverUuid
+} = storeToRefs(widgetStore)
+const { dCropUuid } = storeToRefs(controlStore)
 
 // ...mapGetters(['dActiveElement', 'dWidgets', 'dZoom', 'dMouseXY', 'dDropOverUuid', 'dCropUuid']),
 const cropEdit = computed(() => {
@@ -135,7 +143,8 @@ watch(
 
 onUpdated(() => {
   updateRecord()
-  store.commit('updateRect')
+  forceStore.setUpdateRect()
+  // store.commit('updateRect')
 })
 
 onMounted(async () => {
@@ -216,8 +225,8 @@ function move(payload?: MouseEvent) {
 }
 
 function updateRecord() {
-  if (dActiveElement.value.uuid === props.params.uuid) {
-    let record = dActiveElement.value.record
+  if (dActiveElement.value?.uuid === props.params.uuid) {
+    let record = dActiveElement.value?.record
     if (widgetRef.value) {
       record.width = widgetRef.value.offsetWidth
       record.height = widgetRef.value.offsetHeight
@@ -245,14 +254,14 @@ function setTransform(attrName: string, value: string | number) {
   } else {
     setValue = props.params.transform + ` ${attrName}(${value})`
   }
-  store.dispatch("updateWidgetData", {
+  widgetStore.updateWidgetData({
     uuid: props.params.uuid,
     key: 'transform',
     value: setValue,
     pushHistory: false,
   })
-  // updateWidgetData({
-  //   uuid: this.params.uuid,
+  // store.dispatch("updateWidgetData", {
+  //   uuid: props.params.uuid,
   //   key: 'transform',
   //   value: setValue,
   //   pushHistory: false,
@@ -297,9 +306,11 @@ function fixRotate() {
     flipTemp = props.params.flip
     props.params.flip = null
   }
-  store.commit('setShowMoveable', false)
+  // store.commit('setShowMoveable', false)
+  controlStore.setShowMoveable(false)
   setTimeout(() => {
-    store.commit('setShowMoveable', true)
+    // store.commit('setShowMoveable', true)
+    controlStore.setShowMoveable(true)
   }, 100)
 }
 
@@ -313,7 +324,7 @@ function lockOthers() {
   } else {
     locksTemp = []
     for (const widget of dWidgets.value) {
-      locksTemp.push(widget.lock)
+      locksTemp.push(widget?.lock || false)
     }
     dWidgets.value.forEach((widget: any) => {
       widget.uuid != props.params.uuid && (widget.lock = true)

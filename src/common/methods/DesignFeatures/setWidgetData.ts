@@ -8,12 +8,11 @@
 // import store from '@/store'
 // import { getImage } from '../getImgDetail'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
-// import wImage from '@/components/modules/widgets/wImage/wImage.vue'
-import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 // import wText from '@/components/modules/widgets/wText/wText.vue'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import wImage from '@/components/modules/widgets/wImage/wImage.vue'
-import wSvg from '@/components/modules/widgets/wSvg/wSvg.vue'
+// import wImage from '@/components/modules/widgets/wImage/wImage.vue'
+import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
+import { wSvgSetting } from '@/components/modules/widgets/wSvg/wSvgSetting'
 
 export default async function(type: string, item: TCommonItemData, data: Record<string, any>) {
   let setting = data
@@ -35,7 +34,7 @@ export default async function(type: string, item: TCommonItemData, data: Record<
     setting.mask = item.value.url
   }
   if (type === 'svg') {
-    setting = JSON.parse(JSON.stringify(wSvg.setting))
+    setting = JSON.parse(JSON.stringify(wSvgSetting))
     const img = await setImageData(item.value)
     setting.width = img.width
     setting.height = img.height // parseInt(100 / item.value.ratio, 10)
