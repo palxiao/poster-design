@@ -7,7 +7,7 @@
  */
 
 import { useCanvasStore, useControlStore, usePageStore } from "@/store"
-import { TWidgetStore } from ".."
+import { TWidgetStore, TdWidgetData } from ".."
 
 export type TInidDMovePayload = {
   startX: number
@@ -122,4 +122,8 @@ export function setDropOver(store: TWidgetStore, uuid: string) {
 
 export function setMouseEvent(state: TWidgetStore, e: MouseEvent | null) {
   state.activeMouseEvent = e
+}
+
+export function setdActiveElement(state: TWidgetStore, data: TdWidgetData) {
+  state.dActiveElement = data
 }
