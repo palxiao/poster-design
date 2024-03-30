@@ -16,23 +16,16 @@ export function addGroup(store: TWidgetStore, group: TdWidgetData[] | TdWidgetDa
   const historyStore = useHistoryStore()
   const canvasStore = useCanvasStore()
   let parent: TdWidgetData | null = null
-  if (Array.isArray(group)) {
-    group.forEach((item) => {
-      item.uuid = nanoid() // 重设id
-      item.type === 'w-group' && (parent = item) // 找出父组件
-    })
-    group.forEach((item) => {
-      !item.isContainer && parent && (item.parent = parent.uuid) // 重设父id
-      item.text && (item.text = decodeURIComponent(item.text))
-      store.dWidgets.push(item)
-    })
-  } else {
-    group.uuid = nanoid() // 重设id
-    group.type === 'w-group' && (parent = group) // 找出父组件
-    !group.isContainer && parent && (group.parent = parent.uuid) // 重设父id
-    group.text && (group.text = decodeURIComponent(group.text))
-    store.dWidgets.push(group)
-  }
+  const tmpGroup: TdWidgetData[] = !Array.isArray(group) ? [group] : group
+  tmpGroup.forEach((item) => {
+    item.uuid = nanoid() // 重设id
+    item.type === 'w-group' && (parent = item) // 找出父组件
+  })
+  tmpGroup.forEach((item) => {
+    !item.isContainer && parent && (item.parent = parent.uuid) // 重设父id
+    item.text && (item.text = decodeURIComponent(item.text))
+    store.dWidgets.push(item)
+  })
   // 选中组件
   const len = store.dWidgets.length
   store.dActiveElement = store.dWidgets[len - 1]
