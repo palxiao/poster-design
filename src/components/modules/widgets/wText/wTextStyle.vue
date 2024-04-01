@@ -52,7 +52,6 @@
 // 文本组件样式
 const NAME = 'w-text-style'
 import { defineComponent, reactive, toRefs, computed, watch, nextTick, onMounted } from 'vue'
-// import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { styleIconList1, styleIconList2, alignIconList, TStyleIconData, TStyleIconData2 } from '@/assets/data/TextIconsData'
 import layerIconList from '@/assets/data/LayerIconList'
@@ -86,7 +85,6 @@ type TState = {
   alignIconList: TIconItemSelectData[],
 }
 
-// const store = useStore()
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()
 const route = useRoute()

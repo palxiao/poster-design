@@ -39,7 +39,7 @@
 import { reactive, toRefs, watch, nextTick, ref, onMounted } from 'vue'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import { useRouter } from 'vue-router'
-// import { useStore } from 'vuex'
+
 import uploader from '@/components/common/Uploader'
 import api from '@/api'
 // import wImage from '../../widgets/wImage/wImage.vue'
@@ -73,7 +73,7 @@ const props = defineProps<TProps>()
 
 const router = useRouter()
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 

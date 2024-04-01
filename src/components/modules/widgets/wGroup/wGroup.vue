@@ -26,7 +26,7 @@
 // 组合组件
 const NAME = 'w-group'
 import { nextTick, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
-// import { useStore } from 'vuex'
+
 import { setTransformAttribute } from '@/common/methods/handleTransform'
 import { useWidgetStore } from '@/store';
 import { storeToRefs } from 'pinia';
@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<TProps>(), {
   params: () => ({}),
   parent: () => ({})
 })
-// const store = useStore();
+;
 const widgetStore = useWidgetStore()
 
 const widget = ref<HTMLElement | null>(null)

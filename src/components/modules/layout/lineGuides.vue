@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
 import { watch } from 'vue'
-// import { useStore } from 'vuex'
+
 import Guides, { GuideOptions } from '@scena/guides'
 import { useCanvasStore } from '@/store';
 
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<TProps>(), {
   show: false
 })
 
-// const store = useStore()
+
 const canvasStore = useCanvasStore()
 const container = 'page-design' // page-design out-page
 let guidesTop: TGuidesData | null = null

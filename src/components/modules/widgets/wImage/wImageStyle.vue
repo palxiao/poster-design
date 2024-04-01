@@ -71,7 +71,7 @@
 // 图片组件样式
 // const NAME = 'w-image-style'
 import { nextTick, reactive, ref, watch, onBeforeUnmount } from 'vue'
-// import { useStore } from 'vuex'
+
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
 import numberSlider from '../../settings/numberSlider.vue'
@@ -134,7 +134,7 @@ const state = reactive<TState>({
 const picBoxRef = ref<typeof picBox | null>(null)
 const imageCutoutRef = ref<typeof imageCutout | null>(null)
 
-// const store = useStore()
+
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()
 const canvasStore = useCanvasStore()

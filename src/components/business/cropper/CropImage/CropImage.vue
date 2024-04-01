@@ -23,7 +23,6 @@
 import api from '@/api'
 import { ElDialog } from 'element-plus'
 import { ref, defineComponent, toRefs, reactive, nextTick } from 'vue'
-// import { useStore } from 'vuex'
 import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'
 import { useControlStore } from '@/store'
@@ -32,7 +31,6 @@ export default defineComponent({
   components: { ElDialog },
   emits: ['done'],
   setup(props, context) {
-    // const store = useStore()
     const state = reactive({
       loading: false,
       url: '',

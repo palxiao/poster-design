@@ -10,7 +10,6 @@
 
 <script lang="ts" setup>
 import { StyleValue, onMounted, reactive, nextTick } from 'vue'
-// import { useStore } from 'vuex'
 import api from '@/api'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import Preload from '@/utils/plugins/preload'
@@ -28,7 +27,6 @@ type TState = {
   style: StyleValue
 }
 
-// const store = useStore()
 const route = useRoute()
 const state = reactive<TState>({
   style: {

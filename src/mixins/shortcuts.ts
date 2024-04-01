@@ -11,7 +11,6 @@
 
 import keyCodeOptions from './methods/keyCodeOptions'
 import dealWithCtrl from './methods/dealWithCtrl'
-import { useStore, Store } from 'vuex'
 import { TControlStore } from '@/store/design/control'
 
 const ignoreNode = ['INPUT', 'TEXTAREA']

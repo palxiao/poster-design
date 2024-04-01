@@ -35,7 +35,7 @@
 // 图片组件
 // const NAME = 'w-qrcode'
 
-// import { mapGetters, mapActions, useStore } from 'vuex'
+
 import QRCode from '@/components/business/qrcode'
 import { TWQrcodeSetting } from './wQrcodeSetting';
 import { computed, nextTick, onMounted, onUpdated, reactive, ref, watch } from 'vue';
@@ -59,7 +59,7 @@ type TState = {
   qrCodeOptions: Options
 }
 
-// const store = useStore()
+
 const forceStore = useForceStore()
 const widgetStore = useWidgetStore()
 const props = defineProps<TProps>()

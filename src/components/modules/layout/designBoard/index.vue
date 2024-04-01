@@ -76,9 +76,7 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-// import {useStore } from 'vuex'
 import { getTarget } from '@/common/methods/target'
-// import { ElScrollbar } from 'element-plus'
 import setWidgetData from '@/common/methods/DesignFeatures/setWidgetData'
 import PointImg from '@/utils/plugins/pointImg'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
@@ -99,7 +97,6 @@ type TParentData = {
 
 type TSetting = Partial<TPageState>
 
-// const store = useStore()
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const canvasStore = useCanvasStore()

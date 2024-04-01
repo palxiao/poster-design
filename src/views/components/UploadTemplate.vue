@@ -14,7 +14,6 @@
 <script lang="ts" setup>
 import api from '@/api'
 import { reactive, ref } from 'vue'
-// import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import useNotification from '@/common/methods/notification'
 import SaveImage from '@/components/business/save-download/CreateCover.vue'
@@ -58,7 +57,6 @@ const emit = defineEmits<TEmits>()
 const route = useRoute()
 const router = useRouter()
 
-// const store = useStore()
 const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 const { dWidgets } = storeToRefs(widgetStore)

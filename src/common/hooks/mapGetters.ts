@@ -7,7 +7,7 @@
  */
 
 // import { ComputedRef, computed } from 'vue'
-// import { useStore } from 'vuex'
+
 
 // export function useSetupMapGetters<T extends string>(strList: T[]) {
 //   const mapData: Partial<{[x in T]: ComputedRef}> = {}

@@ -60,7 +60,6 @@
 // const NAME = 'w-text'
 
 import { reactive, toRefs, computed, onUpdated, watch, onMounted, ref } from 'vue'
-// import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg'
@@ -83,8 +82,6 @@ type TProps = {
 }
 
 const props = defineProps<TProps>()
-
-// const store = useStore()
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()
 const historyStore = useHistoryStore()

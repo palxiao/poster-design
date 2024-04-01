@@ -26,7 +26,7 @@
 // const NAME = 'tool-list-wrap'
 // import api from '@/api'
 import { ref, onMounted } from 'vue'
-// import { useStore } from 'vuex'
+
 import { useRoute } from 'vue-router'
 // import wQrcode from '../../widgets/wQrcode/wQrcode.vue'
 import imageCutout from '@/components/business/image-cutout'
@@ -35,7 +35,7 @@ import { wQrcodeSetting } from '../../widgets/wQrcode/wQrcodeSetting'
 import { storeToRefs } from 'pinia'
 import { useControlStore, usePageStore, useWidgetStore } from '@/store'
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 
 const route = useRoute()

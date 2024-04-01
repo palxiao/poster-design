@@ -56,7 +56,7 @@
 // 画布组件样式
 // const NAME = 'page-style'
 import { nextTick, onMounted, reactive, watch } from 'vue'
-// import { mapGetters, mapActions, useStore } from 'vuex'
+
 import numberInput from '../settings/numberInput.vue'
 import colorSelect, { colorChangeData } from '../settings/colorSelect.vue'
 import uploader, { TUploadDoneData } from '@/components/common/Uploader/index.vue'
@@ -85,7 +85,7 @@ type TState = {
   showBgLib: boolean
 }
 
-// const store = useStore()
+
 const pageStore = usePageStore()
 const widgetStore = useWidgetStore()
 const state = reactive<TState>({

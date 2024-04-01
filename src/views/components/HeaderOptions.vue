@@ -29,7 +29,6 @@
 <script lang="ts" setup>
 import api from '@/api'
 import { reactive, toRefs, ref } from 'vue'
-// import { mapGetters, mapActions, useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import _dl from '@/common/methods/download'
 import useNotification from '@/common/methods/notification'
@@ -62,7 +61,6 @@ const props = defineProps<TProps>()
 const emit = defineEmits<TEmits>()
 const route = useRoute()
 const router = useRouter()
-// const store = useStore()
 const userStore = useUserStore()
 const widgetStore = useWidgetStore()
 

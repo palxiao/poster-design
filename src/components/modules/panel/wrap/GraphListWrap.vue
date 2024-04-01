@@ -45,7 +45,7 @@ import api from '@/api'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
 import { wSvgSetting } from '../../widgets/wSvg/wSvgSetting'
 // import wSvg from '../../widgets/wSvg/wSvg.vue'
-// import { useStore } from 'vuex'
+
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
 import { TGetListData } from '@/api/material'
@@ -83,7 +83,7 @@ const props = defineProps<TProps>()
 
 const colors = ['#f8704b', '#5b89ff', '#2cc4cc', '#a8ba73', '#f8704b']
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 

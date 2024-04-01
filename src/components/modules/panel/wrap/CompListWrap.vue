@@ -55,7 +55,7 @@
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
 import api from '@/api'
-// import { useStore } from 'vuex'
+
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
 import setItem2Data from '@/common/methods/DesignFeatures/setImage'
@@ -88,7 +88,7 @@ const state = reactive<TState>({
   types: [],
   showList: [],
 })
-// const store = useStore()
+
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const dPage = usePageStore().dPage

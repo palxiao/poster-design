@@ -58,7 +58,7 @@
 // 图片组件样式
 // const NAME = 'w-image-style'
 import { nextTick, reactive, watch } from 'vue'
-// import { useStore } from 'vuex'
+
 import { ElSelect, ElOption } from 'element-plus'
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
@@ -98,7 +98,7 @@ const state = reactive<TState>({
   localization,
 })
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()

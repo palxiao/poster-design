@@ -35,7 +35,7 @@
 // 图片组件
 // const NAME = 'w-image'
 import { CSSProperties, StyleValue, computed, nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, watch } from 'vue'
-// import { mapGetters, mapActions, useStore } from 'vuex'
+
 import { getMatrix } from '@/common/methods/handleTransform'
 import setting from "./wImageSetting"
 import PointImg from '@/utils/plugins/pointImg'
@@ -83,7 +83,7 @@ const state = reactive<TState>({
 })
 const route = useRoute()
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()

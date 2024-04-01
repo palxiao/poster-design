@@ -56,7 +56,6 @@
 <script lang="ts" setup>
 import { reactive, onMounted, nextTick, onBeforeMount, ref, getCurrentInstance } from 'vue'
 import { useRoute } from 'vue-router'
-// import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import shortcuts from '@/mixins/shortcuts'
@@ -92,7 +91,6 @@ const state = reactive<TState>({
   downloadMsg: '',
   cancelText: '',
 })
-// const store = useStore()
 const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 

@@ -37,7 +37,7 @@
 // 组合组件样式
 // const NAME = 'w-group-style'
 import { reactive, watch } from 'vue'
-// import { mapGetters, mapActions, useStore } from 'vuex'
+
 import numberInput from '../../settings/numberInput.vue'
 import iconItemSelect, { TIconItemSelectData } from '../../settings/iconItemSelect.vue'
 import numberSlider from '../../settings/numberSlider.vue'
@@ -70,7 +70,7 @@ const state = reactive<TState>({
   layerIconList,
   alignIconList,
 })
-// const store = useStore()
+
 const widgetStore = useWidgetStore()
 // const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
 const { dActiveElement } = storeToRefs(widgetStore)

@@ -42,7 +42,7 @@
 import { useWidgetStore } from '@/store'
 import { TdWidgetData } from '@/store/design/widget'
 import { defineComponent, computed, reactive, ref, toRefs } from 'vue'
-// import { useStore } from 'vuex'
+
 import draggable from 'vuedraggable'
 
 export default defineComponent({
@@ -64,7 +64,7 @@ export default defineComponent({
       }
     })
 
-    // const store = useStore()
+    
     // const dPage = computed(() => {
     //   return store.getters.dPage
     // })

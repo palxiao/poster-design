@@ -28,10 +28,8 @@
 // const NAME = 'widget-panel'
 import widgetClassifyListData from '@/assets/data/WidgetClassifyList'
 import { reactive, onMounted, watch, nextTick, } from 'vue'
-// import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
-// const store = useStore()
 const route = useRoute()
 const state = reactive({
   widgetClassifyList: widgetClassifyListData,

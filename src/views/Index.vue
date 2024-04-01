@@ -58,7 +58,6 @@ import {
   CSSProperties, computed, nextTick,
   onBeforeUnmount, onMounted, reactive, ref,
 } from 'vue'
-// import { useStore } from 'vuex'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
@@ -108,7 +107,6 @@ const state = reactive<TState>({
 })
 const optionsRef = ref<typeof HeaderOptions | null>(null)
 const zoomControlRef = ref<typeof zoomControl | null>(null)
-// const store = useStore()
 const controlStore = useControlStore()
 const route = useRoute()
 

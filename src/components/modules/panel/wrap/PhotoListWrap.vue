@@ -31,7 +31,7 @@ import { toRefs, reactive, computed, onMounted } from 'vue'
 // import wImage from '../../widgets/wImage/wImage.vue'
 import wImageSetting from '../../widgets/wImage/wImageSetting'
 import api from '@/api'
-// import { useStore } from 'vuex'
+
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import { storeToRefs } from 'pinia'
 import { useControlStore, usePageStore, useWidgetStore } from '@/store'
@@ -57,7 +57,7 @@ type TCurrentCategory = {
 
 const props = defineProps<TProps>()
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 

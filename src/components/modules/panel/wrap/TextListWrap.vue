@@ -28,7 +28,7 @@ import { storeToRefs } from 'pinia';
 // import wText from '../../widgets/wText/wText.vue'
 import { wTextSetting } from '../../widgets/wText/wTextSetting'
 
-// import { useStore } from 'vuex'
+
 import { useControlStore, usePageStore, useWidgetStore } from '@/store';
 
 type TBasicTextData = {
@@ -37,7 +37,7 @@ type TBasicTextData = {
   fontWeight: string
 }
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 

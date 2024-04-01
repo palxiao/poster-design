@@ -20,7 +20,6 @@
 <script setup lang="ts">
 // 样式设置面板
 // const NAME = 'style-panel'
-// import { useStore } from 'vuex'
 import alignIconList, { AlignListData } from '@/assets/data/AlignListData'
 import iconItemSelect, { TIconItemSelectData } from '../settings/iconItemSelect.vue'
 import { ref, watch } from 'vue';
@@ -30,7 +29,6 @@ import { storeToRefs } from 'pinia';
 import { TdWidgetData } from '@/store/design/widget';
 import type { TUpdateAlignData } from '@/store/design/widget/actions/align'
 
-// const store = useStore();
 const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 const groupStore = useGroupStore()

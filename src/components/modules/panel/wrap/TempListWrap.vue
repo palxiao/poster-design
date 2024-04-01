@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import api from '@/api'
-// import { useStore } from 'vuex'
+
 import { LocationQueryValue, useRoute, useRouter } from 'vue-router'
 // import chooseType from './components/chooseType.vue'
 // import editModel from './components/editModel.vue'
@@ -54,7 +54,7 @@ const listRef = ref<HTMLElement | null>(null)
 const route = useRoute()
 const router = useRouter()
 
-// const store = useStore()
+
 const controlStore = useControlStore()
 
 const userStore = useUserStore()

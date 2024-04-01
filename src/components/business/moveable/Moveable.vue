@@ -13,14 +13,11 @@ import { nextTick, onMounted, watch } from 'vue'
 
 import Moveable, { EVENTS } from 'moveable' // PROPERTIES, METHODS,
 import MoveableHelper from 'moveable-helper'
-// import { mapGetters, mapActions, useStore } from 'vuex'
 // import { setTransformAttribute } from '@/common/methods/handleTransform'
 import useSelecto from './Selecto'
-// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { storeToRefs } from 'pinia'
 import { useCanvasStore, useControlStore, useWidgetStore, useForceStore, useHistoryStore } from '@/store'
 
-// const store = useStore()
 const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 const forceStore = useForceStore()

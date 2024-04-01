@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-// import { useStore } from 'vuex'
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import addMouseWheel from '@/common/methods/addMouseWheel'
 import { OtherList, TZoomData, ZoomList } from './data';
@@ -30,7 +29,6 @@ import { storeToRefs } from 'pinia';
 import { useCanvasStore, useForceStore, usePageStore } from '@/store';
 
 const route = useRoute()
-// const store = useStore()
 
 // 组件大小控制器
 let holder: number | undefined

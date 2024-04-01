@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 // svg
 // const NAME = 'w-svg'
-// import { mapGetters, mapActions, useStore } from 'vuex'
+
 import { useCanvasStore, useForceStore, useWidgetStore } from '@/store';
 import { TWSvgSetting } from './wSvgSetting'
 import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue';
@@ -58,7 +58,7 @@ const state = reactive<TState>({
   attrRecord: {}, // 记录可更改的属性
   svgImg: null
 })
-// const store = useStore()
+
 const widgetStore = useWidgetStore()
 const canvasStore = useCanvasStore()
 const forceStore = useForceStore()

@@ -15,7 +15,6 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-// import { useStore } from 'vuex'
 import { 
   widgetMenu as widget, 
   pageMenu as page,
@@ -27,7 +26,6 @@ import { getTarget } from '@/common/methods/target'
 import { storeToRefs } from 'pinia';
 import { useControlStore, useWidgetStore } from '@/store';
 
-// const store = useStore()
 const menuListData = ref<TMenuItemData>({...menu})
 const showMenuBg = ref<boolean>(false)
 const widgetMenu = ref<TWidgetItemData[]>({...widget})

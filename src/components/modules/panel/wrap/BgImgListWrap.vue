@@ -25,7 +25,7 @@
 <script lang="ts" setup>
 import { reactive, computed } from 'vue'
 import api from '@/api'
-// import { useStore } from 'vuex'
+
 import { ElImage } from 'element-plus'
 import { TGetImageListResult } from '@/api/material';
 import { usePageStore, useWidgetStore } from '@/store';
@@ -56,7 +56,7 @@ type TState = {
 const { model } = defineProps<TProps>()
 
 
-// const store = useStore()
+
 const pageStore = usePageStore()
 const widgetStore = useWidgetStore()
 
