@@ -6,13 +6,13 @@
  * @LastEditTime: 2024-03-27 21:00:00
  */
 
-import { usePageStore, useWidgetStore } from "@/store"
+import { useCanvasStore, useWidgetStore } from "@/store"
 import { THistoryStore } from ".."
 import { proxyToObject } from "@/utils/utils"
 
 /** push操作历史记录 */
 export function pushHistory(store: THistoryStore, msg: string = "") {
-  const pageStore = usePageStore()
+  const pageStore = useCanvasStore()
   const widgetStore = useWidgetStore()
   console.log('history压栈', '来源: ' + msg)
   // 如果有上一次记录，并且与新纪录相同，那么不继续操作

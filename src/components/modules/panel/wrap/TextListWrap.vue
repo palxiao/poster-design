@@ -29,7 +29,7 @@ import { storeToRefs } from 'pinia';
 import { wTextSetting } from '../../widgets/wText/wTextSetting'
 
 
-import { useControlStore, usePageStore, useWidgetStore } from '@/store';
+import { useControlStore, useCanvasStore, useWidgetStore } from '@/store';
 
 type TBasicTextData = {
   text: string
@@ -41,8 +41,7 @@ type TBasicTextData = {
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 
-const { dPage } = storeToRefs(usePageStore())
-
+const { dPage } = storeToRefs(useCanvasStore())
 
 const selectBasicText = (item: TBasicTextData) => {
 

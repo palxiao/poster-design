@@ -53,7 +53,7 @@ import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 import eventBus from '@/utils/plugins/eventBus'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 
 type TProps = {
   active?: number
@@ -77,7 +77,7 @@ const router = useRouter()
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 const listRef = ref<HTMLElement | null>(null)
 const imgListRef = ref<typeof photoList | null>(null)
 

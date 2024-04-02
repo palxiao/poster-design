@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { useCanvasStore, useHistoryStore, usePageStore } from "@/store"
+import { useCanvasStore, useHistoryStore } from "@/store"
 import { TWidgetStore, TdWidgetData } from ".."
 import { customAlphabet } from 'nanoid/non-secure'
 const nanoid = customAlphabet('1234567890abcdef', 12)
@@ -201,7 +201,7 @@ export function deleteWidget(store: TWidgetStore) {
 
   if (count === 0) {
     // 重置 activeElement
-    const pageStore = usePageStore()
+    const pageStore = useCanvasStore()
     store.dActiveElement = pageStore.dPage
   } else {
     const tmp = widgets.find((item) => item.uuid === activeElement.parent)

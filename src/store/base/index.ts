@@ -16,8 +16,6 @@ type TStoreBaseState = {
   scroll: boolean
   /** fonts */
   fonts: string[]
-  /** 抠图服务 */
-  app: string | null
 }
 
 type TUserAction = {
@@ -31,7 +29,6 @@ const useBaseStore = defineStore<'base', TStoreBaseState, {}, TUserAction>('base
     loading: null,
     scroll: true,
     fonts: [], // 缓存字体列表
-    app: null, // 抠图服务
   }),
   actions: {
     /** 隐藏loading */

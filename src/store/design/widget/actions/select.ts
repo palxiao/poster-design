@@ -1,4 +1,4 @@
-import { useControlStore, useHistoryStore, usePageStore } from "@/store"
+import { useControlStore, useHistoryStore, useCanvasStore } from "@/store"
 import { TWidgetStore } from ".."
 import { proxyToObject } from "@/utils/utils"
 
@@ -9,7 +9,7 @@ export type TSelectWidgetData = {
 // TODO: 选中元件与取消选中
 export function selectWidget(store: TWidgetStore, { uuid }: TSelectWidgetData) {
   const controlStore = useControlStore()
-  const pageStore = usePageStore()
+  const pageStore = useCanvasStore()
   const historyStore = useHistoryStore()
 
   const alt = controlStore.dAltDown
@@ -67,7 +67,7 @@ export function selectWidget(store: TWidgetStore, { uuid }: TSelectWidgetData) {
 
 /** 多选元素 */
 export function selectWidgetsInOut(store: TWidgetStore, { uuid }: TSelectWidgetData) {
-  const pageStore = usePageStore()
+  const pageStore = useCanvasStore()
 
   const selectWidgets = store.dSelectWidgets
   const widget = store.dWidgets.find((item) => item.uuid === uuid)

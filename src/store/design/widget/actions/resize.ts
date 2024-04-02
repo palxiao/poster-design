@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { useCanvasStore, useControlStore, usePageStore } from "@/store"
+import { useCanvasStore, useControlStore } from "@/store"
 import { TWidgetStore } from ".."
 import { updateGroupSize } from "."
 
@@ -42,7 +42,7 @@ export type TdResizePayload = {
 
 /** 更新组件宽高 */
 export function dResize(store: TWidgetStore, { x, y, dirs }: TdResizePayload) {
-  const pageStore = usePageStore()
+  const pageStore = useCanvasStore()
   const canvasStore = useCanvasStore()
   const controlStore = useControlStore()
 

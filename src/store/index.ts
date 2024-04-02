@@ -8,7 +8,6 @@
 
 import useBaseStore from "./base";
 import useUserStore from "./base/user";
-import usePageStore from "./design/page"
 import useCanvasStore from "./design/canvas"
 import useControlStore from './design/control'
 import useHistoryStore from './design/history'
@@ -19,7 +18,6 @@ import useForceStore from './design/force'
 export {
   useBaseStore,
   useUserStore,
-  usePageStore,
   useCanvasStore,
   useControlStore,
   useHistoryStore,

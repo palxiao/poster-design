@@ -60,7 +60,7 @@ import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
 import setItem2Data from '@/common/methods/DesignFeatures/setImage'
 import { TGetCompListResult, TGetTempDetail, TTempDetail } from '@/api/home'
-import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 
 type TState = {
   loading: boolean
@@ -91,7 +91,7 @@ const state = reactive<TState>({
 
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
-const dPage = usePageStore().dPage
+const dPage = useCanvasStore().dPage
 const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
 onMounted(async () => {

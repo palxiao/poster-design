@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { useCanvasStore, useControlStore, usePageStore } from "@/store"
+import { useCanvasStore, useControlStore } from "@/store"
 import { TWidgetStore, TdWidgetData } from ".."
 
 export type TInidDMovePayload = {
@@ -32,7 +32,7 @@ export type TMovePayload = {
 
 /** 移动组件 */
 export function dMove(store: TWidgetStore, payload: TMovePayload) {
-  const page = usePageStore().dPage
+  const page = useCanvasStore().dPage
   const canvasStore = useCanvasStore()
   const controlStore = useControlStore()
   const { donotMove } = payload // 由moveable代理移动
@@ -87,7 +87,7 @@ export function dMove(store: TWidgetStore, payload: TMovePayload) {
 }
 
 export function updateGroupSize(store: TWidgetStore, uuid: string) {
-  const pageStore = usePageStore()
+  const pageStore = useCanvasStore()
   const widgets = store.dWidgets
   const group = widgets.find((item) => item.uuid === uuid)
   if (!group) return

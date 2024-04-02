@@ -9,7 +9,7 @@
 import { Store, defineStore } from "pinia"
 import {pushHistory, pushColorToHistory} from "./actions/pushHistory"
 import handleHistory from "./actions/handleHistory"
-import { usePageStore, useWidgetStore } from "@/store"
+import { useCanvasStore, useWidgetStore } from "@/store"
 
 export type THistoryParamData = {
   index: number
@@ -65,7 +65,7 @@ const HistoryStore = defineStore<"historyStore", THistoryState, {}, THistoryActi
     },
     handleHistory(action) {
       const widgetStore = useWidgetStore()
-      const pageStore = usePageStore()
+      const pageStore = useCanvasStore()
       handleHistory(this, action)
       // 激活组件默认为page
       widgetStore.setdActiveElement(pageStore.dPage)

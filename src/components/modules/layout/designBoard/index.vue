@@ -82,9 +82,9 @@ import PointImg from '@/utils/plugins/pointImg'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import { debounce } from 'throttle-debounce'
 import { move, moveInit } from '@/mixins/move'
-import { useCanvasStore, useControlStore, useGroupStore, usePageStore, useWidgetStore } from '@/store'
+import { useCanvasStore, useControlStore, useGroupStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { TPageState } from '@/store/design/page'
+import { TPageState } from '@/store/design/canvas/d'
 // 页面设计组件
 type TProps = {
   pageDesignCanvasId: string
@@ -103,7 +103,7 @@ const canvasStore = useCanvasStore()
 
 const { pageDesignCanvasId } = defineProps<TProps>()
 
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom, dPaddingTop, dScreen } = storeToRefs(canvasStore)
 const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlStore)
 const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid } = storeToRefs(widgetStore)

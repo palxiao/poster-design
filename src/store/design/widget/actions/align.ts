@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-03-28 14:00:00
  */
 
-import { useCanvasStore, useHistoryStore, usePageStore } from "@/store"
+import { useCanvasStore, useHistoryStore } from "@/store"
 import { TWidgetStore, TdWidgetData } from ".."
 
 type TAlign = 'left' | 'ch' | 'right' | 'top' | 'cv' | 'bottom'
@@ -18,7 +18,7 @@ export type TUpdateAlignData = {
 }
 
 export function updateAlign(store: TWidgetStore, { align, uuid, group }: TUpdateAlignData) {
-  const pageStore = usePageStore()
+  const pageStore = useCanvasStore()
   const historyStore = useHistoryStore()
   const canvasStore = useCanvasStore()
 

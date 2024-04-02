@@ -72,7 +72,7 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { processPSD2Page } from '@/utils/plugins/psd'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import { useCanvasStore, useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { useCanvasStore, useControlStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 type TState = {
@@ -97,7 +97,7 @@ const controlStore = useControlStore()
 const route = useRoute()
 
 // const { dZoom } = useSetupMapGetters(['dZoom'])
-const pageStore = usePageStore()
+const pageStore = useCanvasStore()
 const { dPage } = storeToRefs(pageStore)
 const { dZoom } = storeToRefs(useCanvasStore())
 

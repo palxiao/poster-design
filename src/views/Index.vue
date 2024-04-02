@@ -71,7 +71,7 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
-import { useCanvasStore, useControlStore, usePageStore, useHistoryStore, useWidgetStore, useGroupStore } from '@/store'
+import { useCanvasStore, useControlStore, useHistoryStore, useWidgetStore, useGroupStore } from '@/store'
 
 type TState = {
   style: CSSProperties
@@ -88,7 +88,7 @@ type TState = {
 const widgetStore = useWidgetStore()
 const historyStore = useHistoryStore()
 const groupStore = useGroupStore()
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom } = storeToRefs(useCanvasStore())
 const { dHistoryParams } = storeToRefs(useHistoryStore())
 const { dActiveElement, dCopyElement } = storeToRefs(widgetStore)

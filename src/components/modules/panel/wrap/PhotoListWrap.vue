@@ -34,7 +34,7 @@ import api from '@/api'
 
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 import { TGetImageListResult } from '@/api/material'
 
 type TProps = {
@@ -61,7 +61,7 @@ const props = defineProps<TProps>()
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 const state = reactive<TState>({
   recommendImgList: [],
   loadDone: false,

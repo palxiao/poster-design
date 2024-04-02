@@ -49,7 +49,7 @@ import { wSvgSetting } from '../../widgets/wSvg/wSvgSetting'
 import setImageData from '@/common/methods/DesignFeatures/setImage'
 import DragHelper from '@/common/hooks/dragHelper'
 import { TGetListData } from '@/api/material'
-import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 type TProps = {
@@ -87,7 +87,7 @@ const colors = ['#f8704b', '#5b89ff', '#2cc4cc', '#a8ba73', '#f8704b']
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 const state = reactive<TState>({
   loading: false,
   loadDone: false,

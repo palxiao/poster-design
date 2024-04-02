@@ -11,7 +11,7 @@
     <el-divider v-show="state.title" style="margin-top: 1.7rem" content-position="left">
       <span style="font-weight: bold">{{ state.title }}</span>
     </el-divider>
-    
+
     <ul ref="listRef" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <img-water-fall :listData="state.list" @select="selectItem" />
       <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
@@ -32,7 +32,7 @@ import useConfirm from '@/common/methods/confirm'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import imgWaterFall from './components/imgWaterFall.vue'
 import { IGetTempListData } from '@/api/home'
-import {useControlStore, usePageStore, useUserStore, useHistoryStore, useWidgetStore, useForceStore} from '@/store'
+import { useControlStore, useCanvasStore, useUserStore, useHistoryStore, useWidgetStore, useForceStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 type TState = {
@@ -44,8 +44,8 @@ type TState = {
 }
 
 type TPageOptions = {
-  page: number,
-  pageSize: number,
+  page: number
+  pageSize: number
   cate: number | string
   state?: string
 }
@@ -54,11 +54,10 @@ const listRef = ref<HTMLElement | null>(null)
 const route = useRoute()
 const router = useRouter()
 
-
 const controlStore = useControlStore()
 
 const userStore = useUserStore()
-const pageStore = usePageStore()
+const pageStore = useCanvasStore()
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()
 const state = reactive<TState>({
@@ -118,10 +117,8 @@ function checkHeight() {
   const isLess = listRef.value.offsetHeight > (listRef.value.firstElementChild as HTMLElement)?.offsetHeight
   isLess && load()
 }
-// ...mapActions(['selectWidget', 'updatePageData', 'setTemplate', 'pushHistory']),
-async function selectItem(item: IGetTempListData) {
 
-  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
+async function selectItem(item: IGetTempListData) {
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
 
   if (dHistoryParams.value.length > 0) {
@@ -130,12 +127,8 @@ async function selectItem(item: IGetTempListData) {
       return false
     }
   }
-  // store.commit('managerEdit', false)
   userStore.managerEdit(false)
-
   widgetStore.setDWidgets([])
-  // store.commit('setDWidgets', [])
-
   setTempId(item.id)
 
   let result = null
@@ -146,52 +139,16 @@ async function selectItem(item: IGetTempListData) {
     result = JSON.parse(item.data)
   }
   const { page, widgets } = result
-  console.log(widgets)
-
   pageStore.setDPage(page)
-  // store.commit('setDPage', page)
   widgetStore.setTemplate(widgets)
-  // store.dispatch('setTemplate', widgets)
-  // setTemplate(widgets)
   setTimeout(() => {
     forceStore.setZoomScreenChange()
-    // store.commit('zoomScreenChange')
   }, 300)
   widgetStore.selectWidget({
-    uuid: '-1'
+    uuid: '-1',
   })
-  // store.dispatch('selectWidget', {
-  //   uuid: '-1'
-  // })
-  // selectWidget({
-  //   uuid: '-1',
-  // })
 }
-    // action({ name, value }: any, item: any, index: number) {
-    //   switch (name) {
-    //     case 'edit':
-    //       this.editTemp(item)
-    //       break
-    //     case 'del':
-    //       this.delTemp(item, index)
-    //       break
-    //     case 'stat':
-    //       this.setTempStat(item, value)
-    //       break
-    //   }
-    // },
-    // editTemp(item: any) {
-    // this.$router.push({ path: '/home', query: { tempid: item.id }, replace: true })
-    // this.$store.commit('managerEdit', true)
-    // },
-    // delTemp({ id }: any, index: number) {
-    //   api.home.removeComp({ id })
-    //   this.list.splice(index, 1)
-    //   this.$store.commit('managerEdit', false)
-    // },
-    // setTempStat({ id }: any, stat: string) {
-    //   api.home.setTempStat({ id, stat })
-    // },
+
 function setTempId(tempId: number | string) {
   const { id } = route.query
   router.push({ path: '/home', query: { tempid: tempId, id }, replace: true })
@@ -202,7 +159,6 @@ defineExpose({
   cateChange,
   listRef,
 })
-
 </script>
 
 <style lang="less" scoped>

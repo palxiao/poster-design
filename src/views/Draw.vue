@@ -21,7 +21,7 @@ import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
-import { useGroupStore, usePageStore, useWidgetStore } from '@/store'
+import { useGroupStore, useCanvasStore, useWidgetStore } from '@/store'
 
 type TState = {
   style: StyleValue
@@ -33,11 +33,10 @@ const state = reactive<TState>({
     left: '0px',
   },
 })
-const pageStore = usePageStore()
+const pageStore = useCanvasStore()
 const groupStore = useGroupStore()
 const widgetStore = useWidgetStore()
 const { dPage } = storeToRefs(pageStore)
-// const { dPage } = useSetupMapGetters(['dPage'])
 
 onMounted(() => {
   groupStore.initGroupJson(JSON.stringify(wGroupSetting))

@@ -28,7 +28,7 @@ import api from '@/api'
 
 import { ElImage } from 'element-plus'
 import { TGetImageListResult } from '@/api/material';
-import { usePageStore, useWidgetStore } from '@/store';
+import { useCanvasStore, useWidgetStore } from '@/store';
 
 type TCommonPanelData = {
   color: string
@@ -57,7 +57,7 @@ const { model } = defineProps<TProps>()
 
 
 
-const pageStore = usePageStore()
+const pageStore = useCanvasStore()
 const widgetStore = useWidgetStore()
 
 const state = reactive<TState>({

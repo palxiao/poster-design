@@ -8,42 +8,7 @@
  */
 
 import { Store, defineStore } from 'pinia'
-
-type TScreeData = {
-  /** 记录编辑界面的宽度 */
-  width: number
-  /** 记录编辑界面的高度 */
-  height: number
-}
-
-type TGuidelinesData = {
-  verticalGuidelines: number[]
-  horizontalGuidelines: number[]
-}
-
-type TCanvasState = {
-  /** 画布缩放百分比 */
-  dZoom: number
-  /** 画布垂直居中修正值 */
-  dPaddingTop: number
-  /** 编辑界面 */
-  dScreen: TScreeData
-  /** 标尺辅助线 */
-  guidelines: TGuidelinesData
-}
-
-type TStoreAction = {
-  /** 更新画布缩放百分比 */
-  updateZoom: (zoom: number) => void
-  /** 更新画布垂直居中修正值 */
-  updatePaddingTop: (num: number) => void
-  /** 更新编辑界面的宽高 */
-  updateScreen: (data: TScreeData) => void
-  /** 修改标尺线 */
-  updateGuidelines: (lines: TGuidelinesData) => void
-  /** 强制重绘画布 */
-  reChangeCanvas: () => void
-}
+import { TCanvasState, TScreeData, TGuidelinesData, TStoreAction, TPageState } from './d'
 
 /** 画布全局设置 */
 const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("canvasStore", {
@@ -54,15 +19,33 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
       width: 0, // 记录编辑界面的宽度
       height: 0, // 记录编辑界面的高度
     },
-    // gridSize: {
-    //   width: 0, // 网格小格子的宽度
-    //   height: 0, // 网格小格子的高度
-    // },
     guidelines: {
       // moveable 标尺辅助线
       verticalGuidelines: [],
       horizontalGuidelines: [],
     },
+    dPage: {
+      name: '背景页面',
+      type: 'page',
+      uuid: '-1',
+      left: 0,
+      top: 0,
+      width: 1920, // 画布宽度
+      height: 1080, // 画布高度
+      backgroundColor: '#ffffff', // 画布背景颜色
+      backgroundImage: '', // 画布背景图片
+      backgroundTransform: {},
+      opacity: 1, // 透明度
+      tag: 0, // 强制刷新用
+      setting: [
+        {
+          label: '背景颜色',
+          parentKey: 'backgroundColor',
+          value: false,
+        },
+      ],
+      record: {},
+    }
   }),
   actions: {
     /** 更新画布缩放百分比 */
@@ -75,7 +58,6 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
     },
     /** 更新编辑界面的宽高 */
     updateScreen({ width, height }: TScreeData) {
-      console.log(this.dScreen)
       this.dScreen.width = width
       this.dScreen.height = height
     },
@@ -88,6 +70,21 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
       // const tag = this.dPage.tag
       // this.dPage.tag = tag === 0 ? 0.01 : 0
     },
+    /** 更新 Page 字段 */
+    updatePageData({ key, value, pushHistory }) {
+      const data = this.dPage
+      if (data[key] !== value || pushHistory) {
+        data[key] = value
+      }
+    },
+    /** 设置 Page */
+    setDPage(data: TPageState) {
+      const cur = this.dPage
+      const keys = Object.keys(data) as (keyof TPageState)[];
+      keys.forEach(val => {
+        cur[val] = data[val]
+      })
+    }
   }
 })
 

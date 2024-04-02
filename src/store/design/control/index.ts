@@ -27,7 +27,7 @@ type TControlState = {
   dAltDown: boolean
   // 是否按下空格键
   dSpaceDown: boolean
-  /** 正在编辑or裁剪的组件id *
+  /** 正在编辑or裁剪的组件id */
   dCropUuid: string
 }
 

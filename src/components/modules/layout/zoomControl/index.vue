@@ -26,7 +26,7 @@ import { OtherList, TZoomData, ZoomList } from './data';
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useCanvasStore, useForceStore, usePageStore } from '@/store';
+import { useCanvasStore, useForceStore } from '@/store';
 
 const route = useRoute()
 
@@ -48,7 +48,7 @@ const curAction = ref('')
 
 // const { zoomScreenChange } = useSetupMapGetters(['zoomScreenChange'])
 const canvasStore = useCanvasStore()
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 const { zoomScreenChange } = storeToRefs(useForceStore())
 const { dZoom, dScreen } = storeToRefs(canvasStore)
 

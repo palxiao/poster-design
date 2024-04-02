@@ -33,7 +33,7 @@ import imageCutout from '@/components/business/image-cutout'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wQrcodeSetting } from '../../widgets/wQrcode/wQrcodeSetting'
 import { storeToRefs } from 'pinia'
-import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 
 
 const controlStore = useControlStore()
@@ -43,7 +43,7 @@ const route = useRoute()
 const loadDone = ref(false)
 const imageCutoutRef = ref<typeof imageCutout | null>(null)
 const widgetStore = useWidgetStore()
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 
 onMounted(() => {
   // this.getDataList()

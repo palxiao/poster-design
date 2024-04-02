@@ -8,7 +8,7 @@
 
 import { Store, defineStore } from "pinia";
 import { TInidDMovePayload, TMovePayload, dMove, initDMove, setDropOver, setMouseEvent, setdActiveElement, updateGroupSize, updateHoverUuid } from "./actions";
-import { TPageState } from "../page";
+import { TPageState } from "@/store/design/canvas/d";
 import { TInitResize, TResize, TdResizePayload, dResize, initDResize, resize } from "./actions/resize";
 import { TUpdateWidgetMultiplePayload, TUpdateWidgetPayload, TsetWidgetStyleData, addWidget, deleteWidget, setDWidgets, setWidgetStyle, updateWidgetData, updateWidgetMultiple, lockWidgets } from "./actions/widget";
 import { addGroup } from "./actions/group";

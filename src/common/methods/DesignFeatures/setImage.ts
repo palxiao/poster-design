@@ -7,7 +7,7 @@
  */
 // import store from '@/store'
 import { getImage } from '../getImgDetail'
-import { useCanvasStore, usePageStore } from '@/store'
+import { useCanvasStore } from '@/store'
 
 export type TItem2DataParam = {
   id?: string | number
@@ -26,9 +26,8 @@ export type TItem2DataResult = {
 
 export default async function setItem2Data(item: TItem2DataParam): Promise<Required<TItem2DataParam>> {
   const canvasStore = useCanvasStore()
-  const pageStore = usePageStore()
   const cloneItem = JSON.parse(JSON.stringify(item))
-  const { width: screenWidth, height: screenHeight } = pageStore.dPage
+  const { width: screenWidth, height: screenHeight } = canvasStore.dPage
   let { width: imgWidth, height: imgHeight } = item
   if (!imgWidth || !imgHeight) {
     const actual = await getImage(item.url)

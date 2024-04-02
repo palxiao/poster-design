@@ -21,7 +21,7 @@ import { useFontStore } from '@/common/methods/fonts'
 import _config from '@/config'
 import github from '@/api/github'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useControlStore, usePageStore, useWidgetStore } from '@/store'
+import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TdWidgetData } from '@/store/design/widget'
 
@@ -49,7 +49,7 @@ type TState = {
 }
 
 // const { dWidgets } = useSetupMapGetters(['dWidgets'])
-const { dPage } = storeToRefs(usePageStore())
+const { dPage } = storeToRefs(useCanvasStore())
 
 const props = defineProps<TProps>()
 const emit = defineEmits<TEmits>()
