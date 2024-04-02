@@ -1,6 +1,5 @@
 import { useControlStore, useHistoryStore, useCanvasStore } from "@/store"
 import { TWidgetStore } from ".."
-import { proxyToObject } from "@/utils/utils"
 
 export type TSelectWidgetData = {
   uuid: string
@@ -51,7 +50,7 @@ export function selectWidget(store: TWidgetStore, { uuid }: TSelectWidgetData) {
     store.dActiveElement = pageStore.dPage
     const pageHistory = historyStore.dPageHistory
     if (pageHistory.length === 0) {
-      pageHistory.push(JSON.stringify(proxyToObject(pageStore.dPage)))
+      pageHistory.push(JSON.stringify(pageStore.dPage))
     }
     setTimeout(() => {
       store.dSelectWidgets = []

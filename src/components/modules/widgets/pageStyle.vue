@@ -69,7 +69,6 @@ import TabPanel from '@palxp/color-picker/comps/TabPanel.vue'
 import { useCanvasStore, useWidgetStore } from '@/store'
 import { TPageState } from '@/store/design/canvas/d'
 import { storeToRefs } from 'pinia'
-import { proxyToObject } from '@/utils/utils'
 import { Delete as iconDelete, Download as iconDownload } from '@element-plus/icons-vue'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 // import setImageData from '@/common/methods/DesignFeatures/setImage'
@@ -144,7 +143,7 @@ function onChangeMode(value: string) {
 function change() {
   state.mode = state.modes[0]
   state.tag = true
-  state.innerElement = proxyToObject(dActiveElement.value || {})
+  state.innerElement = dActiveElement.value || {}
   state.innerElement.backgroundImage && (state.mode = state.modes[1])
 }
 function changeValue() {

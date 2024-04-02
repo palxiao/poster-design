@@ -2,13 +2,12 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-18 21:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-27 21:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-02 21:10:53
  */
 
 import { useCanvasStore, useWidgetStore } from "@/store"
 import { THistoryStore } from ".."
-import { proxyToObject } from "@/utils/utils"
 
 /** push操作历史记录 */
 export function pushHistory(store: THistoryStore, msg: string = "") {
@@ -28,7 +27,7 @@ export function pushHistory(store: THistoryStore, msg: string = "") {
     store.dHistoryParams.index = store.dHistory.length - 1
   }
   store.dHistory.push(JSON.stringify(widgetStore.dWidgets))
-  store.dPageHistory.push(JSON.stringify(proxyToObject(pageStore.dPage)))
+  store.dPageHistory.push(JSON.stringify(pageStore.dPage))
   store.dHistoryParams.index = store.dHistory.length - 1
   store.dHistoryParams.length = store.dHistory.length
 }
