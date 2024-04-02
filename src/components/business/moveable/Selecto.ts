@@ -1,10 +1,11 @@
 import Selecto from 'selecto'
 import Moveable, { getElementInfo } from 'moveable'
 // import store from '@/store'
-import { useWidgetStore } from '@/store'
+import { useWidgetStore, useControlStore } from '@/store'
 
 export default function(moveable: Moveable) {
   const widgetStore = useWidgetStore()
+  const controlStore = useControlStore()
   const selecto = new Selecto({
     container: document.getElementById('page-design'),
     selectableTargets: ['.layer'],
@@ -45,5 +46,9 @@ export default function(moveable: Moveable) {
     moveable.renderDirections = [] // ['nw', 'ne', 'sw', 'se'] // []
     moveable.rotatable = false
     moveable.target = [].slice.call(document.querySelectorAll('.widget-selected'))
+  }).on("dragStart", e => {
+    if (controlStore.dSpaceDown) {
+      e.stop();
+    }
   })
 }

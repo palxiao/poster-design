@@ -7,13 +7,13 @@
  */
 import { useControlStore, useWidgetStore } from '@/store'
 import { TdWidgetData } from '@/store/design/widget'
-// import store from '@/store'
+
+const appContainer: any = document.querySelector('#app')
+const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
 
 export default function keyCodeOptions(e: any, params: any) {
   const { f } = params
-  const controlStore = useControlStore()
-  const widgetStore = useWidgetStore()
-
   switch (e.keyCode) {
     case 38:
       udlr('top', -1 * f, e)
@@ -49,6 +49,10 @@ export default function keyCodeOptions(e: any, params: any) {
       }
       break
   }
+
+  if (e.key === ' ') {
+    dealWithSpace(e)
+  }
 }
 /**
  * 对组合的子元素某个值进行判断
@@ -81,15 +85,18 @@ function udlr(type: keyof TdWidgetData, value: any, event: any) {
       key: type,
       value: result,
     })
-    // store.dispatch('updateWidgetData', {
-    //   uuid: store.getters.dActiveElement.uuid,
-    //   key: type,
-    //   value: result,
-    // })
+  }
+}
 
-    // TODO: 键盘移位需要防抖入栈
-    // timer = setTimeout(() => {
-    //   this.pushHistory()
-    // }, 100)
+function dealWithSpace(event: any) {
+  const widgetStore: any = useWidgetStore()
+  // 防止编辑文字时空格按不出来
+  if (!widgetStore.dActiveElement.editable) {
+    event.preventDefault()
+    appContainer.classList.add('move-case');
+    if (!controlStore.dSpaceDown) {
+      widgetStore.lockWidgets()
+    }
+    controlStore.setSpaceDown(true)
   }
 }

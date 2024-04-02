@@ -105,7 +105,7 @@ const { pageDesignCanvasId } = defineProps<TProps>()
 
 const { dPage } = storeToRefs(usePageStore())
 const { dZoom, dPaddingTop, dScreen } = storeToRefs(canvasStore)
-const { dDraging, showRotatable, dAltDown } = storeToRefs(controlStore)
+const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlStore)
 const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid } = storeToRefs(widgetStore)
 
 
@@ -118,6 +118,32 @@ onMounted(() => {
   if (!pageDesignEl) return
   pageDesignEl.addEventListener('mousedown', handleSelection, false)
   pageDesignEl.addEventListener('mousemove', debounce(100, false, handleMouseMove), false)
+  // 绑定空格事件
+  const scrollContainer: any = document.querySelector('#main')
+  const dragContainer: any = pageDesignEl
+  dragContainer.onmousedown = (e: any) => {
+    let mouseDownScrollPosition = {
+      scrollLeft: scrollContainer.scrollLeft,
+      scrollTop: scrollContainer.scrollTop,
+    }
+    let mouseDownPoint = {
+      x: e.clientX,
+      y: e.clientY,
+    }
+    dragContainer.onmousemove = (e: any) => {
+      if (!dSpaceDown.value) return
+      let dragMoveDiff = {
+        x: mouseDownPoint.x - e.clientX,
+        y: mouseDownPoint.y - e.clientY,
+      }
+      scrollContainer.scrollLeft = mouseDownScrollPosition.scrollLeft + dragMoveDiff.x
+      scrollContainer.scrollTop = mouseDownScrollPosition.scrollTop + dragMoveDiff.y
+    }
+    document.onmouseup = (e) => {
+      dragContainer.onmousemove = null
+      document.onmouseup = null
+    }
+  }
 })
 
   // components: {lineGuides},

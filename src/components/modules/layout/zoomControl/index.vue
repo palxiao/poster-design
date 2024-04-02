@@ -81,8 +81,6 @@ watch(
       realValue = calcZoom()
     }
     canvasStore.updateZoom(realValue)
-    // store.dispatch('updateZoom', realValue)
-    // updateZoom(realValue)
     autoFixTop()
   }
 )
@@ -155,8 +153,6 @@ function screenChange() {
   // 弹性尺寸即时修改
   if (activezoomIndex.value === zoomList.value.length - 1) {
     canvasStore.updateZoom(calcZoom())
-    // store.dispatch('updateZoom', calcZoom())
-    // this.updateZoom(this.calcZoom())
     autoFixTop()
   }
 }
@@ -225,10 +221,9 @@ function mousewheelZoom(down: boolean) {
   const value = Number(dZoom.value.toFixed(0))
   if (down && value <= 1) return
   canvasStore.updateZoom(down ? value - 1 : value + 1)
-  // store.dispatch('updateZoom', down ? value - 1 : value + 1)
-  // updateZoom(down ? value - 1 : value + 1)
   zoom.value.text = (value + '%') as any
   autoFixTop()
+  activezoomIndex.value = -99
 }
 
 function nearZoom(add?: boolean) {
@@ -246,7 +241,6 @@ function nearZoom(add?: boolean) {
 function calcZoom() {
   let widthZoom = ((dScreen.value.width - 142) * 100) / dPage.value.width
   let heightZoom = ((dScreen.value.height - 122) * 100) / dPage.value.height
-
   bestZoom.value = Math.min(widthZoom, heightZoom)
   return bestZoom.value
 }

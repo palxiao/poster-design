@@ -334,10 +334,7 @@ function imgCrop(val: boolean) {
   const { left, top } = el.getBoundingClientRect()
   toolBarStyle = { left: left + 'px', top: top + 'px' }
   state.innerElement.cropEdit = val
-
-  // store.commit('setShowRotatable', !val)
   controlStore.setShowRotatable(!val)
-  
 }
 
 

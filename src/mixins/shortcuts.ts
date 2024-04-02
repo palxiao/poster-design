@@ -12,6 +12,7 @@
 import keyCodeOptions from './methods/keyCodeOptions'
 import dealWithCtrl from './methods/dealWithCtrl'
 import { TControlStore } from '@/store/design/control'
+import { useControlStore, useWidgetStore } from '@/store'
 
 const ignoreNode = ['INPUT', 'TEXTAREA']
 
@@ -31,6 +32,9 @@ const systemKeyCode = [
 ]
 
 let hadDown = false
+const appContainer: any = document.querySelector('#app')
+const controlStore = useControlStore()
+const widgetStore = useWidgetStore()
 
 const shortcuts = {
   methods: {
@@ -118,18 +122,20 @@ const shortcuts = {
     },
     handleKeyup(store: TControlStore, checkCtrl: number | undefined) {
       return (e: any) => {
-        console.log(e)
         clearInterval(checkCtrl)
         hadDown = false
         if (e.key === 'Alt' || e.key === 'Shift' || e.key === 'Control' || e.key === 'Meta') {
           store.updateAltDown(false)
-          // store.dispatch('updateAltDown', false)
+        }
+        if (e.key === ' ') {
+          appContainer.classList.remove('move-case');
+          controlStore.setSpaceDown(false)
+          widgetStore.lockWidgets()
         }
       }
     },
     dealCtrl(e: any, instance: any) {
       dealWithCtrl(e, instance)
-      console.log(e.key, e.keyCode)
     },
   },
 }

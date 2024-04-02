@@ -235,3 +235,22 @@ export function setWidgetStyle(state: TWidgetStore, { uuid, key, value, pushHist
 export function setDWidgets(state: TWidgetStore, e: TdWidgetData[]) {
   state.dWidgets = e
 }
+
+// 锁定所有图层 / 再次调用时还原图层
+let lastLocks: boolean[] | null = null
+export function lockWidgets(state: TWidgetStore) {
+  if (lastLocks && lastLocks.length > 0) {
+    for (let i = 0; i < lastLocks.length; i++) {
+      state.dWidgets[i].lock = lastLocks[i]
+    }
+    lastLocks = []
+  } else {
+    lastLocks = []
+    for (const widget of state.dWidgets) {
+      lastLocks.push(widget?.lock || false)
+    }
+    state.dWidgets.forEach((widget: any) => {
+      widget.lock = true
+    })
+  }
+}

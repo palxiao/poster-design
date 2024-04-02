@@ -93,7 +93,6 @@ const targetRef = ref<HTMLImageElement | null>(null)
 
 let rotateTemp: number | null = null
 let flipTemp: string | null = null
-let locksTemp: boolean[] | null = null
 
 // const {
 //   dActiveElement, dWidgets, dMouseXY, dDropOverUuid, dCropUuid
@@ -129,7 +128,7 @@ watch(
       el?.removeEventListener('mousedown', touchstart, false)
     }
     fixRotate()
-    lockOthers()
+    lockOthers(val)
   }
 )
 
@@ -314,21 +313,15 @@ function fixRotate() {
   }, 100)
 }
 
-function lockOthers() {
+function lockOthers(isCrop) {
   // 裁剪时锁定其他图层
-  if (locksTemp && locksTemp.length > 0) {
-    for (let i = 0; i < locksTemp.length; i++) {
-      dWidgets.value[i].lock = locksTemp[i]
+  widgetStore.lockWidgets()
+  if (!isCrop) return
+  for (const widget of dWidgets.value) {
+    if (widget.uuid === props.params.uuid) {
+      widget.lock = false
+      break;
     }
-    locksTemp = []
-  } else {
-    locksTemp = []
-    for (const widget of dWidgets.value) {
-      locksTemp.push(widget?.lock || false)
-    }
-    dWidgets.value.forEach((widget: any) => {
-      widget.uuid != props.params.uuid && (widget.lock = true)
-    })
   }
 }
 // cropDone(e) {

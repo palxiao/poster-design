@@ -25,7 +25,9 @@ type TControlState = {
   showRotatable: boolean
   /** 记录是否按下alt键 / 或ctrl */
   dAltDown: boolean
-  /** 正在编辑or裁剪的组件id */
+  // 是否按下空格键
+  dSpaceDown: boolean
+  /** 正在编辑or裁剪的组件id *
   dCropUuid: string
 }
 
@@ -43,6 +45,7 @@ type TControlAction = {
   stopDMove: () => void
   /** 设置正在裁剪or编辑的组件 */
   setCropUuid: (uuid: string) => void
+  setSpaceDown: (uuid: boolean) => void // 设置是否按下空格键
 }
 
 /** 全局控制配置 */
@@ -56,6 +59,7 @@ const ControlStore =  defineStore<"controlStore", TControlState, {}, TControlAct
     showRotatable: true, // 是否显示moveable的旋转按钮
     dAltDown: false, // 记录是否按下alt键 / 或ctrl
     dCropUuid: '-1', // 正在编辑or裁剪的组件id
+    dSpaceDown: false, // 记录是否按下空格键
   }),
   getters: {},
   actions: {
@@ -108,6 +112,9 @@ const ControlStore =  defineStore<"controlStore", TControlState, {}, TControlAct
       // 设置正在裁剪or编辑的组件
       this.dCropUuid = uuid
     },
+    setSpaceDown(val: boolean) {
+      this.dSpaceDown = val
+    }
   }
 })
 
