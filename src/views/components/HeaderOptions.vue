@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-03-11 01:43:30
+ * @LastEditTime: 2024-04-03 12:21:25
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -37,9 +37,7 @@ import { useFontStore } from '@/common/methods/fonts'
 import copyRight from './CopyRight.vue'
 import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
-// import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
-// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useBaseStore, useControlStore, useHistoryStore, useCanvasStore, useUserStore, useWidgetStore } from '@/store/index'
+import { useControlStore, useHistoryStore, useCanvasStore, useUserStore, useWidgetStore } from '@/store/index'
 import { storeToRefs } from 'pinia'
 
 type TProps = {
@@ -103,8 +101,6 @@ async function save(hasCover: boolean = false) {
   const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id: (id as string), title: state.title || '未命名设计', data: JSON.stringify({ page: dPage.value, widgets }), temp_id: (tempid as string), width: dPage.value.width, height: dPage.value.height })
   stat !== 0 ? useNotification('保存成功', '可在"我的作品"中查看') : useNotification('保存失败', msg, { type: 'error' })
   !id && router.push({ path: '/home', query: { id: newId }, replace: true })
-  
-  // store.commit('setShowMoveable', true)
   controlStore.setShowMoveable(true)
 }
 
@@ -151,15 +147,14 @@ async function saveTemp() {
       }
       state.loading = true
       emit('update:modelValue', true)
-      emit('change', { downloadPercent: 1, downloadText: '正在处理封面' })
+      emit('change', { downloadPercent: 1, downloadText: '请稍候..' })
       await save(true)
       setTimeout(async () => {
         const { id } = route.query
         if (id) {
           const { width, height } = dPage.value
           emit('update:modelValue', true)
-          emit('change', { downloadPercent: 1, downloadText: '准备合成图片' })
-          state.loading = false
+          emit('change', { downloadPercent: 1, downloadText: '正在处理数据' })
           let timerCount = 0
           const animation = setInterval(() => {
             if (props.modelValue && timerCount < 75) {
@@ -175,9 +170,11 @@ async function saveTemp() {
               progress >= timerCount && emit('change', { downloadPercent: Number(progress.toFixed(0)), downloadText: '图片生成中' })
             } else {
               xhr.abort()
+              state.loading = false
             }
           })
-          emit('change', { downloadPercent: 100, downloadText: '图片下载中' })
+          emit('change', { downloadPercent: 100, downloadText: '作品下载成功', downloadMsg: '仅供学习、研究或欣赏等用途，暂不提供商业授权。' })
+          state.loading = false
         }
       }, 100)
     }

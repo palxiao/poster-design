@@ -2,9 +2,9 @@
  * @Author: ShawnPhang
  * @Date: 2023-09-18 17:34:44
  * @Description: 
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-02-25 14:51:00
+ * @LastEditTime: 2024-04-03 10:58:42
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -45,6 +45,7 @@
     <ProgressLoading
       :percent="state.downloadPercent"
       :text="state.downloadText"
+      :msg="state.downloadMsg"
       cancelText="取消"
       @cancel="downloadCancel"
       @done="state.downloadPercent = 0"
@@ -66,7 +67,7 @@ import lineGuides from '@/components/modules/layout/lineGuides.vue'
 import shortcuts from '@/mixins/shortcuts'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
-import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
+import ProgressLoading from '@/components/common/ProgressLoading/download.vue'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
@@ -77,6 +78,7 @@ type TState = {
   style: CSSProperties
   downloadPercent: number // 下载进度
   downloadText: string
+  downloadMsg: string | undefined
   isContinue: boolean
   APP_NAME: string
   showLineGuides: boolean
@@ -101,6 +103,7 @@ const state = reactive<TState>({
   // openDraw: false,
   downloadPercent: 0, // 下载进度
   downloadText: '',
+  downloadMsg: '',
   isContinue: true,
   APP_NAME: _config.APP_NAME,
   showLineGuides: false,
@@ -217,9 +220,10 @@ function fixTopBarScroll() {
 //   console.log('click listener', e)
 // }
 
-function optionsChange({ downloadPercent, downloadText }: { downloadPercent: number, downloadText: string }) {
+function optionsChange({ downloadPercent, downloadText, downloadMsg }: { downloadPercent: number, downloadText: string, downloadMsg?: string }) {
   state.downloadPercent = downloadPercent
   state.downloadText = downloadText
+  state.downloadMsg = downloadMsg
 }
 </script>
 
