@@ -412,8 +412,8 @@ function getChilds(uuid: string) {
 // },
 
 const widgetStyle = (widgetData: TdWidgetData): CSSProperties => {
-  const { transform, transformOrigin, width, height } = widgetData
-  const style: CSSProperties = { position: 'absolute' }
+  const { transform, transformOrigin, width, height, opacity, clipPath } = widgetData
+  const style: CSSProperties = { position: 'absolute', opacity, clipPath }
   if (transform) style.transform = transform
   if (transformOrigin) style.transformOrigin = transformOrigin
   if (width !== undefined) style.width = `${width}px`
@@ -422,11 +422,11 @@ const widgetStyle = (widgetData: TdWidgetData): CSSProperties => {
 }
 
 const groupWidgetChildrenStyle = (groupWidgetData: TdWidgetData, widgetData: TdWidgetData): CSSProperties => {
-  const { transform, transformOrigin, width, height } = widgetData
+  const { transform, transformOrigin, width, height, opacity, clipPath } = widgetData
   const { transform: gTransform } = groupWidgetData
   const { x: gX, y: gY } = getOffsetFromTransform(gTransform || '')
   const { x, y } = getOffsetFromTransform(transform || '')
-  const style: CSSProperties = { position: 'absolute' }
+  const style: CSSProperties = { position: 'absolute', opacity, clipPath }
   if (transform) style.transform = removeTranslate(transform)
   if (transformOrigin) style.transformOrigin = transformOrigin
   if (width !== undefined) style.width = `${width}px`

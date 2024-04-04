@@ -3,7 +3,7 @@
  * @Date: 2024-03-18 21:00:00
  * @Description: Store方法export
  * @LastEditors: xi_zi
- * @LastEditTime: 2024-04-03 15:26:46
+ * @LastEditTime: 2024-04-04 11:32:47
  */
 
 import { Store, defineStore } from "pinia";
@@ -29,6 +29,7 @@ export type TdWidgetData = TPageState & Partial<TCommonItemData> & {
   rotate?: string
   transform?: string
   transformOrigin?: string
+  clipPath?: string
   sliceData?: Record<string, any>
   flip?: boolean
   cropEdit?: boolean

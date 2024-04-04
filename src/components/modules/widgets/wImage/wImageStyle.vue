@@ -3,7 +3,7 @@
  * @Date: 2021-08-09 11:41:53
  * @Description: 
  * @LastEditors: xi_zi
- * @LastEditTime: 2024-04-04 11:13:38
+ * @LastEditTime: 2024-04-04 11:47:25
 -->
 <template>
   <div id="w-image-style">
@@ -21,8 +21,10 @@
         <!-- <el-button size="mini" style="width: 100%; margin-top: 0.5rem" plain @click="openCropper">替换图片</el-button> -->
         <el-button style="width: 100%; margin-bottom: 12px" plain @click="openPicBox">替换图片</el-button>
         <div class="options">
-          <el-button v-if="state.innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
+          <el-button v-if="clippable" plain type="primary" @click="imgCrop(false)">完成</el-button>
           <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> 裁剪</el-button>
+          <!-- <el-button v-if="state.innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
+          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> 裁剪</el-button> -->
           <el-button plain @click="openImageCutout"><i class="icon sd-AIkoutu" /> 抠图</el-button>
           <!-- <uploader class="options__upload" @done="uploadImgDone">
             <el-button size="small" plain>替换图片</el-button>
@@ -137,7 +139,7 @@ const canvasStore = useCanvasStore()
 //   dActiveElement, dWidgets
 // } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
 const controlStore = useControlStore()
-const { dMoving } = storeToRefs(controlStore)
+const { dMoving, clippable } = storeToRefs(controlStore)
 const { dActiveElement, dWidgets } = storeToRefs(widgetStore)
 
 let lastUuid: string | undefined = undefined
@@ -317,14 +319,15 @@ async function selectDone(img: TGetImageListResult) {
 }
 
 async function imgCrop(val: boolean) {
-  // TODO: 画布内图像裁剪
+  /* // TODO: 画布内图像裁剪
   const el = document.getElementById(state.innerElement.uuid || '')
   if (!el) return
   const { left, top } = el.getBoundingClientRect()
   toolBarStyle = { left: left + 'px', top: top + 'px' }
   state.innerElement.cropEdit = val
   await nextTick()
-  controlStore.setShowRotatable(!val)
+  controlStore.setShowRotatable(!val) */
+  controlStore.setClippable(val)
 }
 
 function cropHandle() {

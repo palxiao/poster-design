@@ -2,7 +2,7 @@
  * @Description: widget move
  * @Author: xi_zi
  * @Date: 2024-04-03 10:25:49
- * @LastEditTime: 2024-04-04 00:28:22
+ * @LastEditTime: 2024-04-04 11:52:22
  * @LastEditors: xi_zi
 -->
 <template>
@@ -73,6 +73,9 @@ import type {
   OnResizeGroupEnd,
   OnRotateGroup,
   OnRotateGroupEnd,
+  ClippableProps,
+  OnClip,
+  OnClipEnd,
 } from 'vue3-moveable'
 import { TUpdateWidgetMultiplePayload } from '@/store/design/widget/actions/widget'
 
@@ -81,9 +84,8 @@ type TModifierStyle = { transform?: string; transformOrigin?: string; width?: nu
 const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 const forceStore = useForceStore()
-const historyStore = useHistoryStore()
 const { guidelines } = storeToRefs(useCanvasStore())
-const { showMoveable, showRotatable, dAltDown, resizable, scalable, warpable, dSpaceDown } = storeToRefs(controlStore)
+const { showMoveable, showRotatable, dAltDown, resizable, scalable, warpable, clippable, dSpaceDown } = storeToRefs(controlStore)
 const { dSelectWidgets, dActiveElement, activeMouseEvent, dWidgets } = storeToRefs(widgetStore)
 const { updateRect, updateSelect } = storeToRefs(forceStore)
 
@@ -103,7 +105,7 @@ const modifierStyle = (target: HTMLElement | SVGElement, { transform, transformO
 
 const updateStoreModifierStyle = (target: HTMLElement | SVGElement, { transform, transformOrigin, width, height }: TModifierStyle) => {
   const uuid = target.getAttribute('id') || ''
-  const updateData:  TUpdateWidgetMultiplePayload['data'] = []
+  const updateData: TUpdateWidgetMultiplePayload['data'] = []
   if (transform) updateData.push({ key: 'transform', value: transform })
   if (transformOrigin) updateData.push({ key: 'transformOrigin', value: transformOrigin })
   if (width) updateData.push({ key: 'width', value: width })
@@ -112,6 +114,7 @@ const updateStoreModifierStyle = (target: HTMLElement | SVGElement, { transform,
   widgetStore.updateWidgetMultiple({
     uuid,
     data: updateData,
+    pushHistory: true,
   })
 }
 
@@ -251,12 +254,33 @@ const rotateOptions = reactive<RotatableProps>({
   onRotateEnd,
 })
 
+const onClip = (e: OnClip) => {
+  e.target.style.clipPath = e.clipStyle
+}
+const onClipEnd = (e: OnClipEnd) => {
+  const uuid = dActiveElement.value?.uuid || ''
+  widgetStore.updateWidgetData({
+    uuid,
+    key: 'clipPath',
+    value: e.target.style.clipPath,
+  })
+}
+const clipOptions = reactive<ClippableProps>({
+  clippable: true,
+  clipRelative: false,
+  clipArea: false,
+  clipTargetBounds: false,
+  onClip,
+  onClipEnd,
+})
+
 const options = computed(() => {
   const opt = { ...dragOptions }
   if (showRotatable.value) Object.assign(opt, rotateOptions)
   if (warpable.value) Object.assign(opt, warpOptions)
   if (scalable.value) Object.assign(opt, scaleOptions)
   if (resizable.value) Object.assign(opt, resizeOptions)
+  if (clippable.value) Object.assign(opt, clipOptions)
   return opt
 })
 
