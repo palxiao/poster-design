@@ -4,7 +4,7 @@
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-04-03 10:58:42
+ * @LastEditTime: 2024-04-05 05:34:43
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -16,22 +16,29 @@
             <div :class="['operation-item', { disable: !undoable }]" @click="undoable ? handleHistory('undo') : ''"><i class="iconfont icon-undo" /></div>
             <div :class="['operation-item', { disable: !redoable }]" @click="redoable ? handleHistory('redo') : ''"><i class="iconfont icon-redo" /></div>
           </div>
-          <el-tooltip effect="dark" content="标尺" placement="bottom">
-            <i style="font-size: 20px" class="icon sd-biaochi extra-operation" @click="changeLineGuides" />
-          </el-tooltip>
+          <el-divider direction="vertical" />
+          <Folder @select="dealWith" ref="ref1"> <div class="operation-item"><i class="icon sd-wenjian" /> <span class="text" >文件</span></div> </Folder>
+          <Helper @select="dealWith"> <div class="operation-item"><i class="icon sd-bangzhu" /> <span class="text" >帮助</span></div> </Helper>
+          <!-- <el-tooltip effect="dark" :show-after="300" :offset="0" content="标尺" placement="bottom">
+            <i style="font-size: 20px" class="icon sd-biaochi operation-item" @click="changeLineGuides" />
+          </el-tooltip> -->
+          <el-divider direction="vertical" />
         </div>
-        <HeaderOptions ref="optionsRef" v-model="state.isContinue" @change="optionsChange" />
+        <HeaderOptions ref="optionsRef" v-model="state.isContinue" @change="optionsChange">
+          <el-button size="large" class="primary-btn" @click="dealWith('save')">保存</el-button>
+          <el-button ref="ref4" size="large" class="primary-btn" plain type="primary" @click="dealWith('download')">下载作品</el-button>
+        </HeaderOptions>
       </div>
     </div>
     <div class="page-design-index-wrap">
-      <widget-panel></widget-panel>
+      <widget-panel ref="ref2"></widget-panel>
       <design-board class="page-design-wrap" pageDesignCanvasId="page-design-canvas">
         <!-- 用于挡住画布溢出部分，因为使用overflow有bug -->
         <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
         <!-- 提供一个背景图层 -->
         <div class="shelter-bg transparent-bg" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
       </design-board>
-      <style-panel></style-panel>
+      <style-panel ref="ref3"></style-panel>
     </div>
     <!-- 标尺 -->
     <line-guides :show="state.showLineGuides" />
@@ -50,6 +57,8 @@
       @cancel="downloadCancel"
       @done="state.downloadPercent = 0"
     />
+    <!-- 漫游导航 -->
+    <Tour ref="tourRef" :steps="[ref1, ref2, ref3, ref4]" />
   </div>
 </template>
 
@@ -67,12 +76,21 @@ import lineGuides from '@/components/modules/layout/lineGuides.vue'
 import shortcuts from '@/mixins/shortcuts'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
+import Folder from './components/Folder.vue'
+import Helper from './components/Helper.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/download.vue'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
 import { useCanvasStore, useControlStore, useHistoryStore, useWidgetStore, useGroupStore } from '@/store'
+import type { ButtonInstance } from 'element-plus'
+import Tour from './components/Tour.vue'
+
+const ref1 = ref<ButtonInstance>()
+const ref2 = ref<ButtonInstance>()
+const ref3 = ref<ButtonInstance>()
+const ref4 = ref<ButtonInstance>()
 
 type TState = {
   style: CSSProperties
@@ -93,8 +111,7 @@ const groupStore = useGroupStore()
 const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom } = storeToRefs(useCanvasStore())
 const { dHistoryParams } = storeToRefs(useHistoryStore())
-const { dActiveElement, dCopyElement } = storeToRefs(widgetStore)
-
+// const { dActiveElement, dCopyElement } = storeToRefs(widgetStore)
 
 const state = reactive<TState>({
   style: {
@@ -128,10 +145,6 @@ function jump2home() {
   // window.open(fullPath[0] + '//' + fullPath[2])
   window.open('https://xp.palxp.cn/')
 }
-
-defineExpose({
-  jump2home,
-})
 
 const undoable = computed(() => {
   return !(
@@ -216,15 +229,32 @@ function fixTopBarScroll() {
   state.style.left = `-${scrollLeft}px`
 }
 
-// function clickListener(e: Event) {
-//   console.log('click listener', e)
-// }
-
 function optionsChange({ downloadPercent, downloadText, downloadMsg }: { downloadPercent: number, downloadText: string, downloadMsg?: string }) {
   state.downloadPercent = downloadPercent
   state.downloadText = downloadText
   state.downloadMsg = downloadMsg
 }
+
+const tourRef = ref<any>()
+const fns: any = {
+  openTour: () => {
+    tourRef.value.open()
+  },
+  save: () => {
+    optionsRef.value?.save(false)
+  },
+  download: () => {
+    optionsRef.value?.download()
+  },
+  changeLineGuides
+}
+const dealWith = (fnName: string, params?: any) => {
+  fns[fnName](params)
+}
+
+defineExpose({
+  jump2home,
+})
 </script>
 
 <style lang="less" scoped>

@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-13 00:12:11
+ * @LastEditTime: 2024-04-03 20:58:43
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -13,7 +13,7 @@
           <div class="name" style="font-size: 15px">在线PSD解析</div>
         </div>
         <div style="flex: 1">
-          <el-button plain type="primary" @click="jump2word">说明文档及PSD规范</el-button>
+          <el-button plain type="primary" @click="jump2word">说明文档及 PSD 规范</el-button>
         </div>
         <el-button v-show="state.isDone" @click="clear">清空模板</el-button>
         <div class="v-tips">
@@ -32,7 +32,7 @@
               style="margin-right: 1rem"
               src="https://cdn.dancf.com/design/svg/icon_psdimport.37e6f23e.svg"
               alt="upload"
-            /> 在此拖入或选择PSD文件
+            /> 在此拖入或选择 PSD 文件
           </div>
         </uploader>
       </design-board>

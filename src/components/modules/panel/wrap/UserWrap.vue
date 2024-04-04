@@ -3,7 +3,7 @@
  * @Date: 2022-02-13 22:18:35
  * @Description: 我的
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-03-11 01:42:44
+ * @LastEditTime: 2024-04-03 21:00:26
 -->
 <template>
   <div class="wrap">
@@ -13,9 +13,9 @@
     </el-tabs>
     <div v-show="state.tabActiveName === 'pics'">
       <uploader v-model="state.percent" class="upload" @done="uploadDone">
-        <el-button class="upload-btn" plain>上传图片 <i class="iconfont icon-upload" /></el-button>
+        <el-button class="upload-btn" plain><i class="iconfont icon-upload" /> 上传图片</el-button>
       </uploader>
-      <el-button class="upload-btn upload-psd" plain type="primary" @click="openPSD">上传 PSD 模板</el-button>
+      <el-button class="upload-btn upload-psd" plain type="primary" @click="openPSD">导入 PSD</el-button>
       <div style="margin: 1rem; height: 100vh">
         <photo-list
           ref="imgListRef" 
@@ -294,11 +294,11 @@ defineExpose({
   margin: 0 0 0 1rem;
   display: inline-block;
   &-btn {
-    width: 160px;
+    width: 170px;
     font-size: 14px;
   }
   &-psd {
-    width: 124px;
+    width: 114px;
     margin-left: 10px;
   }
 }

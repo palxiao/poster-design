@@ -1,29 +1,25 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2021-07-13 02:48:38
- * @Description: 本地测试项目请勿修改此文件
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-02-26 17:54:00
+ * @Description: 本地测试用户身份写死
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-03 20:56:23
  */
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios'
-// import store from '@/store'
 import app_config, { LocalStorageKey } from '@/config'
 import { useBaseStore, useUserStore } from '@/store/index';
 
 axios.defaults.timeout = 30000
-axios.defaults.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTc4ODU3NDc1MDU4NX0.L_t6DFD48Dm6rUPfgIgOWJkz18En1m_-hhMHcpbxliY';
+// axios.defaults.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTc4ODU3NDc1MDU4NX0.L_t6DFD48Dm6rUPfgIgOWJkz18En1m_-hhMHcpbxliY';
+const defaultToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTc4ODU3NDc1MDU4NX0.L_t6DFD48Dm6rUPfgIgOWJkz18En1m_-hhMHcpbxliY';
 // const version = app_config.VERSION;
 const baseUrl = app_config.API_URL
 
 // 请求拦截器
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    // const access_token = store.state.currentUser.access_token;
     const url = config.url ?? ""
     const values = {}
-    // values.access_token = access_token;
-    // values.version = version;
-
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       config.url = url.startsWith('/') ? baseUrl + url : config.url = baseUrl + '/' + url
     }
@@ -48,7 +44,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use((res: AxiosResponse<any>) => {
     // store.dispatch('hideLoading');
     // 接口规则：只有正确code为200时返回result结果对象，错误返回整个结果对象
-
     if (!res.data) {
       return Promise.reject(res)
     }
@@ -95,9 +90,9 @@ const fetch = <T = any> (
     // store.commit('loading', '加载中..');
   }
 
-  const token = localStorage.getItem(LocalStorageKey.tokenKey)
+  const token = defaultToken//localStorage.getItem(LocalStorageKey.tokenKey)
   const headerObject: Record<string, any> = {}
-  token && (headerObject.authorization = token)
+  token && (headerObject.Authorization = token)
   
   if (type === 'get') {
     return axios.get(url, {

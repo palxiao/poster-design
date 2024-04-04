@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-07-12 11:26:53
  * @Description: 上传用户模板
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-14 09:17:56
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-03 20:57:29
 -->
 <template>
   <el-button v-show="isDone" type="primary" plain @click="prepare"><b>上传模板</b></el-button>
@@ -136,7 +136,7 @@ async function uploadImgs() {
       const { id, stat, msg } = await api.home.saveWorks({ cover, title: '自设计模板', data: JSON.stringify({ page, widgets }), width: page.width, height: page.height })
       stat !== 0 ? useNotification('保存成功', '可在"我的模板"中查看') : useNotification('保存失败', msg, { type: 'error' })
       router.push({ path: '/psd', query: { id }, replace: true })
-      emit('change', { downloadPercent: 99.99, downloadText: '上传完成', cancelText: '查看我的作品' }) // 关闭弹窗
+      emit('change', { downloadPercent: 99.99, downloadText: '上传完成', cancelText: '点击查看作品' }) // 关闭弹窗
     }
 
 defineExpose({

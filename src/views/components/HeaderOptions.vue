@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-03 12:21:25
+ * @LastEditTime: 2024-04-05 05:37:53
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -17,10 +17,10 @@
       <div class="divide__line">|</div>
     </template>
     <!-- <el-button @click="draw">绘制(测试)</el-button> -->
-    <el-button size="large" class="primary-btn" :disabled="tempEditing" @click="save(false)">保存</el-button>
-    <copyRight>
-      <el-button :loading="state.loading" size="large" class="primary-btn" :disabled="tempEditing" plain type="primary" @click="download">下载作品</el-button>
-    </copyRight>
+    <!-- <copyRight> -->
+      <slot />
+      <!-- <el-button :loading="state.loading" size="large" class="primary-btn" :disabled="tempEditing" plain type="primary" @click="download">下载作品</el-button> -->
+    <!-- </copyRight> -->
   </div>
   <!-- 生成图片组件 -->
   <SaveImage ref="canvasImage" />
@@ -34,7 +34,7 @@ import _dl from '@/common/methods/download'
 import useNotification from '@/common/methods/notification'
 import SaveImage from '@/components/business/save-download/CreateCover.vue'
 import { useFontStore } from '@/common/methods/fonts'
-import copyRight from './CopyRight.vue'
+// import copyRight from './CopyRight.vue'
 import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 import { useControlStore, useHistoryStore, useCanvasStore, useUserStore, useWidgetStore } from '@/store/index'
@@ -136,6 +136,7 @@ async function saveTemp() {
     }
     async function download() {
       if (state.loading === true) {
+        useNotification('作品导出中', '当前有作品正在导出，请稍候再试')
         return
       }
       // 临时提示
@@ -173,7 +174,11 @@ async function saveTemp() {
               state.loading = false
             }
           })
-          emit('change', { downloadPercent: 100, downloadText: '作品下载成功', downloadMsg: '仅供学习、研究或欣赏等用途，暂不提供商业授权。' })
+          emit('change', { downloadPercent: 100, downloadText: '作品下载成功', downloadMsg: '该作品仅供学习、研究或欣赏等用途，暂不提供商业授权。' })
+          state.loading = false
+        } else {
+          emit('change', { downloadPercent: 0, downloadText: '请稍候..' })
+          useNotification('作品为空', '无法下载，请先创建设计', { type: 'error' })
           state.loading = false
         }
       }, 100)
@@ -257,9 +262,10 @@ defineExpose({
 .top-title {
   color: @color-black;
   flex: 1;
-  padding-left: 88px;
+  padding-left: 20px;
   // font-weight: bold;
   .input-wrap {
+    // box-shadow: none;
     width: 15rem;
     :deep(input) {
       border-color: #ffffff;
@@ -268,7 +274,7 @@ defineExpose({
   }
   .input-wrap:hover {
     :deep(input) {
-      border-color: #e8eaec;
+      // border-color: #e8eaec;
     }
   }
 }
@@ -277,7 +283,6 @@ defineExpose({
   transform: scale(0.95);
   margin-left: 10px;
 }
-
 .divide__line {
   margin: 0 1rem;
   color: #e8eaec;

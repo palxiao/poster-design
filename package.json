@@ -22,7 +22,7 @@
     "core-js": "^3.6.5",
     "cropperjs": "^1.6.1",
     "dayjs": "^1.10.7",
-    "element-plus": "^2.3.7",
+    "element-plus": "^2.6.3",
     "fontfaceobserver": "^2.1.0",
     "html2canvas": "^1.4.1",
     "mitt": "^3.0.1",

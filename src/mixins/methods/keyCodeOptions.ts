@@ -3,7 +3,7 @@
  * @Date: 2022-03-09 14:20:09
  * @Description: 处理常用操作
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-30 10:09:55
+ * @LastEditTime: 2024-04-04 00:33:01
  */
 import { useControlStore, useWidgetStore } from '@/store'
 import { TdWidgetData } from '@/store/design/widget'
@@ -13,19 +13,19 @@ const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 
 export default function keyCodeOptions(e: any, params: any) {
-  const { f } = params
+  const { range } = params
   switch (e.keyCode) {
     case 38:
-      udlr('top', -1 * f, e)
+      udlr('top', -1 * range, e)
       break
     case 40:
-      udlr('top', Number(f), e)
+      udlr('top', Number(range), e)
       break
     case 37:
-      udlr('left', -1 * f, e)
+      udlr('left', -1 * range, e)
       break
     case 39:
-      udlr('left', Number(f), e)
+      udlr('left', Number(range), e)
       break
     case 46:
     case 8:
