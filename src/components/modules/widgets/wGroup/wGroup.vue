@@ -2,22 +2,11 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-02 09:41:41
  * @Description: 
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-16 00:30:03
+ * @LastEditors: xi_zi
+ * @LastEditTime: 2024-04-03 23:31:12
 -->
 <template>
-  <div
-    ref="widget"
-    :class="['w-group', { 'layer-lock': props.params?.lock }]"
-    :style="{
-      position: 'absolute',
-      left: (props.params.left || 0) - (props.parent?.left || 0) + 'px',
-      top: (props.params.top || 0) - (props.parent.top || 0) + 'px',
-      width: params.width + 'px',
-      height: params.height + 'px',
-      opacity: params.opacity,
-    }"
-  >
+  <div ref="widget" :class="['w-group', { 'layer-lock': props.params?.lock }]">
     <slot></slot>
   </div>
 </template>
@@ -28,8 +17,8 @@ const NAME = 'w-group'
 import { nextTick, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
 
 import { setTransformAttribute } from '@/common/methods/handleTransform'
-import { useWidgetStore } from '@/store';
-import { storeToRefs } from 'pinia';
+import { useWidgetStore } from '@/store'
+import { storeToRefs } from 'pinia'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
 export type TParamsData = {
@@ -46,13 +35,12 @@ export type TParamsData = {
 
 type TProps = {
   params?: Partial<TParamsData>
-  parent?: Partial<Pick<TParamsData, "top" | "left">>
+  parent?: Partial<Pick<TParamsData, 'top' | 'left'>>
 }
 const props = withDefaults(defineProps<TProps>(), {
   params: () => ({}),
-  parent: () => ({})
+  parent: () => ({}),
 })
-;
 const widgetStore = useWidgetStore()
 
 const widget = ref<HTMLElement | null>(null)
@@ -105,7 +93,7 @@ onMounted(async () => {
   document.addEventListener('mousedown', touchstart, false)
   document.addEventListener('mouseup', touchend, false)
   if (props.params?.rotate && widget.value) {
-    (widget.value.style.transform += `rotate(${props.params.rotate})`)
+    widget.value.style.transform += `rotate(${props.params.rotate})`
   }
 })
 
@@ -115,7 +103,7 @@ onBeforeUnmount(() => {
 })
 // ...mapActions(['updateWidgetData']),
 
-function updateRecord(tempScale ?: number) {
+function updateRecord(tempScale?: number) {
   if (dActiveElement.value?.uuid === props.params.uuid) {
     // clearTimeout(this.timer)
     let record = dActiveElement.value?.record
@@ -238,14 +226,13 @@ function keySetValue(uuid: string, key: keyof TParamsData, value: number) {
   setTimeout(() => {
     const widget = dWidgets.value.find((item) => item.uuid === uuid)
     if (!widget) return
-    (widget[key] as Number) = value + Number(props.params[key] || '')
+    ;(widget[key] as Number) = value + Number(props.params[key] || '')
   }, 10)
 }
 
 // defineExpose({
 //   setting
 // })
-
 </script>
 
 <style lang="less" scoped>

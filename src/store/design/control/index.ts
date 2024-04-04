@@ -3,8 +3,8 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-18 21:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-18 21:00:00
+ * @LastEditors: xi_zi
+ * @LastEditTime: 2024-04-03 10:26:38
  */
 
 import { useHistoryStore } from "@/store";
@@ -27,8 +27,11 @@ type TControlState = {
   dAltDown: boolean
   // 是否按下空格键
   dSpaceDown: boolean
-  /** 正在编辑or裁剪的组件id */
+  /** 正在编辑or裁剪的组件id **/
   dCropUuid: string
+  warpable: boolean, // 是否开启斜切
+  scalable: boolean, // 是否开启缩放
+  resizable: boolean, // 是否开启拖拽
 }
 
 type TControlAction = {
@@ -45,11 +48,29 @@ type TControlAction = {
   stopDMove: () => void
   /** 设置正在裁剪or编辑的组件 */
   setCropUuid: (uuid: string) => void
+  /**
+   * 设置斜切
+   * @param able 
+   * @returns 
+   */
+  setWarpable: (able: boolean) => void
+  /**
+   * 设置尺寸控制
+   * @param able 
+   * @returns 
+   */
+  setResizable: (able: boolean) => void
+  /**
+   * 设置缩放
+   * @param able 
+   * @returns 
+   */
+  setScalable: (able: boolean) => void
   setSpaceDown: (uuid: boolean) => void // 设置是否按下空格键
 }
 
 /** 全局控制配置 */
-const ControlStore =  defineStore<"controlStore", TControlState, {}, TControlAction>("controlStore", {
+const ControlStore = defineStore<"controlStore", TControlState, {}, TControlAction>("controlStore", {
   state: () => ({
     dMoving: false, // 是否正在移动组件
     dDraging: false, // 是否正在抓取组件
@@ -59,6 +80,9 @@ const ControlStore =  defineStore<"controlStore", TControlState, {}, TControlAct
     showRotatable: true, // 是否显示moveable的旋转按钮
     dAltDown: false, // 记录是否按下alt键 / 或ctrl
     dCropUuid: '-1', // 正在编辑or裁剪的组件id
+    warpable: false, // 是否开启斜切
+    scalable: false, // 是否开启缩放
+    resizable: true, // 是否开启拖拽
     dSpaceDown: false, // 记录是否按下空格键
   }),
   getters: {},
@@ -111,6 +135,31 @@ const ControlStore =  defineStore<"controlStore", TControlState, {}, TControlAct
     setCropUuid(uuid: string) {
       // 设置正在裁剪or编辑的组件
       this.dCropUuid = uuid
+    },
+    setWarpable(able: boolean) {
+      this.warpable = able
+      if (able) {
+        this.scalable = false
+        this.resizable = false
+      } else {
+        this.resizable = true
+      }
+    },
+    setResizable(able: boolean) {
+      this.resizable = able
+      if (able) {
+        this.warpable = false
+        this.scalable = false
+      }
+    },
+    setScalable(able: boolean) {
+      this.scalable = able
+      if (able) {
+        this.warpable = false
+        this.resizable = false
+      } else {
+        this.resizable = true
+      }
     },
     setSpaceDown(val: boolean) {
       this.dSpaceDown = val

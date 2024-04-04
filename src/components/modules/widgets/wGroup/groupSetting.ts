@@ -8,7 +8,7 @@ export const wGroupSetting = {
   height: 0,
   left: 0,
   top: 0,
-  transform: '',
+  transform: 'translate(0,0) matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)',
   opacity: 1,
   parent: '-1',
   isContainer: true,

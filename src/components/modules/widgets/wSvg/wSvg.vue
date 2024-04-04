@@ -2,30 +2,18 @@
   TODO: 重构
 -->
 <template>
-  <div
-    :id="params.uuid"
-    ref="widgetRef"
-    class="w-svg"
-    :style="{
-      position: state.position,
-      left: params.left - parent.left + 'px',
-      top: params.top - parent.top + 'px',
-      width: params.width + 'px',
-      height: params.height + 'px',
-      opacity: params.opacity,
-    }"
-  ></div>
+  <div :id="params.uuid" ref="widgetRef" class="w-svg"></div>
 </template>
 
 <script lang="ts" setup>
 // svg
 // const NAME = 'w-svg'
 
-import { useCanvasStore, useForceStore, useWidgetStore } from '@/store';
+import { useCanvasStore, useForceStore, useWidgetStore } from '@/store'
 import { TWSvgSetting } from './wSvgSetting'
-import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget';
+import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
 type TProps = {
@@ -37,12 +25,12 @@ type TProps = {
 }
 
 type TState = {
-  position: CSSProperties['position'], // 'absolute'relative
-  editBoxStyle: CSSProperties,
-  editBoxs: Record<string, any>,
-  editingKey: string,
-  cropWidgetXY: Record<string, any>, // 裁剪框移动作用
-  attrRecord: Record<string, any>, // 记录可更改的属性
+  position: CSSProperties['position'] // 'absolute'relative
+  editBoxStyle: CSSProperties
+  editBoxs: Record<string, any>
+  editingKey: string
+  cropWidgetXY: Record<string, any> // 裁剪框移动作用
+  attrRecord: Record<string, any> // 记录可更改的属性
   svgImg: Record<string, any> | null
 }
 
@@ -56,7 +44,7 @@ const state = reactive<TState>({
   editingKey: '',
   cropWidgetXY: {}, // 裁剪框移动作用
   attrRecord: {}, // 记录可更改的属性
-  svgImg: null
+  svgImg: null,
 })
 
 const widgetStore = useWidgetStore()
@@ -88,7 +76,7 @@ watch(
   () => {
     attrsChange()
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 )
 
 watch(
@@ -96,7 +84,7 @@ watch(
   async () => {
     await nextTick()
     updateRecord()
-  }
+  },
 )
 
 watch(
@@ -106,7 +94,7 @@ watch(
     state.svgImg.attr({
       'xlink:href': props.params.imgUrl,
     })
-  }
+  },
 )
 
 watch(
@@ -118,7 +106,7 @@ watch(
     } else {
       el?.removeEventListener('mousedown', touchstart, false)
     }
-  }
+  },
 )
 
 onUpdated(() => {

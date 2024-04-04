@@ -1,7 +1,7 @@
 // .prettierrc.js 代码美化规则配置
 module.exports = {
     // 一行最多 n 字符
-    printWidth: 1000,
+    printWidth: 200,
     // 使用 2 个空格缩进
     tabWidth: 2,
     // 不使用缩进符，而使用空格

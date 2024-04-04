@@ -1,33 +1,337 @@
 <!--
- * @Author: ShawnPhang
- * @Date: 2021-08-04 11:46:39
- * @Description: 原版movable插件
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-14 11:41:23
+ * @Description: widget move
+ * @Author: xi_zi
+ * @Date: 2024-04-03 10:25:49
+ * @LastEditTime: 2024-04-04 00:28:22
+ * @LastEditors: xi_zi
 -->
 <template>
-  <div id="empty" class="moveable__remove-item zk-moveable-style"></div>
+  <moveable
+    v-if="targetRef"
+    ref="moveableRef"
+    v-bind="options"
+    :target="targetRef"
+    :elementGuidelines="elementGuidelines"
+    :getElementRect="getElementInfo"
+    :renderDirections="renderDirections"
+    @drag-origin="onDragOrigin"
+    @drag-origin-end="onDragOriginEnd"
+    @change-targets="onChangeTargets"
+    @drag-group="onDragGroup"
+    @drag-group-end="onDragGroupEnd"
+    @scale-group="onScaleGroup"
+    @scale-group-end="onScaleGroupEnd"
+    @resize-group="onResizeGroup"
+    @resize-group-end="onResizeGroupEnd"
+    @rotate-group="onRotateGroup"
+    @rotate-group-end="onRotateGroupEnd"
+  />
+  <vue-selecto
+    dragContainer="#page-design"
+    toggleContinueSelect="shift"
+    :selectableTargets="['.layer']"
+    :selectByClick="false"
+    :continueSelect="false"
+    :selectFromInside="false"
+    :hitRate="5"
+    :keyContainer="keyContainer"
+    @select="onSelect"
+    @drag-start="onSelectoDragStart"
+  />
 </template>
 <script lang="ts" setup>
-import { nextTick, onMounted, watch } from 'vue'
-
-import Moveable, { EVENTS } from 'moveable' // PROPERTIES, METHODS,
-import MoveableHelper from 'moveable-helper'
-// import { setTransformAttribute } from '@/common/methods/handleTransform'
-import useSelecto from './Selecto'
+import Moveable, { getElementInfo } from 'vue3-moveable'
+import { VueSelecto } from 'vue3-selecto'
+import VanillaSelecto, { OnSelect, OnDragStart as OnSelectoDragStart } from 'selecto'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCanvasStore, useControlStore, useWidgetStore, useForceStore, useHistoryStore } from '@/store'
+import type {
+  MoveableRefTargetType,
+  OnDragStart,
+  OnDrag,
+  OnDragEnd,
+  OnWarp,
+  OnResize,
+  OnResizeEnd,
+  OnScale,
+  OnRotate,
+  OnRotateEnd,
+  RotatableProps,
+  OnScaleEnd,
+  OnWarpEnd,
+  ElementGuidelineValueOption,
+  MoveableRefType,
+  OnDragOrigin,
+  OnChangeTargets,
+  OnDragOriginEnd,
+  OnDragGroup,
+  OnDragGroupEnd,
+  OnScaleGroup,
+  OnScaleGroupEnd,
+  OnResizeGroup,
+  OnResizeGroupEnd,
+  OnRotateGroup,
+  OnRotateGroupEnd,
+} from 'vue3-moveable'
+import { TUpdateWidgetMultiplePayload } from '@/store/design/widget/actions/widget'
+
+type TModifierStyle = { transform?: string; transformOrigin?: string; width?: number; height?: number }
 
 const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 const forceStore = useForceStore()
 const historyStore = useHistoryStore()
 const { guidelines } = storeToRefs(useCanvasStore())
-const { showMoveable, showRotatable, dAltDown } = storeToRefs(controlStore)
+const { showMoveable, showRotatable, dAltDown, resizable, scalable, warpable, dSpaceDown } = storeToRefs(controlStore)
 const { dSelectWidgets, dActiveElement, activeMouseEvent, dWidgets } = storeToRefs(widgetStore)
 const { updateRect, updateSelect } = storeToRefs(forceStore)
 
+const keyContainer = document.getElementById('page-design')
+const targetRef = ref<MoveableRefTargetType>()
+const moveableRef = ref<Moveable>()
+const elementGuidelines = ref<(ElementGuidelineValueOption | MoveableRefType<Element>)[]>([])
+const renderDirections = ref<string[]>([])
 let _target: string | null = null
+
+const modifierStyle = (target: HTMLElement | SVGElement, { transform, transformOrigin, width, height }: TModifierStyle) => {
+  if (transform) target.style.transform = transform
+  if (transformOrigin) target.style.transformOrigin = transformOrigin
+  if (width) target.style.width = `${width}px`
+  if (height) target.style.height = `${height}px`
+}
+
+const updateStoreModifierStyle = (target: HTMLElement | SVGElement, { transform, transformOrigin, width, height }: TModifierStyle) => {
+  const uuid = target.getAttribute('id') || ''
+  const updateData:  TUpdateWidgetMultiplePayload['data'] = []
+  if (transform) updateData.push({ key: 'transform', value: transform })
+  if (transformOrigin) updateData.push({ key: 'transformOrigin', value: transformOrigin })
+  if (width) updateData.push({ key: 'width', value: width })
+  if (height) updateData.push({ key: 'height', value: height })
+
+  widgetStore.updateWidgetMultiple({
+    uuid,
+    data: updateData,
+  })
+}
+
+const onDragGroup = ({ events, inputEvent }: OnDragGroup) => {
+  inputEvent.stopPropagation()
+  inputEvent.preventDefault()
+  events.forEach(({ target, transform }) => modifierStyle(target, { transform }))
+}
+const onDragGroupEnd = ({ targets }: OnDragGroupEnd) => targets.forEach((target) => updateStoreModifierStyle(target, { transform: target.style.transform }))
+
+const onScaleGroup = ({ events }: OnScaleGroup) => {
+  events.forEach((ev) => {
+    ev.target.style.transform = ev.transform
+  })
+}
+
+const onScaleGroupEnd = (e: OnScaleGroupEnd) => {}
+
+const onResizeGroup = ({ events }: OnResizeGroup) => {
+  events.forEach((ev) => {
+    ev.target.style.transform = ev.transform
+  })
+}
+const onResizeGroupEnd = (e: OnResizeGroupEnd) => {}
+
+const onRotateGroup = ({ events }: OnRotateGroup) => {
+  events.forEach((ev) => {
+    ev.target.style.transform = ev.transform
+  })
+}
+
+const onRotateGroupEnd = (e: OnRotateGroupEnd) => {}
+
+const onDragStart = (e: OnDragStart) => {
+  const { inputEvent, stopDrag } = e
+  if (inputEvent.target.nodeName === 'PRE' && dActiveElement.value?.editable) stopDrag()
+  if (dActiveElement.value?.lock) stopDrag()
+}
+const onDrag = ({ target, transform }: OnDrag) => modifierStyle(target, { transform })
+const onDragEnd = ({ inputEvent, target }: OnDragEnd) => {
+  widgetStore.setMouseEvent(null)
+  inputEvent.stopPropagation()
+  inputEvent.preventDefault()
+  updateStoreModifierStyle(target, { transform: target.style.transform })
+}
+
+/**
+ * 拖拽参数
+ */
+const dragOptions = reactive({
+  // 是否可以拖动目标
+  draggable: true,
+  // 拖动节流
+  throttleDrag: 1,
+  // 是否通过拖动边线移动
+  edgeDraggable: false,
+  // 当拖动时，角度为 x，y 的节流阀。
+  throttleDragRotate: 0,
+  // 当拖动时，旋转 x，y。
+  startDragRotate: 0,
+  onDrag,
+  onDragStart,
+  onDragEnd,
+})
+
+const onWarp = ({ target, transform }: OnWarp) => modifierStyle(target, { transform })
+const onWarpEnd = ({ target }: OnWarpEnd) => updateStoreModifierStyle(target, { transform: target.style.transform })
+/**
+ * 扭曲参数
+ */
+const warpOptions = reactive({
+  //目标能否扭曲
+  warpable: true,
+  onWarp,
+  onWarpEnd,
+})
+
+const onResize = ({ width, height, drag: { transform }, target }: OnResize) => modifierStyle(target, { transform, width, height })
+const onResizeEnd = ({ target }: OnResizeEnd) => updateStoreModifierStyle(target, { transform: target.style.transform, width: parseFloat(target.style.width), height: parseFloat(target.style.height) })
+
+/**
+ * 调整大小参数
+ */
+const resizeOptions = reactive({
+  // 开启调整大小
+  resizable: true,
+  // 调整大小最大宽度
+  maxWidth: 'auto',
+  // 调整大小最大高度
+  maxHeight: 'auto',
+  // 调整大小最小宽度
+  minWidth: 'auto',
+  // 调整大小最小高度
+  minHeight: 'auto',
+  // 是否保持宽高比
+  keepRatio: false,
+  // 宽度、高度调整时的节流
+  throttleResize: 1,
+  onResize,
+  onResizeEnd,
+})
+
+const onScale = ({ target, drag: { transform } }: OnScale) => modifierStyle(target, { transform })
+const onScaleEnd = (e: OnScaleEnd) => {
+  const uuid = dActiveElement.value?.uuid || ''
+  widgetStore.updateWidgetData({
+    uuid,
+    key: 'transform',
+    value: e.target.style.transform,
+  })
+}
+/**
+ * 缩放参数
+ */
+const scaleOptions = reactive({
+  // 是否可缩放
+  scalable: true,
+  // 是否保持宽度、高度的比例
+  keepRatio: false,
+  //节流阀的比例
+  throttleScale: 0,
+  onScale,
+  onScaleEnd,
+})
+
+const onRotate = (e: OnRotate) => (e.target.style.transform = e.drag.transform)
+const onRotateEnd = ({ target }: OnRotateEnd) => updateStoreModifierStyle(target, { transform: target.style.transform })
+
+const rotateOptions = reactive<RotatableProps>({
+  // 是否可旋转
+  rotatable: true,
+  // 转动时角度节流阀
+  throttleRotate: 1,
+  // 旋转的位置
+  rotationPosition: 'bottom',
+  onRotate,
+  onRotateEnd,
+})
+
+const options = computed(() => {
+  const opt = { ...dragOptions }
+  if (showRotatable.value) Object.assign(opt, rotateOptions)
+  if (warpable.value) Object.assign(opt, warpOptions)
+  if (scalable.value) Object.assign(opt, scaleOptions)
+  if (resizable.value) Object.assign(opt, resizeOptions)
+  return opt
+})
+
+const onDragOrigin = ({ target, transformOrigin, drag }: OnDragOrigin) => {
+  target.style.transformOrigin = transformOrigin
+  target.style.transform = drag.transform
+}
+
+const onDragOriginEnd = ({ target }: OnDragOriginEnd) => {
+  const uuid = dActiveElement.value?.uuid || ''
+  widgetStore.updateWidgetData({
+    uuid,
+    key: 'transform',
+    value: target.style.transform,
+  })
+  widgetStore.updateWidgetData({
+    uuid,
+    key: 'transformOrigin',
+    value: target.style.transformOrigin,
+  })
+}
+
+/**
+ * target 发生变化的时候，transformOrigin 放置于中心
+ * 用于兼容ps插件转码 transformOrigin 定位问题
+ */
+const onChangeTargets = ({ targets, moveable }: OnChangeTargets) => {
+  const target = targets[0]
+  if (targets.length !== 1 || !target) return
+  const transformOrigin = target.style.transformOrigin
+  if (!transformOrigin.includes('left') || !transformOrigin.includes('top')) return
+  const cloneNode: any = target.cloneNode(true)
+  cloneNode.style.position = 'fixed'
+  cloneNode.style.zIndex = '-10000'
+  cloneNode.style.transform = 'none'
+  document.body.appendChild(cloneNode)
+  const react = cloneNode?.getBoundingClientRect()
+  document.body.removeChild(cloneNode)
+  if (!react) return
+  setTimeout(() => {
+    moveable.request('originDraggable', { origin: [react.width / 2, react.height / 2] }, true)
+  }, 100)
+}
+
+const onSelect = (e: OnSelect<VanillaSelecto>) => {
+  e.added.forEach((el) => {
+    if (!Array.from(el.classList).includes('layer-lock') && !el.hasAttribute('child')) {
+      el.classList.add('widget-selected')
+      widgetStore.selectWidgetsInOut({
+        uuid: el.getAttribute('data-uuid') || '',
+      })
+    }
+  })
+  e.removed.forEach((el) => {
+    el.classList.remove('widget-selected')
+    widgetStore.selectWidgetsInOut({
+      uuid: el.getAttribute('data-uuid') || '',
+    })
+  })
+  renderDirections.value = []
+  controlStore.setShowRotatable(false)
+  targetRef.value = [].slice.call(document.querySelectorAll('.widget-selected'))
+}
+
+const onSelectoDragStart = (e: OnSelectoDragStart<VanillaSelecto>) => {
+  if (dSpaceDown.value) e.stop()
+}
+
+const checkMouseEvent = () => {
+  if (!activeMouseEvent.value || !moveableRef.value) return
+  moveableRef.value.dragStart(activeMouseEvent.value)
+  // 使用后销毁 mouseEvent
+  widgetStore.setMouseEvent(null)
+  // store.commit('setMouseEvent', null)
+}
 
 watch(
   () => dActiveElement.value,
@@ -35,91 +339,39 @@ watch(
     setTimeout(async () => {
       await nextTick()
       checkMouseEvent()
-    }, 10);
-    if (!val || !val.record) {
+    }, 10)
+    if (!val || !val.record) return
+    if (val.uuid === '-1') {
+      targetRef.value = null
+      _target = null
+      elementGuidelines.value.length = 0
       return
     }
-    if (!moveable) return
-    // 选中非面板 并且不是组合内的元素
-    if (Number(val.uuid) != -1) {
-      await nextTick()
-      const target = `[id="${val.uuid}"]`
-      _target = `[id="${val.uuid}"]`
-      moveable.rotatable = true // 选择时会取消旋转
-      // 方向点位设置
-      // this.moveable.renderDirections = val.type === 'w-text' ? ['e', 'se'] : 'w-image' ? ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'] : ['nw', 'ne', 'sw', 'se']
-      switch (val.type) {
-        case 'w-text':
-          moveable.renderDirections = ['e', 'se']
-          break
-        case 'w-image':
-          moveable.renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
-          break
-        case 'w-svg':
-          moveable.renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
-          break
-        default:
-          moveable.renderDirections = ['nw', 'ne', 'sw', 'se']
-          break
-      }
-      // // Set Move Auto
-      moveable.setState({ target: _target }, () => {
-        // 当出现mouseevent时进行即刻选中
-        checkMouseEvent()
-      })
-      // // End
-      controlStore.setShowMoveable(true)
-      // store.commit('setShowMoveable', true)
-      // 参考线设置
-      if (moveable.elementGuidelines && !moveable.elementGuidelines.includes(target)) {
-        moveable.elementGuidelines.push(target)
-      }
-    } else {
-      moveable.target = `[id="empty"]`
-      if (moveable.target !== `[id="empty"]`) {
-        setTimeout(() => {
-          if (!moveable) return
-          moveable.target = `[id="empty"]`
-        }, 210)
-      }
-      // feature: 可以遍历来设置参考线，目前先粗暴清空
-      moveable.elementGuidelines && (moveable.elementGuidelines.length = 0)
-    }
-  }
+    await nextTick()
+    const targetId = `[id="${val.uuid}"]`
+    _target = targetId
+    controlStore.setShowRotatable(true)
+    renderDirections.value = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
+    targetRef.value = document.querySelector(targetId) as MoveableRefTargetType
+    controlStore.setShowMoveable(true)
+    if (!elementGuidelines.value.includes(targetId)) elementGuidelines.value.push(targetId)
+    checkMouseEvent()
+  },
 )
 
 watch(
   () => showMoveable.value,
   (val) => {
-    if (!moveable) return
-    if (val) {
-        moveable.target = _target
-      } else {
-        moveable.target = `[id="empty"]`
-      }
-  }
-)
-
-watch(
-  () => showRotatable.value,
-  (val) => {
-    if (!moveable) return
-    // TODO: 这里是通过旋转来判断是否可以操作
-    moveable.renderDirections = val ? ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'] : []
-    moveable.resizable = val
-    // this.moveable.scalable = val
-    const el = document.getElementsByClassName('moveable-rotation')
-    if (el && el[0]) {
-      (el[0] as HTMLElement).style.display = val ? 'block' : 'none'
-    }
-  }
+    if (!val) return (targetRef.value = null)
+    targetRef.value = _target
+  },
 )
 
 watch(
   () => updateRect.value,
   () => {
-    moveable && moveable.updateRect()
-  }
+    if (moveableRef.value) moveableRef.value.updateRect()
+  },
 )
 
 watch(
@@ -127,31 +379,27 @@ watch(
   () => {
     const items = widgetStore.dSelectWidgets
     setTimeout(async () => {
-      if (!moveable) return
-      moveable.updateRect()
+      if (!moveableRef.value) return
+      moveableRef.value.updateRect()
       await nextTick()
       for (let i = 0; i < items.length; i++) {
-        console.log(items[i].uuid)
         document.getElementById(items[i].uuid)?.classList.add('widget-selected')
       }
-      moveable.renderDirections = []
-      moveable.rotatable = false
-      const targetCollector = [].slice.call(document.querySelectorAll('.widget-selected'))
-      console.log(targetCollector)
-
-      moveable.target = targetCollector
+      renderDirections.value = []
+      controlStore.setShowRotatable(false)
+      const targetCollector: MoveableRefType<HTMLElement>[] = [].slice.call(document.querySelectorAll('.widget-selected'))
+      targetRef.value = targetCollector
       for (let i = 0; i < items.length; i++) {
         document.getElementById(items[i].uuid)?.classList.remove('widget-selected')
       }
     }, 400)
-  }
+  },
 )
 
 /** 选择的元素 */
 watch(
   () => dSelectWidgets.value,
   (items) => {
-    if (!moveable) return
     const alt = dAltDown.value
     // if (items.length > 1) {
     //   console.log('打开组合面板')
@@ -160,507 +408,31 @@ watch(
       for (let i = 0; i < items.length; i++) {
         document.getElementById(items[i].uuid)?.classList.add('widget-selected')
       }
-      moveable.renderDirections = []
-      moveable.rotatable = false
-      const targetCollector = [].slice.call(document.querySelectorAll('.widget-selected'))
-      // this.moveable.target = `[id="empty"]`
-      moveable.target = targetCollector
+      renderDirections.value = []
+      controlStore.setShowRotatable(false)
+      const targetCollector: MoveableRefType<HTMLElement>[] = [].slice.call(document.querySelectorAll('.widget-selected'))
+      targetRef.value = targetCollector
       for (let i = 0; i < items.length; i++) {
         document.getElementById(items[i].uuid)?.classList.remove('widget-selected')
       }
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 /** 标尺线 */
 watch(
   () => guidelines.value,
   (lines) => {
-    if (!moveable) return
-    console.log(lines)
-    moveable.verticalGuidelines = lines.verticalGuidelines
-    moveable.horizontalGuidelines = lines.horizontalGuidelines
-  }
+    if (!moveableRef.value) return
+    moveableRef.value.verticalGuidelines = lines.verticalGuidelines
+    moveableRef.value.horizontalGuidelines = lines.horizontalGuidelines
+  },
 )
 
-type TMoveableOptions = {
-  target: HTMLElement | null
-  container?:  HTMLElement | null
-  zoom: number
-  draggable: boolean
-  clippable: boolean // 裁剪
-  throttleDrag: number
-  resizable: boolean
-  throttleResize: number
-  scalable: boolean
-  throttleScale: number
-  keepRatio: boolean
-  rotatable: boolean
-  throttleRotate: number
-  renderDirections: string[] // ['nw', 'ne', 'sw', 'se'] // 'e'
-  pinchable: boolean // ["draggable", "resizable", "scalable", "rotatable"]
-  origin: boolean
-  defaultGroupOrigin: string,
-  /* 样式相关 */
-  rotationPosition: 'bottom',
-  className: 'zk-moveable-style',
-  /* -- 吸附对齐 Start -- */
-  snappable: boolean,
-  elementGuidelines: [],
-  verticalGuidelines: [],
-  horizontalGuidelines: [],
-  snapThreshold: 4,
-  isDisplaySnapDigit: boolean,
-  snapGap: boolean,
-  snapElement: boolean,
-  snapVertical: boolean,
-  snapHorizontal: boolean,
-  snapCenter: boolean,
-  snapDigit: number
-
-  // snapDirections={{"top":true,"right":true,"bottom":true,"left":true}}
-  //       elementSnapDirections={{}}
-  // -- END --
-  triggerAblesSimultaneously: true,
-}
-
-let moveable: Moveable | null = null
-let holdPosition: { left: number, top: number } | null = null
-let startHL: number = 0
-let startLS: number = 0
-let resetRatio: number = 0
-let resizeTempData: { width: number, height: number } | null = null
-
-onMounted(() => {
-  let holdGroupPosition: Record<string, any> | null = null
-  const moveableOptions: TMoveableOptions = {
-    target: document.querySelector(`[id="empty"]`),
-    // container: document.querySelector('#page-design'),
-    zoom: 0.8,
-    draggable: true,
-    clippable: false, // 裁剪
-    throttleDrag: 0,
-    resizable: true,
-    throttleResize: 0,
-    scalable: false,
-    throttleScale: 0,
-    keepRatio: true,
-    rotatable: true,
-    throttleRotate: 0,
-    renderDirections: ['nw', 'ne', 'sw', 'se'], // ['nw', 'ne', 'sw', 'se'] // 'e'
-    pinchable: true, // ["draggable", "resizable", "scalable", "rotatable"]
-    origin: false,
-    defaultGroupOrigin: '0% 0%',
-    // 样式相关
-    rotationPosition: 'bottom',
-    className: 'zk-moveable-style',
-    // -- 吸附对齐 Start --
-    snappable: true,
-    elementGuidelines: [],
-    verticalGuidelines: [],
-    horizontalGuidelines: [],
-    snapThreshold: 4,
-    isDisplaySnapDigit: true,
-    snapGap: false,
-    snapElement: true,
-    snapVertical: true,
-    snapHorizontal: true,
-    snapCenter: false,
-    snapDigit: 0,
-
-    // snapDirections={{"top":true,"right":true,"bottom":true,"left":true}}
-    //       elementSnapDirections={{}}
-    // -- END --
-    triggerAblesSimultaneously: true,
-  }
-
-  moveable = new Moveable(document.body, moveableOptions)
-
-  const helper = new MoveableHelper()
-
-  EVENTS.forEach((event) => {
-    let helperEvent = (event.replace(event[0], 'on' + event[0].toUpperCase()) as keyof MoveableHelper)
-    // console.log(event)
-    // 'resizeStart', 'resize', 'resizeEnd', rotate, onScale, onScaleStart
-    if (['resizeStart', 'rotate', 'resize'].includes(event)) {
-      moveable?.on(event as any, (...args) => {
-        // this.$emit(event, ...args)
-        if (helper[helperEvent] && typeof helper[helperEvent] === "function") {
-          (helper[helperEvent] as Function)(...args)
-        }
-      })
-    }
-  })
-
-  /* draggable */
-  let resizeStartWidth = 0
-
-  moveable
-  .on('dragStart', ({ inputEvent, target, stop }) => {
-    if (!dActiveElement.value) return
-    if (inputEvent.target.nodeName === 'PRE') {
-      dActiveElement.value.editable && stop()
-    }
-    dActiveElement.value.lock && stop()
-  })
-  .on('drag', ({ target, transform, left, top, inputEvent }) => {
-    // target!.style.transform = transform]
-    target!.style.left = `${left}px`
-    target!.style.top = `${top}px`
-    holdPosition = { left, top }
-  })
-  .on('dragEnd', ({ target, isDrag, inputEvent }) => {
-    // console.log('onDragEnd', inputEvent)
-    // TODO 清理mouseevent
-    widgetStore.setMouseEvent(null)
-    // store.commit('setMouseEvent', null)
-
-    inputEvent.stopPropagation()
-    inputEvent.preventDefault()
-    // console.log(this.holdPosition, inputEvent.pageX, inputEvent.pageY)
-    if (holdPosition) {
-      widgetStore.updateWidgetData({
-        uuid: dActiveElement.value?.uuid || "",
-        key: 'left',
-        value: Number(holdPosition?.left),
-      })
-      // store.dispatch("updateWidgetData", {
-      //   uuid: dActiveElement.value.uuid,
-      //   key: 'left',
-      //   value: Number(holdPosition?.left),
-      // })
-
-      widgetStore.updateWidgetData({
-        uuid: dActiveElement.value?.uuid || "",
-        key: 'top',
-        value: Number(holdPosition?.top),
-      })
-      // store.dispatch("updateWidgetData", {
-      //   uuid: dActiveElement.value.uuid,
-      //   key: 'top',
-      //   value: Number(holdPosition?.top),
-      // })
-
-      holdPosition = null // important
-      setTimeout(() => {
-        historyStore.pushHistory()
-        // store.dispatch("pushHistory")
-      }, 100)
-    }
-  })
-  // .on('keyUp', (e) => {
-  //   moveable.updateRect()
-  // })
-  .on('rotate', ({ target, beforeDist, dist, transform }: any) => {
-    // console.log('onRotate', Number(this.dActiveElement.rotate) + Number(beforeDist + dist))
-    // target.style.transform = transform
-    console.log(target.style.transform)
-  })
-  .on('rotateEnd', (e: any) => {
-    const tf = e.target.style.transform
-    const iof = tf.indexOf('rotate')
-    let rotate = ''
-    if (iof != -1) {
-      const index = iof + 'rotate'.length
-      const half = tf.substring(index + 1)
-      rotate = half.slice(0, half.indexOf(')'))
-    }
-    rotate && widgetStore.updateWidgetData({
-      uuid: dActiveElement.value?.uuid || "",
-      key: 'rotate',
-      value: rotate,
-    })
-
-    // rotate &&
-    //   store.dispatch("updateWidgetData", {
-    //     uuid: dActiveElement.value.uuid,
-    //     key: 'rotate',
-    //     value: rotate,
-    //   })
-  })
-  .on('resizeStart', (args) => {
-    console.log(args.target.style.transform)
-    if (!moveable) return
-    
-    moveable.snappable = false
-    if (dActiveElement.value?.type === 'w-text') {
-      if (String(args.direction) === '1,0') {
-        moveable.keepRatio = false
-        moveable.scalable = false
-      }
-      if (String(args.direction) === '1,1') {
-        moveable.keepRatio = false
-        resizeStartWidth = (args.target as HTMLElement).offsetWidth
-        startHL = Number(args.target!.style.lineHeight.replace('px', ''))
-        startLS = Number(args.target!.style.letterSpacing.replace('px', ''))
-        resetRatio = 1
-      }
-    } else if (dActiveElement.value?.type === 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg') {
-      const dirs = ['1,0', '0,-1', '-1,0', '0,1']
-      dirs.includes(String(args.direction)) && (moveable.keepRatio = false)
-    }
-  })
-  .on('resize', (args: any) => {
-    const { target, width, height, dist, delta, clientX, clientY, direction } = args
-    console.log(2, args)
-    if (dActiveElement.value?.type === 'w-text') {
-      if (String(direction) === '1,1') {
-        resetRatio = width / resizeStartWidth
-        target!.style.fontSize = (dActiveElement.value?.fontSize || 0) * resetRatio + 'px'
-        target!.style.letterSpacing = startLS * resetRatio + 'px'
-        target!.style.lineHeight = startHL * resetRatio + 'px'
-      }
-      target.style.width = width
-      target.style.height = height
-      resizeTempData = { width, height }
-      // moveable.updateRect()
-      target.style.backgroundImage = 'none'
-      // moveable.keepRatio !== this.resetRatio > 1 && (moveable.keepRatio = this.resetRatio > 1)
-    } else if (dActiveElement.value?.type == 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg') {
-      resizeTempData = { width, height }
-    } else if (dActiveElement.value?.type == 'w-group') {
-      // let record = this.dActiveElement.record
-      // this.dActiveElement.tempScale = width / record.width
-
-      widgetStore.resize({ width: width, height: height })
-      // store.commit('resize', { width: width, height: height })
-
-      // this.resizeTempData = { width, height }
-      // let record = this.dActiveElement.record
-      // setTransformAttribute(target, 'scale', width / record.width)
-    } else {
-      widgetStore.resize({ width: width, height: height })
-      // store.commit('resize', { width: width, height: height })
-    }
-    dActiveElement.value?.rotate && (target!.style.transform = target!.style.transform.replace('(0deg', `(${dActiveElement.value?.rotate}`))
-  })
-  .on('resizeEnd', (e: any) => {
-    if (!moveable) return
-    moveable.resizable = true
-    // moveable.scalable = true
-    moveable.snappable = true
-    if (e.lastEvent) {
-      // setTimeout(() => {
-      // if (this.dActiveElement.type === 'w-group') {
-      //   // 临时屏蔽，抖得太严重
-      //   return
-      // }
-      console.log('重置translate', dActiveElement.value)
-      // 转换成位置
-      // if (this.dActiveElement.cache && this.dActiveElement.cache.recordLeft) {
-      //   const left = e.lastEvent.drag.translate[0] + Number(this.dActiveElement.cache.recordLeft)
-      //   const top = e.lastEvent.drag.translate[1] + Number(this.dActiveElement.cache.recordTop)
-      //   this.dActiveElement.cache = { left, top }
-      // } else {
-      //   const left = e.lastEvent.drag.translate[0] + Number(this.dActiveElement.left)
-      //   const top = e.lastEvent.drag.translate[1] + Number(this.dActiveElement.top)
-      //   this.dActiveElement.cache = { left, top }
-      // }
-      const left = e.lastEvent.drag.translate[0]
-      const top = e.lastEvent.drag.translate[1]
-      widgetStore.updateWidgetMultiple({
-        uuid: dActiveElement.value?.uuid || "",
-        data: [
-          {
-            key: 'left',
-            value: Number(dActiveElement.value?.left) + left,
-          },
-          {
-            key: 'top',
-            value: Number(dActiveElement.value?.top) + top,
-          },
-        ],
-      })
-      // store.dispatch("updateWidgetMultiple", {
-      //   uuid: dActiveElement.value.uuid,
-      //   data: [
-      //     {
-      //       key: 'left',
-      //       value: Number(dActiveElement.value.left) + left,
-      //     },
-      //     {
-      //       key: 'top',
-      //       value: Number(dActiveElement.value.top) + top,
-      //     },
-      //   ],
-      // })
-      // 重置translate
-      const tf = e.target.style.transform
-      const iof = tf.indexOf('translate')
-      const FRONT = tf.slice(0, iof + 'translate'.length + 1)
-      const half = tf.substring(iof + 'translate'.length + 1)
-      const END = half.substring(half.indexOf(')'))
-      e.target.style.transform = FRONT + '0, 0' + END
-      // this.moveable.updateRect()
-      // }, 10)
-    }
-    if (resizeTempData) {
-      widgetStore.resize(resizeTempData)
-      // store.commit('resize', resizeTempData)
-
-      resizeTempData = null
-      // await this.$nextTick()
-      moveable.updateRect()
-      // 临时处理缩放后细线问题 https://github.com/palxiao/poster-design/issues/75
-      controlStore.setShowMoveable(false)
-      // store.commit('setShowMoveable', false)
-      setTimeout(() => {
-        controlStore.setShowMoveable(true)
-        // store.commit('setShowMoveable', true)
-      }, 10);
-    }
-    try {
-      if (dActiveElement.value?.type === 'w-text') {
-        const d = e.direction || e.lastEvent.direction
-        String(d) === '1,1' && (dActiveElement.value.fontSize = Number(dActiveElement.value?.fontSize) * resetRatio)
-      }
-    } catch (err) {}
-    moveable.keepRatio = true
-  })
-  .on('scaleStart', (e) => {
-    if (dActiveElement.value?.type === 'w-text') {
-      startHL = Number(e.target!.style.lineHeight.replace('px', ''))
-      startLS = Number(e.target!.style.letterSpacing.replace('px', ''))
-      resetRatio = 1
-    } else {
-      if (!moveable) return
-      moveable.scalable = false
-    }
-  })
-  .on('scale', (e) => {
-    if (!moveable) return
-    moveable.resizable = false
-    const { target, scale, transform } = e
-    resetRatio = scale[0]
-    target!.style.transform = transform
-    dActiveElement.value?.rotate && (target!.style.transform = target!.style.transform.replace('0deg', dActiveElement.value.rotate))
-  })
-  .on('scaleEnd', (e: any) => {
-    if (!moveable) return
-    moveable.resizable = true
-    // moveable.scalable = true
-    moveable.keepRatio = true
-    console.log(e.target.style.transform)
-    try {
-      if (dActiveElement.value?.type === 'w-text') {
-        const d = e.direction || e.lastEvent.direction
-        String(d) === '1,1' && (dActiveElement.value.fontSize = Number(dActiveElement.value.fontSize) * resetRatio)
-      }
-    } catch (err) {}
-  })
-  .on('dragGroup', (e) => {
-    e.inputEvent.stopPropagation()
-    e.inputEvent.preventDefault()
-    holdGroupPosition = {}
-    const events = e.events
-    for (let i = 0; i < events.length; i++) {
-      const ev = events[i]
-      const currentWidget = dWidgets.value.find((item: any) => item.uuid === ev.target.getAttribute('data-uuid'))
-      const left = Number(currentWidget?.left) + ev.beforeTranslate[0]
-      // debug -- start --
-      if (i === 1) {
-        console.log(Number(currentWidget?.left), ev.beforeTranslate[0])
-      }
-      // debug -- end --
-      const top = Number(currentWidget?.top) + ev.beforeTranslate[1]
-      ev.target.style.left = `${left}px`
-      ev.target.style.top = `${top}px`
-      holdGroupPosition[`${ev.target.getAttribute('data-uuid')}`] = { left, top }
-    }
-  })
-  .on('dragGroupEnd', (e) => {
-    for (const key in holdGroupPosition) {
-      if (Object.prototype.hasOwnProperty.call(holdGroupPosition, key)) {
-        const item = holdGroupPosition[key]
-        widgetStore.updateWidgetData({
-          uuid: key,
-          key: 'left',
-          value: item.left,
-        })
-        // store.dispatch("updateWidgetData", {
-        //   uuid: key,
-        //   key: 'left',
-        //   value: item.left,
-        // })
-
-        widgetStore.updateWidgetData({
-          uuid: key,
-          key: 'top',
-          value: item.top,
-        })
-        // store.dispatch("updateWidgetData", {
-        //   uuid: key,
-        //   key: 'top',
-        //   value: item.top,
-        // })
-      }
-    }
-    holdGroupPosition = null
-    // background: linear-gradient(to right, #ccc 0%, #ccc 50%, transparent 50%);
-    // background-size: 12px 1px;
-  })
-  .on('resizeGroupStart', ({ events }: any) => {
-    console.log(events)
-    // events.forEach((ev, i) => {
-    //     const frame = this.frames[i];
-    //     // Set origin if transform-origin use %.
-    //     ev.setOrigin(["%", "%"]);
-
-    //     // If cssSize and offsetSize are different, set cssSize.
-    //     const style = window.getComputedStyle(ev.target);
-    //     const cssWidth = parseFloat(style.width);
-    //     const cssHeight = parseFloat(style.height);
-    //     ev.set([cssWidth, cssHeight]);
-
-    //     // If a drag event has already occurred, there is no dragStart.
-    //     ev.dragStart && ev.dragStart.set(frame.translate);
-    // });
-  })
-  .on('resizeGroup', (e: any) => {
-    // events.forEach(({ target, width, height, drag }, i) => {
-    //     const frame = this.frames[i];
-    //     target.style.width = `${width}px`;
-    //     target.style.height = `${height}px`;
-    //     // get drag event
-    //     frame.translate = drag.beforeTranslate;
-    //     target.style.transform
-    //         = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
-    // });
-  })
-  .on('resizeGroupEnd', ({ targets, isDrag }: any) => {
-    console.log('onResizeGroupEnd', targets, isDrag)
-  })
-
-  // -- 选择功能 Start --
-  useSelecto(moveable)
-  // -- 选择功能 END --
-
-})
-
-async function created() {
-  await nextTick()
-  const Ele = document.getElementById('main')
-  // 后续可能加个节流 TODO
-  Ele?.addEventListener('scroll', () => {
-    if (!moveable) return
-    moveable.updateRect()
-  })
-}
-
-created()
-
-// ...mapActions(['updateWidgetData', 'updateWidgetMultiple', 'pushHistory']),
-function checkMouseEvent() {
-  if (activeMouseEvent.value && moveable) {
-    moveable.dragStart(activeMouseEvent.value)
-    // 使用后销毁mouseevent
-    widgetStore.setMouseEvent(null)
-    // store.commit('setMouseEvent', null)
-  }
-}
+watch(
+  () => updateRect.value,
+  () => moveableRef.value?.updateRect(),
+)
 </script>
-
-<style lang="less">
-@import url('./style/index.less');
-</style>
+<style scoped lang="less"></style>

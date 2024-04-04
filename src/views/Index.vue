@@ -2,9 +2,9 @@
  * @Author: ShawnPhang
  * @Date: 2023-09-18 17:34:44
  * @Description: 
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditors: xi_zi
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-04-03 10:58:42
+ * @LastEditTime: 2024-04-03 11:11:39
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -39,46 +39,36 @@
     <zoom-control ref="zoomControlRef" />
     <!-- 右键菜单 -->
     <right-click-menu />
-    <!-- 旋转缩放组件 -->
-    <Moveable />
+
+    <moveable />
+
     <!-- 遮罩百分比进度条 -->
-    <ProgressLoading
-      :percent="state.downloadPercent"
-      :text="state.downloadText"
-      :msg="state.downloadMsg"
-      cancelText="取消"
-      @cancel="downloadCancel"
-      @done="state.downloadPercent = 0"
-    />
+    <ProgressLoading :percent="state.downloadPercent" :text="state.downloadText" cancelText="取消" @cancel="downloadCancel" @done="state.downloadPercent = 0" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import _config from '../config'
-import {
-  CSSProperties, computed, nextTick,
-  onBeforeUnmount, onMounted, reactive, ref,
-} from 'vue'
+import { CSSProperties, computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
-import Moveable from '@/components/business/moveable/Moveable.vue'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import lineGuides from '@/components/modules/layout/lineGuides.vue'
 import shortcuts from '@/mixins/shortcuts'
 // import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
-import ProgressLoading from '@/components/common/ProgressLoading/download.vue'
+import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
 import { useCanvasStore, useControlStore, useHistoryStore, useWidgetStore, useGroupStore } from '@/store'
+import Moveable from '@/components/business/moveable/Moveable.vue'
 
 type TState = {
   style: CSSProperties
   downloadPercent: number // 下载进度
   downloadText: string
-  downloadMsg: string | undefined
   isContinue: boolean
   APP_NAME: string
   showLineGuides: boolean
@@ -95,7 +85,6 @@ const { dZoom } = storeToRefs(useCanvasStore())
 const { dHistoryParams } = storeToRefs(useHistoryStore())
 const { dActiveElement, dCopyElement } = storeToRefs(widgetStore)
 
-
 const state = reactive<TState>({
   style: {
     left: '0px',
@@ -103,7 +92,6 @@ const state = reactive<TState>({
   // openDraw: false,
   downloadPercent: 0, // 下载进度
   downloadText: '',
-  downloadMsg: '',
   isContinue: true,
   APP_NAME: _config.APP_NAME,
   showLineGuides: false,
@@ -115,8 +103,8 @@ const route = useRoute()
 
 const beforeUnload = function (e: Event): any {
   if (dHistoryParams.value.length > 0) {
-    const confirmationMessage: string = '系统不会自动保存您未修改的内容';
-    (e || window.event).returnValue = (confirmationMessage as any) // Gecko and Trident
+    const confirmationMessage: string = '系统不会自动保存您未修改的内容'
+    ;(e || window.event).returnValue = confirmationMessage as any // Gecko and Trident
     return confirmationMessage // Gecko and WebKit
   } else return false
 }
@@ -134,9 +122,7 @@ defineExpose({
 })
 
 const undoable = computed(() => {
-  return !(
-    dHistoryParams.value.index === -1 || 
-    (dHistoryParams.value.index === 0 && dHistoryParams.value.length === dHistoryParams.value.maxLength))
+  return !(dHistoryParams.value.index === -1 || (dHistoryParams.value.index === 0 && dHistoryParams.value.length === dHistoryParams.value.maxLength))
 })
 
 const redoable = computed(() => {
@@ -180,9 +166,9 @@ onBeforeUnmount(() => {
   document.removeEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   document.oncontextmenu = null
 })
-    // ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
+// ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
 
-function handleHistory(data: "undo" | "redo") {
+function handleHistory(data: 'undo' | 'redo') {
   historyStore.handleHistory(data)
   // store.dispatch('handleHistory', data)
 }
@@ -204,7 +190,7 @@ function loadData() {
     if (!zoomControlRef.value) return
     // await nextTick()
     // zoomControlRef.value.screenChange()
-    
+
     // 初始化激活的控件为page
     widgetStore.selectWidget({ uuid: '-1' })
     // store.dispatch('selectWidget', { uuid: '-1' })
@@ -220,10 +206,9 @@ function fixTopBarScroll() {
 //   console.log('click listener', e)
 // }
 
-function optionsChange({ downloadPercent, downloadText, downloadMsg }: { downloadPercent: number, downloadText: string, downloadMsg?: string }) {
+function optionsChange({ downloadPercent, downloadText }: { downloadPercent: number; downloadText: string }) {
   state.downloadPercent = downloadPercent
   state.downloadText = downloadText
-  state.downloadMsg = downloadMsg
 }
 </script>
 

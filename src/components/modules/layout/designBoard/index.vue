@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + 120 + 'px' }" >
+    <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + 120 + 'px' }">
       <div
         id="out-page"
         class="out-page"
@@ -42,11 +42,17 @@
           <component
             :is="layer.type"
             v-for="layer in getlayers()"
-            :id="layer.uuid" :key="layer.uuid" 
+            :id="layer.uuid"
+            :key="layer.uuid"
             :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }]"
-            :data-title="layer.type" :params="layer"
-            :parent="dPage" :data-type="layer.type"
+            :data-title="layer.type"
+            :params="layer"
+            :parent="dPage"
+            :data-type="layer.type"
             :data-uuid="layer.uuid"
+            :style="{
+              ...widgetStyle(layer),
+            }"
           >
             <template v-if="layer.isContainer">
               <!-- :class="{
@@ -58,10 +64,17 @@
               <component
                 :is="widget.type"
                 v-for="widget in getChilds(layer.uuid)"
-                :key="widget.uuid" child :class="['layer', { 'layer-no-hover':dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]"
-                :data-title="widget.type" :params="widget"
-                :parent="layer" :data-type="widget.type"
+                :key="widget.uuid"
+                child
+                :class="['layer', { 'layer-no-hover': dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]"
+                :data-title="widget.type"
+                :params="widget"
+                :parent="layer"
+                :data-type="widget.type"
                 :data-uuid="widget.uuid"
+                :style="{
+                  ...groupWidgetChildrenStyle(layer, widget),
+                }"
               />
             </template>
           </component>
@@ -75,7 +88,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { CSSProperties, onMounted } from 'vue'
 import { getTarget } from '@/common/methods/target'
 import setWidgetData from '@/common/methods/DesignFeatures/setWidgetData'
 import PointImg from '@/utils/plugins/pointImg'
@@ -85,6 +98,8 @@ import { move, moveInit } from '@/mixins/move'
 import { useCanvasStore, useControlStore, useGroupStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TPageState } from '@/store/design/canvas/d'
+import { TdWidgetData } from '@/store/design/widget'
+import { getOffsetFromTransform, removeTranslate } from '@/utils/widgets/transferTranslate'
 // 页面设计组件
 type TProps = {
   pageDesignCanvasId: string
@@ -107,7 +122,6 @@ const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom, dPaddingTop, dScreen } = storeToRefs(canvasStore)
 const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlStore)
 const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid } = storeToRefs(widgetStore)
-
 
 let _dropIn: string | null = ''
 let _srcCache: string | null = ''
@@ -146,14 +160,14 @@ onMounted(() => {
   }
 })
 
-  // components: {lineGuides},
-  // mixins: [moveInit],
-    // ...mapActions(['updateScreen', 'selectWidget', 'deleteWidget', 'addWidget', 'addGroup']),
+// components: {lineGuides},
+// mixins: [moveInit],
+// ...mapActions(['updateScreen', 'selectWidget', 'deleteWidget', 'addWidget', 'addGroup']),
 
-    // getBackground(data) {
-    //   if (data.startsWith('http')) return `url(${data})`
-    //   if (data.startsWith('linear-gradient')) return data
-    // },
+// getBackground(data) {
+//   if (data.startsWith('http')) return `url(${data})`
+//   if (data.startsWith('linear-gradient')) return data
+// },
 
 async function dropOver(e: MouseEvent) {
   if (!dActiveElement.value) return
@@ -172,7 +186,7 @@ async function dropOver(e: MouseEvent) {
   if (!target) return
   const uuid = target.getAttribute('data-uuid')
 
-  widgetStore.setDropOver(uuid ?? "-1")
+  widgetStore.setDropOver(uuid ?? '-1')
   // store.dispatch('setDropOver', uuid)
 
   const imgEl = target?.firstElementChild?.firstElementChild as HTMLImageElement
@@ -201,7 +215,7 @@ async function drop(e: MouseEvent) {
   const dropIn = _dropIn
   _dropIn = ''
 
-  widgetStore.setDropOver("-1")
+  widgetStore.setDropOver('-1')
   // store.dispatch('setDropOver', '-1')
 
   // store.commit('setShowMoveable', false) // 清理上一次的选择
@@ -239,7 +253,7 @@ async function drop(e: MouseEvent) {
     })
     const half = {
       x: parent.width ? (parent.width * dZoom.value) / 100 / 2 : 0,
-      y: parent.height ? (parent.height * dZoom.value) / 100 / 2 : 0
+      y: parent.height ? (parent.height * dZoom.value) / 100 / 2 : 0,
     }
     componentItem.forEach((element) => {
       element.left += (lost ? lostX - half.x : e.layerX - half.x) * (100 / dZoom.value)
@@ -250,9 +264,9 @@ async function drop(e: MouseEvent) {
     // addGroup(item)
   }
   // 设置坐标
-  const half = { 
+  const half = {
     x: setting.width ? (setting.width * dZoom.value) / 100 / 2 : 0,
-    y: setting.height ? (setting.height * dZoom.value) / 100 / 2 : 0
+    y: setting.height ? (setting.height * dZoom.value) / 100 / 2 : 0,
   }
   // const half = { x: (this.dDragInitData.offsetX * this.dZoom) / 100, y: (this.dDragInitData.offsetY * this.dZoom) / 100 }
   setting.left = (lost ? lostX - half.x : e.layerX - half.x) * (100 / dZoom.value)
@@ -268,7 +282,7 @@ async function drop(e: MouseEvent) {
       // store.commit('setShowMoveable', true) // 恢复选择
       controlStore.setShowMoveable(true) // 恢复选择
 
-      const widget = dWidgets.value.find((item: {uuid: string}) => item.uuid === uuid)
+      const widget = dWidgets.value.find((item: { uuid: string }) => item.uuid === uuid)
       if (!widget) return
       widget.imgUrl = item.value.url
       // if (e.target.className.baseVal) {
@@ -277,14 +291,13 @@ async function drop(e: MouseEvent) {
       // }
     } else {
       if (dropIn) {
-        const widget = dWidgets.value.find((item: {uuid: string}) => item.uuid == dropIn)
+        const widget = dWidgets.value.find((item: { uuid: string }) => item.uuid == dropIn)
         if (!widget) return
         widget.imgUrl = item.value.url
         console.log('加入+', widget)
 
         // store.commit('setShowMoveable', true) // 恢复选择
         controlStore.setShowMoveable(true) // 恢复选择
-
       } else {
         widgetStore.addWidget(setting as Required<TPageState>)
         // store.dispatch('addWidget', setting) // 正常加入面板
@@ -343,7 +356,7 @@ async function handleSelection(e: MouseEvent) {
   if (type) {
     let uuid = target.getAttribute('data-uuid')
     if (uuid !== '-1' && !dAltDown.value) {
-      let widget = dWidgets.value.find((item: {uuid: string}) => item.uuid === uuid)
+      let widget = dWidgets.value.find((item: { uuid: string }) => item.uuid === uuid)
       if (!widget || !dActiveElement.value) return
       if (widget.parent !== '-1' && widget.parent !== dActiveElement.value.uuid && widget.parent !== dActiveElement.value.parent) {
         uuid = widget.parent || null
@@ -352,14 +365,18 @@ async function handleSelection(e: MouseEvent) {
 
     // 设置选中元素
     // this.$store.commit('setMoveable', false)
-    if (showRotatable.value !== false) {
+    /* if (showRotatable.value !== false) {
       widgetStore.selectWidget({
-        uuid: uuid ?? " -1",
+        uuid: uuid ?? ' -1',
       })
       // store.dispatch('selectWidget', {
       //   uuid: uuid,
       // })
-    }
+    } */
+
+    widgetStore.selectWidget({
+      uuid: uuid ?? ' -1',
+    })
 
     if (uuid !== '-1') {
       moveInit.methods.initmovement(e) // 参见 mixins
@@ -367,7 +384,7 @@ async function handleSelection(e: MouseEvent) {
   } else {
     // 取消选中元素
     widgetStore.selectWidget({
-      uuid: "-1"
+      uuid: '-1',
     })
     // store.dispatch('selectWidget', {
     //   uuid: '-1',
@@ -382,22 +399,47 @@ function getlayers() {
 function getChilds(uuid: string) {
   return dWidgets.value.filter((item) => item.parent === uuid)
 }
-    // getIsActive(uuid) {
-    //   if (this.dSelectWidgets.length > 0) {
-    //     let widget = this.dSelectWidgets.find((item) => item.uuid === uuid)
-    //     if (widget) {
-    //       return true
-    //     }
-    //     return false
-    //   } else {
-    //     return uuid === this.dActiveElement.uuid
-    //   }
-    // },
+// getIsActive(uuid) {
+//   if (this.dSelectWidgets.length > 0) {
+//     let widget = this.dSelectWidgets.find((item) => item.uuid === uuid)
+//     if (widget) {
+//       return true
+//     }
+//     return false
+//   } else {
+//     return uuid === this.dActiveElement.uuid
+//   }
+// },
+
+const widgetStyle = (widgetData: TdWidgetData): CSSProperties => {
+  const { transform, transformOrigin, width, height } = widgetData
+  const style: CSSProperties = { position: 'absolute' }
+  if (transform) style.transform = transform
+  if (transformOrigin) style.transformOrigin = transformOrigin
+  if (width !== undefined) style.width = `${width}px`
+  if (height !== undefined) style.height = `${height}px`
+  return style
+}
+
+const groupWidgetChildrenStyle = (groupWidgetData: TdWidgetData, widgetData: TdWidgetData): CSSProperties => {
+  const { transform, transformOrigin, width, height } = widgetData
+  const { transform: gTransform } = groupWidgetData
+  const { x: gX, y: gY } = getOffsetFromTransform(gTransform || '')
+  const { x, y } = getOffsetFromTransform(transform || '')
+  const style: CSSProperties = { position: 'absolute' }
+  if (transform) style.transform = removeTranslate(transform)
+  if (transformOrigin) style.transformOrigin = transformOrigin
+  if (width !== undefined) style.width = `${width}px`
+  if (height !== undefined) style.height = `${height}px`
+  style.transform = `translate(${x - gX}px, ${y - gY}px) ${style.transform}`
+  return style
+}
 </script>
 
 <style lang="less" scoped>
 #main {
-  overflow: auto; position: relative;
+  overflow: auto;
+  position: relative;
 }
 #page-design {
   scrollbar-width: none;
