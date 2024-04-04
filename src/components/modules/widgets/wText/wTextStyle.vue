@@ -2,12 +2,13 @@
   <div id="w-text-style">
     <el-collapse v-model="state.activeNames">
       <el-collapse-item title="位置尺寸" name="1">
-        <div class="line-layout">
+        <!-- <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
           <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" :editable="true" @finish="(value) => finish('width', value)" />
           <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" :editable="true" @finish="(value) => finish('height', value)" />
-        </div>
+        </div> -->
+        <line-layout />
       </el-collapse-item>
       <!-- <el-collapse-item title="样式设置" name="2"> -->
       <div class="line-layout style-item">
@@ -69,6 +70,7 @@ import { storeToRefs } from 'pinia';
 import { useControlStore, useForceStore, useWidgetStore } from '@/store';
 import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget';
 import { TUpdateAlignData } from '@/store/design/widget/actions/align';
+import LineLayout from '@/components/business/line-layout/index.vue'
 
 type TState = {
   activeNames: string[],

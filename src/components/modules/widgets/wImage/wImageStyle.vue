@@ -3,18 +3,19 @@
  * @Date: 2021-08-09 11:41:53
  * @Description: 
  * @LastEditors: xi_zi
- * @LastEditTime: 2024-04-03 13:44:42
+ * @LastEditTime: 2024-04-04 11:13:38
 -->
 <template>
   <div id="w-image-style">
     <el-collapse v-model="state.activeNames">
       <el-collapse-item title="位置尺寸" name="1">
-        <div class="line-layout">
+        <!-- <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
           <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
           <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
-        </div>
+        </div> -->
+        <line-layout />
       </el-collapse-item>
       <el-collapse-item title="设置" name="2">
         <!-- <el-button size="mini" style="width: 100%; margin-top: 0.5rem" plain @click="openCropper">替换图片</el-button> -->
@@ -87,6 +88,7 @@ import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '
 import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
 import { TupdateLayerIndexData } from '@/store/design/widget/actions/layer'
 import { TUpdateAlignData } from '@/store/design/widget/actions/align'
+import LineLayout from '@/components/business/line-layout/index.vue'
 
 type TState = {
   picBoxShow: boolean
