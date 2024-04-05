@@ -18,7 +18,7 @@
         <Tabs :value="state.mode" @update:value="onChangeMode">
           <TabPanel v-for="label in state.modes" :key="label" :label="label"></TabPanel>
         </Tabs>
-        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色','渐变']" @change="colorChange" @finish="(value) => finish('backgroundColor', value)" />
+        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色','渐变']" @change="colorChange" />
         <div v-if="state.mode === '图片' && state.innerElement.backgroundImage" style="margin-top: 1.2rem">
           <div class="backgroud-wrap">
             <el-image style="height: 100%" :src="state.innerElement.backgroundImage" fit="contain"></el-image>
@@ -123,13 +123,8 @@ onMounted(() => {
 
 function colorChange(e: colorChangeData) {
   if (e.mode === '渐变') {
-    console.log('渐变背景');
-    
-    // setTimeout(() => {
-    //   console.log(1, e)
-    //   this.finish('backgroundImage', e.color)
-    // }, 1000)
-  }
+    state.innerElement.backgroundGradient = e.color
+  } else state.innerElement.backgroundGradient = ''
 }
 function onChangeMode(value: string) {
   state.mode = value
@@ -169,6 +164,8 @@ function changeValue() {
 }
 
 function finish(key: keyof TPageState, value: string | number) {
+  console.log('111');
+  
   pageStore.updatePageData({
     key: key,
     value: value,

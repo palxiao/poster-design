@@ -1,3 +1,10 @@
+/*
+ * @Author: ShawnPhang
+ * @Date: 2024-04-05 06:23:23
+ * @Description:  
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-05 14:53:01
+ */
 export type TScreeData = {
   /** 记录编辑界面的宽度 */
   width: number
@@ -56,6 +63,8 @@ export type TPageState = {
   height: number
   /** 画布背景颜色 */
   backgroundColor: string
+  /** 画布背景颜色(兼容渐变色) */
+  backgroundGradient: string,
   /** 画布背景图片 */
   backgroundImage: string
   backgroundTransform: {

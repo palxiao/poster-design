@@ -21,11 +21,11 @@
             height: dPage.height + 'px',
             transform: 'scale(' + dZoom / 100 + ')',
             transformOrigin: (dZoom >= 100 ? 'center' : 'left') + ' top',
-            backgroundColor: dPage.backgroundColor,
-            backgroundImage: `url(${dPage?.backgroundImage})`,
-            backgroundSize: dPage?.backgroundTransform?.x ? 'auto' : 'cover',
-            backgroundPositionX: (dPage?.backgroundTransform?.x || 0) + 'px',
-            backgroundPositionY: (dPage?.backgroundTransform?.y || 0) + 'px',
+            backgroundColor: dPage.backgroundGradient ? undefined : dPage.backgroundColor,
+            backgroundImage: dPage.backgroundImage ? `url(${dPage?.backgroundImage})` : dPage.backgroundGradient || undefined,
+            backgroundSize: dPage.backgroundTransform?.x ? 'auto' : 'cover',
+            backgroundPositionX: (dPage.backgroundTransform?.x || 0) + 'px',
+            backgroundPositionY: (dPage.backgroundTransform?.y || 0) + 'px',
             opacity: dPage.opacity + (dZoom < 100 ? dPage.tag : 0),
           }"
           @mousemove="dropOver($event)"

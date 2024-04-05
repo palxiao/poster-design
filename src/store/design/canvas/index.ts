@@ -3,8 +3,8 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-18 21:00:00
  * @Description: 画布全局配置
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-18 21:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-05 14:52:06
  */
 
 import { Store, defineStore } from 'pinia'
@@ -33,6 +33,7 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
       width: 1920, // 画布宽度
       height: 1080, // 画布高度
       backgroundColor: '#ffffff', // 画布背景颜色
+      backgroundGradient: '', // 用于兼容渐变颜色
       backgroundImage: '', // 画布背景图片
       backgroundTransform: {},
       opacity: 1, // 透明度

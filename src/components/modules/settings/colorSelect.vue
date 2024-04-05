@@ -83,7 +83,6 @@ watch(
       first = false
       return
     }
-    // addHistory(value)
   },
 )
 
@@ -130,7 +129,6 @@ const hide = () => {
 
 
 const colorChange = (color: colorChangeData) => {
-  // console.log('color', color)
   emit('change', color)
 }
 
