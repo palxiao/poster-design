@@ -4,7 +4,10 @@
       <li
         v-for="(item, index) in menuListData.list"
         :key="index"
-        :class="{ 'menu-item': true, 'disable-menu': dCopyElement.length === 0 && item.type === 'paste' }"
+        :class="{
+          'menu-item': true,
+          'disable-menu': dCopyElement.length === 0 && item.type === 'paste',
+        }"
         @click.stop="selectMenu(item.type)"
       >
         {{ item.text }}
@@ -15,28 +18,23 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import { 
-  widgetMenu as widget, 
-  pageMenu as page,
-  menuList as menu, 
-  TMenuItemData, TWidgetItemData, 
-} from './rcMenuData'
+import { widgetMenu as widget, pageMenu as page, menuList as menu, TMenuItemData, TWidgetItemData } from './rcMenuData'
 import { getTarget } from '@/common/methods/target'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
-import { storeToRefs } from 'pinia';
-import { useControlStore, useWidgetStore } from '@/store';
+import { storeToRefs } from 'pinia'
+import { useControlStore, useWidgetStore } from '@/store'
 
-const menuListData = ref<TMenuItemData>({...menu})
+const menuListData = ref<TMenuItemData>({ ...menu })
 const showMenuBg = ref<boolean>(false)
-const widgetMenu = ref<TWidgetItemData[]>({...widget})
-const pageMenu = ref<TWidgetItemData[]>({...page})
+const widgetMenu = ref<TWidgetItemData[]>({ ...widget })
+const pageMenu = ref<TWidgetItemData[]>({ ...page })
 
 const widgetStore = useWidgetStore()
+const controlStore = useControlStore()
 // const {dActiveElement, dWidgets, dCopyElement} = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dCopyElement'])
 
-const {dActiveElement, dWidgets, dCopyElement} = storeToRefs(widgetStore)
+const { dActiveElement, dWidgets, dCopyElement } = storeToRefs(widgetStore)
 const { dAltDown } = storeToRefs(useControlStore())
-
 
 const styleObj = computed(() => {
   return {
@@ -64,12 +62,8 @@ async function mouseRightClick(e: MouseEvent) {
 
     if (uuid !== '-1' && !dAltDown.value) {
       let widget = dWidgets.value.find((item: any) => item.uuid === uuid)
-      if (
-        widget?.parent !== '-1' && 
-        widget?.parent !== dActiveElement.value?.uuid &&
-        widget?.parent !== dActiveElement.value?.parent
-      ) {
-        uuid = widget?.parent || ""
+      if (widget?.parent !== '-1' && widget?.parent !== dActiveElement.value?.uuid && widget?.parent !== dActiveElement.value?.parent) {
+        uuid = widget?.parent || ''
       }
     }
     widgetStore.selectWidget({
@@ -130,7 +124,7 @@ function selectMenu(type: TWidgetItemData['type']) {
       break
     case 'index-up':
       widgetStore.updateLayerIndex({
-        uuid: dActiveElement.value?.uuid || "",
+        uuid: dActiveElement.value?.uuid || '',
         value: 1,
         isGroup: dActiveElement.value?.isContainer,
       })
@@ -142,7 +136,7 @@ function selectMenu(type: TWidgetItemData['type']) {
       break
     case 'index-down':
       widgetStore.updateLayerIndex({
-        uuid: dActiveElement.value?.uuid || "",
+        uuid: dActiveElement.value?.uuid || '',
         value: -1,
         isGroup: dActiveElement.value?.isContainer,
       })
@@ -157,13 +151,21 @@ function selectMenu(type: TWidgetItemData['type']) {
       // store.dispatch('deleteWidget')
       break
     case 'ungroup':
-      widgetStore.ungroup(dActiveElement.value?.uuid || "")
+      widgetStore.ungroup(dActiveElement.value?.uuid || '')
       // store.dispatch('ungroup', dActiveElement.value.uuid)
+      break
+    case 'warpable':
+      controlStore.setWarpable(true)
+      break
+    case 'scalable':
+      controlStore.setScalable(true)
+      break
+    case 'resizable':
+      controlStore.setResizable(true)
       break
   }
   closeMenu()
 }
-
 </script>
 
 <style lang="less" scoped>

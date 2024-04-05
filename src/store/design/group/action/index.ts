@@ -2,21 +2,21 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-28 14:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-28 14:00:00
+ * @LastEditors: xi_zi
+ * @LastEditTime: 2024-04-03 23:34:21
  */
 
 import { customAlphabet } from 'nanoid/non-secure'
 import { TGroupStore } from '..'
 import { useHistoryStore, useCanvasStore, useWidgetStore } from '@/store'
 import { TdWidgetData } from '../../widget'
+import { getOffsetFromTransform, transferTransformWidget } from '@/utils/widgets/transferTranslate'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
 export function realCombined(store: TGroupStore) {
   const widgetStore = useWidgetStore()
   const pageStore = useCanvasStore()
   const historyStore = useHistoryStore()
-
   const selectWidgets = widgetStore.dSelectWidgets
   if (selectWidgets.length > 1) {
     const widgets = widgetStore.dWidgets
@@ -60,10 +60,12 @@ export function realCombined(store: TGroupStore) {
       //   index: index,
       //   widget: widget,
       // })
-      left = Math.min(left, widget.left)
-      top = Math.min(top, widget.top)
-      right = Math.max(right, Number(widget.width || widget.record.width) + Number(widget.left))
-      bottom = Math.max(bottom, Number(widget.height || widget.record.height) + Number(widget.top))
+      const { x, y } = getOffsetFromTransform(widget.transform ?? '')
+      left = Math.min(left, x)
+      top = Math.min(top, y)
+      const rect = document.getElementById(`${widget.uuid}`)?.getBoundingClientRect()
+      right = Math.max(right, Number((rect?.width ?? 0) / (pageStore.dZoom / 100) || widget.record.width) + Number(x))
+      bottom = Math.max(bottom, Number((rect?.height ?? 0) / (pageStore.dZoom / 100) || widget.record.height) + Number(y))
     }
     // sortWidgets.sort((a, b) => a.index > b.index)
     // for (let i = 0; i < sortWidgets.length; ++i) {
@@ -71,9 +73,9 @@ export function realCombined(store: TGroupStore) {
     //     widgets.splice(index, 1)
     //     widgets.push(sortWidgets[i].widget)
     // }
-
-    group.left = Number(left)
-    group.top = Number(top)
+    // group.left = Number(left)
+    // group.top = Number(top)
+    group.transform = `translate(${left}px,${top}px)`
     group.width = Number(right - left)
     group.height = Number(bottom - top)
     widgetStore.dActiveElement = group
@@ -92,6 +94,7 @@ export function getCombined(store: TGroupStore): Promise<TdWidgetData> {
   const selectWidgets = widgetStore.dSelectWidgets
   return new Promise((resolve) => {
     if (selectWidgets.length > 1) {
+
       const widgets = widgetStore.dWidgets
       const group = JSON.parse(store.dGroupJson)
       group.uuid = nanoid()
@@ -109,16 +112,17 @@ export function getCombined(store: TGroupStore): Promise<TdWidgetData> {
         const uuid = sortWidgets[i].uuid
         const index = widgets.findIndex((item: Type.Object) => item.uuid === uuid)
         const widget = { ...widgets[index] } // clone
-        left = Math.min(left, widget.left)
-        top = Math.min(top, widget.top)
-        right = Math.max(right, Number(widget.width) + Number(widget.left))
-        bottom = Math.max(bottom, Number(widget.height) + Number(widget.top))
+        const { x, y } = getOffsetFromTransform(widget.transform ?? '')
+        left = Math.min(left, x)
+        top = Math.min(top, y)
+        const rect = document.getElementById(`${widget.uuid}`)?.getBoundingClientRect()
+        right = Math.max(right, Number((rect?.width ?? 0) / (pageStore.dZoom / 100) || widget.record.width) + Number(x))
+        bottom = Math.max(bottom, Number((rect?.height ?? 0) / (pageStore.dZoom / 100) || widget.record.height) + Number(y))
       }
 
-      group.left = left
-      group.top = top
-      group.width = right - left
-      group.height = bottom - top
+      group.transform = `translate(${left}px,${top}px)`
+      group.width = Number(right - left)
+      group.height = Number(bottom - top)
 
       resolve(group)
     }

@@ -10,13 +10,14 @@
 import { customAlphabet } from 'nanoid/non-secure'
 import { TWidgetStore, TdWidgetData } from '..'
 import { useCanvasStore, useHistoryStore } from '@/store'
+import { transferTransformWidgets } from '@/utils/widgets/transferTranslate'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
 // TODO: 选择模板
 export function setTemplate(store: TWidgetStore, allWidgets: TdWidgetData[]) {
   const historyStore = useHistoryStore()
   const canvasStore = useCanvasStore()
-  allWidgets.forEach((item) => {
+  transferTransformWidgets(allWidgets).forEach((item) => {
     Number(item.uuid) < 0 && (item.uuid = nanoid()) // 重设id
     item.text && (item.text = decodeURIComponent(item.text))
     store.dWidgets.push(item)

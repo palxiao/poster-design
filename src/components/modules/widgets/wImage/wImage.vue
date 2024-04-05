@@ -3,30 +3,30 @@
     :id="params.uuid"
     ref="widgetRef"
     :class="['w-image', { 'layer-lock': params.lock }]"
-    :style="{
-      position: state.position,
-      left: params.left - parent.left + 'px',
-      top: params.top - parent.top + 'px',
-      width: params.width + 'px',
-      height: params.height + 'px',
-      opacity: params.opacity,
-    }"
   >
-    <div
-      v-if="cropEdit"
-      :id="params.uuid + '_ebox'"
-      :ref="params.uuid + '_ebox'"
-      :style="state.editBoxStyle"
-      class="svg__edit__wrap"
-    >
-      <img class="edit__model" :src="params.imgUrl" />
-    </div>
-    <div :style="{ transform: params.flip ? `rotate${params.flip}(180deg)` : undefined, borderRadius: params.radius + 'px', '-webkit-mask-image': `${params.mask ? `url('${params.mask}')` : 'initial'}` }" :class="['img__box', { mask: params.mask }]">
-      <div v-if="params.isNinePatch" ref="targetRef" class="target" :style="{ border: `${(params.height * params.sliceData.ratio) / 2}px solid transparent`, borderImage: `url('${params.imgUrl}') ${params.sliceData.left} round` }"></div>
-      <img v-else ref="targetRef" class="target" style="transform-origin: center" :src="params.imgUrl" />
-    </div>
-    <div v-if="isMask" class="drop__mask">
-      <div putIn="true" :style="{ fontSize: params.width / 12 + 'px' }" class="drop__btn">拖入</div>
+    <div>
+      <div v-if="cropEdit" :id="params.uuid + '_ebox'" :ref="params.uuid + '_ebox'" :style="state.editBoxStyle" class="svg__edit__wrap">
+        <img class="edit__model" :src="params.imgUrl" />
+      </div>
+      <div
+        :style="{
+          transform: params.flip ? `rotate${params.flip}(180deg)` : undefined,
+          borderRadius: params.radius + 'px',
+          '-webkit-mask-image': `${params.mask ? `url('${params.mask}')` : 'initial'}`,
+        }"
+        :class="['img__box', { mask: params.mask }]"
+      >
+        <div
+          v-if="params.isNinePatch"
+          ref="targetRef"
+          class="target"
+          :style="{ border: `${(params.height * params.sliceData.ratio) / 2}px solid transparent`, borderImage: `url('${params.imgUrl}') ${params.sliceData.left} round` }"
+        ></div>
+        <img v-else ref="targetRef" class="target" style="transform-origin: center" :src="params.imgUrl" />
+      </div>
+      <div v-if="isMask" class="drop__mask">
+        <div putIn="true" :style="{ fontSize: params.width / 12 + 'px' }" class="drop__btn">拖入</div>
+      </div>
     </div>
   </div>
 </template>
@@ -37,7 +37,7 @@
 import { CSSProperties, StyleValue, computed, nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, watch } from 'vue'
 
 import { getMatrix } from '@/common/methods/handleTransform'
-import setting from "./wImageSetting"
+import setting from './wImageSetting'
 import PointImg from '@/utils/plugins/pointImg'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
@@ -53,8 +53,8 @@ type TProps = {
 }
 
 type TState = {
-  position: 'absolute' | 'relative', // 'absolute'relative
-  editBoxStyle: CSSProperties,
+  position: 'absolute' | 'relative' // 'absolute'relative
+  editBoxStyle: CSSProperties
   cropWidgetXY: {
     x: number
     y: number
@@ -79,10 +79,9 @@ const state = reactive<TState>({
   holdPosition: {
     left: 0,
     top: 0,
-  }
+  },
 })
 const route = useRoute()
-
 
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
@@ -98,9 +97,7 @@ let flipTemp: string | null = null
 //   dActiveElement, dWidgets, dMouseXY, dDropOverUuid, dCropUuid
 // } = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dMouseXY', 'dDropOverUuid', 'dCropUuid'])
 const { dZoom } = storeToRefs(useCanvasStore())
-const {
-  dActiveElement, dWidgets, dMouseXY, dDropOverUuid
-} = storeToRefs(widgetStore)
+const { dActiveElement, dWidgets, dMouseXY, dDropOverUuid } = storeToRefs(widgetStore)
 const { dCropUuid } = storeToRefs(controlStore)
 
 // ...mapGetters(['dActiveElement', 'dWidgets', 'dZoom', 'dMouseXY', 'dDropOverUuid', 'dCropUuid']),
@@ -129,7 +126,7 @@ watch(
     }
     fixRotate()
     lockOthers(val)
-  }
+  },
 )
 
 watch(
@@ -137,7 +134,7 @@ watch(
   async () => {
     await nextTick()
     updateRecord()
-  }
+  },
 )
 
 onUpdated(() => {
@@ -241,7 +238,7 @@ function updateRecord() {
 }
 
 function setTransform(attrName: string, value: string | number) {
-  const iof = props.params.transform.indexOf(attrName)
+  /* const iof = props.params.transform.indexOf(attrName)
   let setValue = ''
   if (iof != -1) {
     const index = iof + attrName.length
@@ -267,11 +264,11 @@ function setTransform(attrName: string, value: string | number) {
   // })
   if (props.params.transform && targetRef.value) {
     targetRef.value.style.transform = props.params.transform
-  }
+  } */
 }
 
 function setEditBox(attrName: string, value: string | number) {
-  const iof = state.editBoxStyle.transform?.indexOf(attrName)
+ /*  const iof = state.editBoxStyle.transform?.indexOf(attrName)
   let setValue = ''
   if (iof != -1 && iof != undefined) {
     const index = iof + attrName.length
@@ -283,7 +280,7 @@ function setEditBox(attrName: string, value: string | number) {
   } else {
     setValue = state.editBoxStyle.transform + ` ${attrName}(${value})`
   }
-  state.editBoxStyle.transform = setValue
+  state.editBoxStyle.transform = setValue */
 }
 
 function updateZoom() {
@@ -320,7 +317,7 @@ function lockOthers(isCrop) {
   for (const widget of dWidgets.value) {
     if (widget.uuid === props.params.uuid) {
       widget.lock = false
-      break;
+      break
     }
   }
 }

@@ -2,13 +2,14 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-28 21:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-28 14:00:00
+ * @LastEditors: xi_zi
+ * @LastEditTime: 2024-04-03 23:23:56
  */
 
 import { useCanvasStore, useHistoryStore } from "@/store"
 import { TWidgetStore, TdWidgetData } from ".."
 import { customAlphabet } from 'nanoid/non-secure'
+import { getOffsetFromTransform, removeTranslate, transferTransformWidget, transferTransformWidgets } from "@/utils/widgets/transferTranslate"
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
 type TUpdateWidgetKey = keyof TdWidgetData
@@ -37,7 +38,7 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
         break
       case 'left':
       case 'top':
-        if (widget.isContainer) {
+        /* if (widget.isContainer) {
           let dLeft = widget.left - Number(value)
           let dTop = widget.top - Number(value)
           if (key === 'left') {
@@ -54,8 +55,32 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
               child.top -= dTop
             }
           }
-        }
+        } */
+        delete widget.left
+        delete widget.top
         break
+      case 'transform':
+        if (widget.isContainer) {
+          const { x: gX1, y: gY1 } = getOffsetFromTransform(value as any)
+          const { x: gX, y: gY } = getOffsetFromTransform(widget.transform)
+          const dLeft = gX - gX1
+          const dTop = gY - gY1
+          const len = store.dWidgets.length
+          for (let i = 0; i < len; ++i) {
+            const child = store.dWidgets[i]
+            if (child.parent === widget.uuid) {
+              let cTransform = removeTranslate(child.transform)
+              const { x, y } = getOffsetFromTransform(child.transform)
+              cTransform = `translate(${x - dLeft}px, ${y - dTop}px) ${cTransform}`
+              child.transform = cTransform
+            }
+          }
+        }
+        // widget.transform = value as string
+        break;
+      case 'transformOrigin':
+        // widget.transformOrigin = value as string
+        break;
     }
     (widget[key] as TUpdateWidgetPayload['value']) = value
     if (pushHistory) {
@@ -73,7 +98,8 @@ export type TUpdateWidgetMultiplePayload = {
   uuid: string
   data: {
     key: TUpdateWidgetKey
-    value: number
+    // value: number
+    value: string | number | boolean | Record<string, any>
   }[]
   pushHistory?: boolean
 }
@@ -82,33 +108,34 @@ export type TUpdateWidgetMultiplePayload = {
 export function updateWidgetMultiple(store: TWidgetStore, { uuid, data, pushHistory }: TUpdateWidgetMultiplePayload) {
   for (const item of data) {
     const { key, value } = item
-    const widget = store.dWidgets.find((item) => item.uuid === uuid)
-    if (widget && (widget[key] !== value || pushHistory)) {
-      switch (key) {
-        case 'left':
-        case 'top':
-          if (widget.isContainer) {
-            let dLeft = widget.left - value
-            let dTop = widget.top - value
-            if (key === 'left') {
-              dTop = 0
-            }
-            if (key === 'top') {
-              dLeft = 0
-            }
-            const len = store.dWidgets.length
-            for (let i = 0; i < len; ++i) {
-              const child = store.dWidgets[i]
-              if (child.parent === widget.uuid) {
-                child.left -= dLeft
-                child.top -= dTop
-              }
-            }
-          }
-          break
-      }
-      (widget[key] as number | string) = value
-    }
+    updateWidgetData(store, { uuid, key, value })
+    /*  const widget = store.dWidgets.find((item) => item.uuid === uuid)
+     if (widget && (widget[key] !== value || pushHistory)) {
+       switch (key) {
+         case 'left':
+         case 'top':
+           if (widget.isContainer) {
+             let dLeft = widget.left - value
+             let dTop = widget.top - value
+             if (key === 'left') {
+               dTop = 0
+             }
+             if (key === 'top') {
+               dLeft = 0
+             }
+             const len = store.dWidgets.length
+             for (let i = 0; i < len; ++i) {
+               const child = store.dWidgets[i]
+               if (child.parent === widget.uuid) {
+                 child.left -= dLeft
+                 child.top -= dTop
+               }
+             }
+           }
+           break
+       }
+       (widget[key] as number | string) = value
+     } */
   }
   setTimeout(() => {
     const historyStore = useHistoryStore()
@@ -122,7 +149,7 @@ export function addWidget(store: TWidgetStore, setting: TdWidgetData) {
   const historyStore = useHistoryStore()
   const canvasStore = useCanvasStore()
   setting.uuid = nanoid()
-  store.dWidgets.push(setting)
+  store.dWidgets.push(transferTransformWidget(setting))
   const len = store.dWidgets.length
   // store.state.dActiveElement = store.state.dWidgets[len - 1]
 
@@ -157,7 +184,7 @@ export function deleteWidget(store: TWidgetStore) {
       try {
         // 清除掉可能存在的选中框
         document.getElementById(uuid)?.classList.remove('widget-selected')
-      } catch (e) {}
+      } catch (e) { }
     }
     store.dSelectWidgets = []
   } else {
@@ -233,7 +260,7 @@ export function setWidgetStyle(state: TWidgetStore, { uuid, key, value, pushHist
 }
 
 export function setDWidgets(state: TWidgetStore, e: TdWidgetData[]) {
-  state.dWidgets = e
+  state.dWidgets = transferTransformWidgets(e)
 }
 
 // 锁定所有图层 / 再次调用时还原图层

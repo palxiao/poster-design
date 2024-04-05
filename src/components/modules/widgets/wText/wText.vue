@@ -1,17 +1,15 @@
 <template>
   <div
     :id="`${params.uuid}`"
-    ref="widget"
-    v-loading="state.loading"
+    v-bind="$attrs"
+    class="element-inner"
     :class="['w-text', { editing: state.editable, 'layer-lock': params.lock }, params.uuid]"
+    ref="widget"
     :style="{
-      position: 'absolute',
-      left: params.left - parent.left + 'px',
-      top: params.top - parent.top + 'px',
-      width: params.width + 'px',
-      minWidth: params.fontSize + 'px',
-      minHeight: params.fontSize * params.lineHeight + 'px',
+      // minWidth: params.fontSize + 'px',
+      // minHeight: params.fontSize * params.lineHeight + 'px',
       height: params.height + 'px',
+      width: params.width + 'px',
       lineHeight: params.fontSize * params.lineHeight + 'px',
       letterSpacing: (params.fontSize * params.letterSpacing) / 100 + 'px',
       fontSize: params.fontSize + 'px',
@@ -46,12 +44,15 @@
       ></div>
     </template>
     <div
-      ref="editWrap" :style="{ fontFamily: `'${params.fontClass.value}'` }"
-      class="edit-text" spellcheck="false" 
+      ref="editWrap"
+      :style="{ fontFamily: `'${params.fontClass.value}'` }"
+      class="edit-text"
+      spellcheck="false"
       :contenteditable="state.editable ? 'plaintext-only' : false"
       @input="writingText($event)"
       @blur="writeDone($event)"
-      v-html="params.text"></div>
+      v-html="params.text"
+    ></div>
   </div>
 </template>
 
@@ -65,12 +66,21 @@ import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg'
 import { wTextSetting } from './wTextSetting'
 import { useForceStore, useHistoryStore, useWidgetStore } from '@/store'
+import { addFont } from '@/utils/addFont'
 
 export type TwTextParams = {
   rotate?: number
   lock?: boolean
   width?: number
   height?: number
+  imageTransform?: {
+    a: number
+    b: number
+    c: number
+    d: number
+    tx: number
+    ty: number
+  }
 } & typeof wTextSetting
 
 type TProps = {
@@ -92,7 +102,9 @@ const state = reactive({
   loadFontDone: '',
 })
 const widget = ref<HTMLElement | null>(null)
+const widgetWrap = ref<HTMLElement | null>(null)
 const editWrap = ref<HTMLElement | null>(null)
+const editorElRef = ref<HTMLElement | null>(null)
 
 const dActiveElement = computed(() => widgetStore.dActiveElement)
 const isDraw = computed(() => route.name === 'Draw' && fontWithDraw)
@@ -103,11 +115,6 @@ onUpdated(() => {
 
 onMounted(() => {
   updateRecord()
-
-  if (!widget.value) return
-  props.params.transform && (widget.value.style.transform = props.params.transform)
-  props.params.rotate && (widget.value.style.transform += `translate(0px, 0px) rotate(${props.params.rotate}) scale(1, 1)`)
-  // store.commit('updateRect')
 })
 
 watch(
@@ -128,9 +135,7 @@ watch(
         return
       }
       state.loading = !isDraw.value
-      const loadFont = new window.FontFace(font.value, `url(${font.url})`)
-      await loadFont.load()
-      document.fonts.add(loadFont)
+      await addFont(font.value, font.url)
       state.loadFontDone = font.value
       state.loading = false
     } else {
@@ -171,7 +176,7 @@ function updateRecord() {
 }
 
 function updateText(e?: Event) {
-  const value = e && e.target ? (e.target as HTMLElement).innerHTML : props.params.text//.replace(/\n/g, '<br/>')
+  const value = e && e.target ? (e.target as HTMLElement).innerHTML : props.params.text //.replace(/\n/g, '<br/>')
   if (value !== props.params.text) {
     widgetStore.updateWidgetData({
       uuid: String(props.params.uuid),
@@ -212,7 +217,7 @@ function writingText(e?: Event) {
 function writeDone(e: Event) {
   state.editable = false
   setTimeout(() => {
-    historyStore.pushHistory("文字修改")
+    historyStore.pushHistory('文字修改')
     // store.dispatch('pushHistory', '文字修改')
   }, 100)
   updateText(e)
@@ -231,9 +236,9 @@ function dblclickText(_: MouseEvent) {
       range.select()
     } else {
       const range = document.createRange()
-      range.selectNodeContents(el);
-      window.getSelection()?.removeAllRanges();
-      window.getSelection()?.addRange(range);
+      range.selectNodeContents(el)
+      window.getSelection()?.removeAllRanges()
+      window.getSelection()?.addRange(range)
     }
   }, 100)
 }
@@ -251,6 +256,23 @@ defineExpose({
 </script>
 
 <style lang="less" scoped>
+.element-inner {
+  position: absolute;
+  // z-index: 1;
+  // width: 100%;
+  // height: 100%;
+  font-size: 0;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+  // transform-origin: 0 0;
+  .element-inner-position {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
 .w-text {
   // cursor: pointer;
   user-select: none;

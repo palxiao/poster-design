@@ -2,32 +2,12 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-13 15:59:52
  * @Description: 二维码
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 15:54:10
+ * @LastEditors: xi_zi
+ * @LastEditTime: 2024-04-03 23:32:14
 -->
 <template>
-  <div
-    :id="`${params.uuid}`"
-    ref="widgetRef"
-    :class="['w-qrcode', { 'layer-lock': params.lock }]"
-    :style="{
-      position: 'absolute',
-      left: params.left - parent.left + 'px',
-      top: params.top - parent.top + 'px',
-      width: params.width + 'px',
-      height: params.height + 'px',
-      opacity: params.opacity,
-    }"
-  >
-    <QRCode
-      ref="qrcode"
-      v-bind="state.qrCodeOptions"
-      :width="width"
-      :height="width"
-      class="target"
-      :image="params.url"
-      :value="params.value"
-    />
+  <div :id="`${params.uuid}`" ref="widgetRef" :class="['w-qrcode', { 'layer-lock': params.lock }]">
+    <QRCode ref="qrcode" v-bind="state.qrCodeOptions" :width="width" :height="width" class="target" :image="params.url" :value="params.value" />
   </div>
 </template>
 
@@ -35,14 +15,13 @@
 // 图片组件
 // const NAME = 'w-qrcode'
 
-
 import QRCode from '@/components/business/qrcode'
-import { TWQrcodeSetting } from './wQrcodeSetting';
-import { computed, nextTick, onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import { TWQrcodeSetting } from './wQrcodeSetting'
+import { computed, nextTick, onMounted, onUpdated, reactive, ref, watch } from 'vue'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
-import { Options } from 'qr-code-styling';
-import { useForceStore, useWidgetStore } from '@/store';
-import { storeToRefs } from 'pinia';
+import { Options } from 'qr-code-styling'
+import { useForceStore, useWidgetStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 type TProps = {
   params: TWQrcodeSetting & {
@@ -59,12 +38,11 @@ type TState = {
   qrCodeOptions: Options
 }
 
-
 const forceStore = useForceStore()
 const widgetStore = useWidgetStore()
 const props = defineProps<TProps>()
 const state = reactive<TState>({
-  qrCodeOptions: {}
+  qrCodeOptions: {},
 })
 // const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
 const { dActiveElement } = storeToRefs(widgetStore)
@@ -76,7 +54,7 @@ watch(
   () => {
     changeValues()
   },
-  { immediate: true, deep: true, }
+  { immediate: true, deep: true },
 )
 
 onUpdated(() => {
@@ -88,7 +66,7 @@ onUpdated(() => {
 onMounted(async () => {
   updateRecord()
   await nextTick()
-  if (widgetRef.value){
+  if (widgetRef.value) {
     props.params.rotate && (widgetRef.value.style.transform += `rotate(${props.params.rotate})`)
   }
 })

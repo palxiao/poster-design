@@ -2,26 +2,29 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:41:53
  * @Description: 
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-03-22 16:14:48
+ * @LastEditors: xi_zi
+ * @LastEditTime: 2024-04-04 11:47:25
 -->
 <template>
   <div id="w-image-style">
     <el-collapse v-model="state.activeNames">
       <el-collapse-item title="位置尺寸" name="1">
-        <div class="line-layout">
+        <!-- <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
           <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
           <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
-        </div>
+        </div> -->
+        <line-layout />
       </el-collapse-item>
       <el-collapse-item title="设置" name="2">
         <!-- <el-button size="mini" style="width: 100%; margin-top: 0.5rem" plain @click="openCropper">替换图片</el-button> -->
         <el-button style="width: 100%; margin-bottom: 12px" plain @click="openPicBox">替换图片</el-button>
         <div class="options">
-          <el-button v-if="state.innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
+          <el-button v-if="clippable" plain type="primary" @click="imgCrop(false)">完成</el-button>
           <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> 裁剪</el-button>
+          <!-- <el-button v-if="state.innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
+          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> 裁剪</el-button> -->
           <el-button plain @click="openImageCutout"><i class="icon sd-AIkoutu" /> 抠图</el-button>
           <!-- <uploader class="options__upload" @done="uploadImgDone">
             <el-button size="small" plain>替换图片</el-button>
@@ -31,22 +34,20 @@
         <container-wrap @change="changeContainer" />
         <div class="slide-wrap">
           <number-slider v-model="state.innerElement.opacity" style="font-size: 14px" label="不透明" :step="0.05" :maxValue="1" @finish="(value) => finish('opacity', value)" />
-          <number-slider v-model="state.innerElement.radius" style="font-size: 14px" label="圆角" :maxValue="Math.min(Number(state.innerElement.record?.width), Number(state.innerElement.record?.height))" @finish="(value) => finish('radius', value)" />
+          <number-slider
+            v-model="state.innerElement.radius"
+            style="font-size: 14px"
+            label="圆角"
+            :maxValue="Math.min(Number(state.innerElement.record?.width), Number(state.innerElement.record?.height))"
+            @finish="(value) => finish('radius', value)"
+          />
           <!-- <number-slider v-model="innerElement.letterSpacing" style="font-size: 14px" label="字距" labelWidth="40px" :step="0.05" :minValue="-50" :maxValue="innerElement.fontSize" @finish="(value) => finish('letterSpacing', value)" />
         <number-slider v-model="innerElement.lineHeight" style="font-size: 14px" label="行距" labelWidth="40px" :step="0.05" :minValue="0" :maxValue="2.5" @finish="(value) => finish('lineHeight', value)" /> -->
         </div>
       </el-collapse-item>
       <el-collapse-item v-if="state.innerElement.isNinePatch" title="点九图设置" name="3">
-        <number-slider
-          v-model="state.innerElement.sliceData.ratio"
-          :step="0.01" label="比率" :maxValue="10" 
-          @finish="(value) => finishSliceData('ratio', value)"
-        />
-        <number-slider
-          v-model="state.innerElement.sliceData.left"
-          :step="0.5" label="大小"
-          @finish="(value) => finishSliceData('left', value)"
-        />
+        <number-slider v-model="state.innerElement.sliceData.ratio" :step="0.01" label="比率" :maxValue="10" @finish="(value) => finishSliceData('ratio', value)" />
+        <number-slider v-model="state.innerElement.sliceData.left" :step="0.5" label="大小" @finish="(value) => finishSliceData('left', value)" />
       </el-collapse-item>
       <br />
       <icon-item-select class="style-item" label="" :data="layerIconList" @finish="layerAction" />
@@ -55,11 +56,7 @@
     </el-collapse>
     <!-- <CropImage ref="crop" @done="cropDone" /> -->
     <inner-tool-bar v-show="state.innerElement.cropEdit" :style="toolBarStyle">
-      <number-slider
-        v-model="state.innerElement.zoom"
-        class="inner-bar" label="缩放" labelWidth="40px"
-        :step="0.01" :minValue="1" :maxValue="3"
-      />
+      <number-slider v-model="state.innerElement.zoom" class="inner-bar" label="缩放" labelWidth="40px" :step="0.01" :minValue="1" :maxValue="3" />
       <i style="padding: 0 8px; cursor: pointer" class="icon sd-queren" @click="imgCrop(false)" />
     </inner-tool-bar>
     <picBox ref="picBoxRef" @select="selectDone" />
@@ -93,6 +90,7 @@ import { useCanvasStore, useControlStore, useForceStore, useWidgetStore } from '
 import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
 import { TupdateLayerIndexData } from '@/store/design/widget/actions/layer'
 import { TUpdateAlignData } from '@/store/design/widget/actions/align'
+import LineLayout from '@/components/business/line-layout/index.vue'
 
 type TState = {
   picBoxShow: boolean
@@ -134,7 +132,6 @@ const state = reactive<TState>({
 const picBoxRef = ref<typeof picBox | null>(null)
 const imageCutoutRef = ref<typeof imageCutout | null>(null)
 
-
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()
 const canvasStore = useCanvasStore()
@@ -142,13 +139,12 @@ const canvasStore = useCanvasStore()
 //   dActiveElement, dWidgets
 // } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
 const controlStore = useControlStore()
-const { dMoving } = storeToRefs(controlStore)
+const { dMoving, clippable } = storeToRefs(controlStore)
 const { dActiveElement, dWidgets } = storeToRefs(widgetStore)
-
 
 let lastUuid: string | undefined = undefined
 let tag: boolean
-let toolBarStyle: { left: string, top: string } | null = null
+let toolBarStyle: { left: string; top: string } | null = null
 
 onBeforeUnmount(() => {
   imgCrop(false)
@@ -166,7 +162,7 @@ watch(
     }
     lastUuid = newValue.uuid
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -175,7 +171,7 @@ watch(
     changeValue()
     cropHandle()
   },
-  { deep: true }
+  { deep: true },
 )
 
 function created() {
@@ -201,15 +197,12 @@ function changeValue() {
   }
   for (let key in state.innerElement) {
     if (state.ingoreKeys.indexOf(key) !== -1) {
-      (dActiveElement.value as Record<string, any>)[key] = state.innerElement[(key as keyof TImageSetting)]
-    } else if (
-      key !== 'cropEdit' && key !== 'record' &&
-      state.innerElement[(key as keyof TImageSetting)] !== (dActiveElement.value as Record<string, any>)[key]
-    ) {
+      ;(dActiveElement.value as Record<string, any>)[key] = state.innerElement[key as keyof TImageSetting]
+    } else if (key !== 'cropEdit' && key !== 'record' && state.innerElement[key as keyof TImageSetting] !== (dActiveElement.value as Record<string, any>)[key]) {
       widgetStore.updateWidgetData({
-        uuid: dActiveElement.value?.uuid || "",
-        key: (key as TUpdateWidgetPayload['key']),
-        value: (state.innerElement[(key as keyof TImageSetting)] as TUpdateWidgetPayload['value']),
+        uuid: dActiveElement.value?.uuid || '',
+        key: key as TUpdateWidgetPayload['key'],
+        value: state.innerElement[key as keyof TImageSetting] as TUpdateWidgetPayload['value'],
       })
       // store.dispatch('updateWidgetData', {
       //   uuid: dActiveElement.value.uuid,
@@ -240,10 +233,10 @@ function finishSliceData(key: string, value: number | number[]) {
   }
 }
 
-function finish(key: string = "", value: string | number | (string | number)[] | null = "") {
+function finish(key: string = '', value: string | number | (string | number)[] | null = '') {
   widgetStore.updateWidgetData({
-    uuid: dActiveElement.value?.uuid || "",
-    key: (key as TUpdateWidgetPayload['key']),
+    uuid: dActiveElement.value?.uuid || '',
+    key: key as TUpdateWidgetPayload['key'],
     value: value as TUpdateWidgetPayload['value'],
     pushHistory: true,
   })
@@ -258,22 +251,22 @@ function finish(key: string = "", value: string | number | (string | number)[] |
 function layerAction(item: TIconItemSelectData) {
   if (item.key === 'zIndex') {
     widgetStore.updateLayerIndex({
-      uuid: dActiveElement.value?.uuid || "",
-      value: (item.value as TupdateLayerIndexData['value']),
+      uuid: dActiveElement.value?.uuid || '',
+      value: item.value as TupdateLayerIndexData['value'],
     })
     // store.dispatch("updateLayerIndex", {
     //   uuid: dActiveElement.value.uuid,
     //   value: item.value,
     // })
   } else {
-    finish(item.key || "", item.value === dActiveElement.value?.flip ? null : item.value)
+    finish(item.key || '', item.value === dActiveElement.value?.flip ? null : item.value)
   }
 }
 
 async function alignAction(item: TIconItemSelectData) {
   widgetStore.updateAlign({
-    align: (item.value as TUpdateAlignData['align']),
-    uuid: dActiveElement.value?.uuid || "",
+    align: item.value as TUpdateAlignData['align'],
+    uuid: dActiveElement.value?.uuid || '',
   })
   // store.dispatch("updateAlign", {
   //   align: item.value,
@@ -294,7 +287,6 @@ function openCropper() {
 //   this.innerElement.width = width.toFixed(0)
 //   this.innerElement.height = height.toFixed(0)
 // }
-
 
 async function changeContainer(setting: any) {
   state.innerElement.mask = setting.svgUrl
@@ -318,25 +310,25 @@ async function changeContainer(setting: any) {
 //   this.$store.commit('setShowMoveable', true)
 // }
 
-
 async function selectDone(img: TGetImageListResult) {
   state.innerElement.imgUrl = img.url
   const loadImg = await getImage(img.url)
-  state.innerElement.width = loadImg.width * canvasStore.dZoom / 100
-  state.innerElement.height = loadImg.height * canvasStore.dZoom / 100
+  state.innerElement.width = (loadImg.width * canvasStore.dZoom) / 100
+  state.innerElement.height = (loadImg.height * canvasStore.dZoom) / 100
   // this.imgCrop(true)
 }
 
-function imgCrop(val: boolean) {
-  // TODO: 画布内图像裁剪
-  const el = document.getElementById(state.innerElement.uuid || "")
+async function imgCrop(val: boolean) {
+  /* // TODO: 画布内图像裁剪
+  const el = document.getElementById(state.innerElement.uuid || '')
   if (!el) return
   const { left, top } = el.getBoundingClientRect()
   toolBarStyle = { left: left + 'px', top: top + 'px' }
   state.innerElement.cropEdit = val
-  controlStore.setShowRotatable(!val)
+  await nextTick()
+  controlStore.setShowRotatable(!val) */
+  controlStore.setClippable(val)
 }
-
 
 function cropHandle() {
   controlStore.setCropUuid(state.innerElement.cropEdit ? state.innerElement.uuid : '-1')
@@ -352,7 +344,7 @@ function openPicBox() {
 
 // 打开抠图
 function openImageCutout() {
-  fetch(state.innerElement.imgUrl || "")
+  fetch(state.innerElement.imgUrl || '')
     .then((response) => response.blob())
     .then((blob) => {
       const file = new File([blob], `image_${Math.random()}.jpg`, { type: 'image/jpeg' })
@@ -371,7 +363,6 @@ async function cutImageDone(url: string) {
     state.innerElement.imgUrl = url
   }, 300)
 }
-
 </script>
 
 <style lang="less" scoped>

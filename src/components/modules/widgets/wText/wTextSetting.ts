@@ -8,6 +8,7 @@ export type TwTextData = {
   left: number
   top: number
   transform: string
+  transformOrigin: string
   lineHeight: number
   letterSpacing: number
   fontSize: number

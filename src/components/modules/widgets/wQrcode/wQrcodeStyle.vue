@@ -2,19 +2,20 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:41:53
  * @Description: 
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 17:53:23
+ * @LastEditors: xi_zi
+ * @LastEditTime: 2024-04-04 11:13:31
 -->
 <template>
   <div id="w-image-style">
     <el-collapse v-model="state.activeNames">
       <el-collapse-item title="位置尺寸" name="1">
-        <div class="line-layout">
+        <!-- <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
           <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
           <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
-        </div>
+        </div> -->
+        <line-layout />
       </el-collapse-item>
       <el-collapse-item title="样式设计" name="2">
         <div style="flex-wrap: nowrap" class="line-layout">
@@ -29,7 +30,16 @@
           <color-select v-model="state.innerElement.dotColor" @finish="(value) => finish('dotColor', value)" />
           <color-select v-show="state.innerElement.dotColorType !== 'single'" v-model="state.innerElement.dotColor2" @finish="(value) => finish('dotColor2', value)" />
         </div>
-        <number-slider v-show="state.innerElement.dotColorType !== 'single'" v-model="state.innerElement.dotRotation" style="margin-top: 8px" label="渐变角度" :step="1" :minValue="0" :maxValue="360" @finish="(value) => finish('dotRotation', value)" />
+        <number-slider
+          v-show="state.innerElement.dotColorType !== 'single'"
+          v-model="state.innerElement.dotRotation"
+          style="margin-top: 8px"
+          label="渐变角度"
+          :step="1"
+          :minValue="0"
+          :maxValue="360"
+          @finish="(value) => finish('dotRotation', value)"
+        />
       </el-collapse-item>
       <el-collapse-item title="内容设置" name="3">
         <text-input-area v-model="state.innerElement.value" :max="40" label="" @finish="(value) => finish('value', value)" />
@@ -77,15 +87,16 @@ import { storeToRefs } from 'pinia'
 import { useControlStore, useForceStore, useWidgetStore } from '@/store'
 import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
 import { TUpdateAlignData } from '@/store/design/widget/actions/align'
+import LineLayout from '@/components/business/line-layout/index.vue'
 
 type TState = {
   activeNames: string[]
-  innerElement: TWQrcodeSetting,
-  tag: boolean,
-  ingoreKeys: string[],
-  layerIconList: TIconItemSelectData[],
-  alignIconList: TIconItemSelectData[],
-  localization: QrCodeLocalizationData,
+  innerElement: TWQrcodeSetting
+  tag: boolean
+  ingoreKeys: string[]
+  layerIconList: TIconItemSelectData[]
+  alignIconList: TIconItemSelectData[]
+  localization: QrCodeLocalizationData
 }
 
 const state = reactive<TState>({
@@ -98,11 +109,9 @@ const state = reactive<TState>({
   localization,
 })
 
-
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()
-
 
 // const {
 //   dActiveElement, dWidgets
@@ -121,7 +130,7 @@ watch(
     if (Number(newValue.uuid) == -1) {
       state.innerElement.cropEdit = false
       widgetStore.updateWidgetData({
-        uuid: lastUuid ?? "",
+        uuid: lastUuid ?? '',
         key: 'cropEdit',
         value: false,
       })
@@ -134,7 +143,7 @@ watch(
       lastUuid = newValue.uuid
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -142,7 +151,7 @@ watch(
   (newValue, oldValue) => {
     changeValue()
   },
-  { deep: true }
+  { deep: true },
 )
 
 function created() {
@@ -168,13 +177,10 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof TWQrcodeSetting
     if (state.ingoreKeys.indexOf(key) !== -1) {
-      (dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
-    } else if (
-      key !== 'setting' && key !== 'record' &&
-      state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]
-    ) {
+      ;(dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
+    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]) {
       widgetStore.updateWidgetData({
-        uuid: dActiveElement.value?.uuid || "",
+        uuid: dActiveElement.value?.uuid || '',
         key: key as TUpdateWidgetPayload['key'],
         value: state.innerElement[itemKey] as TUpdateWidgetPayload['value'],
       })
@@ -205,7 +211,7 @@ function finish(key: string, value: number | number[] | string) {
 function layerAction(item: TIconItemSelectData) {
   console.log(item)
   widgetStore.updateLayerIndex({
-    uuid: dActiveElement.value?.uuid || "",
+    uuid: dActiveElement.value?.uuid || '',
     value: item.value as number,
   })
   // store.dispatch("updateLayerIndex", {
@@ -217,7 +223,7 @@ function layerAction(item: TIconItemSelectData) {
 async function alignAction(item: TIconItemSelectData) {
   widgetStore.updateAlign({
     align: item.value as TUpdateAlignData['align'],
-    uuid: dActiveElement.value?.uuid || "",
+    uuid: dActiveElement.value?.uuid || '',
   })
   // store.dispatch("updateAlign", {
   //   align: item.value,
@@ -237,7 +243,7 @@ async function uploadImgDone(img: TUploadDoneData) {
   // this.innerElement.width = img.width
   // this.innerElement.height = img.height * (this.innerElement.width / img.width)
   state.innerElement.url = img.url
-  
+
   // store.commit('setShowMoveable', true)
   controlStore.setShowMoveable(true)
 }

@@ -48,8 +48,8 @@ export type TPageState = {
   name: string
   type: string
   uuid: string
-  left: number
-  top: number
+  left?: number
+  top?: number
   /** 画布宽度 */
   width: number
   /** 画布高度 */

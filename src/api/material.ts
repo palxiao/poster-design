@@ -47,7 +47,7 @@ export type TGetFontParam = {
 
 /** 字体item数据 */
 export type TGetFontItemData = {
-  id: number
+  id: number | string
   alias: string
   oid: string
   value: string

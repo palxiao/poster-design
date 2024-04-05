@@ -9,5 +9,16 @@
   },
   "css.validate": false,
   "less.validate": false,
-  "scss.validate": false
+  "scss.validate": false,
+  "[vue]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "cSpell.words": [
+    "clippable",
+    "pinchable",
+    "pinia",
+    "snappable",
+    "ungroup",
+    "warpable"
+  ]
 }
