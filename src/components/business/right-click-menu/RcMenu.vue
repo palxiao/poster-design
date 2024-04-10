@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, toRaw } from 'vue'
 import { 
   widgetMenu as widget, 
   pageMenu as page,
@@ -22,21 +22,18 @@ import {
   TMenuItemData, TWidgetItemData, 
 } from './rcMenuData'
 import { getTarget } from '@/common/methods/target'
-// import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 import { storeToRefs } from 'pinia';
 import { useControlStore, useWidgetStore } from '@/store';
 
 const menuListData = ref<TMenuItemData>({...menu})
 const showMenuBg = ref<boolean>(false)
-const widgetMenu = ref<TWidgetItemData[]>({...widget})
-const pageMenu = ref<TWidgetItemData[]>({...page})
+const widgetMenu = ref<TWidgetItemData[]>([...widget])
+const pageMenu = ref<TWidgetItemData[]>([...page])
 
 const widgetStore = useWidgetStore()
-// const {dActiveElement, dWidgets, dCopyElement} = useSetupMapGetters(['dActiveElement', 'dWidgets', 'dCopyElement'])
 
 const {dActiveElement, dWidgets, dCopyElement} = storeToRefs(widgetStore)
 const { dAltDown } = storeToRefs(useControlStore())
-
 
 const styleObj = computed(() => {
   return {
@@ -75,9 +72,6 @@ async function mouseRightClick(e: MouseEvent) {
     widgetStore.selectWidget({
       uuid: uuid ?? '-1',
     })
-    // store.dispatch('selectWidget', {
-    //   uuid: uuid ?? '-1',
-    // })
     showMenu(e)
   }
 }
@@ -119,14 +113,12 @@ function selectMenu(type: TWidgetItemData['type']) {
   switch (type) {
     case 'copy':
       widgetStore.copyWidget()
-      // store.dispatch('copyWidget')
       break
     case 'paste':
       if (dCopyElement.value.length === 0) {
         return
       }
       widgetStore.pasteWidget()
-      // store.dispatch('pasteWidget')
       break
     case 'index-up':
       widgetStore.updateLayerIndex({
@@ -134,11 +126,6 @@ function selectMenu(type: TWidgetItemData['type']) {
         value: 1,
         isGroup: dActiveElement.value?.isContainer,
       })
-      // store.dispatch('updateLayerIndex', {
-      //   uuid: dActiveElement.value.uuid,
-      //   value: 1,
-      //   isGroup: dActiveElement.value.isContainer,
-      // })
       break
     case 'index-down':
       widgetStore.updateLayerIndex({
@@ -146,19 +133,12 @@ function selectMenu(type: TWidgetItemData['type']) {
         value: -1,
         isGroup: dActiveElement.value?.isContainer,
       })
-      // store.dispatch('updateLayerIndex', {
-      //   uuid: dActiveElement.value.uuid,
-      //   value: -1,
-      //   isGroup: dActiveElement.value.isContainer,
-      // })
       break
     case 'del':
       widgetStore.deleteWidget()
-      // store.dispatch('deleteWidget')
       break
     case 'ungroup':
       widgetStore.ungroup(dActiveElement.value?.uuid || "")
-      // store.dispatch('ungroup', dActiveElement.value.uuid)
       break
   }
   closeMenu()
