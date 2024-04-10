@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-05 05:37:53
+ * @LastEditTime: 2024-04-09 23:39:24
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -16,6 +16,7 @@
       <!-- <el-button @click="$store.commit('managerEdit', false)">取消</el-button> -->
       <div class="divide__line">|</div>
     </template>
+    <watermark-option style="margin-right: .5rem;" />
     <!-- <el-button @click="draw">绘制(测试)</el-button> -->
     <!-- <copyRight> -->
       <slot />
@@ -39,6 +40,7 @@ import _config from '@/config'
 import useConfirm from '@/common/methods/confirm'
 import { useControlStore, useHistoryStore, useCanvasStore, useUserStore, useWidgetStore } from '@/store/index'
 import { storeToRefs } from 'pinia'
+import watermarkOption from './Watermark.vue'
 
 type TProps = {
   modelValue?: boolean
@@ -51,6 +53,7 @@ type TEmits = {
 
 type TState= {
   stateBollean: boolean,
+  wmBollean: boolean,
   title: string,
   loading: boolean,
 }
@@ -80,6 +83,7 @@ const { dHistory, dPageHistory } = storeToRefs(useHistoryStore())
 
 const state = reactive<TState>({
   stateBollean: false,
+  wmBollean: false,
   title: '',
   loading: false,
 })
@@ -91,7 +95,6 @@ async function save(hasCover: boolean = false) {
     return
   }
   
-  // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
 
   // console.log(proxy?.dPage, proxy?.dWidgets)
@@ -189,11 +192,17 @@ async function saveTemp() {
 
 // ...mapActions(['pushHistory', 'addGroup']),
 
-async function load(id: number, tempId: number, type: number, cb: () => void) {
+async function load(cb: () => void) {
+  const { id, tempid: tempId, tempType: type, w_h } = route.query
   if (route.name !== 'Draw') {
     await useFontStore.init() // 初始化加载字体
   }
   const apiName = tempId && !id ? 'getTempDetail' : 'getWorks'
+  if (w_h) {
+    const wh: any = w_h.toString().split('*')
+    wh[0] && (dPage.value.width = wh[0])
+    wh[1] && (dPage.value.height = wh[1])
+  }
   if (!id && !tempId) {
     cb()
     return

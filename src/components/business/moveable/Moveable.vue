@@ -3,7 +3,7 @@
  * @Date: 2021-08-04 11:46:39
  * @Description: 原版movable插件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-14 11:41:23
+ * @LastEditTime: 2024-04-06 14:56:35
 -->
 <template>
   <div id="empty" class="moveable__remove-item zk-moveable-style"></div>
@@ -275,7 +275,9 @@ onMounted(() => {
     triggerAblesSimultaneously: true,
   }
 
-  moveable = new Moveable(document.body, moveableOptions)
+  // moveable = new Moveable(document.body, moveableOptions)
+  const containerEl = document.querySelector('#main') as HTMLElement | SVGElement;
+  moveable = new Moveable(containerEl, moveableOptions)
 
   const helper = new MoveableHelper()
 
@@ -578,12 +580,6 @@ onMounted(() => {
           key: 'left',
           value: item.left,
         })
-        // store.dispatch("updateWidgetData", {
-        //   uuid: key,
-        //   key: 'left',
-        //   value: item.left,
-        // })
-
         widgetStore.updateWidgetData({
           uuid: key,
           key: 'top',

@@ -2,13 +2,12 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-03 14:13:16
  * @Description:
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-02-26 17:54:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-08 18:19:35
  */
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-// import store from './store'
 import utils from './utils'
 import 'normalize.css/normalize.css'
 import '@/assets/styles/index.less'

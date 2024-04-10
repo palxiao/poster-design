@@ -11,13 +11,11 @@
 <script lang="ts" setup>
 import { StyleValue, onMounted, reactive, nextTick } from 'vue'
 import api from '@/api'
-// import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
 import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
-// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
@@ -50,7 +48,7 @@ onMounted(() => {
 async function load() {
   let backgroundImage = ''
   let loadFlag = false
-  const { id, tempid, tempType: type  } = route.query 
+  const { id, tempid, tempType: type = 0  } = route.query 
   if (id || tempid) {
     const postData = {
       id: Number(id || tempid),

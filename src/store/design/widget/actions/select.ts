@@ -44,8 +44,6 @@ export function selectWidget(store: TWidgetStore, { uuid }: TSelectWidgetData) {
     return
   }
   store.dSelectWidgets = []
-  console.log("uuid", uuid);
-  
   if (uuid === '-1') {
     store.dActiveElement = pageStore.dPage
     const pageHistory = historyStore.dPageHistory

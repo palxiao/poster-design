@@ -8,10 +8,9 @@
     </div>
     <el-collapse v-else v-model="state.activeNames">
       <el-collapse-item title="画布尺寸" name="1">
-        <div class="position-size">
-          <number-input v-model="state.innerElement.width" label="宽" :maxValue="5000" @finish="(value) => finish('width', value)" />
-          <number-input v-model="state.innerElement.height" label="高" :maxValue="5000" @finish="(value) => finish('height', value)" />
-        </div>
+        <sizeEditor :params="state.innerElement">
+          <i @click="openSizeEdit" class="icon sd-edit"></i>
+        </sizeEditor>
       </el-collapse-item>
       <el-collapse-item title="背景设置" name="2">
         <el-button style="width: 100%; margin: 0 0 1rem 0;" type="primary" link @click="state.showBgLib = true">在背景库中选择</el-button>
@@ -49,29 +48,27 @@
         <el-button v-show="state.mode === '图片' && state.innerElement.backgroundImage" class="btn-wrap" @click="shiftOut">将背景分离为图层</el-button>
       </el-collapse-item>
     </el-collapse>
+    <createDesign ref="sizeEditRef" :params="state.innerElement" />
   </div>
 </template>
 
 <script lang="ts" setup>
 // 画布组件样式
 // const NAME = 'page-style'
-import { nextTick, onMounted, reactive, watch } from 'vue'
-
-import numberInput from '../settings/numberInput.vue'
-import colorSelect, { colorChangeData } from '../settings/colorSelect.vue'
+import { nextTick, onMounted, reactive, watch, ref, Ref } from 'vue'
+import colorSelect, { colorChangeData } from '@/components/modules/settings/colorSelect.vue'
 import uploader, { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import api from '@/api'
 import _dl from '@/common/methods/download'
-// import ColorPipette from '@/utils/plugins/color-pipette'
 import Tabs from '@palxp/color-picker/comps/Tabs.vue'
 import TabPanel from '@palxp/color-picker/comps/TabPanel.vue'
-// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useCanvasStore, useWidgetStore } from '@/store'
 import { TPageState } from '@/store/design/canvas/d'
 import { storeToRefs } from 'pinia'
 import { Delete as iconDelete, Download as iconDownload } from '@element-plus/icons-vue'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
-// import setImageData from '@/common/methods/DesignFeatures/setImage'
+import sizeEditor from '@/components/business/create-design/sizeEditor.vue'
+import createDesign from '@/components/business/create-design'
 
 type TState = {
   activeNames: string[]
@@ -83,7 +80,6 @@ type TState = {
   modes: string[]
   showBgLib: boolean
 }
-
 
 const pageStore = useCanvasStore()
 const widgetStore = useWidgetStore()
@@ -97,6 +93,7 @@ const state = reactive<TState>({
   modes: ['颜色', '图片'],
   showBgLib: false
 })
+const sizeEditRef: Ref<typeof createDesign | null> = ref(null)
 // const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
 const { dActiveElement } = storeToRefs(widgetStore)
 let _localTempBG: string | null = null
@@ -164,8 +161,6 @@ function changeValue() {
 }
 
 function finish(key: keyof TPageState, value: string | number) {
-  console.log('111');
-  
   pageStore.updatePageData({
     key: key,
     value: value,
@@ -202,16 +197,17 @@ async function shiftOut() {
   setting.width = state.innerElement.width
   setting.height = state.innerElement.height
   setting.imgUrl = state.innerElement.backgroundImage
-  // store.dispatch('addWidget', setting)
   setting.uuid = `bg-${(new Date()).getTime()}`
   widgetStore.dWidgets.unshift(setting)
   widgetStore.selectWidget({
     uuid: widgetStore.dWidgets[0].uuid,
   })
-  // store.dispatch('selectWidget', {
-  //   uuid: store.getters.dWidgets[0].uuid,
-  // })
   deleteBg()
+}
+
+// 打开
+function openSizeEdit() {
+  sizeEditRef.value?.open()
 }
 </script>
 
@@ -219,13 +215,14 @@ async function shiftOut() {
 #page-style {
   height: 100%;
   width: 100%;
-}
-.position-size {
-  display: flex;
-  // justify-content: space-between;
-  width: 100%;
-  .number-input {
-    flex: 0.25;
+  .sd-edit {
+    cursor: pointer;
+    color: #666666;
+    font-size: 22px;
+  }
+  .sd-edit:hover {
+    color: #333333;
+    transform: scale(1.2);
   }
 }
 .select {

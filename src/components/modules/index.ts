@@ -1,9 +1,9 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2021-07-13 22:51:29
- * @Description: require.context自动引用
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-08 10:28:47
+ * @Description: Widgets、panel中所有组件将会自动全局引入
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-09 22:31:08
  */
 import { App } from "vue"
 

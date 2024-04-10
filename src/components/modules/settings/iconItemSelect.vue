@@ -2,14 +2,14 @@
  * @Author: ShawnPhang
  * @Date: 2021-07-29 18:31:27
  * @Description: 
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-07 23:26:51
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-10 07:36:58
 -->
 <template>
   <div class="icon-item-select">
     <span v-if="label" class="label">{{ label }}</span>
     <ul class="list btn__bar flex">
-      <el-tooltip v-for="(item, index) in data" :key="index" class="item" effect="dark" :content="item.tip" placement="top" :auto-close="400">
+      <el-tooltip v-for="(item, index) in data" :key="index" class="item" effect="dark" :content="item.tip" placement="top" :show-after="300" >
         <li :class="{ 'list-item': true, active: item.select }" @click="selectItem(item)">
           <i :class="`${item.extraIcon ? 'icon' : 'iconfont'} ${item.icon}`"></i>
         </li>

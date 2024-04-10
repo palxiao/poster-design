@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-02-29 16:54:28
+ * @LastEditTime: 2024-04-09 22:30:10
 -->
 <template>
   <div class="wrap">
@@ -55,7 +55,6 @@
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
 import api from '@/api'
-
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import DragHelper from '@/common/hooks/dragHelper'
 import setItem2Data from '@/common/methods/DesignFeatures/setImage'

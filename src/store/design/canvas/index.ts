@@ -4,7 +4,7 @@
  * @Date: 2024-03-18 21:00:00
  * @Description: 画布全局配置
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-05 14:52:06
+ * @LastEditTime: 2024-04-08 21:23:38
  */
 
 import { Store, defineStore } from 'pinia'

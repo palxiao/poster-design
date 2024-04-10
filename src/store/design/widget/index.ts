@@ -2,14 +2,14 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-18 21:00:00
  * @Description: Store方法export
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-28 14:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-10 08:17:16
  */
 
 import { Store, defineStore } from "pinia";
 import { TInidDMovePayload, TMovePayload, dMove, initDMove, setDropOver, setMouseEvent, setdActiveElement, updateGroupSize, updateHoverUuid } from "./actions";
 import { TPageState } from "@/store/design/canvas/d";
-import { TInitResize, TResize, TdResizePayload, dResize, initDResize, resize } from "./actions/resize";
+import { TInitResize, TSize, TdResizePayload, dResize, initDResize, resize, autoResizeAll } from "./actions/resize";
 import { TUpdateWidgetMultiplePayload, TUpdateWidgetPayload, TsetWidgetStyleData, addWidget, deleteWidget, setDWidgets, setWidgetStyle, updateWidgetData, updateWidgetMultiple, lockWidgets } from "./actions/widget";
 import { addGroup } from "./actions/group";
 import { setTemplate } from "./actions/template";
@@ -113,12 +113,13 @@ type TAction = {
   /** 设置拖拽时在哪个图层 */
   setDropOver: (uuid: string) => void
   setSelectItem: (data: TselectItem) => void
-  resize: (data: TResize) => void
+  resize: (data: TSize) => void
   setWidgetStyle: (data: TsetWidgetStyleData) => void
   setDWidgets: (data: TdWidgetData[]) => void
   lockWidgets: () => void
   setMouseEvent: (e: MouseEvent | null) => void
   setdActiveElement: (data: TdWidgetData) => void
+  autoResizeAll: (data: TSize) => void
 }
 
 const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("widgetStore", {
@@ -180,6 +181,7 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     lockWidgets() { lockWidgets(this) },
     setMouseEvent(event) { setMouseEvent(this, event) },
     setdActiveElement(data) { setdActiveElement(this, data) },
+    autoResizeAll(data) { autoResizeAll(this, data) }
   }
 })
 

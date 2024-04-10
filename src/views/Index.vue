@@ -4,7 +4,7 @@
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-04-05 05:34:43
+ * @LastEditTime: 2024-04-10 07:16:48
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -59,6 +59,8 @@
     />
     <!-- 漫游导航 -->
     <Tour ref="tourRef" :steps="[ref1, ref2, ref3, ref4]" />
+    <!-- 创建设计 -->
+    <createDesign ref="createDesignRef" />
   </div>
 </template>
 
@@ -66,7 +68,7 @@
 import _config from '../config'
 import {
   CSSProperties, computed, nextTick,
-  onBeforeUnmount, onMounted, reactive, ref,
+  onBeforeUnmount, onMounted, reactive, ref, Ref
 } from 'vue'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
@@ -74,18 +76,16 @@ import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import lineGuides from '@/components/modules/layout/lineGuides.vue'
 import shortcuts from '@/mixins/shortcuts'
-// import wGroup from '@/components/modules/widgets/wGroup/wGroup.vue'
 import HeaderOptions from './components/HeaderOptions.vue'
 import Folder from './components/Folder.vue'
 import Helper from './components/Helper.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/download.vue'
-// import { useSetupMapGetters } from '@/common/hooks/mapGetters'
-import { useRoute } from 'vue-router'
 import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 import { storeToRefs } from 'pinia'
 import { useCanvasStore, useControlStore, useHistoryStore, useWidgetStore, useGroupStore } from '@/store'
 import type { ButtonInstance } from 'element-plus'
 import Tour from './components/Tour.vue'
+import createDesign from '@/components/business/create-design'
 
 const ref1 = ref<ButtonInstance>()
 const ref2 = ref<ButtonInstance>()
@@ -111,7 +111,6 @@ const groupStore = useGroupStore()
 const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom } = storeToRefs(useCanvasStore())
 const { dHistoryParams } = storeToRefs(useHistoryStore())
-// const { dActiveElement, dCopyElement } = storeToRefs(widgetStore)
 
 const state = reactive<TState>({
   style: {
@@ -128,7 +127,7 @@ const state = reactive<TState>({
 const optionsRef = ref<typeof HeaderOptions | null>(null)
 const zoomControlRef = ref<typeof zoomControl | null>(null)
 const controlStore = useControlStore()
-const route = useRoute()
+const createDesignRef: Ref<typeof createDesign | null> = ref(null)
 
 const beforeUnload = function (e: Event): any {
   if (dHistoryParams.value.length > 0) {
@@ -211,16 +210,13 @@ function downloadCancel() {
 
 function loadData() {
   // 初始化加载页面
-  const { id, tempid, tempType } = route.query
   if (!optionsRef.value) return
-  optionsRef.value.load(id, tempid, tempType, async () => {
+  optionsRef.value.load(async () => {
     if (!zoomControlRef.value) return
     // await nextTick()
     // zoomControlRef.value.screenChange()
-    
     // 初始化激活的控件为page
     widgetStore.selectWidget({ uuid: '-1' })
-    // store.dispatch('selectWidget', { uuid: '-1' })
   })
 }
 
@@ -246,7 +242,10 @@ const fns: any = {
   download: () => {
     optionsRef.value?.download()
   },
-  changeLineGuides
+  changeLineGuides,
+  newDesign: () => {
+    createDesignRef.value?.open()
+  }
 }
 const dealWith = (fnName: string, params?: any) => {
   fns[fnName](params)

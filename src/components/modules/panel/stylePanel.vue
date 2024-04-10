@@ -68,38 +68,12 @@ function alignAction(item: TIconItemSelectData) {
         uuid: element.uuid,
         group,
       })
-      // store.dispatch('updateAlign', {
-      //   align: item.value,
-      //   uuid: element.uuid,
-      //   group,
-      // })
     });
     historyStore.pushHistory()
-    // store.dispatch('pushHistory')
-    // pushHistory()
   })
-  // store.dispatch('getCombined').then((group) => {
-  //   sWidgets.forEach((element: Record<string, any>) => {
-  //     store.dispatch('updateAlign', {
-  //       align: item.value,
-  //       uuid: element.uuid,
-  //       group,
-  //     })
-  //     // updateAlign({
-  //     //   align: item.value,
-  //     //   uuid: element.uuid,
-  //     //   group,
-  //     // })
-  //   });
-  //   store.dispatch('pushHistory')
-  //   // pushHistory()
-  // })
 }
 function layerChange(newLayer: TdWidgetData[]) {
   widgetStore.setDWidgets(newLayer.toReversed())
-  // store.commit('setDWidgets', newLayer.toReversed())
-
-  // store.commit('setShowMoveable', false)
   controlStore.setShowMoveable(false)
 }
 

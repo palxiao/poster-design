@@ -2,8 +2,8 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-17 15:00:00
  * @Description: Base全局状态管理
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-18 21:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-08 17:00:12
  */
 
 import { Store, defineStore } from 'pinia'
@@ -13,7 +13,7 @@ import { Store, defineStore } from 'pinia'
 
 type TStoreBaseState = {
   loading: boolean | null
-  scroll: boolean
+  watermark: string | string[]
   /** fonts */
   fonts: string[]
 }
@@ -21,13 +21,14 @@ type TStoreBaseState = {
 type TUserAction = {
   hideLoading: () => void
   setFonts: (list: string[]) => void
+  changeWatermark: (e: string[] | string) => void
 }
 
 /** Base全局状态管理 */
 const useBaseStore = defineStore<'base', TStoreBaseState, {}, TUserAction>('base', {
   state: () => ({
     loading: null,
-    scroll: true,
+    watermark: ['迅排设计', 'poster-design'],
     fonts: [], // 缓存字体列表
   }),
   actions: {
@@ -40,6 +41,9 @@ const useBaseStore = defineStore<'base', TStoreBaseState, {}, TUserAction>('base
     setFonts(list: string[]) {
       this.fonts = list
     },
+    changeWatermark(wm: any) {
+      this.watermark = wm
+    }
   }
 })
 

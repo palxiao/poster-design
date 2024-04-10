@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-03-11 01:42:36
+ * @LastEditTime: 2024-04-09 22:29:51
 -->
 <template>
   <div class="wrap">
@@ -50,12 +50,9 @@ type TState = {
   bgList: TGetImageListResult[]
   showList: boolean
   colors: string[]
-
 }
 
 const { model } = defineProps<TProps>()
-
-
 
 const pageStore = useCanvasStore()
 const widgetStore = useWidgetStore()

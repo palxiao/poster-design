@@ -3,7 +3,7 @@
  * @Date: 2024-04-03 19:15:21
  * @Description: 文件 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-05 06:01:20
+ * @LastEditTime: 2024-04-10 07:16:00
 -->
 <template>
   <el-dropdown trigger="click" size="large" placement="bottom-start">
@@ -12,7 +12,7 @@
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item><div class="item">创建设计</div></el-dropdown-item>
+        <el-dropdown-item><div @click="$emit('select', 'newDesign')" class="item">创建设计</div></el-dropdown-item>
         <el-dropdown-item @click="openPSD">导入文件</el-dropdown-item>
         <el-dropdown-item @click="$emit('select', 'save')" divided>保存</el-dropdown-item>
         <el-dropdown-item @click="$emit('select', 'download')">导出文件</el-dropdown-item>
@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-// import { ref } from 'vue'
-import { useRouter} from 'vue-router'
+// import { ref, Ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElDropdown, ElDropdownItem, ElDropdownMenu } from 'element-plus'
 
 const router = useRouter()

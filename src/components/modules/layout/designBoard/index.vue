@@ -10,7 +10,9 @@
           opacity: 1 - (dZoom < 100 ? dPage.tag : 0),
         }"
       >
-        <slot />
+      <slot />
+      <resize-page :width="(dPage.width * dZoom) / 100" :height="(dPage.height * dZoom) / 100" />
+      <watermark :customStyle="{ height: (dPage.height * dZoom) / 100 + 'px'}">
         <div
           :id="pageDesignCanvasId"
           class="design-canvas"
@@ -33,12 +35,6 @@
           @mouseup="drop($event)"
         >
           <!-- <grid-size /> -->
-
-          <!-- :class="{
-              layer: true,
-              'layer-active': getIsActive(layer.uuid),
-              'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid,
-            }" -->
           <component
             :is="layer.type"
             v-for="layer in getlayers()"
@@ -69,6 +65,7 @@
           <!-- <ref-line v-if="dSelectWidgets.length === 0" /> -->
           <!-- <size-control v-if="dSelectWidgets.length === 0" /> -->
         </div>
+      </watermark>
       </div>
     </div>
   </div>
@@ -82,9 +79,11 @@ import PointImg from '@/utils/plugins/pointImg'
 import getComponentsData from '@/common/methods/DesignFeatures/setComponents'
 import { debounce } from 'throttle-debounce'
 import { move, moveInit } from '@/mixins/move'
-import { useCanvasStore, useControlStore, useGroupStore, useWidgetStore } from '@/store'
+import { useCanvasStore, useControlStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TPageState } from '@/store/design/canvas/d'
+import resizePage from './comps/resize.vue'
+import watermark from './comps/pageWatermark.vue'
 // 页面设计组件
 type TProps = {
   pageDesignCanvasId: string

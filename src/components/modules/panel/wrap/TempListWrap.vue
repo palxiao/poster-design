@@ -118,13 +118,14 @@ function checkHeight() {
   isLess && load()
 }
 
+let hideReplacePrompt: any = localStorage.getItem('hide_replace_prompt')
 async function selectItem(item: IGetTempListData) {
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
-
-  if (dHistoryParams.value.length > 0) {
-    const isPass = await useConfirm('提示', '使用模板后，当前页面将会被替换，是否继续', 'warning')
-    if (!isPass) {
-      return false
+  if (!hideReplacePrompt && dHistoryParams.value.length > 0) {
+    const doNotPrompt = await useConfirm('添加到作品', '模板内容将替换页面内容', 'warning', {confirmButtonText: '知道了',cancelButtonText: '不再提示'})
+    if (!doNotPrompt) {
+      localStorage.setItem('hide_replace_prompt', '1')
+      hideReplacePrompt = true
     }
   }
   userStore.managerEdit(false)
