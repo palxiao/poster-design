@@ -3,7 +3,7 @@
  * @Date: 2021-08-02 09:41:41
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-16 00:30:03
+ * @LastEditTime: 2024-04-16 17:19:15
 -->
 <template>
   <div
@@ -59,26 +59,6 @@ const widget = ref<HTMLElement | null>(null)
 const ratio = ref(0)
 const temp = ref<Record<string, any>>({})
 const compWidgetsRecord = ref<Record<string, any>>({})
-// const setting = {
-//   name: '组合',
-//   type: NAME,
-//   uuid: -1,
-//   width: 0,
-//   height: 0,
-//   left: 0,
-//   top: 0,
-//   transform: '',
-//   opacity: 1,
-//   parent: '-1',
-//   isContainer: true,
-//   record: {
-//     width: 0,
-//     height: 0,
-//     minWidth: 0,
-//     minHeight: 0,
-//     dir: 'none',
-//   },
-// }
 
 const timer = ref<number | null>(null)
 // const { dActiveElement, dWidgets } = useSetupMapGetters(['dActiveElement', 'dWidgets'])
@@ -196,12 +176,12 @@ function touchend() {
         keyChange(key, 'width', temp.value[key].width)
         keyChange(key, 'height', temp.value[key].height)
         // 重新拿前面设定好的，实时DOM修改过了
-        keySetValue(key, 'left', compWidgetsRecord.value[key].left * ratio.value)
-        keySetValue(key, 'top', compWidgetsRecord.value[key].top * ratio.value)
+        keySetValue(key, 'left', compWidgetsRecord.value[key]?.left * ratio.value)
+        keySetValue(key, 'top', compWidgetsRecord.value[key]?.top * ratio.value)
         // this.keySetValue(key, 'left', Number(document.getElementById(key).style.left.replace('px', '')) * this.ratio)
         // this.keySetValue(key, 'top', Number(document.getElementById(key).style.top.replace('px', '')) * this.ratio)
         if (temp.value[key].raw.type === 'w-text') {
-          keyChange(key, 'fontSize', compWidgetsRecord.value[key].fontSize * ratio.value)
+          keyChange(key, 'fontSize', compWidgetsRecord.value[key]?.fontSize * ratio.value)
           // this.keyChange(key, 'fontSize', this.temp[key].raw.fontSize * this.ratio)
           // this.keyChange(key, 'letterSpacing', this.temp[key].raw.letterSpacing * this.ratio)
         }

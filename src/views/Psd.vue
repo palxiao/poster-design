@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-03 20:58:43
+ * @LastEditTime: 2024-04-11 15:37:38
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -156,12 +156,7 @@ async function loadPSD(file: File) {
 
 async function clear() {
   widgetStore.setDWidgets([])
-  // store.commit('setDWidgets', [])
-
   pageStore.setDPage(Object.assign(pageStore.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
-  // store.commit('setDPage', Object.assign(store.getters.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
-  
-  // store.commit('setShowMoveable', false)
   controlStore.setShowMoveable(false)
   
   await nextTick()

@@ -3,7 +3,7 @@
  * @Date: 2024-03-18 21:00:00
  * @Description: Store方法export
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-10 18:01:14
+ * @LastEditTime: 2024-04-16 17:25:42
  */
 
 import { useCanvasStore, useControlStore } from '@/store'
@@ -136,8 +136,10 @@ export function autoResizeAll(store: TWidgetStore, lastPageSize: TSize) {
     let diff = 0
     if (widget.type === 'w-text') {
       widget.fontSize && (widget.fontSize *= ratio)
+    } else if (widget.type !== 'w-group') {
+      widget.width *= ratio
+      widget.height *= ratio
     } else widget.height *= ratio
-    widget.width *= ratio
     diff = (originWidth - widget.width) / 2
     widget.left = widget.left + diff + pageDiff
     widget.top *= degree[1]

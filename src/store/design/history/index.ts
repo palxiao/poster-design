@@ -2,14 +2,14 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-18 21:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-27 21:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-15 16:53:51
  */
 
-import { Store, defineStore } from "pinia"
-import {pushHistory, pushColorToHistory} from "./actions/pushHistory"
-import handleHistory from "./actions/handleHistory"
-import { useCanvasStore, useWidgetStore } from "@/store"
+import { Store, defineStore } from 'pinia'
+import { pushHistory, pushColorToHistory } from './actions/pushHistory'
+import handleHistory from './actions/handleHistory'
+import { useCanvasStore, useWidgetStore } from '@/store'
 
 export type THistoryParamData = {
   index: number
@@ -20,11 +20,9 @@ export type THistoryParamData = {
 type THistoryState = {
   /** 记录历史操作（保存整个画布的json数据） */
   dHistory: string[]
-  /** 记录历史操作对应的激活的组件的uuid */
-  dActiveUuidHistory: string[]
   /** 记录历史操作对应的page */
   dPageHistory: string[]
-  dHistoryParams: THistoryParamData,
+  dHistoryParams: THistoryParamData
   /** 记录历史选择的颜色 */
   dColorHistory: string[]
 }
@@ -41,12 +39,12 @@ type THistoryAction = {
    * action为undo表示撤销
    * action为redo表示重做
    */
-  handleHistory: (action: "undo" | "redo") => void
+  handleHistory: (action: 'undo' | 'redo') => void
   pushColorToHistory: (color: string) => void
 }
 
 /** 历史记录Store */
-const HistoryStore = defineStore<"historyStore", THistoryState, {}, THistoryAction>("historyStore", {
+const HistoryStore = defineStore<'historyStore', THistoryState, {}, THistoryAction>('historyStore', {
   state: () => ({
     dHistory: [],
     dHistoryParams: {
@@ -54,9 +52,8 @@ const HistoryStore = defineStore<"historyStore", THistoryState, {}, THistoryActi
       length: 0,
       maxLength: 20,
     },
-    dActiveUuidHistory: [],
     dColorHistory: [],
-    dPageHistory: []
+    dPageHistory: [],
   }),
 
   actions: {
@@ -72,10 +69,10 @@ const HistoryStore = defineStore<"historyStore", THistoryState, {}, THistoryActi
     },
     pushColorToHistory(color) {
       pushColorToHistory(this, color)
-    }
-  }
+    },
+  },
 })
 
-export type THistoryStore = Store<"historyStore", THistoryState, {}, THistoryAction>
+export type THistoryStore = Store<'historyStore', THistoryState, {}, THistoryAction>
 
 export default HistoryStore

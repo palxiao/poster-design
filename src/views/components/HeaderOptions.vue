@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-09 23:39:24
+ * @LastEditTime: 2024-04-16 15:38:39
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -94,14 +94,13 @@ async function save(hasCover: boolean = false) {
   if (dHistory.value.length <= 0) {
     return
   }
-  
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
-
   // console.log(proxy?.dPage, proxy?.dWidgets)
   const { id, tempid } = route.query
   const cover = hasCover ? await draw() : undefined
-  const widgets = dWidgets.value // reviseData()
-  const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id: (id as string), title: state.title || '未命名设计', data: JSON.stringify({ page: dPage.value, widgets }), temp_id: (tempid as string), width: dPage.value.width, height: dPage.value.height })
+  // const widgets = dWidgets.value // reviseData()
+  const data = widgetStore.dLayouts
+  const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id: (id as string), title: state.title || '未命名设计', data: JSON.stringify(data), temp_id: (tempid as string), width: dPage.value.width, height: dPage.value.height })
   stat !== 0 ? useNotification('保存成功', '可在"我的作品"中查看') : useNotification('保存失败', msg, { type: 'error' })
   !id && router.push({ path: '/home', query: { id: newId }, replace: true })
   controlStore.setShowMoveable(true)
@@ -168,7 +167,7 @@ async function saveTemp() {
               clearInterval(animation)
             }
           }, 800)
-          await _dl.downloadImg(api.home.download({ id, width, height }) + '&r=' + Math.random(), (progress: number, xhr: any) => {
+          await _dl.downloadImg(api.home.download({ id, width, height, index: pageStore.dCurrentPage }) + '&r=' + Math.random(), (progress: number, xhr: any) => {
             if (props.modelValue) {
               clearInterval(animation)
               progress >= timerCount && emit('change', { downloadPercent: Number(progress.toFixed(0)), downloadText: '图片生成中' })
@@ -198,7 +197,8 @@ async function load(cb: () => void) {
     await useFontStore.init() // 初始化加载字体
   }
   const apiName = tempId && !id ? 'getTempDetail' : 'getWorks'
-  if (w_h) {
+  if (w_h && !id && !tempId) {
+    // 用于初始化画布大小，创建空作品
     const wh: any = w_h.toString().split('*')
     wh[0] && (dPage.value.width = wh[0])
     wh[1] && (dPage.value.height = wh[1])
@@ -208,25 +208,29 @@ async function load(cb: () => void) {
     return
   }
   const { data: content, title, state: _state, width, height } = await api.home[apiName]({ id: id || tempId, type })
-  if (content) {
-    const data = JSON.parse(content)
-    state.stateBollean = !!_state
-    state.title = title
-    controlStore.setShowMoveable(false) // 清理掉上一次的选择框
-    
-    // this.$store.commit('setDWidgets', [])
-    if (type == 1) {
-      // 加载文字组合组件
-      dPage.value.width = width
-      dPage.value.height = height
-      widgetStore.addGroup(data)
+  if (!content) return
+  const data = JSON.parse(content)
+  state.stateBollean = !!_state
+  state.title = title
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
+  if (type == 1) {
+    // 加载文字组合组件
+    dPage.value.width = width
+    dPage.value.height = height
+    widgetStore.addGroup(data)
+  } else {
+    if (Array.isArray(data)) {
+      widgetStore.dLayouts = data
+      widgetStore.setDWidgets(widgetStore.getWidgets)
     } else {
-      pageStore.setDPage(data.page)
-      id ? widgetStore.setDWidgets(data.widgets) : widgetStore.setTemplate(data.widgets)
+      widgetStore.dLayouts = [{global: data.page, layers: data.widgets}]
+      id ? widgetStore.setDWidgets(widgetStore.getWidgets) : widgetStore.setTemplate(widgetStore.getWidgets)
     }
-    cb()
-    historyStore.pushHistory('请求加载load')
+    pageStore.setDPage(pageStore.getDPage)
+    // id ? widgetStore.setDWidgets(data.widgets) : widgetStore.setTemplate(data.widgets)
   }
+  cb()
+  historyStore.pushHistory('请求加载load')
 }
 
 function draw() {

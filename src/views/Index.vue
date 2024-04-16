@@ -4,7 +4,7 @@
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-04-10 07:16:48
+ * @LastEditTime: 2024-04-16 11:35:11
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -37,6 +37,8 @@
         <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
         <!-- 提供一个背景图层 -->
         <div class="shelter-bg transparent-bg" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
+        <!-- 多画板操作组件 -->
+        <template #bottom> <multipleBoards /> </template>
       </design-board>
       <style-panel ref="ref3"></style-panel>
     </div>
@@ -86,6 +88,7 @@ import { useCanvasStore, useControlStore, useHistoryStore, useWidgetStore, useGr
 import type { ButtonInstance } from 'element-plus'
 import Tour from './components/Tour.vue'
 import createDesign from '@/components/business/create-design'
+import multipleBoards from '@/components/modules/layout/multipleBoards'
 
 const ref1 = ref<ButtonInstance>()
 const ref2 = ref<ButtonInstance>()

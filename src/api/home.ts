@@ -2,14 +2,18 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-19 18:43:22
  * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-24 13:01:10
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-16 15:37:54
  */
 import fetch from '@/utils/axios'
 import _config from '@/config'
 
+function serialize(obj: any) {
+  return Object.keys(obj).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`).join('&');
+}
+
 // const screenshot_url = window.location.protocol + '//' + window.location.host + '/draw'
-export const download = (params: Type.Object = {}) => `${_config.SCREEN_URL}/api/screenshots?id=${params.id}&width=${params.width}&height=${params.height}`
+export const download = (params: Type.Object = {}) => `${_config.SCREEN_URL}/api/screenshots?${serialize(params)}`
 
 type IGetTempListParam = {
   search: string

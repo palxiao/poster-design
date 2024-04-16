@@ -3,14 +3,14 @@
  * @Date: 2024-03-18 21:00:00
  * @Description: Store方法export
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-10 08:17:16
+ * @LastEditTime: 2024-04-16 10:07:13
  */
 
 import { Store, defineStore } from "pinia";
 import { TInidDMovePayload, TMovePayload, dMove, initDMove, setDropOver, setMouseEvent, setdActiveElement, updateGroupSize, updateHoverUuid } from "./actions";
 import { TPageState } from "@/store/design/canvas/d";
 import { TInitResize, TSize, TdResizePayload, dResize, initDResize, resize, autoResizeAll } from "./actions/resize";
-import { TUpdateWidgetMultiplePayload, TUpdateWidgetPayload, TsetWidgetStyleData, addWidget, deleteWidget, setDWidgets, setWidgetStyle, updateWidgetData, updateWidgetMultiple, lockWidgets } from "./actions/widget";
+import { TUpdateWidgetMultiplePayload, TUpdateWidgetPayload, TsetWidgetStyleData, addWidget, deleteWidget, setDWidgets, updateDWidgets, setWidgetStyle, updateWidgetData, updateWidgetMultiple, lockWidgets } from "./actions/widget";
 import { addGroup } from "./actions/group";
 import { setTemplate } from "./actions/template";
 import { copyWidget, pasteWidget } from "./actions/clone";
@@ -18,6 +18,7 @@ import { TSelectWidgetData, TselectItem, selectItem, selectWidget, selectWidgets
 import { TUpdateAlignData, updateAlign } from "./actions/align";
 import { TWidgetJsonData, widgetJsonData } from "./getter";
 import { TupdateLayerIndexData, ungroup, updateLayerIndex } from "./actions/layer";
+import pageDefault from "../canvas/page-default";
 
 export type TdWidgetData = TPageState & Partial<TCommonItemData> & {
   parent?: string
@@ -33,6 +34,11 @@ export type TdWidgetData = TPageState & Partial<TCommonItemData> & {
   cropEdit?: boolean
   fontClass?: Record<string, any>
   writingMode?: string
+}
+
+export type TdLayout = {
+  global: TPageState
+  layers: TdWidgetData[]
 }
 
 export type TWidgetState = {
@@ -61,6 +67,8 @@ export type TWidgetState = {
   dDropOverUuid: string
   /** 已使用的组件 */
   dWidgets: TdWidgetData[]
+  /** 所有图层数据与页面数据 */
+  dLayouts: TdLayout[]
   /** 记录多选的组件 */
   dSelectWidgets: TdWidgetData[]
   /** 复制的组件（可能是单个也可能是数组） */
@@ -72,7 +80,7 @@ export type TWidgetState = {
 }
 
 type TGetter = {
-  getWidgetJsonData(state: TWidgetState): TWidgetJsonData
+  getWidgets(state: TWidgetState): TWidgetJsonData
 }
 
 type TAction = {
@@ -116,6 +124,7 @@ type TAction = {
   resize: (data: TSize) => void
   setWidgetStyle: (data: TsetWidgetStyleData) => void
   setDWidgets: (data: TdWidgetData[]) => void
+  updateDWidgets: () => void
   lockWidgets: () => void
   setMouseEvent: (e: MouseEvent | null) => void
   setdActiveElement: (data: TdWidgetData) => void
@@ -141,6 +150,10 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     dHoverUuid: '-1', // 鼠标在这个图层上
     dDropOverUuid: '', // 拖动时放在哪个图层上
     dWidgets: [], // 已使用的组件
+    dLayouts: [{
+      global: pageDefault,
+      layers: []
+    }], // 页面与图层数据
     dSelectWidgets: [], // 记录多选的组件
     selectItem: { data: null }, // 记录当前选择的元素, data
     activeMouseEvent: null, // 正在活动的鼠标事件
@@ -148,7 +161,7 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
   }),
 
   getters: {
-    getWidgetJsonData(store) {
+    getWidgets(store) {
       return widgetJsonData(store)
     }
   },
@@ -178,6 +191,7 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     resize(data) { resize(this, data) },
     setWidgetStyle(data) { setWidgetStyle(this, data) },
     setDWidgets(data) { setDWidgets(this, data) },
+    updateDWidgets() { updateDWidgets(this) },
     lockWidgets() { lockWidgets(this) },
     setMouseEvent(event) { setMouseEvent(this, event) },
     setdActiveElement(data) { setdActiveElement(this, data) },

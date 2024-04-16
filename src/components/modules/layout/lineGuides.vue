@@ -3,7 +3,7 @@
  * @Date: 2022-04-08 10:31:34
  * @Description: 标尺
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-03-11 01:42:25
+ * @LastEditTime: 2024-04-10 23:07:44
 -->
 <template>
   <div></div>
@@ -13,28 +13,27 @@
 import { watch } from 'vue'
 
 import Guides, { GuideOptions } from '@scena/guides'
-import { useCanvasStore } from '@/store';
+import { useCanvasStore } from '@/store'
 
 type TProps = {
   show: boolean
 }
 
 type TSameParams = {
-  backgroundColor: string,
+  backgroundColor: string
   lineColor: string
   textColor: string
   // direction: 'start',
   // height: 30,
-  displayDragPos: boolean,
-  dragPosFormat: (v: string | number) => string,
+  displayDragPos: boolean
+  dragPosFormat: (v: string | number) => string
 }
 
 type TGuidesData = Guides & GuideOptions
 
 const props = withDefaults(defineProps<TProps>(), {
-  show: false
+  show: false,
 })
-
 
 const canvasStore = useCanvasStore()
 const container = 'page-design' // page-design out-page
@@ -54,20 +53,6 @@ watch(
     changeScroll()
   },
 )
-
-// onMounted(() => {
-//   // let scrollX = 0
-//   // let scrollY = 0
-//   // window.addEventListener('resize', () => {
-//   //   guides.resize()
-//   // })
-//   // window.addEventListener('wheel', (e) => {
-//   //   scrollX += e.deltaX
-//   //   scrollY += e.deltaY
-//   //   guides.scrollGuides(scrollY)
-//   //   guides.scroll(scrollX)
-//   // })
-// })
 
 function destroy() {
   guidesTop?.destroy()

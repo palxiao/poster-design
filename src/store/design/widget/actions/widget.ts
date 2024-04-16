@@ -2,12 +2,12 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-28 21:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-28 14:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-16 11:12:40
  */
 
-import { useCanvasStore, useHistoryStore } from "@/store"
-import { TWidgetStore, TdWidgetData } from ".."
+import { useCanvasStore, useHistoryStore } from '@/store'
+import { TWidgetStore, TdWidgetData } from '..'
 import { customAlphabet } from 'nanoid/non-secure'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
@@ -57,11 +57,11 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
         }
         break
     }
-    (widget[key] as TUpdateWidgetPayload['value']) = value
+    ;(widget[key] as TUpdateWidgetPayload['value']) = value
     if (pushHistory) {
       const historyStore = useHistoryStore()
       setTimeout(() => {
-        historyStore.pushHistory("updateWidgetData")
+        historyStore.pushHistory('updateWidgetData')
         // pushHistory && store.dispatch('pushHistory', 'updateWidgetData')
       }, 100)
     }
@@ -107,12 +107,12 @@ export function updateWidgetMultiple(store: TWidgetStore, { uuid, data, pushHist
           }
           break
       }
-      (widget[key] as number | string) = value
+      ;(widget[key] as number | string) = value
     }
   }
   setTimeout(() => {
     const historyStore = useHistoryStore()
-    historyStore.pushHistory("updateWidgetMultiple")
+    historyStore.pushHistory('updateWidgetMultiple')
     // store.dispatch('pushHistory', 'updateWidgetMultiple')
   }, 100)
 }
@@ -133,7 +133,7 @@ export function addWidget(store: TWidgetStore, setting: TdWidgetData) {
   //   uuid: store.dWidgets[len - 1].uuid,
   // })
 
-  historyStore.pushHistory("addWidget")
+  historyStore.pushHistory('addWidget')
   // store.dispatch('pushHistory', 'addWidget')
   canvasStore.reChangeCanvas()
   // store.dispatch('reChangeCanvas')
@@ -154,12 +154,15 @@ export function deleteWidget(store: TWidgetStore) {
       const uuid = selectWidgets[i].uuid
       const index = widgets.findIndex((item) => item.uuid === uuid)
       widgets.splice(index, 1)
-      try {
-        // 清除掉可能存在的选中框
-        document.getElementById(uuid)?.classList.remove('widget-selected')
-      } catch (e) {}
+      // try {
+      //   // 清除掉可能存在的中框
+      //   document.getElementById(uuid)?.classList.remove('widget-selected')
+      // } catch (e) {}
     }
     store.dSelectWidgets = []
+    store.selectWidget({
+      uuid: '-1',
+    })
   } else {
     if (activeElement.type === 'page') {
       return
@@ -213,7 +216,7 @@ export function deleteWidget(store: TWidgetStore) {
     // store.dispatch('updateGroupSize', store.dActiveElement.uuid)
   }
 
-  historyStore.pushHistory("deleteWidget")
+  historyStore.pushHistory('deleteWidget')
   // store.dispatch('pushHistory', 'deleteWidget')
   canvasStore.reChangeCanvas()
   // store.dispatch('reChangeCanvas')
@@ -229,11 +232,19 @@ export type TsetWidgetStyleData = {
 export function setWidgetStyle(state: TWidgetStore, { uuid, key, value, pushHistory }: TsetWidgetStyleData) {
   const widget = state.dWidgets.find((item) => item.uuid === uuid)
   if (!widget) return
-  (widget[key] as Record<string, any>) = value
+  ;(widget[key] as Record<string, any>) = value
 }
 
 export function setDWidgets(state: TWidgetStore, e: TdWidgetData[]) {
   state.dWidgets = e
+  updateDWidgets(state)
+}
+
+export function updateDWidgets(state: TWidgetStore) {
+  const pageStore = useCanvasStore()
+  const { dCurrentPage } = pageStore
+  state.dLayouts[dCurrentPage].layers = state.dWidgets
+  state.dWidgets = state.getWidgets
 }
 
 // 锁定所有图层 / 再次调用时还原图层

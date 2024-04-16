@@ -3,7 +3,7 @@
  * @Date: 2024-04-05 06:23:23
  * @Description:  
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-05 14:53:01
+ * @LastEditTime: 2024-04-16 12:13:54
  */
 export type TScreeData = {
   /** 记录编辑界面的宽度 */
@@ -20,6 +20,10 @@ export type TGuidelinesData = {
 export type TCanvasState = {
   /** 画布缩放百分比 */
   dZoom: number
+  /** 画布默认预留边距 */
+  dPresetPadding: number,
+  /** 画布底部工具栏高度 */
+  dBottomHeight: number,
   /** 画布垂直居中修正值 */
   dPaddingTop: number
   /** 编辑界面 */
@@ -28,6 +32,8 @@ export type TCanvasState = {
   guidelines: TGuidelinesData
   /** 页面数据 */
   dPage: TPageState
+  /** 当前页面下标 */
+  dCurrentPage: number
 }
 
 export type TStoreAction = {
@@ -47,8 +53,13 @@ export type TStoreAction = {
     value: TPageState[T]
     pushHistory?: boolean
   }): void
+  getDPage(data: TPageState): void
   /** 设置dPage */
   setDPage(data: TPageState): void
+  /** 更新 Page（从layouts获取）*/
+  updateDPage(): void
+  /** 设置底部工具栏高度 */
+  setBottomHeight(h: number): void
 }
 
 export type TPageState = {
@@ -75,11 +86,5 @@ export type TPageState = {
   opacity: number
   /** 强制刷新用 */
   tag: number
-  setting:{
-    label: string
-    parentKey: string
-    value: boolean
-  }[]
-  record: Record<string, any>
 }
 

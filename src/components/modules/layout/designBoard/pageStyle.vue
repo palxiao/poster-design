@@ -1,10 +1,8 @@
 <template>
   <div id="page-style">
-    <div v-if="state.showBgLib" style="width: 256px;height: 100%;">
-      <span class="header-back" @click="state.showBgLib = false">
-        <i class="iconfont icon-right"></i> 选择背景
-      </span>
-      <bg-img-list-wrap style="padding-top: 2rem;" model="stylePanel" />
+    <div v-if="state.showBgLib" style="width: 256px; height: 100%">
+      <span class="header-back" @click="state.showBgLib = false"> <i class="iconfont icon-right"></i> 选择背景 </span>
+      <bg-img-list-wrap style="padding-top: 2rem" model="stylePanel" />
     </div>
     <el-collapse v-else v-model="state.activeNames">
       <el-collapse-item title="画布尺寸" name="1">
@@ -13,20 +11,20 @@
         </sizeEditor>
       </el-collapse-item>
       <el-collapse-item title="背景设置" name="2">
-        <el-button style="width: 100%; margin: 0 0 1rem 0;" type="primary" link @click="state.showBgLib = true">在背景库中选择</el-button>
+        <el-button style="width: 100%; margin: 0 0 1rem 0" type="primary" link @click="state.showBgLib = true">在背景库中选择</el-button>
         <Tabs :value="state.mode" @update:value="onChangeMode">
           <TabPanel v-for="label in state.modes" :key="label" :label="label"></TabPanel>
         </Tabs>
-        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色','渐变']" @change="colorChange" />
+        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色', '渐变']" @change="colorChange" />
         <div v-if="state.mode === '图片' && state.innerElement.backgroundImage" style="margin-top: 1.2rem">
           <div class="backgroud-wrap">
             <el-image style="height: 100%" :src="state.innerElement.backgroundImage" fit="contain"></el-image>
             <div class="bg-control">
               <div class="btns">
-                <uploader style="width: 47%;" @done="uploadImgDone">
-                  <el-button style="width: 100%;" plain>上传图片</el-button>
+                <uploader style="width: 47%" @done="uploadImgDone">
+                  <el-button style="width: 100%" plain>上传图片</el-button>
                 </uploader>
-                <el-button style="width: 47%;" @click="state.showBgLib = true" plain>背景库</el-button>
+                <el-button style="width: 47%" @click="state.showBgLib = true" plain>背景库</el-button>
               </div>
             </div>
             <div class="bg-options">
@@ -91,7 +89,7 @@ const state = reactive<TState>({
   downP: 0,
   mode: '颜色',
   modes: ['颜色', '图片'],
-  showBgLib: false
+  showBgLib: false,
 })
 const sizeEditRef: Ref<typeof createDesign | null> = ref(null)
 // const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
@@ -103,7 +101,7 @@ watch(
   () => {
     change()
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -111,7 +109,7 @@ watch(
   () => {
     changeValue()
   },
-  { deep: true }
+  { deep: true },
 )
 
 onMounted(() => {
@@ -144,12 +142,9 @@ function changeValue() {
     return
   }
   for (let key in state.innerElement) {
-    if (
-      key !== 'setting' && key !== 'record' &&
-      state.innerElement[key] !== (dActiveElement.value as Record<string, any>)[key]
-    ) {
+    if (state.innerElement[key] !== (dActiveElement.value as Record<string, any>)[key]) {
       if (state.ingoreKeys.indexOf(key) !== -1) {
-        (dActiveElement.value as Record<string, any>)[key] = state.innerElement[key]
+        ;(dActiveElement.value as Record<string, any>)[key] = state.innerElement[key]
       } else {
         pageStore.updatePageData({
           key: key as keyof TPageState,
@@ -197,7 +192,7 @@ async function shiftOut() {
   setting.width = state.innerElement.width
   setting.height = state.innerElement.height
   setting.imgUrl = state.innerElement.backgroundImage
-  setting.uuid = `bg-${(new Date()).getTime()}`
+  setting.uuid = `bg-${new Date().getTime()}`
   widgetStore.dWidgets.unshift(setting)
   widgetStore.selectWidget({
     uuid: widgetStore.dWidgets[0].uuid,
@@ -229,25 +224,26 @@ function openSizeEdit() {
   margin-bottom: 10px;
 }
 .btn-wrap {
-  width: 100%; margin-top: 1.2rem;
+  width: 100%;
+  margin-top: 1.2rem;
 }
 .header {
   &-back {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      color: #333;
-      font-size: 14px;
-      font-weight: 600;
-      height: 2.9rem;
-      position: absolute;
-      z-index: 2;
-      background: #ffffff;
-      width: 259px;
-      .icon-right {
-        transform: rotate(180deg);
-      }
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    height: 2.9rem;
+    position: absolute;
+    z-index: 2;
+    background: #ffffff;
+    width: 259px;
+    .icon-right {
+      transform: rotate(180deg);
     }
+  }
 }
 
 .backgroud-wrap {

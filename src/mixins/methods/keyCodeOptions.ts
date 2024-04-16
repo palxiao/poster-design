@@ -3,7 +3,7 @@
  * @Date: 2022-03-09 14:20:09
  * @Description: 处理常用操作
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-04 00:33:01
+ * @LastEditTime: 2024-04-16 19:19:36
  */
 import { useControlStore, useWidgetStore } from '@/store'
 import { TdWidgetData } from '@/store/design/widget'
@@ -50,7 +50,7 @@ export default function keyCodeOptions(e: any, params: any) {
       break
   }
 
-  if (e.key === ' ') {
+  if (e.key === ' ' && widgetStore.dActiveElement?.uuid == '-1') {
     dealWithSpace(e)
   }
 }

@@ -150,7 +150,7 @@ defineExpose({
     left: 394px;
     pointer-events: none;
     z-index: 99;
-    width: 20px;
+    width: 15px;
     height: 100%;
     display: -webkit-box;
     display: -webkit-flex;

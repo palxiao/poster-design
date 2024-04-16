@@ -3,7 +3,7 @@
  * @Date: 2024-04-09 11:24:57
  * @Description: 创建/编辑画布尺寸
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-10 17:29:15
+ * @LastEditTime: 2024-04-16 17:11:59
 -->
 <template>
   <div>
@@ -32,9 +32,10 @@ import { ElCheckbox } from 'element-plus'
 import { useRouter } from 'vue-router'
 import sizeEditor from './sizeEditor.vue'
 import sizes from '@/assets/data/PageSizeData'
-import { useWidgetStore } from '@/store';
+import { useWidgetStore, useControlStore } from '@/store';
 
 const router = useRouter()
+const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const props = withDefaults(
   defineProps<{
@@ -54,6 +55,7 @@ const applySize = ({ width, height }: any) => {
 }
 
 const open = () => {
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择框
   if (props.params) {
     page.value.width = props.params.width
     page.value.height = props.params.height

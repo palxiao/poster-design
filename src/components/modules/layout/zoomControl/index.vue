@@ -51,7 +51,7 @@ const canvasStore = useCanvasStore()
 const { dPage } = storeToRefs(useCanvasStore())
 const { zoomScreenChange } = storeToRefs(useForceStore())
 const { dZoom, dScreen } = storeToRefs(canvasStore)
-
+const presetPadding = canvasStore.dPresetPadding
 
 watch(
   activezoomIndex,
@@ -142,10 +142,6 @@ function changeScreen() {
       width: screen.offsetWidth,
       height: screen.offsetHeight,
     })
-    // store.dispatch('updateScreen', {
-    //   width: screen.offsetWidth,
-    //   height: screen.offsetHeight,
-    // })
   }, 300)
 }
 
@@ -239,27 +235,29 @@ function nearZoom(add?: boolean) {
 }
 
 function calcZoom() {
-  let widthZoom = ((dScreen.value.width - 142) * 100) / dPage.value.width
-  let heightZoom = ((dScreen.value.height - 122) * 100) / dPage.value.height
+  // let widthZoom = ((dScreen.value.width - 142) * 100) / dPage.value.width
+  // let heightZoom = ((dScreen.value.height - 122) * 100) / dPage.value.height
+  const diffHeight = presetPadding * 2 + 2 + canvasStore.dBottomHeight
+  const diffWidth = presetPadding * 2 + 22
+  let widthZoom = ((dScreen.value.width - diffWidth) * 100) / dPage.value.width
+  let heightZoom = ((dScreen.value.height - diffHeight) * 100) / dPage.value.height
   bestZoom.value = Math.min(widthZoom, heightZoom)
   return bestZoom.value
 }
 
 async function autoFixTop() {
   await nextTick()
-  const presetPadding = 60
   const el = document.getElementById('out-page')
   if (!el) return
-  const clientHeight = window.innerHeight - 54
+  const headerBarHeight = 54
+  const clientHeight = window.innerHeight - headerBarHeight - canvasStore.dBottomHeight
   // const parentHeight = (el.offsetParent as HTMLElement).offsetHeight - 54
   let padding = (clientHeight - el.offsetHeight) / 2
   if (typeof curAction.value === 'undefined') {
     padding += presetPadding / 2
   }
   curAction.value === 'add' && (padding -= presetPadding)
-
   canvasStore.updatePaddingTop(padding > 0 ? padding : 0)
-  // store.commit('updatePaddingTop', padding > 0 ? padding : 0)
 }
 
 defineExpose({
@@ -280,26 +278,28 @@ defineExpose({
 @z-border-color: #e6e6e6;
 
 #zoom-control {
-  bottom: 20px;
+  bottom: 10px;
   position: absolute;
-  right: 302px;
+  right: 292px;
   z-index: 1000;
   .zoom-control-wrap {
     display: flex;
     flex-direction: row;
     font-size: 14px;
-    height: 40px;
+    height: 38px;
     .radius-left {
-      border-bottom-left-radius: 50%;
-      border-top-left-radius: 50%;
+      border-bottom-left-radius: 6px;
+      border-top-left-radius: 6px;
       border-block-end: 1px solid @z-border-color;
       border-block-start: 1px solid @z-border-color;
+      border-left: 1px solid @z-border-color;
     }
     .radius-right {
-      border-bottom-right-radius: 50%;
-      border-top-right-radius: 50%;
+      border-bottom-right-radius: 6px;
+      border-top-right-radius: 6px;
       border-block-end: 1px solid @z-border-color;
       border-block-start: 1px solid @z-border-color;
+      border-right: 1px solid @z-border-color;
     }
     .zoom-icon {
       align-items: center;
@@ -378,10 +378,4 @@ defineExpose({
     }
   }
 }
-// #zoom-control-active {
-//   background-color: @color1;
-//   background-color: @color5;
-//   color: @color-select;
-//   color: @color-select;
-// }
 </style>
