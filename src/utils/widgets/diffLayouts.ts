@@ -3,7 +3,7 @@
  * @Date: 2023-09-14 11:33:44
  * @Description: 依赖不能直接引入，所以暂时不使用WebWorker
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 20:52:17
+ * @LastEditTime: 2024-04-19 03:07:18
  */
 import diff from 'microdiff'
 import { produce, applyPatches, enablePatches } from 'immer'
@@ -25,6 +25,7 @@ export default class {
     this.notifi = cb
   }
   public postMessage(e: any) {
+    if (!e) return
     if (e.op === 'done') {
       if (!cloneData) return
       let fork = JSON.parse(cloneData)

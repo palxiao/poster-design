@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2024-03-03 19:00:00
  * @Description: 裁剪组件
- * @LastEditors: ShawnPhang <site: book.palxp.com>, Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-03-03 19:00:00
 -->
 <template>
@@ -12,7 +12,7 @@
         <upload-filled style="width: 64px; height: 64px" />
         <div class="el-upload__text">在此拖入或选择<em>上传图片</em></div>
       </div>
-      <div class="el-upload__tip">服务器带宽过低，为了更好的体验，请上传 2M 内的图片</div>
+      <div class="el-upload__tip">服务器带宽小，为了更好的体验，请上传 2M 内的图片</div>
     </uploader>
     <el-progress v-if="!state.cutImage && state.progressText" :percentage="state.progress">
       <el-button text>
@@ -29,10 +29,10 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button v-show="state.rawImage && state.toolModel" @click="clear">清空重选</el-button>
+        <el-button v-show="state.cutImage && state.toolModel" @click="clear">清除重选</el-button>
         <el-button v-show="state.cutImage" type="primary" plain @click="edit">进入编辑模式</el-button>
-        <el-button v-show="state.cutImage && state.toolModel" type="primary" plain @click="download"> 下载 </el-button>
-        <el-button v-show="state.cutImage && !state.toolModel" v-loading="state.loading" type="primary" plain @click="cutDone"> {{ state.loading ? '上传中..' : '完成抠图' }} </el-button>
+        <el-button v-show="state.cutImage && state.toolModel" type="primary" @click="download"> 下载 </el-button>
+        <el-button v-show="state.cutImage && !state.toolModel" v-loading="state.loading" type="primary" @click="cutDone"> {{ state.loading ? '上传中..' : '完成抠图' }} </el-button>
       </span>
     </template>
     <ImageExtraction ref="matting" />
@@ -85,12 +85,13 @@ const raw = ref(null)
 const matting = ref<typeof ImageExtraction | null>(null)
 
 const open = (file: File) => {
+  clear()
   state.loading = false
   state.show = true
-  // store.commit('setShowMoveable', false)
   controlStore.setShowMoveable(false)
   nextTick(() => {
     if (file) {
+      state.toolModel = false // 在编辑模式打开则不展示工具模式下的下载和清除按钮
       handleUploaderLoad(file)
     }
   })
@@ -106,13 +107,10 @@ const handleUploaderLoad = (file: File) => {
     const resultImage = URL.createObjectURL(result)
     state.rawImage && (state.cutImage = resultImage)
     requestAnimationFrame(run)
-    
   })
-  state.toolModel = false
 }
 
 const handleClose = () => {
-  // store.commit('setShowMoveable', true)
   controlStore.setShowMoveable(true)
 }
 
@@ -127,7 +125,6 @@ const download = () => {
 const clear = () => {
   URL.revokeObjectURL(state.rawImage)
   state.rawImage = ''
-  // URL.revokeObjectURL(state.cutImage)
   state.cutImage = ''
   state.percent = 0
   state.offsetWidth = 0
