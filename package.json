@@ -25,6 +25,8 @@
     "element-plus": "^2.6.3",
     "fontfaceobserver": "^2.1.0",
     "html2canvas": "^1.4.1",
+    "immer": "^10.0.4",
+    "microdiff": "^1.4.0",
     "mitt": "^3.0.1",
     "moveable": "^0.26.0",
     "moveable-helper": "^0.4.0",

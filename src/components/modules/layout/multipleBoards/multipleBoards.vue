@@ -3,7 +3,7 @@
  * @Date: 2024-04-11 17:27:58
  * @Description: 多画板操作界面
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-17 11:53:48
+ * @LastEditTime: 2024-04-18 17:12:34
 -->
 <template>
   <div :style="{ position, bottom: -1 * st + 'px', left: sl + 'px' }" :class="['artboards', isFold ? 'fold' : 'unfold']">
@@ -130,7 +130,7 @@ function addLayer() {
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
   widgetStore.dLayouts.push({ global: getInitPage(), layers: [] })
   canvasStore.dCurrentPage = dLayouts.value.length - 1
-  widgetStore.setDWidgets(widgetStore.getWidgets)
+  widgetStore.setDWidgets(widgetStore.getWidgets())
   canvasStore.setDPage(getInitPage())
   canvasStore.updateDPage()
   widgetStore.selectWidget({ uuid: '-1' })
@@ -139,7 +139,7 @@ function addLayer() {
 function selectPoster(i: number) {
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
   canvasStore.dCurrentPage = i
-  widgetStore.setDWidgets(widgetStore.getWidgets)
+  widgetStore.setDWidgets(widgetStore.getWidgets())
   canvasStore.setDPage(dLayouts.value[i].global)
   widgetStore.selectWidget({ uuid: '-1' })
 }

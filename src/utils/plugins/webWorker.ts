@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-03-06 13:53:30
  * @Description: 计算密集型任务
- * @LastEditors: ShawnPhang <https://m.palxp.cn>, Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-05 12:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-04-17 15:58:53
  */
 export default class WebWorker {
   private worker: Worker | undefined
@@ -19,17 +19,20 @@ export default class WebWorker {
         }))
     }
   }
-  public start(data: any) {
+  public start(data?: any, cb?: Function) {
     return new Promise((resolve) => {
       if (!this.worker) resolve('')
       else {
         // 监听Web Worker的消息
         this.worker.onmessage = (e) => {
-          resolve(e.data)
+          cb ? cb(e.data) : resolve(e.data)
         }
         // 发送数据给Web Worker
         this.worker.postMessage(data)
       }
     })
+  }
+  public send(data?: any) {
+    this.worker?.postMessage(data)
   }
 }

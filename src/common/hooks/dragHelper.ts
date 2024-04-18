@@ -3,12 +3,10 @@
  * @Date: 2023-07-10 14:58:48
  * @Description: 拖拽优化
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-22 18:11:15
+ * @LastEditTime: 2024-04-18 16:17:36
  */
 
 import { useControlStore, useWidgetStore } from "@/store"
-
-// import store from '@/store'
 
 type TInitial = {
   offsetX: number

@@ -3,7 +3,7 @@
  * @Date: 2024-03-28 21:00:00
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 11:12:40
+ * @LastEditTime: 2024-04-18 18:49:09
  */
 
 import { useCanvasStore, useHistoryStore } from '@/store'
@@ -240,11 +240,21 @@ export function setDWidgets(state: TWidgetStore, e: TdWidgetData[]) {
   updateDWidgets(state)
 }
 
+export function setDLayouts(state: TWidgetStore, data: any[]) {
+  state.dLayouts = data
+  state.dWidgets = state.getWidgets()
+  const pageStore = useCanvasStore()
+  pageStore.setDPage(data[pageStore.dCurrentPage].global)
+  setTimeout(() => {
+    state.dActiveElement = pageStore.dPage
+  }, 150);
+}
+
 export function updateDWidgets(state: TWidgetStore) {
   const pageStore = useCanvasStore()
   const { dCurrentPage } = pageStore
   state.dLayouts[dCurrentPage].layers = state.dWidgets
-  state.dWidgets = state.getWidgets
+  state.dWidgets = state.getWidgets()
 }
 
 // 锁定所有图层 / 再次调用时还原图层

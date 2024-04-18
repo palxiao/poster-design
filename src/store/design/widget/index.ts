@@ -3,20 +3,21 @@
  * @Date: 2024-03-18 21:00:00
  * @Description: Store方法export
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 10:07:13
+ * @LastEditTime: 2024-04-18 17:11:51
  */
 
 import { Store, defineStore } from "pinia";
+import { useCanvasStore } from '@/store'
 import { TInidDMovePayload, TMovePayload, dMove, initDMove, setDropOver, setMouseEvent, setdActiveElement, updateGroupSize, updateHoverUuid } from "./actions";
 import { TPageState } from "@/store/design/canvas/d";
 import { TInitResize, TSize, TdResizePayload, dResize, initDResize, resize, autoResizeAll } from "./actions/resize";
-import { TUpdateWidgetMultiplePayload, TUpdateWidgetPayload, TsetWidgetStyleData, addWidget, deleteWidget, setDWidgets, updateDWidgets, setWidgetStyle, updateWidgetData, updateWidgetMultiple, lockWidgets } from "./actions/widget";
+import { TUpdateWidgetMultiplePayload, TUpdateWidgetPayload, TsetWidgetStyleData, addWidget, deleteWidget, setDWidgets, updateDWidgets, setWidgetStyle, updateWidgetData, updateWidgetMultiple, lockWidgets, setDLayouts } from "./actions/widget";
 import { addGroup } from "./actions/group";
 import { setTemplate } from "./actions/template";
 import { copyWidget, pasteWidget } from "./actions/clone";
 import { TSelectWidgetData, TselectItem, selectItem, selectWidget, selectWidgetsInOut } from "./actions/select";
 import { TUpdateAlignData, updateAlign } from "./actions/align";
-import { TWidgetJsonData, widgetJsonData } from "./getter";
+// import { TWidgetJsonData, widgetJsonData } from "./getter";
 import { TupdateLayerIndexData, ungroup, updateLayerIndex } from "./actions/layer";
 import pageDefault from "../canvas/page-default";
 
@@ -80,7 +81,7 @@ export type TWidgetState = {
 }
 
 type TGetter = {
-  getWidgets(state: TWidgetState): TWidgetJsonData
+  // getWidgets(state: TWidgetState): TWidgetJsonData
 }
 
 type TAction = {
@@ -124,11 +125,13 @@ type TAction = {
   resize: (data: TSize) => void
   setWidgetStyle: (data: TsetWidgetStyleData) => void
   setDWidgets: (data: TdWidgetData[]) => void
+  setDLayouts: (data: TdLayout) => void
   updateDWidgets: () => void
   lockWidgets: () => void
   setMouseEvent: (e: MouseEvent | null) => void
   setdActiveElement: (data: TdWidgetData) => void
   autoResizeAll: (data: TSize) => void
+  getWidgets: () => TdWidgetData[]
 }
 
 const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("widgetStore", {
@@ -160,11 +163,11 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     dCopyElement: [], // 复制的组件（可能是单个也可能是数组）
   }),
 
-  getters: {
-    getWidgets(store) {
-      return widgetJsonData(store)
-    }
-  },
+  // getters: {
+  //   getWidgets(store) {
+  //     return widgetJsonData(store)
+  //   }
+  // },
 
   actions: {
     initDMove(payload) { initDMove(this, payload) },
@@ -195,7 +198,13 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     lockWidgets() { lockWidgets(this) },
     setMouseEvent(event) { setMouseEvent(this, event) },
     setdActiveElement(data) { setdActiveElement(this, data) },
-    autoResizeAll(data) { autoResizeAll(this, data) }
+    autoResizeAll(data) { autoResizeAll(this, data) },
+    setDLayouts(data) { setDLayouts(this, data) },
+    getWidgets() {
+      const pageStore = useCanvasStore()
+      !this.dLayouts[pageStore.dCurrentPage] && pageStore.dCurrentPage--
+      return this.dLayouts[pageStore.dCurrentPage].layers
+    }
   }
 })
 

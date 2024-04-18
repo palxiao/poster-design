@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 15:38:39
+ * @LastEditTime: 2024-04-18 17:13:24
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -221,10 +221,10 @@ async function load(cb: () => void) {
   } else {
     if (Array.isArray(data)) {
       widgetStore.dLayouts = data
-      widgetStore.setDWidgets(widgetStore.getWidgets)
+      widgetStore.setDWidgets(widgetStore.getWidgets())
     } else {
       widgetStore.dLayouts = [{global: data.page, layers: data.widgets}]
-      id ? widgetStore.setDWidgets(widgetStore.getWidgets) : widgetStore.setTemplate(widgetStore.getWidgets)
+      id ? widgetStore.setDWidgets(widgetStore.getWidgets()) : widgetStore.setTemplate(widgetStore.getWidgets())
     }
     pageStore.setDPage(pageStore.getDPage)
     // id ? widgetStore.setDWidgets(data.widgets) : widgetStore.setTemplate(data.widgets)

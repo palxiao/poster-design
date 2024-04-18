@@ -4,7 +4,7 @@
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-04-16 11:35:11
+ * @LastEditTime: 2024-04-18 18:14:36
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -89,6 +89,8 @@ import type { ButtonInstance } from 'element-plus'
 import Tour from './components/Tour.vue'
 import createDesign from '@/components/business/create-design'
 import multipleBoards from '@/components/modules/layout/multipleBoards'
+import useHistory from '@/common/hooks/history'
+useHistory()
 
 const ref1 = ref<ButtonInstance>()
 const ref2 = ref<ButtonInstance>()
@@ -113,7 +115,7 @@ const historyStore = useHistoryStore()
 const groupStore = useGroupStore()
 const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom } = storeToRefs(useCanvasStore())
-const { dHistoryParams } = storeToRefs(useHistoryStore())
+const { dHistoryParams, dHistoryStack } = storeToRefs(useHistoryStore())
 
 const state = reactive<TState>({
   style: {
@@ -149,13 +151,14 @@ function jump2home() {
 }
 
 const undoable = computed(() => {
-  return !(
-    dHistoryParams.value.index === -1 || 
-    (dHistoryParams.value.index === 0 && dHistoryParams.value.length === dHistoryParams.value.maxLength))
+  return dHistoryParams.value.stackPointer >= 0
+  // return !(
+  //   dHistoryParams.value.index === -1 || 
+  //   (dHistoryParams.value.index === 0 && dHistoryParams.value.length === dHistoryParams.value.maxLength))
 })
 
 const redoable = computed(() => {
-  return !(dHistoryParams.value.index === dHistoryParams.value.length - 1)
+  return !(dHistoryParams.value.stackPointer === dHistoryStack.value.changes.length - 1)
 })
 
 function zoomSub() {
@@ -195,11 +198,9 @@ onBeforeUnmount(() => {
   document.removeEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   document.oncontextmenu = null
 })
-    // ...mapActions(['selectWidget', 'initGroupJson', 'handleHistory']),
 
 function handleHistory(data: "undo" | "redo") {
   historyStore.handleHistory(data)
-  // store.dispatch('handleHistory', data)
 }
 
 function changeLineGuides() {
