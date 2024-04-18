@@ -3,7 +3,7 @@
  * @Date: 2022-03-06 13:53:30
  * @Description: 计算密集型任务
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-17 15:58:53
+ * @LastEditTime: 2024-04-18 20:02:55
  */
 export default class WebWorker {
   private worker: Worker | undefined
