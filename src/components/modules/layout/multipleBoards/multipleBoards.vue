@@ -3,15 +3,15 @@
  * @Date: 2024-04-11 17:27:58
  * @Description: 多画板操作界面
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 22:58:33
+ * @LastEditTime: 2024-04-17 11:53:48
 -->
 <template>
   <div :style="{ position, bottom: -1 * st + 'px', left: sl + 'px' }" :class="['artboards', isFold ? 'fold' : 'unfold']">
-    <div class="wrap">
+    <div ref="listRef" class="wrap">
       <div v-if="isFold" v-show="dLayouts.length > 0" class="btn" @click="isFold = !isFold">画板 {{ index + 1 }}/{{ dLayouts.length }} <i class="icon sd-zhankai" /></div>
       <div class="list" v-else>
         <span @click="isFold = !isFold" class="icon-btn"><i class="icon sd-zhankai" /></span>
-        <div v-for="(l, li) in dLayouts" :key="'l' + li" :style="{width: getPW(l.global)+'px'}" @click="selectPoster(li)" :class="['item-box', index == li ? 'item-select' : 'item-default']">
+        <div v-for="(l, li) in dLayouts" :key="'l' + li" :style="{ width: getPW(l.global) + 'px' }" @click="selectPoster(li)" :class="['item-box', index == li ? 'item-select' : 'item-default']">
           <div
             class="mini-poster"
             :style="{
@@ -53,6 +53,7 @@ const position: Ref = ref('absolute') // sticky
 const isFold = ref(true)
 const st = ref(0)
 const sl = ref(0)
+const listRef: Ref<HTMLElement | null> = ref(null)
 const index = computed(() => canvasStore.dCurrentPage)
 const { dZoom, dPage } = storeToRefs(canvasStore)
 const { dWidgets, dLayouts } = storeToRefs(widgetStore)
@@ -80,10 +81,15 @@ let mainEl: any = null
 onMounted(async () => {
   await nextTick()
   mainEl = document.getElementById('main')
-
-  mainEl.addEventListener('scroll', function (e) {
+  mainEl.addEventListener('scroll', function (e: any) {
     st.value = mainEl.scrollTop
     sl.value = mainEl.scrollLeft
+  })
+
+  listRef.value?.addEventListener('wheel', (event) => {
+    event.preventDefault()
+    // 使用滚轮横向滚动
+    listRef.value.scrollLeft += event.deltaY
   })
 })
 
