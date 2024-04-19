@@ -3,7 +3,7 @@
  * @Date: 2020-07-22 20:13:14
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-07 12:23:57
+ * @LastEditTime: 2024-04-16 15:43:29
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
 const uuid = require('../utils/uuid.ts')
@@ -55,8 +55,9 @@ module.exports = {
      * @apiParam {String} type 可选, file正常截图返回，cover封面生成，默认file
      * @apiParam {String} size 可选, 按比例缩小到宽度
      * @apiParam {String} quality 可选, 质量
+     * @apiParam {String|Number} index 可选, 下载哪个画板
      */
-    let { id, tempid, tempType, width, height, screenshot_url, type = 'file', size, quality } = req.query
+    let { id, tempid, tempType, width, height, screenshot_url, type = 'file', size, quality, index = 0 } = req.query
     const url = (screenshot_url || drawLink) + `${id ? '?id=' : '?tempid='}`
     id = id || tempid
     const path = filePath + `${id}-screenshot.png`
@@ -67,7 +68,7 @@ module.exports = {
         res.json({ code: 200, msg: '服务器表示顶不住啊，等等再来吧~' })
         return
       }
-      const targetUrl = url + id + `${tempType?'&tempType='+tempType:''}`
+      const targetUrl = url + id + `${tempType?'&tempType='+tempType:''}` + `&index=${index}`
       queueRun(saveScreenshot, targetUrl, { width, height, path, thumbPath, size, quality })
         .then(() => {
           res.setHeader('Content-Type', 'image/jpg')

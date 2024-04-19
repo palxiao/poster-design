@@ -3,7 +3,7 @@
  * @Date: 2024-04-16 10:06:23
  * @Description:  
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 10:06:32
+ * @LastEditTime: 2024-04-19 15:42:40
  */
 export default {
   name: '新画板',
@@ -19,4 +19,5 @@ export default {
   backgroundTransform: {},
   opacity: 1, // 透明度
   tag: 0, // 强制刷新用
+  record: {}
 }

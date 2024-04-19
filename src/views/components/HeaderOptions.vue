@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 17:13:24
+ * @LastEditTime: 2024-04-19 11:22:40
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -78,7 +78,7 @@ const historyStore = useHistoryStore()
 const { dPage } = storeToRefs(pageStore)
 const { tempEditing } = storeToRefs(userStore)
 const { dWidgets } = storeToRefs(widgetStore)
-const { dHistory, dPageHistory } = storeToRefs(useHistoryStore())
+const { dHistoryStack } = storeToRefs(useHistoryStore())
 
 
 const state = reactive<TState>({
@@ -90,8 +90,8 @@ const state = reactive<TState>({
 
 // 保存作品
 async function save(hasCover: boolean = false) {
-  // Bugs: 历史操作有问题，且page操作未及时入栈 proxy?.dPageHistory
-  if (dHistory.value.length <= 0) {
+  // 没有任何修改记录则不保存
+  if (dHistoryStack.value.changes.length <= 0) {
     return
   }
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
