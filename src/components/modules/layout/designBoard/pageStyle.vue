@@ -5,6 +5,11 @@
       <bg-img-list-wrap style="padding-top: 2rem" model="stylePanel" />
     </div>
     <el-collapse v-else v-model="state.activeNames">
+      <el-collapse-item title="设置动画" name="0" @click="openAnimationEdit">
+        <animationEdit :params="state.innerElement">
+            <div>test slot</div>
+        </animationEdit>
+      </el-collapse-item>
       <el-collapse-item title="画布尺寸" name="1">
         <sizeEditor :params="state.innerElement">
           <i @click="openSizeEdit" class="icon sd-edit"></i>
@@ -47,6 +52,7 @@
       </el-collapse-item>
     </el-collapse>
     <createDesign ref="sizeEditRef" :params="state.innerElement" />
+    <!-- <animationEdit ref="animationEditRef" :params="state.innerElement" /> -->
   </div>
 </template>
 
@@ -67,6 +73,9 @@ import { Delete as iconDelete, Download as iconDownload } from '@element-plus/ic
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import sizeEditor from '@/components/business/create-design/sizeEditor.vue'
 import createDesign from '@/components/business/create-design'
+// 动画组件
+import animationEdit from '@/components/business/animation/index.vue'
+import { log } from 'console'
 
 type TState = {
   activeNames: string[]
@@ -92,6 +101,7 @@ const state = reactive<TState>({
   showBgLib: false,
 })
 const sizeEditRef: Ref<typeof createDesign | null> = ref(null)
+// const animationEditRef: Ref<typeof animationEdit | null> = ref(null)
 // const { dActiveElement } = useSetupMapGetters(['dActiveElement'])
 const { dActiveElement } = storeToRefs(widgetStore)
 let _localTempBG: string | null = null
@@ -204,6 +214,13 @@ async function shiftOut() {
 function openSizeEdit() {
   sizeEditRef.value?.open()
 }
+
+// // 打开动画组件
+// function openAnimationEdit(){
+//   console.log(animationEditRef.value);
+  
+//   animationEditRef.value?.open()
+// }
 </script>
 
 <style lang="less" scoped>
