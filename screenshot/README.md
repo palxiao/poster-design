@@ -1,3 +1,4 @@
+
 ## Node截图服务
 
 目录结构比较简单，主要就实现了三个接口，其中 `api/screenshots` 即是项目中所使用到的图片生成接口，在真实生产项目中可以把该服务单独部署，于内网调用，这样利于做一些鉴权之类的处理。
@@ -16,7 +17,7 @@ ERROR: Failed to set up Chromium xxx! Set "PUPPETEER_SKIP_DOWNLOAD" env variable
 
 不用慌，这是因为 puppeteer 会自动下载 Chromium，国内会受到网络波动的影响。
 
-如果跳过的话需要手动安装，比较麻烦所以并不推荐。解决方法是多尝试几次，或者更换国内的镜像源即可。
+如果跳过的话需要手动安装，比较麻烦所以并不推荐。解决方法是**多尝试几次，或者更换国内的镜像源**即可。
 
 ### 启动项目并热更新
 
@@ -43,6 +44,12 @@ port // 端口号
 website // 编辑器项目的地址
 filePath // 生成图片保存的目录
 ```
+
+### 多线程集群
+
+本服务中实现多任务操作使用的是队列的处理方式，保留了 JavaScript 单线程的特点，线程安全并且性能高效，下限低、更稳定，但在高配置机器上可能无法充分利用多核 CPU 资源。
+
+如果你希望在配置更高的机器上创建多线程集群，可以尝试使用 [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster)。
 
 ### 生成 API 文档
 
