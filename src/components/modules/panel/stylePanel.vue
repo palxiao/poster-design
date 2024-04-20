@@ -5,6 +5,15 @@
       <span :class="['tab', { 'active-tab': activeTab === 1 }]" @click="activeTab = 1">图层</span>
     </div>
     <div v-show="activeTab === 0" class="style-wrap">
+      <div v-show="!showGroupCombined">
+        <el-collapse>
+          <el-collapse-item title="设置动画" name="0" @click="openAnimationEdit">
+            <animationEdit :params="dActiveElement">
+                <div>test slot</div>
+            </animationEdit>
+          </el-collapse-item>
+      </el-collapse>
+      </div>
       <div v-show="showGroupCombined" style="padding: 2rem 0">
         <el-button plain type="primary" class="gounp__btn" @click="handleCombine">成组</el-button>
         <icon-item-select label="" :data="iconList" @finish="alignAction" />
@@ -28,6 +37,8 @@ import { useControlStore, useGroupStore, useHistoryStore, useWidgetStore } from 
 import { storeToRefs } from 'pinia';
 import { TdWidgetData } from '@/store/design/widget';
 import type { TUpdateAlignData } from '@/store/design/widget/actions/align'
+// 动画组件
+import animationEdit from '@/components/business/animation/index.vue'
 
 const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
@@ -77,6 +88,13 @@ function layerChange(newLayer: TdWidgetData[]) {
   controlStore.setShowMoveable(false)
 }
 
+
+// // 打开动画组件
+function openAnimationEdit(){
+  console.log( dActiveElement, dWidgets, dSelectWidgets );
+  
+  // animationEditRef.value?.open()
+}
 </script>
 
 <style lang="less" scoped>
