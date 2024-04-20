@@ -5,11 +5,6 @@
       <bg-img-list-wrap style="padding-top: 2rem" model="stylePanel" />
     </div>
     <el-collapse v-else v-model="state.activeNames">
-      <el-collapse-item title="设置动画" name="0" @click="openAnimationEdit">
-        <animationEdit :params="state.innerElement">
-            <div>test slot</div>
-        </animationEdit>
-      </el-collapse-item>
       <el-collapse-item title="画布尺寸" name="1">
         <sizeEditor :params="state.innerElement">
           <i @click="openSizeEdit" class="icon sd-edit"></i>
@@ -73,8 +68,6 @@ import { Delete as iconDelete, Download as iconDownload } from '@element-plus/ic
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import sizeEditor from '@/components/business/create-design/sizeEditor.vue'
 import createDesign from '@/components/business/create-design'
-// 动画组件
-import animationEdit from '@/components/business/animation/index.vue'
 import { log } from 'console'
 
 type TState = {
@@ -214,13 +207,6 @@ async function shiftOut() {
 function openSizeEdit() {
   sizeEditRef.value?.open()
 }
-
-// // 打开动画组件
-// function openAnimationEdit(){
-//   console.log(animationEditRef.value);
-  
-//   animationEditRef.value?.open()
-// }
 </script>
 
 <style lang="less" scoped>

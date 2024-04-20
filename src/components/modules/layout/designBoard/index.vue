@@ -43,7 +43,7 @@
             @mouseup="drop($event)"
           >
             <!-- <grid-size /> -->
-            <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
+            <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
               <template v-if="layer.isContainer">
                 <!-- :class="{
                   layer: true,
@@ -385,6 +385,27 @@ function getChilds(uuid: string) {
 //     return uuid === this.dActiveElement.uuid
 //   }
 // },
+
+// 配置动画方法
+function animationConfig(layer) {
+  console.log(111);
+  
+  // console.log(layer);
+  const res = layer.transition || ''; // 获取动画的配置
+  // console.log(res);
+  if(!res) return ''; 
+  const list = [
+    res?.animate ? 'animate__animated' : '', 
+    res?.animate ? 'animate__' + res.animate : '',
+    res?.delay ? 'animate__delay-'+ res.delay +'s' : '', 
+    res?.speed ? 'animate__' + res.speed : '',
+    // 判断是否预览，预览只循环展示一次，不是预览的话判断是否设置了循环，设置了的话判断循环次数并添加对应次数，否则无限循环
+    res?.isPreview ? 'animate__repeat-1' : (res?.isRepeat ? (res.repeatTime ? 'animate__repeat-' + res.repeatTime : 'animate__infinite') : ''),
+  ]
+ console.log(list);
+ 
+ return list.join(' ');
+}
 </script>
 
 <style lang="less" scoped>

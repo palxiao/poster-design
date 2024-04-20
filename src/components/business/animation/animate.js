@@ -34,12 +34,7 @@ export const animationOptions = [
     label: '强调',
     isAnimating: false,
       value: 'Attention Seekers',
-    children: [
-      {
-        label: '旋转',
-        isAnimating: false,
-      value: 'justRotate'
-      }, {
+    children: [ {
         label: '弹跳',
         isAnimating: false,
       value: 'bounce'
@@ -55,9 +50,14 @@ export const animationOptions = [
       value: 'pulse'
       },
       {
-        label: '抖动',
+        label: '抖动X',
         isAnimating: false,
-      value: 'shake'
+      value: 'shakeX'
+      },
+      {
+        label: '抖动Y',
+        isAnimating: false,
+      value: 'shakeY'
       },
       {
         label: '摇摆',
