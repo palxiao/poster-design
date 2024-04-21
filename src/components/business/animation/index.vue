@@ -2,7 +2,8 @@
   <div>
     <!-- 选项模块 -->
     <div class="flex flex-wrap items-center mb-4">
-      <list :transition="params.transition" :drawer="drawer"></list>
+      <!-- <list :params="params" @openDrawer="openDrawer"></list> -->
+      <list2 v-bind='params' @openDrawer="openDrawer"></list2>
     </div>
 
     <!-- 右侧动画选择抽屉弹窗 -->
@@ -19,16 +20,17 @@
             <span>{{item.label}}</span>
           </div>
         </template>
-        <el-button size="small" v-for="(childrenItem, j) in item.children" :key="j" plain :class="['animateBtn', childrenItem.isAnimating ? 'animate__animated' : '', childrenItem.isAnimating ? 'animate__' + childrenItem.value : '']"  @mouseenter="animating(childrenItem, i, j)" @click="chooseAnimate(childrenItem, i, j)">{{childrenItem.label}}</el-button>
+        <el-button :type="childrenItem.value === params?.transition.animate ? 'primary' : ''" size="small" v-for="(childrenItem, j) in item.children" :key="j" plain :class="['animateBtn', childrenItem.isAnimating ? 'animate__animated' : '', childrenItem.isAnimating ? 'animate__' + childrenItem.value : '']"  @mouseenter="animating(childrenItem, i, j)" @click="chooseAnimate(childrenItem, i, j)">{{childrenItem.label}}</el-button>
       </el-card>
     </el-drawer>
   </div>
 </template>
 <script setup lang="ts">
-  import { ref, Ref } from 'vue'
+  import { ref, Ref, reactive } from 'vue'
   import {animationOptions} from './animate.js'
   import 'animate.css';
   import list from './list.vue';
+  import list2 from './list2.vue';
   import { ElDrawer } from 'element-plus'
   import type { DrawerProps } from 'element-plus'
   type TProps = {
@@ -51,7 +53,16 @@
       childrenItem.isAnimating = false;
     }, 1e3);
   }
-
+  const defaultTransition = reactive({
+  animate: '',
+  animateName: '',
+  duration: 0, 
+  delay: 0, 
+  speed: 'fast', 
+  isRepeat: false, 
+  repeatTime: 1, // 循环次数，1表示一次之后就停止
+})
+  let transition = reactive(props.params?.transition || defaultTransition)
   // 点击选中预览效果，画板添加预览显示
   function chooseAnimate(childrenItem, i, j){
     const { label, value } = childrenItem;
@@ -63,6 +74,11 @@
     // -- repeat: 重复次数
     // -- speed: 速度：slow, slower, fast, faster
     // -- isPreview： 是否预览，一次之后就停止,初始化设置的时候默认为true，发布作品时修改为false
+    // transition.value = {
+      console.log(props);
+      console.log(props.params);
+      console.log(props.params.transition);
+      
     props.params.transition = {
       animate: value,
       animateName: label,
@@ -73,12 +89,23 @@
       repeatTime: 1, // 循环次数，1表示一次之后就停止
       isPreview: true, // 是否预览，一次之后就停止
     }
+    console.log(props.params.transition);
+    console.log(transition.value);
+    
   }
 
   // 关闭抽屉弹窗
   function handleClose(){
     drawer.value = false;
     console.log("handleClose");
+    console.log(props.params)
+    console.log(props.params)
+  }
+
+  function openDrawer(){
+    console.log('openDrawer')
+    
+    drawer.value = true;
   }
 </script>
 
