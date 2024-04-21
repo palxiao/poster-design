@@ -2,8 +2,7 @@
   <div>
     <!-- 选项模块 -->
     <div class="flex flex-wrap items-center mb-4">
-      <!-- <list :params="params" @openDrawer="openDrawer"></list> -->
-      <list2 v-bind='params' @openDrawer="openDrawer"></list2>
+      <list v-bind="params" @openDrawer="openDrawer"></list>
     </div>
 
     <!-- 右侧动画选择抽屉弹窗 -->
@@ -30,7 +29,6 @@
   import {animationOptions} from './animate.js'
   import 'animate.css';
   import list from './list.vue';
-  import list2 from './list2.vue';
   import { ElDrawer } from 'element-plus'
   import type { DrawerProps } from 'element-plus'
   type TProps = {
