@@ -112,7 +112,7 @@ function openAnimationEdit(){
   flex-direction: column;
   height: 100%;
   position: relative;
-  width: 280px;
+  width: 320px;
   .style-tab {
     box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);
     display: flex;
