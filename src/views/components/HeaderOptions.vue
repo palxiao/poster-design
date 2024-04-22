@@ -25,11 +25,24 @@
   </div>
   <!-- 生成图片组件 -->
   <SaveImage ref="canvasImage" />
+  <!-- 预览弹窗 -->
+  <el-drawer
+      v-model="drawer"
+      title="预览"
+      direction="rtl"
+      :append-to-body="true"
+      :before-close="handleClose"
+    >
+    <designBoard :isPreview="true">
+      <!-- 用于挡住画布溢出部分，因为使用overflow有bug -->
+      <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
+    </designBoard>
+  </el-drawer>
 </template>
 
 <script lang="ts" setup>
 import api from '@/api'
-import { reactive, toRefs, ref } from 'vue'
+import { reactive, toRefs, ref, Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import _dl from '@/common/methods/download'
 import useNotification from '@/common/methods/notification'
@@ -42,6 +55,8 @@ import { useControlStore, useHistoryStore, useCanvasStore, useUserStore, useWidg
 import { storeToRefs } from 'pinia'
 import watermarkOption from './Watermark.vue'
 import { log } from 'console'
+import { ElDrawer } from 'element-plus'
+import designBoard from '@/components/modules/layout/designBoard/index.vue'
 
 type TProps = {
   modelValue?: boolean
@@ -80,6 +95,7 @@ const { dPage } = storeToRefs(pageStore)
 const { tempEditing } = storeToRefs(userStore)
 const { dWidgets } = storeToRefs(widgetStore)
 const { dHistoryStack } = storeToRefs(useHistoryStore())
+let drawer: Ref<Boolean> = ref(false); // 是否预览弹窗
 
 
 const state = reactive<TState>({
@@ -94,7 +110,7 @@ async function save(hasCover: boolean = false) {
   console.log(dHistoryStack.value)
   // 没有任何修改记录则不保存
   if (dHistoryStack.value.changes.length <= 0) {
-    return
+    return useNotification('保存失败', '可能是没有修改任何东西哦~', { type: 'error' })
   }
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
   // console.log(proxy?.dPage, proxy?.dWidgets)
@@ -248,12 +264,23 @@ function draw() {
   })
 }
 
+// 预览
+function preview(){
+  // draw()
+  drawer.value = true;
+  controlStore.setShowMoveable(false)
+}
+function handleClose(){
+  drawer.value = false;
+}
+
 defineExpose({
   download,
   save,
   saveTemp,
   stateChange,
   load,
+  preview,
 })
 </script>
 

@@ -19,7 +19,7 @@
         }"
       >
         <slot />
-        <resize-page :width="(dPage.width * dZoom) / 100" :height="(dPage.height * dZoom) / 100" />
+        <resize-page v-if="!isPreview" :width="(dPage.width * dZoom) / 100" :height="(dPage.height * dZoom) / 100" />
         <watermark :customStyle="{ height: (dPage.height * dZoom) / 100 + 'px' }">
           <div
             :id="pageDesignCanvasId"
@@ -43,7 +43,7 @@
             @mouseup="drop($event)"
           >
             <!-- <grid-size /> -->
-            <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
+            <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="[{'layer': !isPreview }, { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
               <template v-if="layer.isContainer">
                 <!-- :class="{
                   layer: true,
@@ -51,7 +51,7 @@
                   'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent,
                   'layer-hover': widget.uuid === dHoverUuid,
                 }" -->
-                <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="['layer', { 'layer-no-hover': dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
+                <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="[{'layer': !isPreview }, { 'layer-no-hover': dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
               </template>
             </component>
 
@@ -81,7 +81,8 @@ import watermark from './comps/pageWatermark.vue'
 
 // 页面设计组件
 type TProps = {
-  pageDesignCanvasId: string
+  pageDesignCanvasId: string,
+  isPreview: Boolean, // 是否预览
 }
 
 type TParentData = {
@@ -95,7 +96,7 @@ const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const canvasStore = useCanvasStore()
 
-const { pageDesignCanvasId } = defineProps<TProps>()
+const { pageDesignCanvasId, isPreview } = defineProps<TProps>()
 
 const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
@@ -388,11 +389,7 @@ function getChilds(uuid: string) {
 
 // 配置动画方法
 function animationConfig(layer) {
-  console.log(111);
-  
-  // console.log(layer);
   const res = layer.transition || ''; // 获取动画的配置
-  // console.log(res);
   if(!res) return ''; 
   const list = [
     res?.animate ? 'animate__animated' : '', 
@@ -402,8 +399,6 @@ function animationConfig(layer) {
     // 判断是否预览，预览只循环展示一次，不是预览的话判断是否设置了循环，设置了的话判断循环次数并添加对应次数，否则无限循环
     res?.isPreview ? 'animate__repeat-1' : (res?.isRepeat ? (res.repeatTime ? 'animate__repeat-' + res.repeatTime : 'animate__infinite') : ''),
   ]
- console.log(list);
- 
  return list.join(' ');
 }
 </script>

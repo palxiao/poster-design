@@ -19,7 +19,7 @@
             <span>{{item.label}}</span>
           </div>
         </template>
-        <el-button :type="childrenItem.value === params?.transition.animate ? 'primary' : ''" size="small" v-for="(childrenItem, j) in item.children" :key="j" plain :class="['animateBtn', childrenItem.isAnimating ? 'animate__animated' : '', childrenItem.isAnimating ? 'animate__' + childrenItem.value : '']"  @mouseenter="animating(childrenItem, i, j)" @click="chooseAnimate(childrenItem, i, j)">{{childrenItem.label}}</el-button>
+        <el-button :type="childrenItem.value === params?.transition?.animate ? 'primary' : ''" size="small" v-for="(childrenItem, j) in item.children" :key="j" plain :class="['animateBtn', childrenItem.isAnimating ? 'animate__animated' : '', childrenItem.isAnimating ? 'animate__' + childrenItem.value : '']"  @mouseenter="animating(childrenItem, i, j)" @click="chooseAnimate(childrenItem, i, j)">{{childrenItem.label}}</el-button>
       </el-card>
     </el-drawer>
   </div>
