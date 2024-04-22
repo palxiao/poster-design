@@ -3,7 +3,7 @@
  * @Date: 2024-04-05 07:31:45
  * @Description:  
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-12 01:00:40
+ * @LastEditTime: 2024-04-22 20:47:43
  */
 // const prefix = import.meta.env
 const prefix = process.env
@@ -25,7 +25,7 @@ export default {
   ICONFONT_URL: '//at.alicdn.com/t/font_2717063_ypy8vprc3b.css?display=swap',
   ICONFONT_EXTRA: '//at.alicdn.com/t/c/font_3228074_xojoer6zhp.css',
   QINIUYUN_PLUGIN: 'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/qiniu-js/2.5.5/qiniu.min.js',
-  supportSubFont: true, // 是否开启服务端字体压缩
+  supportSubFont: false, // 是否开启服务端字体压缩
 }
 
 export const LocalStorageKey = {

@@ -4,7 +4,7 @@
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-04-18 18:14:36
+ * @LastEditTime: 2024-04-20 11:14:13
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -135,7 +135,7 @@ const controlStore = useControlStore()
 const createDesignRef: Ref<typeof createDesign | null> = ref(null)
 
 const beforeUnload = function (e: Event): any {
-  if (dHistoryParams.value.length > 0) {
+  if (dHistoryStack.value.changes.length > 0) {
     const confirmationMessage: string = '系统不会自动保存您未修改的内容';
     (e || window.event).returnValue = (confirmationMessage as any) // Gecko and Trident
     return confirmationMessage // Gecko and WebKit
