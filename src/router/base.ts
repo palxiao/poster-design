@@ -38,6 +38,11 @@ export default [
     component: () => import(/* webpackChunkName: 'draw' */ '@/views/Draw.vue'),
   },
   {
+    path: '/preview',
+    name: 'Preview',
+    component: () => import(/* webpackChunkName: 'preview' */ '@/views/Preview.vue'),
+  },
+  {
     path: '/psd',
     name: 'Psd',
     component: () => import(/* webpackChunkName: 'psd' */ '@/views/Psd.vue'),

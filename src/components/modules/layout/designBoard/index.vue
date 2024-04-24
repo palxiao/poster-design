@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-04-16 11:34:08
 -->
 <template>
-  <div id="main">
+  <div id="main" :class="{'main-preview': isPreview}">
     <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px' }">
       <div
         id="out-page"
@@ -97,6 +97,8 @@ const widgetStore = useWidgetStore()
 const canvasStore = useCanvasStore()
 
 const { pageDesignCanvasId, isPreview } = defineProps<TProps>()
+console.log(isPreview);
+
 
 const { dPage } = storeToRefs(useCanvasStore())
 const { dZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
@@ -107,8 +109,12 @@ let _dropIn: string | null = ''
 let _srcCache: string | null = ''
 
 onMounted(() => {
+  console.log(dPage);
+  
   getScreen()
   const pageDesignEl = document.getElementById('page-design')
+  console.log(pageDesignEl);
+  
   if (!pageDesignEl) return
   pageDesignEl.addEventListener('mousedown', handleSelection, false)
   pageDesignEl.addEventListener('mousemove', debounce(100, false, handleMouseMove), false)
@@ -433,6 +439,12 @@ function animationConfig(layer) {
     // .design-canvas ::-webkit-scrollbar {
     //   display: none; /* Chrome Safari */
     // }
+  }
+}
+.main-preview{
+  pointer-events: none !important;
+  .out-page{
+    margin: unset !important;
   }
 }
 </style>

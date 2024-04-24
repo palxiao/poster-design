@@ -33,10 +33,7 @@
       :append-to-body="true"
       :before-close="handleClose"
     >
-    <designBoard :isPreview="true">
-      <!-- 用于挡住画布溢出部分，因为使用overflow有bug -->
-      <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
-    </designBoard>
+    <Draw></Draw>
   </el-drawer>
 </template>
 
@@ -56,7 +53,7 @@ import { storeToRefs } from 'pinia'
 import watermarkOption from './Watermark.vue'
 import { log } from 'console'
 import { ElDrawer } from 'element-plus'
-import designBoard from '@/components/modules/layout/designBoard/index.vue'
+import Draw from '@/views/Draw.vue'
 
 type TProps = {
   modelValue?: boolean
@@ -107,7 +104,6 @@ const state = reactive<TState>({
 
 // 保存作品
 async function save(hasCover: boolean = false) {
-  console.log(dHistoryStack.value)
   // 没有任何修改记录则不保存
   if (dHistoryStack.value.changes.length <= 0) {
     return useNotification('保存失败', '可能是没有修改任何东西哦~', { type: 'error' })
@@ -265,13 +261,18 @@ function draw() {
 }
 
 // 预览
-function preview(){
+async function preview(){
   // draw()
-  drawer.value = true;
-  controlStore.setShowMoveable(false)
+  // console.log(widgetStore.dLayouts);
+  // 预览之前先保存
+  await save(true)
+  const { id, tempid } = route.query
+  window.open(router.resolve(`/preview?id=${id}`).href, '_blank')
+  // drawer.value = true;
+  // controlStore.setShowMoveable(false)
 }
 function handleClose(){
-  drawer.value = false;
+  // drawer.value = false;
 }
 
 defineExpose({
