@@ -1,5 +1,5 @@
 <template>
-  <div id="zoom-control">
+  <div id="zoom-control" :class="{'preview': isPreview}">
     <ul v-show="show" class="zoom-selecter">
       <li v-for="(item, index) in zoomList" :key="index" :class="['zoom-item', { 'zoom-item-active': activezoomIndex === index }]" @click.stop="selectItem(index)">
         <!-- <i v-if="item.icon" :class="['iconfont', item.icon]"></i> -->
@@ -30,6 +30,12 @@ import { useCanvasStore, useForceStore } from '@/store';
 
 const route = useRoute()
 
+
+// 引入父级数据
+type TProps = {
+  isPreview: Boolean, // 是否预览
+}
+const { isPreview } = defineProps<TProps>()
 // 组件大小控制器
 let holder: number | undefined
 
@@ -377,5 +383,9 @@ defineExpose({
       }
     }
   }
+}
+.preview{
+  left: 80px !important;
+  right: 0 !important;
 }
 </style>

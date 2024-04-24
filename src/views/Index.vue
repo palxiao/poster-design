@@ -26,7 +26,8 @@
         </div>
         <HeaderOptions ref="optionsRef" v-model="state.isContinue" @change="optionsChange">
           <el-button size="large" class="primary-btn" @click="dealWith('save')">保存</el-button>
-          <el-button ref="ref4" size="large" class="primary-btn" plain type="primary" @click="dealWith('download')">下载作品</el-button>
+          <el-button ref="previewRef" size="large" class="primary-btn" plain type="primary" @click="dealWith('preview')">预览</el-button>
+          <el-button ref="ref4" size="large" class="primary-btn" plain type="primary" disabled @click="dealWith('download')">下载作品</el-button>
         </HeaderOptions>
       </div>
     </div>
@@ -249,7 +250,11 @@ const fns: any = {
   changeLineGuides,
   newDesign: () => {
     createDesignRef.value?.open()
-  }
+  },
+  // 预览
+  preview: () => {
+    optionsRef.value?.preview()
+  },
 }
 const dealWith = (fnName: string, params?: any) => {
   fns[fnName](params)
