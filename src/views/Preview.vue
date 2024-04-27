@@ -4,7 +4,7 @@
       <design-board :isPreview="true" class="page-design-wrap fixed-canvas" pageDesignCanvasId="page-design-canvas"></design-board>
     </div>
     <!-- 缩放控制 -->
-    <zoom-control  :isPreview="true"/>
+    <zoom-control :isPreview="true"/>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ import api from '@/api'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
 import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
-import designBoard from '@/components/modules/layout/designBoard/index.vue'
+import designBoard from '@/components/modules/layout/designBoard/previewBoard.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import { useRoute } from 'vue-router'
 // import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
@@ -59,6 +59,8 @@ async function load() {
     const isGroupTemplate = Number(type) == 1
 
     if (Array.isArray(content)) {
+      widgetStore.dLayouts = content
+      widgetStore.setDWidgets(widgetStore.getWidgets())
       const { global, layers } = content[index]
       content = {page: global, widgets: layers}
     }

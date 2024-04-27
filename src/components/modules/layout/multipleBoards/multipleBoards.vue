@@ -45,6 +45,7 @@ import { ref, Ref, onMounted, nextTick, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCanvasStore, useWidgetStore, useForceStore, useControlStore } from '@/store'
 import { ElMessage } from 'element-plus'
+import { log } from 'console';
 const forceStore = useForceStore()
 const canvasStore = useCanvasStore()
 const widgetStore = useWidgetStore()
@@ -79,6 +80,8 @@ watch(
 let mainEl: any = null
 
 onMounted(async () => {
+  console.log(dLayouts);
+  
   await nextTick()
   mainEl = document.getElementById('main')
   mainEl.addEventListener('scroll', function (e: any) {
