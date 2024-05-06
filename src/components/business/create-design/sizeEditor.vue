@@ -7,11 +7,11 @@
 -->
 <template>
   <div class="position-size">
-    <number-input v-model="params.width" label="宽" :maxValue="5000" />
+    <number-input v-model="params.width" label="宽" :maxValue="30000" />
     <el-tooltip :show-after="300" :hide-after="0" effect="dark" :content="lockRatio ? '锁定宽高比' : '自由改变'" placement="top">
       <i @click="changeRatio" :class="['icon', lockRatio ? 'sd-db' : 'sd-fdb']" />
     </el-tooltip>
-    <number-input v-model="params.height" label="高" :maxValue="5000" />
+    <number-input v-model="params.height" label="高" :maxValue="30000" />
     <slot />
   </div>
 </template>

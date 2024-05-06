@@ -26,7 +26,7 @@
   <!-- 生成图片组件 -->
   <SaveImage ref="canvasImage" />
   <!-- 预览弹窗 -->
-  <el-drawer
+  <!-- <el-drawer
       v-model="drawer"
       title="预览"
       direction="rtl"
@@ -34,7 +34,7 @@
       :before-close="handleClose"
     >
     <Draw></Draw>
-  </el-drawer>
+  </el-drawer> -->
 </template>
 
 <script lang="ts" setup>
@@ -115,8 +115,8 @@ async function save(hasCover: boolean = false) {
   // const widgets = dWidgets.value // reviseData()
   const data = widgetStore.dLayouts
   console.log(data);
-  
-  const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id: (id as string), title: state.title || '未命名设计', data: JSON.stringify(data), temp_id: (tempid as string), width: dPage.value.width, height: dPage.value.height })
+  console.log(dPage)
+  const { id: newId, stat, msg } = await api.home.saveWorks({ cover, id: (id as string), title: state.title || '未命名设计', data: JSON.stringify(data), temp_id: (tempid as string), width: dPage.value.width, height: dPage.value.height, autoScroll: dPage.value.autoScroll, scrollSpeed: dPage.value.scrollSpeed })
   stat !== 0 ? useNotification('保存成功', '可在"我的作品"中查看') : useNotification('保存失败', msg, { type: 'error' })
   !id && router.push({ path: '/home', query: { id: newId }, replace: true })
   controlStore.setShowMoveable(true)
@@ -208,7 +208,12 @@ async function saveTemp() {
 // ...mapActions(['pushHistory', 'addGroup']),
 
 async function load(cb: () => void) {
-  const { id, tempid: tempId, tempType: type, w_h } = route.query
+  
+  
+  const { id, tempid: tempId, tempType: type, w_h, name, page_type } = route.query
+  state.title = dPage.name || name || '';
+  dPage.value.page_type = page_type;
+  console.log(dPage)
   if (route.name !== 'Draw') {
     await useFontStore.init() // 初始化加载字体
   }
@@ -218,6 +223,8 @@ async function load(cb: () => void) {
     const wh: any = w_h.toString().split('*')
     wh[0] && (dPage.value.width = wh[0])
     wh[1] && (dPage.value.height = wh[1])
+    dPage.value.autoScroll = true; // 新增时设置默认滚动
+    dPage.value.scrollSpeed = 100; // 新增时设置默认滚动时间（秒）
   }
   if (!id && !tempId) {
     cb()

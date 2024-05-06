@@ -2,7 +2,7 @@
   <div>
     <!-- 选项模块 -->
     <div class="flex flex-wrap items-center mb-4">
-      <list v-bind="params" @openDrawer="openDrawer"></list>
+      <list v-bind="params || {transition: {}}" @openDrawer="openDrawer"></list>
     </div>
 
     <!-- 右侧动画选择抽屉弹窗 -->
@@ -25,7 +25,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { ref, Ref, reactive } from 'vue'
+  import { ref, Ref, reactive, onUpdated } from 'vue'
   import {animationOptions} from './animate.js'
   import 'animate.css';
   import list from './list.vue';
@@ -34,12 +34,9 @@
   type TProps = {
     params: any
   }
-  const props = withDefaults(defineProps<TProps>(), {
-    params: {},
-  })
+  const props = defineProps<TProps>()
   let drawer: Ref<Boolean> = ref(false); // 是否显示右侧动画抽屉弹窗
   const animationList = ref(animationOptions); // 动画选择json数据
-
   // 鼠标移入，按钮出现动画效果预览
   function animating(childrenItem, i, j) {
     // animationList.value[i].children[j].isAnimating = true;
@@ -60,7 +57,10 @@
   isRepeat: false, 
   repeatTime: 1, // 循环次数，1表示一次之后就停止
 })
+
   let transition = reactive(props.params?.transition || defaultTransition)
+  console.log('transition---')
+  console.log(transition)
   // 点击选中预览效果，画板添加预览显示
   function chooseAnimate(childrenItem, i, j){
     const { label, value } = childrenItem;
@@ -96,7 +96,6 @@
   function handleClose(){
     drawer.value = false;
     console.log("handleClose");
-    console.log(props.params)
     console.log(props.params)
   }
 

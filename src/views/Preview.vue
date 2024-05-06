@@ -162,7 +162,7 @@ async function load() {
 @import url('@/assets/styles/design.less');
 .fixed-canvas {
   :deep(#page-design-canvas) {
-    position: fixed !important;
+    // position: fixed !important;
     top: 0 !important;
     left: 0 !important;
   }

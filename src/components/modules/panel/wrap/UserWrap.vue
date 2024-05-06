@@ -32,11 +32,14 @@
         <div v-show="state.isDone" class="loading">全部加载完毕</div>
       </ul>
     </div>
+    
+    <!-- 创建新作品 -->
+    <!-- <createNew v-if="showCreateDialog" :visible="showCreateDialog" @cb="createNewCb"/> -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs, watch, nextTick, ref, onMounted } from 'vue'
+import { reactive, toRefs, watch, nextTick, ref, onMounted, Ref } from 'vue'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import { useRouter } from 'vue-router'
 
@@ -52,6 +55,7 @@ import imgWaterFall from './components/imgWaterFall.vue'
 import { TUploadDoneData } from '@/components/common/Uploader/index.vue'
 import { IGetTempListData } from '@/api/home'
 import eventBus from '@/utils/plugins/eventBus'
+// import createNew from '@/views/components/createNew.vue'
 import { storeToRefs } from 'pinia'
 import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 
@@ -156,7 +160,17 @@ function checkHeight(el: HTMLElement, loadFn: Function) {
     isLess && loadFn()
   }
 }
-
+// function createNewCb(cb){
+//   console.log(cb);
+//   console.log('dPage---');
+//   console.log(dPage);
+//   Object.keys(cb).forEach((key) => {
+//     dPage.value[key] = cb[key]
+//   })
+//   console.log(dPage);
+//   showCreateDialog.value = false;
+//   router.push({ path: '/home', query: {  } })
+// }
 onMounted(() => {
   load(true)
   nextTick(() => {

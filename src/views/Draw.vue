@@ -4,7 +4,7 @@
       <design-board class="page-design-wrap fixed-canvas" pageDesignCanvasId="page-design-canvas"></design-board>
     </div>
     <!-- 缩放控制 -->
-    <zoom-control />
+    <zoom-control  :isPreview="false"/>
   </div>
 </template>
 
