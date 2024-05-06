@@ -14,7 +14,6 @@
         :style="{
           padding: dPresetPadding + 'px',
           width: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px',
-          height: (dPage.height * dZoom) / 100 + dPresetPadding * 2 + 'px',
           opacity: 1 - (dZoom < 100 ? dPage.tag : 0),
         }"
       >
@@ -28,7 +27,7 @@
             :style="{
               width: dPage.width + 'px',
               height: dPage.height + 'px',
-              transform: 'scale(' + dZoom / 100 + ')',
+              scale:  dZoom / 100,
               transformOrigin: (dZoom >= 100 ? 'center' : 'left') + ' top',
               backgroundColor: dPage.backgroundGradient ? undefined : dPage.backgroundColor,
               backgroundImage: dPage.backgroundImage ? `url(${dPage?.backgroundImage})` : dPage.backgroundGradient || undefined,
@@ -36,11 +35,13 @@
               backgroundPositionX: (dPage.backgroundTransform?.x || 0) + 'px',
               backgroundPositionY: (dPage.backgroundTransform?.y || 0) + 'px',
               opacity: dPage.opacity + (dZoom < 100 ? dPage.tag : 0),
+              animationDuration: '10s',
             }"
-            @mousedown="mousedown($event)"
-            @mouseleave="mouseleave($event)"
-            @mouseup="mouseup($event)"
           >
+          
+          <!-- @mousedown="mousedown($event)"
+            @mouseleave="mouseleave($event)"
+            @mouseup="mouseup($event)" -->
             <!-- <div class="pageItem" v-for="(item, i) in dLayouts" :key="i"> -->
               <!-- <component :is="layer.type" v-for="layer in item.layers" :id="layer.uuid" :key="layer.uuid" :class="[layer, { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid"> -->
               <component :is="layer.type" v-for="layer in dLayouts[page_index].layers" :id="layer.uuid" :key="layer.uuid" :class="[layer, { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
@@ -58,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, Ref, ref } from 'vue'
+import { onMounted, Ref, ref, reactive } from 'vue'
 import { getTarget } from '@/common/methods/target'
 import setWidgetData from '@/common/methods/DesignFeatures/setWidgetData'
 import PointImg from '@/utils/plugins/pointImg'
@@ -69,6 +70,8 @@ import { useCanvasStore, useControlStore, useWidgetStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TPageState } from '@/store/design/canvas/d'
 import watermark from './comps/pageWatermark.vue'
+import { log } from 'console'
+import useScroll from './hooks/useScroll'
 
 // 页面设计组件
 type TProps = {
@@ -90,27 +93,32 @@ const { pageDesignCanvasId } = defineProps<TProps>()
 
 
 const { dPage } = storeToRefs(useCanvasStore())
-const { dZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
+let { dZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
 const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlStore)
 const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid,dLayouts } = storeToRefs(widgetStore)
-let page_index: Ref<Number> = ref(0)
-let mouseDownY: Ref<Number> = ref(0)
-let mouseUpY: Ref<Number> = ref(0)
-const scrollTarget = 30; // 判断滚动的高度
-let autoScroll: Ref<Boolean> = ref(true); // 是否自动滚动  -- TODO
-const autoSpeed = 3000; // 自动滚动速度ms  -- TODO
-let autoScrollInterval = null; //自动滚动定时器
-
+// 控制滚动相关的hooks
+const {autoScroll, page_index, page_type, fnAutoScroll, fnAutoTurnPage, moveOver, mousedown, mouseleave, mouseup} = useScroll(dPage, dLayouts)
+// 长页需调整展示比例
+  setTimeout(() => {
+console.log(page_type)
+if(page_type.value === 'longPage') {
+    console.log(dZoom.value)
+    dZoom.value = dZoom.value * 10
+    console.log(dZoom.value)
+}
+  }, 1000);
 let _srcCache: string | null = ''
 onMounted(() => {
   console.log(dLayouts);
   getScreen()
   // 是否开启了自动滚动
   if(autoScroll.value){
-    fnAutoScroll()
+    setTimeout(() => {
+      fnAutoTurnPage()
+    }, 3000);
   }
 })
-
+ 
 function getScreen() {
   const pageDesignEl = document.getElementById('page-design')
   if (!pageDesignEl) return
@@ -138,54 +146,7 @@ function animationConfig(layer) {
  return list.join(' ');
 }
 
-// 监听鼠标滑动事件
-function moveOver(e){
-  console.log(e);
-  
-}
-// 监听鼠标滑动事件
-function mousedown({x, y}){
-  console.log('mousedown---');
-  // 点击时，关闭自动滚动
-  clearInterval(autoScrollInterval);
-  console.log(y);
-  mouseDownY.value = y;
-}
-// 监听鼠标滑动事件
-function mouseleave(e){
-  console.log('mousemove---');
-  console.log(e);
-}
 
-// 监听鼠标滑动事件
-function mouseup({x, y}){
-  console.log('mouseup---');
-  mouseUpY.value = y;
-  console.log(y);
-  // 切换到上一页（向下滑）
-  if(mouseUpY.value - mouseDownY.value >= scrollTarget){
-    console.log('向下滑');
-    if(page_index.value <= 0) return 
-    page_index.value = page_index.value - 1;
-  }
-  // 切换到下一页（向上滑）
-  if(mouseDownY.value - mouseUpY.value >= scrollTarget){
-    console.log('向上滑');
-    if(page_index.value >= dLayouts.value.length - 1) return 
-    page_index.value = page_index.value + 1;
-  }
-}
-
-// 自动滚动
-function fnAutoScroll(){
-  autoScrollInterval = setInterval(() => {
-    if(page_index.value >= dLayouts.value.length - 1){
-      clearInterval(autoScrollInterval);
-      return;
-    }
-    page_index.value += 1;
-  }, autoSpeed)
-}
 </script>
 
 <style lang="less" scoped>
@@ -203,6 +164,8 @@ function fnAutoScroll(){
     margin: 0 auto;
     // padding: 60px;
     position: relative;
+    height: calc(100vh - 25px);
+    overflow-y: auto;
     .design-canvas {
       // transition: all 0.3s;
       background-position: center;
@@ -211,13 +174,31 @@ function fnAutoScroll(){
       box-shadow: 1px 1px 10px 3px rgba(0, 0, 0, 0.1);
       margin: 0 auto;
       position: relative;
+      // animation: slideIn ease 100s forwards;
+      scroll-snap-type: y mandatory;
+      animation: scrollTo 2s forwards;
       // z-index: -9999;
       // overflow: hidden;
       // overflow: auto;
     }
-    // .design-canvas ::-webkit-scrollbar {
-    //   display: none; /* Chrome Safari */
+    // @keyframes slideIn {
+    //     0%{
+    //         margin-top: 0;
+    //     }
+    //     100%{
+    //       margin-top: calc(-100%);
+    //     }
     // }
+    @keyframes scrollTo {
+    0% {
+      // opacity: 0;
+      scroll-snap-align: start;
+    }
+    100% {
+      // opacity: 1;
+      scroll-snap-align: end;
+    }
+  }
   }
 }
 .main-preview{

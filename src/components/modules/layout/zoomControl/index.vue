@@ -35,7 +35,7 @@ const route = useRoute()
 type TProps = {
   isPreview: Boolean, // 是否预览
 }
-const { isPreview } = defineProps<TProps>()
+const { isPreview } = withDefaults(defineProps<TProps>(), {isPreview: false})
 // 组件大小控制器
 let holder: number | undefined
 

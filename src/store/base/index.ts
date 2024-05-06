@@ -28,7 +28,7 @@ type TUserAction = {
 const useBaseStore = defineStore<'base', TStoreBaseState, {}, TUserAction>('base', {
   state: () => ({
     loading: null,
-    watermark: ['迅排设计', 'poster-design'],
+    watermark: ['阿仁邀请函', 'aren-design'],
     fonts: [], // 缓存字体列表
   }),
   actions: {

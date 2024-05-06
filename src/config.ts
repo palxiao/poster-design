@@ -15,7 +15,7 @@ export default {
   isDev,
   BASE_URL: isDev ? '/' : './',
   VERSION: version,
-  APP_NAME: '迅排设计',
+  APP_NAME: '阿仁邀请函',
   COPYRIGHT: 'ShawnPhang - Palxp.cn',
   // API_URL: isDev ? 'http://localhost:9998' : '${API}',
   API_URL: 'https://palxp.cn:8887', // 服务端地址

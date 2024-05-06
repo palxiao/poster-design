@@ -5,7 +5,7 @@
       <span :class="['tab', { 'active-tab': activeTab === 1 }]" @click="activeTab = 1">图层</span>
     </div>
     <div v-show="activeTab === 0" class="style-wrap">
-      <div v-show="!showGroupCombined">
+      <div v-if="!showGroupCombined && dActiveElement?.type !== 'page'">
         <el-collapse>
           <el-collapse-item title="设置动画" name="0" @click="openAnimationEdit">
             <animationEdit :params="dActiveElement">
@@ -13,6 +13,18 @@
             </animationEdit>
           </el-collapse-item>
       </el-collapse>
+      </div>
+      <div v-if="!showGroupCombined && dActiveElement?.type === 'page'">
+        <el-divider content-position="center">全局配置</el-divider>
+        <el-row class="row-bg" justify="space-between" align="middle">
+          <el-col :span="10">自动滚动</el-col>
+          <el-col :span="10" style="display: flex;justify-content: end;"><el-switch v-model="dPage.autoScroll" /></el-col>
+        </el-row>
+        <el-row class="row-bg" justify="space-between" align="middle">
+          <el-col :span="10">滚动速度</el-col>
+          <el-col :span="10" class="scrollSpeed"><el-input-number size="small" v-model="dPage.scrollSpeed" :min="0" :max="999" /><span style="padding-left: 5px;">秒</span></el-col>
+        </el-row>
+        <el-divider />
       </div>
       <div v-show="showGroupCombined" style="padding: 2rem 0">
         <el-button plain type="primary" class="gounp__btn" @click="handleCombine">成组</el-button>
@@ -33,9 +45,10 @@ import alignIconList, { AlignListData } from '@/assets/data/AlignListData'
 import iconItemSelect, { TIconItemSelectData } from '../settings/iconItemSelect.vue'
 import { ref, watch } from 'vue';
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
-import { useControlStore, useGroupStore, useHistoryStore, useWidgetStore } from '@/store';
+import { useControlStore, useGroupStore, useHistoryStore, useWidgetStore, useCanvasStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { TdWidgetData } from '@/store/design/widget';
+import { ElRow, ElCol, ElInputNumber } from 'element-plus'
 import type { TUpdateAlignData } from '@/store/design/widget/actions/align'
 // 动画组件
 import animationEdit from '@/components/business/animation/index.vue'
@@ -44,6 +57,7 @@ const widgetStore = useWidgetStore()
 const controlStore = useControlStore()
 const groupStore = useGroupStore()
 const historyStore = useHistoryStore()
+const { dPage } = storeToRefs(useCanvasStore())
 
 const activeTab = ref(0)
 const iconList = ref<AlignListData[]>(alignIconList)
@@ -91,7 +105,7 @@ function layerChange(newLayer: TdWidgetData[]) {
 
 // // 打开动画组件
 function openAnimationEdit(){
-  console.log( dActiveElement, dWidgets, dSelectWidgets );
+  console.log( dActiveElement, dWidgets, dSelectWidgets, dPage );
   
   // animationEditRef.value?.open()
 }
@@ -154,5 +168,13 @@ function openAnimationEdit(){
     width: 100%;
     margin-bottom: 2.7rem;
   }
+}
+.row-bg{
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.scrollSpeed{
+  display: flex;
+  align-items: center;
 }
 </style>

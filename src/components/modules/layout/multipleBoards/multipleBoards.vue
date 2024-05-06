@@ -63,7 +63,7 @@ watch(
   () => dZoom.value,
   (val) => {
     // 在画布缩放时bottom复位
-    mainEl.scrollTop = 0
+    if(mainEl) mainEl.scrollTop = 0
   },
 )
 
@@ -84,6 +84,8 @@ onMounted(async () => {
   
   await nextTick()
   mainEl = document.getElementById('main')
+  console.log(mainEl);
+  
   mainEl.addEventListener('scroll', function (e: any) {
     st.value = mainEl.scrollTop
     sl.value = mainEl.scrollLeft

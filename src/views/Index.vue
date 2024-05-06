@@ -25,6 +25,7 @@
           <el-divider direction="vertical" />
         </div>
         <HeaderOptions ref="optionsRef" v-model="state.isContinue" @change="optionsChange">
+          <el-button size="large" class="primary-btn" @click="dealWith('newDesign')">新建作品</el-button>
           <el-button size="large" class="primary-btn" @click="dealWith('save')">保存</el-button>
           <el-button ref="previewRef" size="large" class="primary-btn" plain type="primary" @click="dealWith('preview')">预览</el-button>
           <el-button ref="ref4" size="large" class="primary-btn" plain type="primary" disabled @click="dealWith('download')">下载作品</el-button>
@@ -38,15 +39,15 @@
         <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
         <!-- 提供一个背景图层 -->
         <div class="shelter-bg transparent-bg" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
-        <!-- 多画板操作组件 -->
-        <template #bottom> <multipleBoards /> </template>
+        <!-- 多画板操作组件,翻页类型才会出现 -->
+        <template #bottom v-if="dPage.page_type === 'turnPage'"> <multipleBoards /> </template>
       </design-board>
       <style-panel ref="ref3"></style-panel>
     </div>
     <!-- 标尺 -->
     <line-guides :show="state.showLineGuides" />
     <!-- 缩放控制 -->
-    <zoom-control ref="zoomControlRef" />
+    <zoom-control :isPreview="false" ref="zoomControlRef" />
     <!-- 右键菜单 -->
     <right-click-menu />
     <!-- 旋转缩放组件 -->
@@ -71,7 +72,7 @@
 import _config from '../config'
 import {
   CSSProperties, computed, nextTick,
-  onBeforeUnmount, onMounted, reactive, ref, Ref
+  onBeforeUnmount, onMounted, reactive, ref, Ref, watch
 } from 'vue'
 import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
@@ -91,6 +92,7 @@ import Tour from './components/Tour.vue'
 import createDesign from '@/components/business/create-design'
 import multipleBoards from '@/components/modules/layout/multipleBoards'
 import useHistory from '@/common/hooks/history'
+import { useRoute } from 'vue-router'
 useHistory()
 
 const ref1 = ref<ButtonInstance>()
@@ -134,7 +136,7 @@ const optionsRef = ref<typeof HeaderOptions | null>(null)
 const zoomControlRef = ref<typeof zoomControl | null>(null)
 const controlStore = useControlStore()
 const createDesignRef: Ref<typeof createDesign | null> = ref(null)
-
+const route = useRoute()
 const beforeUnload = function (e: Event): any {
   if (dHistoryStack.value.changes.length > 0) {
     const confirmationMessage: string = '系统不会自动保存您未修改的内容';
@@ -146,9 +148,9 @@ const beforeUnload = function (e: Event): any {
 !_config.isDev && window.addEventListener('beforeunload', beforeUnload)
 
 function jump2home() {
-  // const fullPath = window.location.href.split('/')
-  // window.open(fullPath[0] + '//' + fullPath[2])
-  window.open('https://xp.palxp.cn/')
+  const fullPath = window.location.href.split('/')
+  window.open(fullPath[0] + '//' + fullPath[2])
+  // window.open('https://xp.palxp.cn/')
 }
 
 const undoable = computed(() => {
@@ -182,6 +184,11 @@ let checkCtrl: number | undefined
 const instanceFn = { save, zoomAdd, zoomSub }
 
 onMounted(() => {
+  fnMounted();
+})
+function fnMounted(){
+  
+  console.log("onMounted")
   groupStore.initGroupJson(JSON.stringify(wGroupSetting))
   // store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
   // initGroupJson(JSON.stringify(wGroup.setting))
@@ -190,7 +197,7 @@ onMounted(() => {
   document.addEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instanceFn, dealCtrl), false)
   document.addEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
   loadData()
-})
+}
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', fixTopBarScroll)
@@ -214,6 +221,11 @@ function downloadCancel() {
 }
 
 function loadData() {
+  
+  console.log("optionsRef---")
+  console.log(optionsRef)
+  console.log(widgetStore)
+  
   // 初始化加载页面
   if (!optionsRef.value) return
   optionsRef.value.load(async () => {
