@@ -22,7 +22,11 @@
         </el-row>
         <el-row class="row-bg" justify="space-between" align="middle">
           <el-col :span="10">滚动速度</el-col>
-          <el-col :span="10" class="scrollSpeed"><el-input-number size="small" v-model="dPage.scrollSpeed" :min="0" :max="999" /><span style="padding-left: 5px;">秒</span></el-col>
+          <el-col :span="10" class="scrollSpeed"><el-input-number size="small" v-model="dPage.scrollSpeed" :min="0" :max="999999" /><span style="padding-left: 5px;">ms</span></el-col>
+        </el-row>
+        <el-row class="row-bg" justify="space-between" align="middle">
+          <el-col :span="10">停后继续滚动</el-col>
+          <el-col :span="10" class="scrolldelay"><el-input-number size="small" v-model="dPage.scrolldelay" :min="0" :max="999999" /><span style="padding-left: 5px;">ms</span></el-col>
         </el-row>
         <el-divider />
       </div>

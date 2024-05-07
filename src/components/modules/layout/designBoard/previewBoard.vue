@@ -37,13 +37,14 @@
               opacity: dPage.opacity + (dZoom < 100 ? dPage.tag : 0),
               animationDuration: '10s',
             }"
+            @mousedown="mousedown($event)"
+            @mousemove="mousemove($event)"
+            @mouseup="mouseup($event)"
           >
           
-          <!-- @mousedown="mousedown($event)"
-            @mouseleave="mouseleave($event)"
-            @mouseup="mouseup($event)" -->
-            <!-- <div class="pageItem" v-for="(item, i) in dLayouts" :key="i"> -->
-              <!-- <component :is="layer.type" v-for="layer in item.layers" :id="layer.uuid" :key="layer.uuid" :class="[layer, { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid"> -->
+          <!--  -->
+            <!-- <div class="pageItem" v-for="(item, i) in dLayouts" :key="i">
+              <component :is="layer.type" v-for="layer in item.layers" :id="layer.uuid" :key="layer.uuid" :class="[layer, { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid"> -->
               <component :is="layer.type" v-for="layer in dLayouts[page_index].layers" :id="layer.uuid" :key="layer.uuid" :class="[layer, { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }, animationConfig(layer)]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
                 <template v-if="layer.isContainer">
                   <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="[layer, { 'layer-no-hover': dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
@@ -97,26 +98,26 @@ let { dZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
 const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlStore)
 const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid,dLayouts } = storeToRefs(widgetStore)
 // 控制滚动相关的hooks
-const {autoScroll, page_index, page_type, fnAutoScroll, fnAutoTurnPage, moveOver, mousedown, mouseleave, mouseup} = useScroll(dPage, dLayouts)
+const {autoScroll, page_index, page_type, fnAutoScroll, fnAutoTurnPage, mousedown, mousemove, mouseup} = useScroll(dPage, dLayouts)
 // 长页需调整展示比例
-  setTimeout(() => {
-console.log(page_type)
-if(page_type.value === 'longPage') {
-    console.log(dZoom.value)
-    dZoom.value = dZoom.value * 10
-    console.log(dZoom.value)
-}
-  }, 1000);
+setTimeout(() => {
+  console.log(page_type)
+  if(dPage.value.page_type === 'longPage') {
+      console.log(dZoom.value)
+      dZoom.value = dZoom.value * 10
+      console.log(dZoom.value)
+  }
+}, 1000);
 let _srcCache: string | null = ''
 onMounted(() => {
   console.log(dLayouts);
   getScreen()
   // 是否开启了自动滚动
-  if(autoScroll.value){
-    setTimeout(() => {
-      fnAutoTurnPage()
-    }, 3000);
-  }
+  // if(autoScroll.value){
+  //   setTimeout(() => {
+  //     fnAutoTurnPage()
+  //   }, 3000);
+  // }
 })
  
 function getScreen() {
@@ -161,6 +162,7 @@ function animationConfig(layer) {
   position: relative;
   // width: 100%;
   .out-page {
+    scrollbar-width: none;
     margin: 0 auto;
     // padding: 60px;
     position: relative;
@@ -205,5 +207,9 @@ function animationConfig(layer) {
   .out-page{
     margin: unset !important;
   }
+}
+.pageItem{
+  height: 100%;
+  position: relative;
 }
 </style>

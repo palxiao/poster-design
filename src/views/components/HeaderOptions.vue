@@ -224,7 +224,8 @@ async function load(cb: () => void) {
     wh[0] && (dPage.value.width = wh[0])
     wh[1] && (dPage.value.height = wh[1])
     dPage.value.autoScroll = true; // 新增时设置默认滚动
-    dPage.value.scrollSpeed = 100; // 新增时设置默认滚动时间（秒）
+    dPage.value.scrollSpeed = page_type === 'longPage' ? 10 : 1000; // 新增时设置默认滚动时间（毫秒）
+    dPage.value.scrolldelay = 1000; // 新增时设置默认停止滚动后继续的时间（毫秒）
   }
   if (!id && !tempId) {
     cb()
