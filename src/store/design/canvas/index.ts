@@ -4,7 +4,7 @@
  * @Date: 2024-03-18 21:00:00
  * @Description: 画布全局配置
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 15:02:09
+ * @LastEditTime: 2024-05-06 12:05:02
  */
 
 import { Store, defineStore } from 'pinia'
@@ -32,10 +32,10 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
     dPage: pageDefault
   }),
   getters: {
-    getDPage() {
-      const widgetStore = useWidgetStore()
-      return widgetStore.dLayouts[this.dCurrentPage].global
-    },
+    // getDPage() {
+    //   const widgetStore = useWidgetStore()
+    //   return widgetStore.dLayouts[this.dCurrentPage].global
+    // },
   },
   actions: {
     /** 更新画布缩放百分比 */
@@ -66,6 +66,11 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
       if (data[key] !== value || pushHistory) {
         data[key] = value
       }
+    },
+    /** 获取 Page */
+    getDPage() {
+      const widgetStore = useWidgetStore()
+      return widgetStore.dLayouts[this.dCurrentPage].global
     },
     /** 设置 Page */
     setDPage(data: TPageState) {

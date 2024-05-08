@@ -3,7 +3,7 @@
  * @Date: 2022-01-12 11:26:53
  * @Description: 顶部操作按钮组
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-19 11:22:40
+ * @LastEditTime: 2024-05-06 12:07:43
 -->
 <template>
   <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
@@ -228,6 +228,7 @@ async function load(cb: () => void) {
     dPage.value.scrolldelay = 1000; // 新增时设置默认停止滚动后继续的时间（毫秒）
   }
   if (!id && !tempId) {
+    initBoard()
     cb()
     return
   }
@@ -250,11 +251,16 @@ async function load(cb: () => void) {
       widgetStore.dLayouts = [{global: data.page, layers: data.widgets}]
       id ? widgetStore.setDWidgets(widgetStore.getWidgets()) : widgetStore.setTemplate(widgetStore.getWidgets())
     }
-    pageStore.setDPage(pageStore.getDPage)
+    pageStore.setDPage(pageStore.getDPage())
     // id ? widgetStore.setDWidgets(data.widgets) : widgetStore.setTemplate(data.widgets)
   }
   cb()
   historyStore.pushHistory('请求加载load')
+}
+
+function initBoard() {
+  widgetStore.setDWidgets(widgetStore.getWidgets())
+  pageStore.setDPage(pageStore.getDPage())
 }
 
 function draw() {
