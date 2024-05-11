@@ -83,8 +83,8 @@ let mattingParam: MattingType | null
 const mattingStart = (mattingOptions: MattingType) => {
   mattingOptions.initLoadImages(props.raw, props.result)
   state.isErasing = mattingOptions.isErasing
-  state.radius = Number(mattingOptions.radius)
-  state.hardness = Number(mattingOptions.hardness)
+  state.radius = mattingOptions.radius as number;
+  state.hardness = mattingOptions.hardness as number;
   state.constants = mattingOptions.constants
   mattingParam = mattingOptions
 }
