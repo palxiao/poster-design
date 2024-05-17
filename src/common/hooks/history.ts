@@ -6,7 +6,7 @@
  *  差分补丁目前已知的问题是，对于预期以外的影响状态树的修改，现在都会写进历史记录，看起来就像多了一段毫无变化的历史栈一样
  *  例如图层的 left 在修改后可能为 12.6262638 但为了输入框中显示友好，在 input 组件中将自动格式化为 12.63，这个逻辑以前不会有问题，现在则不能这么做了
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 20:54:41
+ * @LastEditTime: 2024-05-18 01:51:34
  */
 import { onMounted } from 'vue'
 // import WebWorker from '@/utils/plugins/webWorker'
@@ -14,7 +14,7 @@ import historyFactory from '@/utils/widgets/diffLayouts'
 import { useHistoryStore, useWidgetStore } from '@/store'
 
 const blackClass: string[] = ['operation-item', 'icon-undo', 'icon-redo']
-const whiteKey: string[] = ['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp', 'Backspace']
+const whiteKey: string[] = ['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp', 'Backspace', 'Delete']
 
 const historyStore = useHistoryStore()
 const widgetStore = useWidgetStore()

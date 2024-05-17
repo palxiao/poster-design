@@ -36,9 +36,8 @@
 // const NAME = 'w-image'
 import { CSSProperties, StyleValue, computed, nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, watch } from 'vue'
 
-import { getMatrix } from '@/common/methods/handleTransform'
+// import { getMatrix } from '@/common/methods/handleTransform'
 import setting from "./wImageSetting"
-import PointImg from '@/utils/plugins/pointImg'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
