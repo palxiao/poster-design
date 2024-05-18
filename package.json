@@ -38,6 +38,7 @@
     "throttle-debounce": "^3.0.1",
     "vite-plugin-compression": "^0.5.1",
     "vue": "3.4.19",
+    "vue-i18n": "^9.13.1",
     "vue-router": "^4.0.0-0",
     "vuedraggable": "^4.1.0"
   },

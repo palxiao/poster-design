@@ -1,24 +1,34 @@
-<!--
- * @Author: ShawnPhang
- * @Date: 2023-09-18 17:34:44
- * @Description:  
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-09-20 16:10:58
--->
 <template>
-  <div id="appindex">
-    <div class="viewWrap">
+  <div id="app-view">
+    <el-config-provider :locale="locale">
       <router-view />
-    </div>
+    </el-config-provider>
   </div>
 </template>
 
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { ElConfigProvider } from 'element-plus'
+import en from 'element-plus/es/locale/lang/en'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import { useI18n } from 'vue-i18n'
+import { getBrowserLang } from './languages'
+
+const lang = getBrowserLang()
+
+const i18n = useI18n()
+onMounted(() => {
+  i18n.locale.value = lang
+})
+
+// 配置语言,否则element默认是英语
+const locale = computed(() => {
+  return lang == 'zh' ? zhCn : en
+})
+</script>
+
 <style lang="less">
-#appindex {
+#app-view {
   min-width: 1180px;
-  .viewWrap {
-    min-height: calc(110vh - 110px);
-    min-width: 1170px;
-  }
 }
 </style>

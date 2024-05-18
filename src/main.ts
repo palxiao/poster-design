@@ -1,10 +1,3 @@
-/*
- * @Author: ShawnPhang
- * @Date: 2022-03-03 14:13:16
- * @Description:
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-08 18:19:35
- */
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -13,6 +6,7 @@ import 'normalize.css/normalize.css'
 import '@/assets/styles/index.less'
 import elementConfig from './utils/widgets/elementConfig'
 import { createPinia } from 'pinia'
+import I18n from '@/languages/index'
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -30,4 +24,5 @@ app
   .use(pinia)
   .use(router)
   .use(utils)
+  .use(I18n)
   .mount('#app')

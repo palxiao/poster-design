@@ -231,6 +231,12 @@ function updateRecord() {
     }
   }
   updateZoom()
+  // 获取点位
+  if (!isDraw.value) {
+    if (targetRef.value) {
+      const read = new PointImg(targetRef.value)
+    }
+  }
 }
 
 function setTransform(attrName: string, value: string | number) {
