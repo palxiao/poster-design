@@ -2,12 +2,13 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-28 14:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-28 14:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-05-22 19:32:24
  */
 
 import { useCanvasStore, useHistoryStore } from "@/store"
 import { TWidgetStore, TdWidgetData } from ".."
+import { useWidgetStore } from "@/store"
 import { customAlphabet } from 'nanoid/non-secure'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
@@ -50,8 +51,7 @@ export function copyWidget(store: TWidgetStore) {
 
 /** 粘贴组件 */
 export function pasteWidget(store: TWidgetStore) {
-  const historyStore = useHistoryStore()
-  const canvasStore = useCanvasStore()
+  const widgetStore = useWidgetStore()
   const copyElement: TdWidgetData[] = JSON.parse(JSON.stringify(store.dCopyElement))
   const container = copyElement.find((item) => item.isContainer)
   for (let i = 0; i < copyElement.length; ++i) {
@@ -63,19 +63,15 @@ export function pasteWidget(store: TWidgetStore) {
     }
     copyElement[i].top += 30
     copyElement[i].left += 30
+    widgetStore.addWidget(copyElement[i])
   }
-  store.dWidgets = store.dWidgets.concat(copyElement)
+  // store.dWidgets = store.dWidgets.concat(copyElement)
   store.dActiveElement = copyElement[0]
   store.dSelectWidgets = copyElement
   if (container) {
     store.dActiveElement = container
     store.dSelectWidgets = []
   }
-
-  historyStore.pushHistory("pasteWidget")
-  // store.dispatch('pushHistory', 'pasteWidget')
+  // 复制以调整下次粘贴的位置
   store.copyWidget()
-  // store.dispatch('copyWidget')
-  canvasStore.reChangeCanvas()
-  // store.dispatch('reChangeCanvas')
 }

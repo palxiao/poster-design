@@ -3,7 +3,7 @@
  * @Date: 2024-04-10 23:02:46
  * @Description: 主画布
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 11:34:08
+ * @LastEditTime: 2024-05-22 19:29:51
 -->
 <template>
   <div id="main">
@@ -273,8 +273,6 @@ async function drop(e: MouseEvent) {
         const widget = dWidgets.value.find((item: { uuid: string }) => item.uuid == dropIn)
         if (!widget) return
         widget.imgUrl = item.value.url
-        console.log('加入+', widget)
-
         // store.commit('setShowMoveable', true) // 恢复选择
         controlStore.setShowMoveable(true) // 恢复选择
       } else {
@@ -285,7 +283,6 @@ async function drop(e: MouseEvent) {
   } else if (type === 'bg') {
     console.log('背景图片放置')
   } else if (type !== 'group') {
-    console.log(setting)
     widgetStore.addWidget(setting as Required<TPageState>)
     // store.dispatch('addWidget', setting) // 正常加入面板
   }
