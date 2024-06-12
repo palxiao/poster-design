@@ -1,5 +1,5 @@
 <template>
-  <div id="zoom-control" :class="{'preview': isPreview}">
+  <div id="zoom-control" v-if="!isH5" :class="{'preview': isPreview}">
     <ul v-show="show" class="zoom-selecter">
       <li v-for="(item, index) in zoomList" :key="index" :class="['zoom-item', { 'zoom-item-active': activezoomIndex === index }]" @click.stop="selectItem(index)">
         <!-- <i v-if="item.icon" :class="['iconfont', item.icon]"></i> -->
@@ -34,8 +34,9 @@ const route = useRoute()
 // 引入父级数据
 type TProps = {
   isPreview: Boolean, // 是否预览
+  isH5: Boolean, // 是否h5  
 }
-const { isPreview } = withDefaults(defineProps<TProps>(), {isPreview: false})
+const { isPreview, isH5 } = withDefaults(defineProps<TProps>(), {isPreview: false, isH5: false})
 // 组件大小控制器
 let holder: number | undefined
 

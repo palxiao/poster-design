@@ -47,4 +47,9 @@ export default [
     name: 'Psd',
     component: () => import(/* webpackChunkName: 'psd' */ '@/views/Psd.vue'),
   },
+  {
+    path: '/h5',
+    name: 'H5',
+    component: () => import(/* webpackChunkName: 'H5' */ '@/h5/index.vue'),
+  },
 ] as RouteRecordRaw[]

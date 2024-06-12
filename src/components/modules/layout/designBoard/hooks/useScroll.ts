@@ -17,6 +17,7 @@ export default function (dPage, dLayouts) {
   let timeout = reactive('');
   let isDragging = ref(false);
   let scrollContainer = ref('');
+  let delayTimeout = null; // 停止后再次自动滚动的定时器
 
   // 挂载后，如果为自动滚动时，进行自动滚动
   onMounted(() => {
@@ -29,7 +30,7 @@ export default function (dPage, dLayouts) {
         if(page_type.value === 'longPage'){
           console.log(page_type.value)
 
-          fnAutoScroll(scrollContainer);
+          // fnAutoScroll(scrollContainer);
         } else {
           fnAutoTurnPage()
         }
@@ -67,6 +68,7 @@ export default function (dPage, dLayouts) {
     console.log('mousedown---');
     if(page_type.value === 'longPage'){
       isDragging.value = true;
+      clearTimeout(delayTimeout); // 清空计时器
     } else {
       // 点击时，关闭自动滚动
       clearInterval(autoScrollInterval);
@@ -89,11 +91,11 @@ export default function (dPage, dLayouts) {
     if(page_type.value === 'longPage'){
       isDragging.value = false;
       // 鼠标停止后，再次启动的时间
-      // if(dPage.value.scrolldelay){
-        setTimeout(() => {
+      if(dPage.value.scrolldelay){
+        delayTimeout = setTimeout(() => {
           fnAutoScroll(scrollContainer);
         }, dPage.value.scrolldelay || 1e3);
-      // }
+      }
     } else {
       console.log('mouseup---');
       mouseUpY.value = y;

@@ -15,10 +15,10 @@
 
 <style lang="less">
 #appindex {
-  min-width: 1180px;
+  // min-width: 1180px;
   .viewWrap {
     min-height: calc(110vh - 110px);
-    min-width: 1170px;
+    // min-width: 1170px;
   }
 }
 </style>

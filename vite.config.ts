@@ -58,7 +58,7 @@ export default defineConfig({
   },
   server: {
     hmr: { overlay: false },
-    host: '127.0.0.1'
+    host: '192.168.0.107'
     // proxy: {
     //   '/api': {
     //     target: '',

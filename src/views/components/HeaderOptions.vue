@@ -104,10 +104,10 @@ const state = reactive<TState>({
 
 // 保存作品
 async function save(hasCover: boolean = false) {
-  // 没有任何修改记录则不保存
-  if (dHistoryStack.value.changes.length <= 0) {
-    return useNotification('保存失败', '可能是没有修改任何东西哦~', { type: 'error' })
-  }
+  // 没有任何修改记录则不保存(暂时注释)
+  // if (dHistoryStack.value.changes.length <= 0) {
+  //   return useNotification('保存失败', '可能是没有修改任何东西哦~', { type: 'error' })
+  // }
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
   // console.log(proxy?.dPage, proxy?.dWidgets)
   const { id, tempid } = route.query

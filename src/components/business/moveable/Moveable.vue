@@ -58,6 +58,9 @@ watch(
         case 'w-svg':
           moveable.renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
           break
+        case 'w-calendar':
+          moveable.renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']
+          break
         default:
           moveable.renderDirections = ['nw', 'ne', 'sw', 'se']
           break
@@ -398,7 +401,7 @@ onMounted(() => {
         startLS = Number(args.target!.style.letterSpacing.replace('px', ''))
         resetRatio = 1
       }
-    } else if (dActiveElement.value?.type === 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg') {
+    } else if (dActiveElement.value?.type === 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg' || dActiveElement.value?.type === 'w-calendar') {
       const dirs = ['1,0', '0,-1', '-1,0', '0,1']
       dirs.includes(String(args.direction)) && (moveable.keepRatio = false)
     }
@@ -419,7 +422,7 @@ onMounted(() => {
       // moveable.updateRect()
       target.style.backgroundImage = 'none'
       // moveable.keepRatio !== this.resetRatio > 1 && (moveable.keepRatio = this.resetRatio > 1)
-    } else if (dActiveElement.value?.type == 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg') {
+    } else if (dActiveElement.value?.type == 'w-image' || dActiveElement.value?.type === 'w-qrcode' || dActiveElement.value?.type === 'w-svg' || dActiveElement.value?.type === 'w-calendar') {
       resizeTempData = { width, height }
     } else if (dActiveElement.value?.type == 'w-group') {
       // let record = this.dActiveElement.record
