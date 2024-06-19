@@ -101,7 +101,7 @@ watch(
       state.list.length = 0
       return
     }
-    let list = newList.filter((v: IGetTempListData) => !newList.includes(v) || !oldList.includes(v)) // difference
+    let list = newList.filter((v: IGetTempListData) => !oldList.includes(v)) // difference
     list = JSON.parse(JSON.stringify(list))
     const marginRight = 6 // 间距
     const limitWidth = (await getFatherWidth()) - marginRight
