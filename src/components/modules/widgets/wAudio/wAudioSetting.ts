@@ -1,5 +1,4 @@
-
-export type TImageSetting = {
+export type TAudioSetting = {
   name: string
   type: string
   uuid: string
@@ -9,10 +8,9 @@ export type TImageSetting = {
   top: number
   zoom: number
   transform: string
-  radius: number
   opacity: number
   parent: string
-  imgUrl: string
+  url: string
   mask: string
   setting: [],
   rotate: number
@@ -25,7 +23,10 @@ export type TImageSetting = {
   },
   lock: false,
   isNinePatch: false,
-  flip: string | null
+  isSet: boolean, // 是否设置
+  loop: boolean, // 循环
+  play: boolean, // 播放
+  color: string, // 颜色
   sliceData: {
     ratio: number
     left: number
@@ -33,20 +34,19 @@ export type TImageSetting = {
   cropEdit?: boolean
 }
 
-const setting: TImageSetting = {
-  name: '图片',
-  type: 'w-image',
+export const wAudioSetting: TAudioSetting = {
+  name: '音频',
+  type: 'w-audio',
   uuid: '-1',
-  width: 300,
-  height: 300,
-  left: 0,
-  top: 0,
+  width: 100,
+  height: 100,
+  right: 30,
+  top: 30,
   zoom: 1,
   transform: '',
   radius: 0,
   opacity: 1,
   parent: '-1',
-  imgUrl: '',
   mask: '',
   setting: [],
   rotate: 0,
@@ -59,11 +59,15 @@ const setting: TImageSetting = {
   },
   lock: false,
   isNinePatch: false,
-  flip: '',
+  audioName: '', // 选中的音频名称
+  url: '', // 选中的音频链接
+  isSet: true, // 是否设置
+  loop: false, // 循环
+  play: true, // 播放
+  color: '#000000', // 颜色
   sliceData: {
     ratio: 0,
     left: 0,
-  }
+  },
 }
 
-export default setting
