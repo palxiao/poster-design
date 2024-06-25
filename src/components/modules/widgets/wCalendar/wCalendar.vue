@@ -66,7 +66,9 @@ const widgetRef = ref<HTMLElement | null>(null)
 
 watch(
   () => props.params,
-  () => {
+  (val) => {
+    console.log('val', val);
+    
     changeValues()
   },
   { immediate: true, deep: true, }

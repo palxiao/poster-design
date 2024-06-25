@@ -9,6 +9,7 @@
 import { useCanvasStore, useHistoryStore } from '@/store'
 import { TWidgetStore, TdWidgetData } from '..'
 import { customAlphabet } from 'nanoid/non-secure'
+import { log } from 'console'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
 type TUpdateWidgetKey = keyof TdWidgetData
@@ -70,6 +71,8 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
     } else {
       console.log('2---', spKey);
       (widget[key] as TUpdateWidgetPayload['value']) = value
+      console.log('widget',widget);
+      
     }
     if (pushHistory) {
       const historyStore = useHistoryStore()

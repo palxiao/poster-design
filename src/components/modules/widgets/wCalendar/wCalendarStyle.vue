@@ -9,21 +9,47 @@
           <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" :editable="true" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
+      <br />
+      <div class="line-layout style-item">
+        <div>日期</div>
+        <el-date-picker
+          v-model="state.innerElement.value"
+          type="date"
+          placeholder="请选择日期"
+          size="default"
+          format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"
+        />
+      </div>
+      <div class="line-layout style-item">
+        <div>图标</div>
+        <color-select v-model="state.innerElement.iconColor" width="30px" label="" @finish="(value) => finish(`${key}.color`, value)" />
+        <el-select v-model="state.innerElement.icon" placeholder="Select" style="width: 200px">
+          <el-option
+            v-for="item in state.iconOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
       <div v-for="key in ['week', 'date', 'lunarDate']">
-        <el-divider content-position="left">{{key === 'week' ? '星期' : key === 'date' ? '日期' : '农历' }}设置</el-divider>
+        <!-- <el-divider content-position="left">{{key === 'week' ? '星期' : key === 'date' ? '日期' : '农历' }}设置</el-divider> -->
         <div class="line-layout style-item">
-          <color-select v-model="state.innerElement[key].color" label="颜色" @finish="(value) => finish(`${key}.color`, value)" />
-          <value-select v-model="state.innerElement[key].fontClass.value" label="文字" :data="state.fontClassList" inputWidth="152px" :readonly="true" @finish="(font) => finish(`${key}.fontClass`, font)" />
-          <value-select v-model="state.innerElement[key].fontSize" label="大小" suffix="px" :data="state.fontSizeList" @finish="(value) => finish(`${key}.fontSize`, value)" />
+          <div>{{key === 'week' ? '星期' : key === 'date' ? '日期' : '农历'}}</div>
+          <color-select v-model="state.innerElement[key].color" width="30px" label="" @finish="(value) => finish(`${key}.color`, value)" />
+          <value-select v-model="state.innerElement[key].fontClass.value" label="" :data="state.fontClassList" inputWidth="130px" :readonly="true" @finish="(font) => finish(`${key}.fontClass`, font)" />
+          <value-select v-model="state.innerElement[key].fontSize" label="" suffix="px" :data="state.fontSizeList" inputWidth="60px"  @finish="(value) => finish(`${key}.fontSize`, value)" />
         </div>
       </div>
       <div>
-        <el-divider content-position="left">边框设置</el-divider>
+        <!-- <el-divider content-position="left">边框设置</el-divider> -->
         <div class="line-layout style-item">
-          <color-select v-model="state.innerElement.border.color" label="颜色" @finish="(value) => finish(`border.color`, value)" />
-          <number-input v-model="state.innerElement.border.size" label="大小" :editable="true" @finish="(value) => finish('border.size', value)" />
-          <value-select v-model="state.innerElement.border.style" label="样式" :data="state.borderStyleList" @finish="(value) => finish('border.style', value)" />
-          <number-input v-model="state.innerElement.border.radius" label="圆角" :editable="true" @finish="(value) => finish('border.radius', value)" />
+          <div>边框</div>
+          <color-select v-model="state.innerElement.border.color" width="30px" label="" @finish="(value) => finish(`border.color`, value)" />
+          <number-input v-model="state.innerElement.border.size" label="" style="width:70px;margin-right: 0px;" :editable="true" @finish="(value) => finish('border.size', value)" />
+          <value-select v-model="state.innerElement.border.style" label="" inputWidth="50px" :data="state.borderStyleList" @finish="(value) => finish('border.style', value)" />
+          <number-input v-model="state.innerElement.border.radius" label=""  style="width: 60px;margin-right: 0px;" :editable="true" @finish="(value) => finish('border.radius', value)" />
         </div>
       </div>
     </el-collapse>
@@ -34,6 +60,7 @@
 // 文本组件样式
 const NAME = 'w-calendar-style'
 import { defineComponent, reactive, toRefs, computed, watch, nextTick, onMounted } from 'vue'
+import { ElDatePicker, ElSelect, ElOption  } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { styleIconList1, styleIconList2, alignIconList, TStyleIconData, TStyleIconData2 } from '@/assets/data/TextIconsData'
 import layerIconList from '@/assets/data/LayerIconList'
@@ -76,7 +103,8 @@ const state = reactive<TState>({
   tag: false,
   ingoreKeys: ['left', 'top', 'name', 'width', 'height', 'text', 'color', 'backgroundColor'],
   fontSizeList: [12, 14, 24, 26, 28, 30, 36, 48, 60, 72, 96, 108, 120, 140, 180, 200, 250, 300, 400, 500],
-  borderStyleList: ['solid', 'dotted', 'dashed'],
+  iconOptions:[{label: '爱心', value: 'love'},{label: '对勾', value: 'right'},{label: '双喜', value: 'double'}],
+  borderStyleList: ['solid', 'dotted', 'dashed', 'outset'],
   fontClassList: {}, // 不能设空字体系统默认字体，因为截图服务的默认字体无法保证一致
   lineHeightList: [1, 1.5, 2],
   letterSpacingList: [0, 10, 25, 50, 75, 100, 200],
@@ -285,15 +313,21 @@ defineExpose({
   height: 100%;
   width: 100%;
   &:deep .color__select{
-    width: auto !important;
+    // width: auto !important;
   }
 }
 .line-layout {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
+  align-items: center;
+  
+  &:deep .color__select .input-label{
+    line-height: 20px;
+    padding: 13px 0 17px 0;
+  }
 }
 .style-item {
   margin-bottom: 12px;

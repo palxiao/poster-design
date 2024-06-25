@@ -16,7 +16,9 @@
   >
     <svg v-if="params.isSet" @click="toggleAudio(false)" t="1718808824604" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="23294" :width="params.width" :height="params.height"><path d="M512 117.333333c217.962667 0 394.666667 176.704 394.666667 394.666667S729.962667 906.666667 512 906.666667 117.333333 729.962667 117.333333 512 294.037333 117.333333 512 117.333333z m0 64C329.386667 181.333333 181.333333 329.386667 181.333333 512c0 182.613333 148.053333 330.666667 330.666667 330.666667 182.613333 0 330.666667-148.053333 330.666667-330.666667 0-133.098667-78.634667-247.829333-192-300.266667v307.370667A138.965333 138.965333 0 0 1 512 650.666667a138.666667 138.666667 0 1 1 74.688-255.509334V189.802667A331.690667 331.690667 0 0 0 512 181.333333z m0 256a74.666667 74.666667 0 1 0 0 149.333334 74.666667 74.666667 0 0 0 0-149.333334z" :fill="params.color" p-id="23295"></path></svg> 
   </div>
-  <audio ref="audioPlayer" :src="params.src"></audio>
+  <audio ref="audioPlayer" :src="params.src" id="audioPlayer" autoplay></audio>
+
+  
 </template>
 
 <script lang="ts" setup>
@@ -69,11 +71,36 @@ const {
   dActiveElement, dWidgets, dMouseXY, dDropOverUuid
 } = storeToRefs(widgetStore)
 
+// 监听播放设置
+watch(
+  () => props.params.play,
+  (newValue, oldValue) => {
+    toggleAudio(true)
+  },
+  { deep: true }
+)
+
+const audioPlayer = ref(null);
 onMounted(async() => {
   console.log('onMounted');
-  toggleAudio(true)
+  setTimeout(() => {
+    document.getElementById('audioPlayer').click();
+  props.params.play = true;
+    toggleAudio(true)
+  }, 1e3);
+    // var audio = new Audio(props.params.src);
+    // audio.muted = true; // 移动端可能需要设置静音来允许自动播放
+    // console.log(' audio.play()');
+    
+    // audio.play()
+    // .then(() => {
+    //     audio.muted = false; // 取消静音以允许音频播放
+    // })
+    // .catch(err => {
+    //     console.error(err);
+    //     // 自动播放失败后的处理逻辑
+    // });
 })
-const audioPlayer = ref(null);
 async function toggleAudio(init) {
   console.log('init', init);
   if(!init){
@@ -82,6 +109,7 @@ async function toggleAudio(init) {
   console.log('props.params.play', props.params.play);
   if(props.params.play){
     audioPlayer.value.play();
+    audioPlayer.value.currentTime = 0;
   } else {
     audioPlayer.value.pause();
   }

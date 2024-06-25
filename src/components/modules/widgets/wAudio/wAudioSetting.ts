@@ -48,6 +48,7 @@ export const wAudioSetting: TAudioSetting = {
   opacity: 1,
   parent: '-1',
   mask: '',
+  url: '',
   setting: [],
   rotate: 0,
   record: {
@@ -60,7 +61,7 @@ export const wAudioSetting: TAudioSetting = {
   lock: false,
   isNinePatch: false,
   audioName: '', // 选中的音频名称
-  url: '', // 选中的音频链接
+  src: '', // 选中的音频链接
   isSet: true, // 是否设置
   loop: false, // 循环
   play: true, // 播放

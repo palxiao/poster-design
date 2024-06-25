@@ -1,8 +1,8 @@
 <template>
   <el-row class="menuShow" justify="space-between" align="middle">
-    <el-col :span="8">{{left}}</el-col>
+    <el-col :span="16">{{left}}</el-col>
     <el-col :span="4" style="text-align: right;">
-      <slot name="right">{{right}}</slot>
+      <slot name="right">{{right || ''}}</slot>
     </el-col>
   </el-row>
 </template>

@@ -24,10 +24,10 @@
         </menu-show>
         <el-divider content-position="left">选择音乐</el-divider>
         <div class="flex flex-wrap gap-4">
-          <el-card v-for="(item, i) in audioList" :key="i" style="width: 480px" shadow="hover">
+          <el-card v-for="(item, i) in audioList" :key="i" shadow="hover" size="small">
             <menu-show :left="item.name">
               <template v-slot:right>
-                <el-button @change="changeAudio(item)">选择</el-button>
+                <el-button @click="changeAudio(item)">选择</el-button>
               </template>
             </menu-show>
           </el-card>
@@ -60,10 +60,10 @@ const state = reactive<TState>({
   innerElement: JSON.parse(JSON.stringify(wAudioSetting)),
 })
 const audioList = reactive([
-  {url: 'https://hxdata.huanxiinv.com/system_assets_music/Tg2kxGdaCR2pfEiO.mp3?v=1705919546', name: '韩文歌', type: '欢快'},
-  {url: 'https://hxdata.huanxiinv.com/system_assets_music/tTeTey4uNAdG90EY.mp3?v=1705919252', name: '千与千寻主题曲Always With Me钢琴版', type: '欢快'},
-  {url: 'https://hxdata.huanxiinv.com/system_assets_music/DQF83hnjdrmFEaGW.mp3?v=1705919247', name: '玛吉阿米', type: '欢快'},
-  {url: 'https://hxdata.huanxiinv.com/system_assets_music/ZWKwxXaHqBCCaBuy.mp3?v=1705919256', name: '震撼大气开场音乐', type: '欢快'},
+  {src: 'https://hxdata.huanxiinv.com/system_assets_music/Tg2kxGdaCR2pfEiO.mp3?v=1705919546', name: '韩文歌', type: '欢快'},
+  {src: 'https://hxdata.huanxiinv.com/system_assets_music/tTeTey4uNAdG90EY.mp3?v=1705919252', name: '千与千寻主题曲Always With Me钢琴版', type: '欢快'},
+  {src: 'https://hxdata.huanxiinv.com/system_assets_music/DQF83hnjdrmFEaGW.mp3?v=1705919247', name: '玛吉阿米', type: '欢快'},
+  {src: 'https://hxdata.huanxiinv.com/system_assets_music/ZWKwxXaHqBCCaBuy.mp3?v=1705919256', name: '震撼大气开场音乐', type: '欢快'},
 ])
 
 
@@ -126,7 +126,7 @@ function changeValue() {
 // 选中音频
 function changeAudio(item){
   state.innerElement.audioName = item.name;
-  state.innerElement.url = item.url;
+  state.innerElement.src = item.src;
 }
 </script>
 
