@@ -177,7 +177,7 @@ function openAnimationEdit(){
   font-size: 13px;
   margin-bottom: 10px;
 }
-.scrollSpeed{
+.scrollSpeed,.scrolldelay{
   display: flex;
   align-items: center;
 }

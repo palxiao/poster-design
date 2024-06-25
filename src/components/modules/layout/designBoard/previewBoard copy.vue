@@ -7,14 +7,13 @@
 -->
 <template>
   <div id="main" class="main-preview" :class="{'h5-preview': isH5 }">
-    <!-- <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px' }"> -->
-    <div id="page-design" ref="page_design" :style="{ minWidth: isH5 ? '100%' : (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px' }">
-      <!-- padding: dPresetPadding + 'px', -->
+    <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px' }">
       <div
         id="out-page"
         class="out-page"
         :style="{
-          width: isH5 ? '100%' : (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px',
+          padding: dPresetPadding + 'px',
+          width: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px',
           opacity: 1 - (dZoom < 100 ? dPage.tag : 0),
         }"
       >
@@ -100,16 +99,13 @@ const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlSto
 const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid,dLayouts } = storeToRefs(widgetStore)
 // 控制滚动相关的hooks
 const {autoScroll, page_index, page_type, fnAutoScroll, fnAutoTurnPage, mousedown, mousemove, mouseup} = useScroll(dPage, dLayouts)
-// 长页需调整展示比例 -- 0.487
+// 长页需调整展示比例
 setTimeout(() => {
   console.log(page_type)
-  console.log('TinnerWidth--' + document.body.clientWidth);// 添加事件监听，以响应屏幕尺寸变化
-  
   if(dPage.value.page_type === 'longPage') {
-      console.log('old-dZoom--'  + dZoom.value)
-      dZoom.value = isH5 ? document.body.clientWidth / dPage.value.width * 100  : dZoom.value * 10
-      // dZoom.value = dZoom.value * 8.8
-      console.log('dZoom--'  + dZoom.value)
+      console.log(dZoom.value)
+      dZoom.value = dZoom.value * 10
+      console.log(dZoom.value)
   }
 }, 1000);
 let _srcCache: string | null = ''
@@ -164,13 +160,8 @@ function animationConfig(layer) {
     margin: 0 auto;
     // padding: 60px;
     position: relative;
-    // height: calc(100vh - 25px);
-    height: 100vh;
-    overflow-y: auto; 
-    &::-webkit-scrollbar{
-      display: none;
-      width:10px;
-    }
+    height: calc(100vh - 25px);
+    overflow-y: auto;
     .design-canvas {
       // transition: all 0.3s;
       background-position: center;
@@ -190,8 +181,5 @@ function animationConfig(layer) {
 .pageItem{
   height: 100%;
   position: relative;
-}
-.h5-preview .design-canvas{
-  overflow-x: hidden !important;
 }
 </style>

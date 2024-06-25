@@ -9,6 +9,7 @@
 import { useCanvasStore, useHistoryStore } from '@/store'
 import { TWidgetStore, TdWidgetData } from '..'
 import { customAlphabet } from 'nanoid/non-secure'
+import { log } from 'console'
 const nanoid = customAlphabet('1234567890abcdef', 12)
 
 type TUpdateWidgetKey = keyof TdWidgetData
@@ -24,6 +25,8 @@ export type TUpdateWidgetPayload = {
 export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHistory }: TUpdateWidgetPayload) {
   const widget = store.dWidgets.find((item) => item.uuid === uuid)
   if (widget && (widget[key] !== value || pushHistory)) {
+    console.log('key', key);
+    
     switch (key) {
       case 'width':
         // const minWidth = widget.record.minWidth
@@ -56,16 +59,27 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
           }
         }
         break
+      }
+    console.log('widget[key]', widget[key]);
+    
+    // 先特殊处理层级深的
+    const deepArr = ['week', 'date', 'lunarDate', 'border']
+    const spKey = key.split('.')
+    if(deepArr.includes(spKey[0]) && widget[spKey[0]] && widget[spKey[0]][spKey[1]]){
+      console.log('1---', spKey);
+      widget[spKey[0]][spKey[1]] = value
+    } else {
+      console.log('2---', spKey);
+      (widget[key] as TUpdateWidgetPayload['value']) = value
+      console.log('widget',widget);
+      
     }
-    ;(widget[key] as TUpdateWidgetPayload['value']) = value
     if (pushHistory) {
       const historyStore = useHistoryStore()
       setTimeout(() => {
         historyStore.pushHistory('updateWidgetData')
-        // pushHistory && store.dispatch('pushHistory', 'updateWidgetData')
       }, 100)
     }
-    // store.dispatch('reChangeCanvas')
   }
 }
 

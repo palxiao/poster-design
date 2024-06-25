@@ -6,7 +6,7 @@
  * @LastEditTime: 2022-03-13 16:17:54
  */
 // TODO: Group类型比较特殊，所以需要全量循环并判断是否为group
-const arr = ['w-text', 'w-image', 'w-svg', 'w-group', 'w-qrcode']
+const arr = ['w-text', 'w-image', 'w-svg', 'w-group', 'w-qrcode', 'w-calendar', 'w-audio']
 
 export function getTarget(currentTarget: HTMLElement): Promise<HTMLElement | null> {
   let collector: string[] = []

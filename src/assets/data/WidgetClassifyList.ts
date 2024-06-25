@@ -43,6 +43,12 @@ export default [
     component: 'photo-list-wrap',
   },
   // {
+  //   name: '音频',
+  //   icon: 'icon-gallery',
+  //   show: false,
+  //   component: 'audio-list-wrap',
+  // },
+  // {
   //   name: '背景',
   //   icon: 'icon-beijing',
   //   show: false,

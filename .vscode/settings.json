@@ -9,5 +9,8 @@
   },
   "css.validate": false,
   "less.validate": false,
-  "scss.validate": false
+  "scss.validate": false,
+  "[vue]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

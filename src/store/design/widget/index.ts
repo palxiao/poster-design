@@ -35,6 +35,7 @@ export type TdWidgetData = TPageState & Partial<TCommonItemData> & {
   cropEdit?: boolean
   fontClass?: Record<string, any>
   writingMode?: string
+  value?: string
 }
 
 export type TdLayout = {

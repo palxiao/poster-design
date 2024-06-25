@@ -12,6 +12,14 @@
       <i class="icon sd-w-qrcode" />
       <div class="text"><span>二维码</span><span class="desc">在设计中使用风格化二维码</span></div>
     </div>
+    <div class="item" @click="addCalendar">
+      <i class="icon sd-w-qrcode" />
+      <div class="text"><span>日历</span><span class="desc">在设计中添加日历</span></div>
+    </div>
+    <div class="item" @click="addAudio">
+      <i class="icon sd-w-qrcode" />
+      <div class="text"><span>音频</span><span class="desc">在设计中添加音频</span></div>
+    </div>
     <div class="header">其它</div>
     <div class="item" @click="openImageCutout">
       <i class="icon sd-AI_zhineng" />
@@ -32,6 +40,8 @@ import { useRoute } from 'vue-router'
 import imageCutout from '@/components/business/image-cutout'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wQrcodeSetting } from '../../widgets/wQrcode/wQrcodeSetting'
+import { wCalendarSetting } from '../../widgets/wCalendar/wCalendarSetting'
+import { wAudioSetting } from '../../widgets/wAudio/wAudioSetting'
 import { storeToRefs } from 'pinia'
 import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 
@@ -75,6 +85,26 @@ function addQrcode() {
   widgetStore.addWidget(setting)
   // store.dispatch('addWidget', setting)
   // addWidget(setting)
+}
+
+// 添加日历
+function addCalendar(){
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+  let setting = JSON.parse(JSON.stringify(wCalendarSetting))
+  const { width: pW, height: pH } = dPage.value
+  setting.left = pW / 2 - setting.width / 2
+  setting.top = pH / 2 - setting.height / 2
+
+  widgetStore.addWidget(setting)
+  // store.dispatch('addWidget', setting)
+  // addWidget(setting)
+}
+
+// 添加音频
+function addAudio(){
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+  let setting = JSON.parse(JSON.stringify(wAudioSetting))
+  widgetStore.addWidget(setting)
 }
 
 function openImageCutout() {
