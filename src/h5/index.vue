@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { StyleValue, onMounted, reactive, nextTick } from 'vue'
+import { StyleValue, onMounted, reactive, nextTick, ref } from 'vue'
 import api from '@/api'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
@@ -35,11 +35,7 @@ const pageStore = useCanvasStore()
 // const groupStore = useGroupStore()
 const widgetStore = useWidgetStore()
 const { dPage } = storeToRefs(pageStore)
-
 onMounted(() => {
-  // groupStore.initGroupJson(JSON.stringify(wGroupSetting))
-  // store.dispatch('initGroupJson', JSON.stringify(wGroupSetting))
-  // initGroupJson(JSON.stringify(wGroup.setting))
   nextTick(() => {
     load()
   })

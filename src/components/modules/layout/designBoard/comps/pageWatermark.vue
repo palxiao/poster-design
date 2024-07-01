@@ -7,7 +7,7 @@
 -->
 <template>
   <slot v-if="isDrawPage" />
-  <el-watermark v-else :style="props.customStyle" :gap="[140, 120]" :content="watermark">
+  <el-watermark v-else :style="props.customStyle" :font="props.customStyle.font" :gap="[140, 120]" :content="watermark">
     <slot />
   </el-watermark>
 </template>
@@ -31,4 +31,6 @@ const props = withDefaults(defineProps<TProps>(), {
 const isDrawPage = computed(() => route.name === 'Draw')
 const baseStore = useBaseStore()
 const { watermark } = storeToRefs(baseStore)
+console.log(props.customStyle);
+
 </script>

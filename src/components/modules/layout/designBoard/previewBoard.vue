@@ -6,7 +6,12 @@
  * @LastEditTime: 2024-04-16 11:34:08
 -->
 <template>
-  <div id="main" class="main-preview" :class="{'h5-preview': isH5 }">
+  <div id="main" class="main-preview" :class="{'h5-preview': isH5 }" v-show="isShow"  
+      v-loading="loading"
+      element-loading-text="Loading..."
+      :element-loading-spinner="svg"
+      element-loading-svg-view-box="-10, -10, 50, 50"
+      element-loading-background="rgba(255, 255, 255, 1)">
     <!-- <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px' }"> -->
     <div id="page-design" ref="page_design" :style="{ minWidth: isH5 ? '100%' : (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px' }">
       <!-- padding: dPresetPadding + 'px', -->
@@ -19,7 +24,7 @@
         }"
       >
         <slot />
-        <watermark :customStyle="{ height: (dPage.height * dZoom) / 100 + 'px' }">
+        <watermark :customStyle="{ height: (dPage.height * dZoom) / 100 + 'px',font: {fontSize: 0} }">
           <div
             :id="pageDesignCanvasId"
             class="design-canvas"
@@ -60,6 +65,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElLoading } from 'element-plus'
 import { onMounted, Ref, ref, reactive } from 'vue'
 import { getTarget } from '@/common/methods/target'
 import setWidgetData from '@/common/methods/DesignFeatures/setWidgetData'
@@ -100,6 +106,18 @@ const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlSto
 const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid,dLayouts } = storeToRefs(widgetStore)
 // 控制滚动相关的hooks
 const {autoScroll, page_index, page_type, fnAutoScroll, fnAutoTurnPage, mousedown, mousemove, mouseup} = useScroll(dPage, dLayouts)
+let isShow = ref(false)
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `
+let loading = ref(true)
 // 长页需调整展示比例 -- 0.487
 setTimeout(() => {
   console.log(page_type)
@@ -112,10 +130,17 @@ setTimeout(() => {
       console.log('dZoom--'  + dZoom.value)
   }
 }, 1000);
+// 爲了優化loading之前的樣式問題
+setTimeout(() => {
+  isShow.value = true;
+}, 100);
 let _srcCache: string | null = ''
 onMounted(() => {
   console.log(dLayouts);
   getScreen()
+    setTimeout(() => {
+      loading.value = false;
+    }, 1e3);
 })
  
 function getScreen() {
