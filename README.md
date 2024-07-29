@@ -37,7 +37,7 @@ git clone https://github.com/palxiao/poster-design.git
 cd poster-design
 npm run prepared
 npm run dev
-cd screreenshot
+cd screenshot
 npm run dev
 ```
 
