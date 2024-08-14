@@ -3,7 +3,7 @@
  * @Date: 2024-08-11 16:17:52
  * @Description:  
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-14 18:54:40
+ * @LastEditTime: 2024-08-14 21:13:18
 -->
 <h2>迅排设计 - Poster Design</h2>
 
@@ -83,7 +83,7 @@ npm run server
 
 [![Star History Chart](https://api.star-history.com/svg?repos=palxiao/poster-design&type=Date)](https://star-history.com/#palxiao/poster-design&Date)
 
-感谢所有喜欢和支持本项目的朋友 :heart:
+感谢所有喜欢并支持本项目的朋友 :heart:
 
 [![Stargazers](https://bytecrank.com/nastyox/reporoster/php/stargazersSVG.php?user=palxiao&repo=poster-design)](https://github.com/palxiao/poster-design/stargazers)
 
@@ -101,4 +101,4 @@ npm run server
 
 ### `LICENSE`
 
-本项目遵循 MIT 开源协议，建议仔细阅读并保留 [开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE)。
+本项目遵循 MIT 开源协议，如有疑问，建议仔细阅读并保留此 [中文版开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE-ZH)。
