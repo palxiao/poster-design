@@ -3,14 +3,14 @@
  * @Date: 2022-02-01 13:41:59
  * @Description: 配置文件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-06 19:17:27
+ * @LastEditTime: 2024-08-12 05:13:19
  */
 const isDev = process.env.NODE_ENV === 'development'
 
 // 服务器常用修改项
 const serviceComfig = {
     port: 7001, // 端口号
-    website: 'https://design.palxp.cn', // 编辑器项目的地址
+    website: 'http://127.0.0.1:5173/', // 编辑器项目的地址
     filePath: '/cache/' // 生成图片保存的目录
 }
 
@@ -22,7 +22,7 @@ exports.servicePort = serviceComfig.port
 /**
  * 前端绘制页地址
  */
-exports.drawLink = isDev ? 'http://localhost:5173/draw' : serviceComfig.website + '/draw'
+exports.drawLink = isDev ? 'http://127.0.0.1:5173/draw' : serviceComfig.website + '/draw'
 
 /**
  * 图片缓存目录位置，根据实际情况调整

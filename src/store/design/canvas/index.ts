@@ -4,7 +4,7 @@
  * @Date: 2024-03-18 21:00:00
  * @Description: 画布全局配置
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-05-06 12:05:02
+ * @LastEditTime: 2024-08-12 09:27:22
  */
 
 import { Store, defineStore } from 'pinia'
@@ -61,9 +61,9 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
       // this.dPage.tag = tag === 0 ? 0.01 : 0
     },
     /** 更新 Page 字段 */
-    updatePageData({ key, value, pushHistory }) {
+    updatePageData({ key, value }) {
       const data = this.dPage
-      if (data[key] !== value || pushHistory) {
+      if (data[key] !== value) {
         data[key] = value
       }
     },

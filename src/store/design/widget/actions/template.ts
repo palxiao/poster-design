@@ -3,7 +3,7 @@
  * @Date: 2024-03-28 21:00:00
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 01:03:05
+ * @LastEditTime: 2024-08-12 09:29:35
  */
 
 
@@ -23,6 +23,5 @@ export function setTemplate(store: TWidgetStore, allWidgets: TdWidgetData[]) {
     store.dWidgets.push(item)
   })
   widgetStore.updateDWidgets()
-  // historyStore.pushHistory("setTemplate")
   canvasStore.reChangeCanvas()
 }

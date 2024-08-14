@@ -64,25 +64,25 @@ import valueSelect from '../../settings/valueSelect.vue'
 import effectWrap from '../../settings/EffectSelect/TextWrap.vue'
 import { useFontStore } from '@/common/methods/fonts'
 import usePageFontsFilter from './pageFontsFilter'
-import { wTextSetting ,TwTextData } from './wTextSetting';
-import { storeToRefs } from 'pinia';
-import { useControlStore, useForceStore, useWidgetStore } from '@/store';
-import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget';
-import { TUpdateAlignData } from '@/store/design/widget/actions/align';
+import { wTextSetting, TwTextData } from './wTextSetting'
+import { storeToRefs } from 'pinia'
+import { useControlStore, useForceStore, useWidgetStore } from '@/store'
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
+import { TUpdateAlignData } from '@/store/design/widget/actions/align'
 
 type TState = {
-  activeNames: string[],
-  innerElement: TwTextData,
-  tag: boolean,
-  ingoreKeys: string[],
-  fontSizeList: number[],
-  fontClassList: Record<string, any>, // 不能设空字体系统默认字体，因为截图服务的默认字体无法保证一致
-  lineHeightList: number[],
-  letterSpacingList: number[],
-  layerIconList: TIconItemSelectData[],
-  styleIconList1: TStyleIconData[],
-  styleIconList2: TStyleIconData2[],
-  alignIconList: TIconItemSelectData[],
+  activeNames: string[]
+  innerElement: TwTextData
+  tag: boolean
+  ingoreKeys: string[]
+  fontSizeList: number[]
+  fontClassList: Record<string, any> // 不能设空字体系统默认字体，因为截图服务的默认字体无法保证一致
+  lineHeightList: number[]
+  letterSpacingList: number[]
+  layerIconList: TIconItemSelectData[]
+  styleIconList1: TStyleIconData[]
+  styleIconList2: TStyleIconData2[]
+  alignIconList: TIconItemSelectData[]
 }
 
 const widgetStore = useWidgetStore()
@@ -108,13 +108,21 @@ const { dMoving } = storeToRefs(useControlStore())
 
 // const isDraw = computed(() => route.name === 'Draw')
 
-watch(() => dActiveElement.value, () => {
-  change()
-}, { deep: true })
+watch(
+  () => dActiveElement.value,
+  () => {
+    change()
+  },
+  { deep: true },
+)
 
-watch(() => state.innerElement, () => {
-  changeValue()
-}, { deep: true })
+watch(
+  () => state.innerElement,
+  () => {
+    changeValue()
+  },
+  { deep: true },
+)
 
 let timer: boolean | null = null
 
@@ -150,24 +158,13 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof TwTextData
     if (state.ingoreKeys.indexOf(itemKey) !== -1) {
-      (dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
-    } else if (
-      key !== 'setting' && key !== 'record' &&
-      state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]
-    ) {
-      // const pushHistory = !['textEffects', 'transformData', 'fontClass'].includes(key)
+      ;(dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
+    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]) {
       widgetStore.updateWidgetData({
         uuid: dActiveElement.value?.uuid || '',
         key: key as TUpdateWidgetPayload['key'],
         value: state.innerElement[itemKey],
-        pushHistory: false,
       })
-      // store.dispatch('updateWidgetData', {
-      //   uuid: dActiveElement.value.uuid,
-      //   key,
-      //   value: state.innerElement[itemKey],
-      //   pushHistory: false,
-      // })
     }
   }
 }
@@ -198,14 +195,7 @@ function finish(key: string, value: number | Record<string, any> | string) {
     uuid: dActiveElement.value?.uuid || '',
     key: key as TUpdateWidgetPayload['key'],
     value,
-    pushHistory: false,
   })
-  // store.dispatch('updateWidgetData', {
-  //   uuid: dActiveElement.value.uuid,
-  //   key,
-  //   value,
-  //   pushHistory: false,
-  // })
   setTimeout(() => {
     key === 'fontClass' && (state.fontClassList['当前页面'] = usePageFontsFilter())
   }, 300)
@@ -223,8 +213,8 @@ function layerAction(item: TIconItemSelectData) {
 }
 
 async function textStyleAction(item: TIconItemSelectData) {
-  let value = item.key === 'textAlign' ? item.value : (item.value as number[])[item.select ? 1 : 0];
-  (state.innerElement as Record<string, any>)[item.key || ""] = value
+  let value = item.key === 'textAlign' ? item.value : (item.value as number[])[item.select ? 1 : 0]
+  ;(state.innerElement as Record<string, any>)[item.key || ''] = value
   // TODO: 对竖版文字的特殊处理
   item.key === 'writingMode' && relationChange()
   await nextTick()
@@ -291,7 +281,7 @@ defineExpose({
   textStyleAction,
   finish,
   layerAction,
-  alignAction
+  alignAction,
 })
 </script>
 

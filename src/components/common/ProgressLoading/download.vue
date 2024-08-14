@@ -3,13 +3,13 @@
  * @Date: 2024-03-17 16:10:21
  * @Description:  
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-03 12:25:15
+ * @LastEditTime: 2024-08-11 18:42:09
 -->
 <template>
   <div v-if="percent" v-show="!hide" class="mask">
     <div class="content">
       <div class="tool">
-        <div v-show="percent < 100" class="backstage" @click="close"><iconSell width="18" /> <span style="margin-left: 0.4rem">后台下载</span></div>
+        <div v-show="percent < 100" class="backstage" @click="close"><span style="margin-left: 0.4rem">后台下载</span></div>
         <iconClose v-show="percent >= 100" class="backstage" @click="cancel" width="20" />
       </div>
       <div class="text">{{ text }}</div>
@@ -26,8 +26,8 @@
 <script lang="ts" setup>
 import { watch, ref } from 'vue'
 import { ElProgress } from 'element-plus'
-import { Close as iconClose, Sell as iconSell } from '@element-plus/icons-vue'
-import toolTip from '@/components/common/PopoverTip.vue'
+import { Close as iconClose } from '@element-plus/icons-vue'
+// import toolTip from '@/components/common/PopoverTip.vue'
 
 type TProps = {
   percent: number

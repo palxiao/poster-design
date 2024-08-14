@@ -3,7 +3,7 @@
  * @Date: 2022-03-07 17:25:19
  * @Description: 图层组件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-11-24 11:39:02
+ * @LastEditTime: 2024-08-12 09:25:15
 -->
 <template>
   <ul class="widget-list">
@@ -141,8 +141,7 @@ export default defineComponent({
       widgetStore.updateWidgetData({
         uuid: item.uuid,
         key: 'lock',
-        value: typeof item.lock === 'undefined' ? true : !item.lock,
-        pushHistory: false,
+        value: typeof item.lock === 'undefined' ? true : !item.lock
       })
       // store.dispatch('updateWidgetData', {
       //   uuid: item.uuid,

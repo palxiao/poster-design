@@ -3,7 +3,7 @@
  * @Date: 2021-08-04 11:46:39
  * @Description: 原版movable插件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-06 14:56:35
+ * @LastEditTime: 2024-08-12 09:24:51
 -->
 <template>
   <div id="empty" class="moveable__remove-item zk-moveable-style"></div>
@@ -345,10 +345,6 @@ onMounted(() => {
       // })
 
       holdPosition = null // important
-      setTimeout(() => {
-        historyStore.pushHistory()
-        // store.dispatch("pushHistory")
-      }, 100)
     }
   })
   // .on('keyUp', (e) => {

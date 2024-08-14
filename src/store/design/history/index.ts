@@ -3,11 +3,11 @@
  * @Date: 2024-03-18 21:00:00
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 15:41:25
+ * @LastEditTime: 2024-08-12 09:28:41
  */
 
 import { Store, defineStore } from 'pinia'
-import { pushHistory, pushColorToHistory } from './actions/pushHistory'
+import { pushColorToHistory } from './actions/pushHistory'
 import handleHistory from './actions/handleHistory'
 import { useCanvasStore, useWidgetStore } from '@/store'
 
@@ -36,7 +36,6 @@ type THistoryState = {
 }
 
 type THistoryAction = {
-  pushHistory: (msg?: string) => void
   /** 写入历史记录 */
   changeHistory: (patches: any) => void
   /**
@@ -67,9 +66,6 @@ const HistoryStore = defineStore<'historyStore', THistoryState, {}, THistoryActi
   }),
 
   actions: {
-    pushHistory(msg) {
-      pushHistory(this, msg)
-    },
     changeHistory({ patches, inversePatches }) {
       const pointer = ++this.dHistoryParams.stackPointer
       // 如若之前撤销过，当新增记录时，后面的记录就清空了

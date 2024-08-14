@@ -3,8 +3,8 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-18 21:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-18 21:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-12 09:27:45
  */
 
 import { useHistoryStore } from "@/store";
@@ -92,20 +92,18 @@ const ControlStore =  defineStore<"controlStore", TControlState, {}, TControlAct
     },
     /** 组件调整结束 */
     stopDResize() {
-      if (this.dResizeing) {
-        const historyStore = useHistoryStore()
-        historyStore.pushHistory('stopDResize')
-        // store.dispatch('pushHistory', 'stopDResize')
-      }
+      // if (this.dResizeing) {
+      //   // store.dispatch('pushHistory', 'stopDResize')
+      // }
       this.dResizeing = false
     },
     /** 组件移动结束 */
     stopDMove() {
-      if (this.dMoving) {
-        const historyStore = useHistoryStore()
-        historyStore.pushHistory("stopDMove")
-        // store.dispatch('pushHistory', 'stopDMove')
-      }
+      // if (this.dMoving) {
+      //   const historyStore = useHistoryStore()
+      //   historyStore.pushHistory("stopDMove")
+      //   // store.dispatch('pushHistory', 'stopDMove')
+      // }
       this.dMoving = false
     },
     setCropUuid(uuid: string) {

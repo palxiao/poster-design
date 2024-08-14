@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表，主要用于文字组合列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-09 22:30:10
+ * @LastEditTime: 2024-08-14 18:49:06
 -->
 <template>
   <div class="wrap">
@@ -18,13 +18,7 @@
     <classHeader v-show="!state.currentCategory" :types="state.types" @select="selectTypes">
       <template v-slot="{ index }">
         <div class="list-wrap">
-          <div
-            v-for="(item, i) in state.showList[index]" :key="i + 'sl'"
-            draggable="false" 
-            @mousedown="dragStart($event, item)" @mousemove="mousemove"
-            @mouseup="mouseup" @click.stop="selectItem(item)"
-            @dragstart="dragStart($event, item)"
-          >
+          <div v-for="(item, i) in state.showList[index]" :key="i + 'sl'" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
             <el-image class="list__img-thumb" :src="item.cover" fit="contain" lazy loading="lazy"></el-image>
           </div>
         </div>
@@ -34,13 +28,7 @@
     <ul v-if="state.currentCategory" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <classHeader :is-back="true" @back="back">{{ state.currentCategory.name }}</classHeader>
       <el-space fill wrap :fillRatio="30" direction="horizontal" class="list">
-        <div
-          v-for="(item, i) in state.list" :key="i + 'i'"
-          class="list__item" draggable="false"
-          @mousedown="dragStart($event, item)" @mousemove="mousemove"
-          @mouseup="mouseup" @click.stop="selectItem(item)"
-          @dragstart="dragStart($event, item)"
-        >
+        <div v-for="(item, i) in state.list" :key="i + 'i'" class="list__item" draggable="false" @mousedown="dragStart($event, item)" @mousemove="mousemove" @mouseup="mouseup" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)">
           <!-- <edit-model :isComp="true" @action="action($event, item, i)"> -->
           <el-image class="list__img" :src="item.cover" fit="contain" lazy loading="lazy" />
           <!-- </edit-model> -->
@@ -95,13 +83,15 @@ const pageOptions = { type: 1, page: 0, pageSize: 20 }
 
 onMounted(async () => {
   if (state.types.length <= 0) {
-    const types = await api.material.getKinds({ type: 3 })
-    state.types = types
-    for (const iterator of types) {
+    // const types = await api.material.getKinds({ type: 3 })
+    state.types = [
+      { cate: 'text', name: '高级特效文字' },
+      { cate: 'comp', name: '示例组合模板' },
+    ]
+    for (const iterator of state.types) {
       const { list } = await api.home.getCompList({
-        cate: iterator.id,
         type: 1,
-        pageSize: 3,
+        cate: iterator.cate,
       })
       state.showList.push(list)
     }
@@ -202,7 +192,7 @@ const selectItem = async (item: TGetCompListResult) => {
   }
   // store.commit('setShowMoveable', false) // 清理掉上一次的选择
   controlStore.setShowMoveable(false) // 清理掉上一次的选择
-  
+
   tempDetail = tempDetail || (await getCompDetail({ id: item.id, type: 1 }))
   // let group = JSON.parse(tempDetail.data)
   const group: any = await getComponentsData(tempDetail.data)
@@ -234,10 +224,11 @@ function getCompDetail(params: TGetTempDetail): Promise<TTempDetail> {
   return new Promise((resolve) => {
     if (compsCache[params.id]) {
       resolve(compsCache[params.id])
-    } else api.home.getTempDetail(params).then((res: any) => {
-      resolve(res)
-      compsCache[params.id] = res // 缓存请求的组件数据
-    })
+    } else
+      api.home.getTempDetail(params).then((res: any) => {
+        resolve(res)
+        compsCache[params.id] = res // 缓存请求的组件数据
+      })
   })
 }
 

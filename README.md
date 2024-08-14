@@ -1,26 +1,37 @@
-**[在线体验网站](https://design.palxp.cn/)** | **[在线文档](https://xp.palxp.cn/)** | [常见问题](https://xp.palxp.cn/#/articles/1689323321667) | [性能压测](https://juejin.cn/post/7348288810722869300)
+<!--
+ * @Author: ShawnPhang
+ * @Date: 2024-08-11 16:17:52
+ * @Description:  
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-14 18:54:40
+-->
+<h2>迅排设计 - Poster Design</h2>
 
----
+<p>
+<a href=""><img src="https://img.shields.io/github/stars/palxiao/poster-design?style=flat" alt="starts"></a>
+<a href="https://github.com/palxiao/poster-design?tab=MIT-1-ov-file"><img src="https://img.shields.io/github/license/palxiao/poster-design?style=flat" alt="License"></a>
+</p>
 
-## 迅排设计
+<p>
+<a href="https://trendshift.io/repositories/8728" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8728" alt="palxiao%2Fposter-design | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+</p>
 
-一款漂亮易用且功能强大的创意图片编辑器，对标稿定设计、创客贴、Canva 等商业产品。
+漂亮易用且功能强大的在线创意图片编辑器，对标稿定设计、创客贴、Canva 等产品，开源免费。
 
-适用于多种场景：海报图片生成、电商分享图、文章长图、视频/公众号封面等，无需下载软件即可轻松实现云端编辑、迅速完成图文排版。
+适用于多种场景：海报图片生成、电商图文分享、制作文章长图、视频/公众号封面等，在线实现创意，迅速图文排版，设计就是如此简单！
 
 [![](https://xp.palxp.cn/images/2023-7-16-1689500112694.gif)](https://design.palxp.cn/)
 
-### 特点
+**[官方网站](https://design.palxp.cn/)** | **[在线文档](https://xp.palxp.cn/)** | [常见问题](https://xp.palxp.cn/#/articles/1689323321667) | [性能压测](https://juejin.cn/post/7348288810722869300)
 
-- 丝滑的页面操作体验，丰富的交互细节，基础功能完善
-- 采用服务端生成图片，确保多端出图统一性，支持各种 HTML5 特性
-- 简易 AI 抠图工具，上传图片一键去除背景
-- 技术栈：Vue3 、Vite5 、Pinia 、ElementPlus
-- 图片生成：Puppeteer、Express
+- 丝滑的操作体验，丰富的交互细节，基础功能完善
+- 服务端生成图片，支持各种 HTML5 特性
+- 主要技术栈：Vue3 、Vite5 、Pinia 、ElementPlus、Puppeteer、Express
 
-### 支持功能
+### 功能简介
 
 - 导入 PSD 文件解析成模板、在线导出图片下载。
+- 简易 AI 抠图工具，上传图片一键去除背景。
 - 元素拖拽、组合、缩放、层级调整、对齐等操作。
 - 图片素材插入、替换、裁剪，图片容器等功能。
 - SVG 素材颜色、透明度编辑，文字花字组合。
@@ -30,36 +41,30 @@
 - 风格二维码编辑，支持单色、渐变、自定义 logo 等。
 - 颜色调色板，原生级取色器颜色吸管（Chrome）。
 
-## 快速开始
+### 快速开始
 
 ```
 git clone https://github.com/palxiao/poster-design.git
 cd poster-design
 npm run prepared
-npm run dev
-cd screenshot
-npm run dev
+npm run server
 ```
 
-![](https://xp.palxp.cn/images/2023-7-16-1689498291322.png)
+输入网址 http://127.0.0.1:5173/ 访问站点，更多参阅[详细说明文档](https://xp.palxp.cn/#/articles/1689319644311)。
 
-访问 http://127.0.0.1:5173/ 查看网页。点此查看[更多说明文档](https://xp.palxp.cn/#/articles/1689319644311)。
+### 服务端 & 图片生成
 
-### 图片生成服务
+本仓库中所提供的后端代码仅为示例作用，目的在于帮助开发者更好地理解项目，实际生产则推荐根据自身需求进行开发。原项目中请求的远程 API 接口已不再适用，但 [接口 API 文档](https://xp.palxp.cn/apidoc/index.html) 仍具有一定参考性。
 
-代码位于根目录 [/screenshot](https://github.com/palxiao/poster-design/tree/main/screenshot)，接口API文档点此查看：[接口 API 文档](https://xp.palxp.cn/apidoc/screenshot.html)。
-
-### 服务端
-
-后端需要自己开发，目前本项目演示 Demo 中的后端接口参考：[接口 API 文档](https://xp.palxp.cn/apidoc/index.html)。
+关于部署等说明请前往项目中查看，后端项目代码位于根目录 [/service](https://github.com/palxiao/poster-design/tree/main/service) 下。
 
 ### 其它
 
-一些问题修改与记录[点击这里查看](https://xp.palxp.cn/#/articles/1689319986889?id=%e8%bf%ad%e4%bb%a3%e8%ae%a1%e5%88%92)，项目持续迭代中，还有很多不足，可以将你遇到的问题在 Issues 中提出，或者提交 Pull Request 帮助完善。
+项目持续迭代中，还有很多不足，可以将你遇到的问题在 Issues 中提出，或者提交 Pull Request 帮助完善。
 
 ### 交流群
 
-关注公众号：品味前端，回复 “加群” 获取二维码，更新公告不错过。
+了解项目最新资讯、或技术交流，欢迎关注公众号《品味前端》；回复“加群”获取群号。
 
 <img style="width: 380px;" src="https://xp.palxp.cn/images/2024-3-1-1709306365949.png" />
 
@@ -68,25 +73,19 @@ npm run dev
 项目还使用或参考了一些优秀开源项目，包括但不限于：
 
 - [moveable](https://github.com/daybrush/moveable): 提供了画布中选择、拖动缩放等能力
-- [html2canvas](https://github.com/niklasvh/html2canvas): 前端生图的一种快捷方案
-- [qr-code-styling](https://qr-code-styling.com/): 风格化二维码
-- [rembg](https://github.com/danielgatis/rembg): 图片抠图，使用 u2net 预训练模型
+- [html2canvas](https://github.com/niklasvh/html2canvas): 前端出图的简单方案
+- [qr-code-styling](https://qr-code-styling.com/): 生成风格化二维码
+- [rembg](https://github.com/danielgatis/rembg): 图片自动抠图，使用 u2net 预训练模型
+
+### `Star`
 
 开源不易，最后别忘了给本项目点个 **Star** ~
 
 [![Star History Chart](https://api.star-history.com/svg?repos=palxiao/poster-design&type=Date)](https://star-history.com/#palxiao/poster-design&Date)
 
-### `Star`
-
-感谢所有支持本项目的朋友 :heart:
+感谢所有喜欢和支持本项目的朋友 :heart:
 
 [![Stargazers](https://bytecrank.com/nastyox/reporoster/php/stargazersSVG.php?user=palxiao&repo=poster-design)](https://github.com/palxiao/poster-design/stargazers)
-
-### `Fork`
-
-这些小伙伴都在使用迅排设计 :heart:
-
-[![Forkers](https://bytecrank.com/nastyox/reporoster/php/forkersSVG.php?user=palxiao&repo=poster-design)](https://github.com/palxiao/poster-design/network/members)
 
 ### 友情赞助商
 
@@ -102,5 +101,4 @@ npm run dev
 
 ### `LICENSE`
 
-本项目完全免费，可在保留 [MIT 开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE) 的前提下使用。
-
+本项目遵循 MIT 开源协议，建议仔细阅读并保留 [开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE)。

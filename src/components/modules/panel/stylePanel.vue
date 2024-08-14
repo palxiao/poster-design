@@ -69,7 +69,6 @@ function alignAction(item: TIconItemSelectData) {
         group,
       })
     });
-    historyStore.pushHistory()
   })
 }
 function layerChange(newLayer: TdWidgetData[]) {

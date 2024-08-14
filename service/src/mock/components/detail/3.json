@@ -1,0 +1,12 @@
+{
+  "id": 1893,
+  "cover": "https://pic.imgdb.cn/item/66b96ba4d9c307b7e956b11f.png",
+  "data": "{\"name\":\"文本\",\"type\":\"w-text\",\"uuid\":-1,\"editable\":false,\"left\":40,\"top\":292,\"transform\":\"\",\"lineHeight\":1.2,\"letterSpacing\":0,\"fontSize\":180,\"fontClass\":{\"alias\":\"站酷快乐体\",\"id\":543,\"value\":\"zcool-kuaile-regular\",\"url\":\"https://lib.baomitu.com/fonts/zcool-kuaile/zcool-kuaile-regular.woff2\"},\"fontWeight\":400,\"fontStyle\":\"normal\",\"writingMode\":\"horizontal-tb\",\"textDecoration\":\"none\",\"color\":\"#e5b187ff\",\"textAlign\":\"center\",\"text\":\"%E8%BE%93%E5%85%A5%E6%96%87%E5%AD%97\",\"opacity\":1,\"backgroundColor\":\"\",\"parent\":\"-1\",\"record\":{\"width\":0,\"height\":0,\"minWidth\":0,\"minHeight\":0,\"dir\":\"horizontal\"},\"width\":721,\"height\":217,\"rotate\":0,\"transformData\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"textEffects\":[{\"stroke\":{\"enable\":true,\"type\":\"outer\",\"color\":\"#ffffffff\",\"width\":10.080000000000002},\"filling\":{\"enable\":true,\"type\":0,\"color\":\"#e5b187ff\",\"imageContent\":{\"repeat\":0,\"scaleX\":1,\"scaleY\":1,\"image\":null,\"width\":null,\"height\":null},\"gradient\":{\"byLine\":0,\"angle\":0,\"stops\":[{\"color\":\"#ffffffff\",\"offset\":0},{\"color\":\"#000000ff\",\"offset\":1}]}},\"offset\":{\"x\":0.00045311068155588286,\"y\":0.0005595450922490192,\"enable\":true}},{\"filling\":{\"enable\":true,\"type\":2,\"color\":\"linear-gradient(90deg, #b6aff4ff 0%,#ffa6a9ff 98.83720930232558%)\",\"imageContent\":{\"repeat\":0,\"scaleX\":1,\"scaleY\":1,\"image\":null,\"width\":null,\"height\":null},\"gradient\":{\"byLine\":0,\"angle\":90,\"stops\":[{\"color\":\"#b6aff4ff\",\"offset\":0},{\"color\":\"#ffa6a9ff\",\"offset\":0.9883720930232558}]}}}]}",
+  "created_time": "2023-11-29T11:07:30.000Z",
+  "updated_time": "2023-11-29T11:12:58.000Z",
+  "title": "",
+  "width": null,
+  "height": null,
+  "state": 1,
+  "tag": null
+}

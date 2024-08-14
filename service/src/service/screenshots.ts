@@ -1,9 +1,9 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2020-07-22 20:13:14
- * @Description:
+ * @Description: 服务端截图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 15:43:29
+ * @LastEditTime: 2024-08-12 11:03:07
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
 const uuid = require('../utils/uuid.ts')
@@ -13,33 +13,6 @@ const { queueRun, queueList } = require('../utils/node-queue.ts')
 const fs = require('fs')
 
 module.exports = {
-  async getImg(req: any, res: any) {
-    /**
-     * @api {get} api/get_img 获取图片
-     * @apiVersion 1.0.0
-     * @apiGroup screenShot
-     *
-     * @apiParam {String|Number} id (必传) 截图id
-     * @apiParam {String} type 可选, file源文件，cover封面图
-     */
-    
-    const isDev = process.env.NODE_ENV === 'development'
-    let { id, type = 'file' } = req.query
-    const path = filePath + `${id}-screenshot.png`
-    const thumbPath = type === 'cover' ? filePath + `${id}-cover.jpg` : null
-
-    if (id) {
-      try {
-        fs.statSync(path)
-        res.setHeader('Content-Type', 'image/jpg')
-        type === 'file' ? res.sendFile(path) : res.sendFile(thumbPath)
-      } catch (error) {
-        res.json({ code: 500, msg: '请求图片不存在' })
-      }
-    } else {
-      res.json({ code: 500, msg: '缺少参数，请检查' })
-    }
-  },
   async screenshots(req: any, res: any) {
     /**
      * @api {get} api/screenshots 截图
@@ -58,6 +31,7 @@ module.exports = {
      * @apiParam {String|Number} index 可选, 下载哪个画板
      */
     let { id, tempid, tempType, width, height, screenshot_url, type = 'file', size, quality, index = 0 } = req.query
+    id == 'undefined' && (id = null)
     const url = (screenshot_url || drawLink) + `${id ? '?id=' : '?tempid='}`
     id = id || tempid
     const path = filePath + `${id}-screenshot.png`
@@ -68,7 +42,7 @@ module.exports = {
         res.json({ code: 200, msg: '服务器表示顶不住啊，等等再来吧~' })
         return
       }
-      const targetUrl = url + id + `${tempType?'&tempType='+tempType:''}` + `&index=${index}`
+      const targetUrl = url + id + `${tempType ? '&tempType=' + tempType : ''}` + `&index=${index}`
       queueRun(saveScreenshot, targetUrl, { width, height, path, thumbPath, size, quality })
         .then(() => {
           res.setHeader('Content-Type', 'image/jpg')

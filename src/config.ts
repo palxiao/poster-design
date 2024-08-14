@@ -3,7 +3,7 @@
  * @Date: 2024-04-05 07:31:45
  * @Description:  
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-22 20:47:43
+ * @LastEditTime: 2024-08-12 05:30:15
  */
 // const prefix = import.meta.env
 const prefix = process.env
@@ -16,10 +16,9 @@ export default {
   BASE_URL: isDev ? '/' : './',
   VERSION: version,
   APP_NAME: '迅排设计',
-  COPYRIGHT: 'ShawnPhang - Palxp.cn',
-  // API_URL: isDev ? 'http://localhost:9998' : '${API}',
-  API_URL: 'https://palxp.cn:8887', // 服务端地址
-  SCREEN_URL: isDev ? 'http://localhost:7001' : '#{SCREEN_URL}', // 截图服务地址
+  COPYRIGHT: 'ShawnPhang - Design.pPalxp.cn',
+  API_URL: isDev ? 'http://localhost:7001' : '', // 后端地址
+  SCREEN_URL: isDev ? 'http://localhost:7001' : '', // 截图服务地址
   IMG_URL: 'https://store.palxp.cn/', // 七牛云资源地址
   // ICONFONT_URL: '//at.alicdn.com/t/font_3223711_74mlzj4jdue.css',
   ICONFONT_URL: '//at.alicdn.com/t/font_2717063_ypy8vprc3b.css?display=swap',

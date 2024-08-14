@@ -8,9 +8,12 @@
 <template>
   <div class="wrap">
     <search-header v-model="state.searchKeyword" @change="cateChange" />
+
     <el-divider v-show="state.title" style="margin-top: 1.7rem" content-position="left">
       <span style="font-weight: bold">{{ state.title }}</span>
     </el-divider>
+
+    <el-button class="upload-psd" plain type="primary" @click="openPSD">导入 PSD 创建模板</el-button>
 
     <ul ref="listRef" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <img-water-fall :listData="state.list" @select="selectItem" />
@@ -64,7 +67,7 @@ const state = reactive<TState>({
   loading: false,
   loadDone: false,
   list: [],
-  title: '推荐模板',
+  title: '示例模板',
   searchKeyword: '',
 })
 
@@ -122,7 +125,7 @@ let hideReplacePrompt: any = localStorage.getItem('hide_replace_prompt')
 async function selectItem(item: IGetTempListData) {
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
   if (!hideReplacePrompt && dHistoryParams.value.length > 0) {
-    const doNotPrompt = await useConfirm('添加到作品', '模板内容将替换页面内容', 'warning', {confirmButtonText: '知道了',cancelButtonText: '不再提示'})
+    const doNotPrompt = await useConfirm('添加到作品', '模板内容将替换页面内容', 'warning', { confirmButtonText: '知道了', cancelButtonText: '不再提示' })
     if (!doNotPrompt) {
       localStorage.setItem('hide_replace_prompt', '1')
       hideReplacePrompt = true
@@ -139,9 +142,15 @@ async function selectItem(item: IGetTempListData) {
   } else {
     result = JSON.parse(item.data)
   }
-  const { page, widgets } = result
-  pageStore.setDPage(page)
-  widgetStore.setTemplate(widgets)
+  if (Array.isArray(result)) {
+    const { global, layers } = result[0]
+    pageStore.setDPage(global)
+    widgetStore.setTemplate(layers)
+  } else {
+    const { page, widgets } = result
+    pageStore.setDPage(page)
+    widgetStore.setTemplate(widgets)
+  }
   setTimeout(() => {
     forceStore.setZoomScreenChange()
   }, 300)
@@ -153,6 +162,10 @@ async function selectItem(item: IGetTempListData) {
 function setTempId(tempId: number | string) {
   const { id } = route.query
   router.push({ path: '/home', query: { tempid: tempId, id }, replace: true })
+}
+
+const openPSD = () => {
+  window.open(router.resolve('/psd').href, '_blank')
 }
 
 defineExpose({
@@ -210,5 +223,10 @@ defineExpose({
   text-align: center;
   font-size: 14px;
   color: #999;
+}
+
+.upload-psd {
+  margin: 0 1rem;
+  width: calc(100% - 2rem);
 }
 </style>

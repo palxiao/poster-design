@@ -16,7 +16,8 @@
 <script lang="ts" setup>
 import { onMounted, nextTick, withDefaults } from 'vue'
 import { ElUpload, UploadRequestOptions } from 'element-plus'
-import Qiniu from '@/common/methods/QiNiu'
+// import Qiniu from '@/common/methods/QiNiu'
+import api from '@/api'
 import { getImage } from '@/common/methods/getImgDetail'
 import _config from '@/config'
 import useNotification from '@/common/methods/notification'
@@ -32,11 +33,11 @@ export type TUploadDoneData = {
   url: string
 }
 
-type TQiNiuUploadReturn = { hash: string, key: string }
+type TQiNiuUploadReturn = { hash: string; key: string }
 
 type TProps = {
   modelValue?: TModelData
-  options?: { bucket: string, prePath: string }
+  options?: { bucket: string; prePath: string }
   hold?: boolean
 }
 
@@ -49,7 +50,7 @@ type TEmits = {
 const props = withDefaults(defineProps<TProps>(), {
   modelValue: () => ({}),
   options: () => ({ bucket: 'xp-design', prePath: 'user' }),
-  hold: false
+  hold: false,
 })
 
 const emit = defineEmits<TEmits>()
@@ -63,15 +64,15 @@ let count: number = 0 // 当前上传总数
 
 let tempSimpleRes: TQiNiuUploadReturn | null // 单个文件上传时返回
 
-onMounted(async () => {
-  await nextTick()
-  setTimeout(() => {
-    // 加载七牛上传插件
-    const link_element = document.createElement('script')
-    link_element.setAttribute('src', _config.QINIUYUN_PLUGIN)
-    document.head.appendChild(link_element)
-  }, 1000)
-})
+// onMounted(async () => {
+//   await nextTick()
+//   setTimeout(() => {
+//     // 加载七牛上传插件
+//     const link_element = document.createElement('script')
+//     link_element.setAttribute('src', _config.QINIUYUN_PLUGIN)
+//     document.head.appendChild(link_element)
+//   }, 1000)
+// })
 
 const upload = async ({ file }: UploadRequestOptions) => {
   if (props.hold) {
@@ -93,10 +94,9 @@ const uploadQueue = async () => {
     if (file) {
       if (file.size <= 1024 * 1024) {
         tempSimpleRes = await qiNiuUpload(file) // 队列有文件，执行上传
-        console.log("tempSimpleRes", tempSimpleRes)
         const { width, height } = await getImage(file)
-        useNotification('上传成功', '公共测试账户，上传请注意保护隐私哦!', { position: 'bottom-left' })
-        emit('done', { width, height, url: _config.IMG_URL + tempSimpleRes?.key }) // 单个文件进行响应
+        useNotification('上传成功', '', { position: 'bottom-left' })
+        emit('done', { width, height, url: tempSimpleRes?.url }) // 单个文件进行响应
       } else useNotification('爱护小水管', '请上传小于 1M 的图片哦!', { type: 'error', position: 'bottom-left' })
       uploading = false
       handleRemove() // 移除已上传文件
@@ -120,9 +120,12 @@ const qiNiuUpload = async (file: File): Promise<null | TQiNiuUploadReturn> => {
       emit('load', file)
       resolve(null)
     } else {
-      const result = await Qiniu.upload(file, props.options, (res: Type.Object) => {
-        updatePercent(res.total.percent)
+      const result = await api.material.upload({ file }, (up: any, dp: any) => {
+        console.log(up, dp)
       })
+      // const result = await Qiniu.upload(file, props.options, (res: Type.Object) => {
+      //   updatePercent(res.total.percent)
+      // })
       resolve(result)
     }
   })

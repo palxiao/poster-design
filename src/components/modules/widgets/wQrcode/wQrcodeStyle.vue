@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:41:53
  * @Description: 
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 17:53:23
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-12 09:26:04
 -->
 <template>
   <div id="w-image-style">
@@ -80,12 +80,12 @@ import { TUpdateAlignData } from '@/store/design/widget/actions/align'
 
 type TState = {
   activeNames: string[]
-  innerElement: TWQrcodeSetting,
-  tag: boolean,
-  ingoreKeys: string[],
-  layerIconList: TIconItemSelectData[],
-  alignIconList: TIconItemSelectData[],
-  localization: QrCodeLocalizationData,
+  innerElement: TWQrcodeSetting
+  tag: boolean
+  ingoreKeys: string[]
+  layerIconList: TIconItemSelectData[]
+  alignIconList: TIconItemSelectData[]
+  localization: QrCodeLocalizationData
 }
 
 const state = reactive<TState>({
@@ -98,11 +98,9 @@ const state = reactive<TState>({
   localization,
 })
 
-
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const forceStore = useForceStore()
-
 
 // const {
 //   dActiveElement, dWidgets
@@ -121,7 +119,7 @@ watch(
     if (Number(newValue.uuid) == -1) {
       state.innerElement.cropEdit = false
       widgetStore.updateWidgetData({
-        uuid: lastUuid ?? "",
+        uuid: lastUuid ?? '',
         key: 'cropEdit',
         value: false,
       })
@@ -134,7 +132,7 @@ watch(
       lastUuid = newValue.uuid
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -142,7 +140,7 @@ watch(
   (newValue, oldValue) => {
     changeValue()
   },
-  { deep: true }
+  { deep: true },
 )
 
 function created() {
@@ -168,13 +166,10 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof TWQrcodeSetting
     if (state.ingoreKeys.indexOf(key) !== -1) {
-      (dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
-    } else if (
-      key !== 'setting' && key !== 'record' &&
-      state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]
-    ) {
+      ;(dActiveElement.value as Record<string, any>)[itemKey] = state.innerElement[itemKey]
+    } else if (key !== 'setting' && key !== 'record' && state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]) {
       widgetStore.updateWidgetData({
-        uuid: dActiveElement.value?.uuid || "",
+        uuid: dActiveElement.value?.uuid || '',
         key: key as TUpdateWidgetPayload['key'],
         value: state.innerElement[itemKey] as TUpdateWidgetPayload['value'],
       })
@@ -192,20 +187,13 @@ function finish(key: string, value: number | number[] | string) {
     uuid: dActiveElement.value?.uuid || '',
     key: key as TUpdateWidgetPayload['key'],
     value: value,
-    pushHistory: true,
   })
-  // store.dispatch("updateWidgetData", {
-  //   uuid: dActiveElement.value.uuid,
-  //   key: key,
-  //   value: value,
-  //   pushHistory: true,
-  // })
 }
 
 function layerAction(item: TIconItemSelectData) {
   console.log(item)
   widgetStore.updateLayerIndex({
-    uuid: dActiveElement.value?.uuid || "",
+    uuid: dActiveElement.value?.uuid || '',
     value: item.value as number,
   })
   // store.dispatch("updateLayerIndex", {
@@ -217,7 +205,7 @@ function layerAction(item: TIconItemSelectData) {
 async function alignAction(item: TIconItemSelectData) {
   widgetStore.updateAlign({
     align: item.value as TUpdateAlignData['align'],
-    uuid: dActiveElement.value?.uuid || "",
+    uuid: dActiveElement.value?.uuid || '',
   })
   // store.dispatch("updateAlign", {
   //   align: item.value,
@@ -237,7 +225,7 @@ async function uploadImgDone(img: TUploadDoneData) {
   // this.innerElement.width = img.width
   // this.innerElement.height = img.height * (this.innerElement.width / img.width)
   state.innerElement.url = img.url
-  
+
   // store.commit('setShowMoveable', true)
   controlStore.setShowMoveable(true)
 }

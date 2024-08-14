@@ -8,11 +8,16 @@
 @height2: 54px;
 
 @canvasBG: #f8f8f8;
+@pageBG: #f0f2f5;
+@canvasDeepBG: #000;
 
 .page-design-bg-color {
-  // background-color: #4b678c;
-  // background-color: #4682b4;
+  background-color: @canvasDeepBG;
 }
+.page-bg-color {
+  background-color: @pageBG;
+}
+
 #page-design-index {
   display: flex;
   flex-direction: column;

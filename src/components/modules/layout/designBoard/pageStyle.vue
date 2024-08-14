@@ -158,8 +158,7 @@ function changeValue() {
 function finish(key: keyof TPageState, value: string | number) {
   pageStore.updatePageData({
     key: key,
-    value: value,
-    pushHistory: true,
+    value: value
   })
 }
 async function uploadImgDone(img: TUploadDoneData) {
@@ -174,8 +173,7 @@ async function deleteBg() {
   _localTempBG = null
   pageStore.updatePageData({
     key: 'backgroundImage',
-    value: '',
-    pushHistory: true,
+    value: ''
   })
   await nextTick()
   state.mode = state.modes[1]

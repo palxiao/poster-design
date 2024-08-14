@@ -3,16 +3,14 @@
  * @Date: 2024-03-18 21:00:00
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 18:17:13
+ * @LastEditTime: 2024-08-12 09:29:10
  */
 
 import { useCanvasStore, useWidgetStore } from "@/store"
 import { THistoryStore } from ".."
 
-/** push操作历史记录 */
+/** push操作历史记录（历史记录功能已重构，该方法不再使用） */
 export function pushHistory(store: THistoryStore, msg: string = "") {
-  console.error('历史记录功能已重构，该方法即将移除：pushHistory');
-  
   // const pageStore = useCanvasStore()
   // const widgetStore = useWidgetStore()
   // console.log('history压栈', '来源: ' + msg)

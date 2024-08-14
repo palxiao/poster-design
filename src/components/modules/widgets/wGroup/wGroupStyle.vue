@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:21:37
  * @Description: 组合设置
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-06-29 17:57:24
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-12 09:25:37
 -->
 <template>
   <div id="w-group-style">
@@ -142,8 +142,7 @@ function finish(key: string, value: string | number | number[]) {
   widgetStore.updateWidgetData({
     uuid: dActiveElement.value?.uuid || "",
     key: key as TUpdateWidgetPayload['key'],
-    value: value  as TUpdateWidgetPayload['value'],
-    pushHistory: true,
+    value: value  as TUpdateWidgetPayload['value']
   })
   // store.dispatch("updateWidgetData", {
   //   uuid: dActiveElement.value.uuid,

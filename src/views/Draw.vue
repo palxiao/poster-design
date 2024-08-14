@@ -1,5 +1,5 @@
 <template>
-  <div id="page-design-index" ref="pageDesignIndex">
+  <div ref="pageDesignIndex">
     <div class="page-design-index-wrap">
       <design-board class="page-design-wrap fixed-canvas" pageDesignCanvasId="page-design-canvas"></design-board>
     </div>
@@ -51,7 +51,7 @@ async function load() {
   const { id, tempid, tempType: type = 0, index = 0  }: any = route.query 
   if (id || tempid) {
     const postData = {
-      id: Number(id || tempid),
+      id: id || tempid,
       type: Number(type)
     }
     const { data, width, height } = await api.home[id ? 'getWorks' : 'getTempDetail'](postData)

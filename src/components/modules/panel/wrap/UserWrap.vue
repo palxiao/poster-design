@@ -3,7 +3,7 @@
  * @Date: 2022-02-13 22:18:35
  * @Description: 我的
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-03 21:00:26
+ * @LastEditTime: 2024-08-12 09:32:00
 -->
 <template>
   <div class="wrap">
@@ -15,14 +15,9 @@
       <uploader v-model="state.percent" class="upload" @done="uploadDone">
         <el-button class="upload-btn" plain><i class="iconfont icon-upload" /> 上传图片</el-button>
       </uploader>
-      <el-button class="upload-btn upload-psd" plain type="primary" @click="openPSD">导入 PSD</el-button>
+      <el-button disabled class="upload-btn upload-psd" plain type="primary" @click="openPSD">导入 PSD</el-button>
       <div style="margin: 1rem; height: 100vh">
-        <photo-list
-          ref="imgListRef" 
-          :edit="state.editOptions.photo" :isDone="state.isDone"
-          :listData="state.imgList"
-          @load="load" @drag="dragStart" @select="selectImg"
-        />
+        <photo-list ref="imgListRef" :edit="state.editOptions.photo" :isDone="state.isDone" :listData="state.imgList" @load="load" @drag="dragStart" @select="selectImg" />
       </div>
     </div>
     <div v-show="state.tabActiveName === 'design'" class="wrap">
@@ -60,19 +55,18 @@ type TProps = {
 }
 
 type TState = {
-  prePath: string,
-  percent: { num: number }, // 当前上传进度
-  imgList: IGetTempListData[],
-  designList: IGetTempListData[],
-  isDone: boolean,
-  editOptions: Record<string, any>,
-  tabActiveName: string,
+  prePath: string
+  percent: { num: number } // 当前上传进度
+  imgList: IGetTempListData[]
+  designList: IGetTempListData[]
+  isDone: boolean
+  editOptions: Record<string, any>
+  tabActiveName: string
 }
 
 const props = defineProps<TProps>()
 
 const router = useRouter()
-
 
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
@@ -107,7 +101,6 @@ const load = (init?: boolean) => {
   loading = true
   page += 1
   api.material.getMyPhoto({ page }).then(({ list }) => {
-    
     if (list.length <= 0) {
       state.isDone = true
     } else {
@@ -166,7 +159,7 @@ onMounted(() => {
 
 const selectImg = async (index: number) => {
   const item = state.imgList[index]
-  
+
   // store.commit('setShowMoveable', false) // 清理掉上一次的选择
   controlStore.setShowMoveable(false) // 清理掉上一次的选择
 
@@ -189,7 +182,6 @@ type controlImgParam = {
 }
 
 const deleteImg = async ({ i, item }: controlImgParam) => {
-  
   // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
 
@@ -208,9 +200,9 @@ const deleteWorks = async ({ i, item }: controlImgParam) => {
   if (isPass) {
     await api.material.deleteMyWorks({ id: item.id })
     setTimeout(() => {
-      router.push({ path: '/home', query: {  }, replace: true })
+      router.push({ path: '/home', query: {}, replace: true })
       loadDesign(true)
-    }, 300);
+    }, 300)
   }
 }
 
@@ -226,7 +218,7 @@ state.editOptions = {
       name: '删除',
       fn: deleteWorks,
     },
-  ]
+  ],
 }
 
 const dragStart = (index: number) => {
@@ -234,10 +226,15 @@ const dragStart = (index: number) => {
   widgetStore.setSelectItem({ data: { value: item }, type: 'image' })
   // store.commit('selectItem', { data: { value: item }, type: 'image' })
 }
-const uploadDone = async (res: TUploadDoneData) => {
-  await api.material.addMyPhoto(res)
+const uploadDone = async (res: any) => {
+  // await api.material.addMyPhoto(res)
+  // state.imgList = []
+  // load(true)
+  const newList = [res, ...state.imgList]
   state.imgList = []
-  load(true)
+  setTimeout(() => {
+    state.imgList = newList // 模拟加载
+  }, 300)
 }
 
 const tabChange = (tabName: TabPaneName) => {

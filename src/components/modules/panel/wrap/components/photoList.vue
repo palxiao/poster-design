@@ -102,7 +102,7 @@ watch(
       return
     }
     let list = newList.filter((v: IGetTempListData) => !oldList.includes(v)) // difference
-    list = JSON.parse(JSON.stringify(list))
+    list = JSON.parse(JSON.stringify(list))  
     const marginRight = 6 // 间距
     const limitWidth = (await getFatherWidth()) - marginRight
     const standardHeight = 280 // 高度阈值

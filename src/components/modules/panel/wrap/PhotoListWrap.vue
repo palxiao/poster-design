@@ -3,7 +3,7 @@
  * @Date: 2022-02-11 18:48:23
  * @Description: 照片图库 Form:Unsplash无版权图片
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-03-19 10:04:39
+ * @LastEditTime: 2024-08-14 18:50:09
 -->
 <template>
   <div class="wrap">
@@ -42,12 +42,12 @@ type TProps = {
 }
 
 type TState = {
-  recommendImgList: TGetImageListResult[],
+  recommendImgList: TGetImageListResult[]
   loadDone: boolean
   page: number
-  currentCategory: TCurrentCategory | null,
-  types: [],
-  showList: TGetImageListResult[][],
+  currentCategory: TCurrentCategory | null
+  types: []
+  showList: TGetImageListResult[][]
 }
 
 type TCurrentCategory = {
@@ -56,7 +56,6 @@ type TCurrentCategory = {
 }
 
 const props = defineProps<TProps>()
-
 
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
@@ -74,9 +73,12 @@ let loading = false
 
 onMounted(async () => {
   if (state.types.length <= 0) {
-    const types = await api.material.getKinds({ type: 4 })
-    state.types = types
-    for (const iterator of types) {
+    // const types = await api.material.getKinds({ type: 4 })
+    state.types = [
+      { id: 1, name: '照片列表，自适应布局' },
+      { id: 2, name: '照片列表，自适应布局' },
+    ]
+    for (const iterator of state.types) {
       const { list } = await api.material.getImagesList({ cate: iterator.id, pageSize: 2 })
       state.showList.push(list)
     }
@@ -85,7 +87,7 @@ onMounted(async () => {
 
 const selectImg = async (index: number, list: TGetImageListResult[]) => {
   const item = list ? list[index] : state.recommendImgList[index]
-  
+
   // store.commit('setShowMoveable', false) // 清理掉上一次的选择
   controlStore.setShowMoveable(false) // 清理掉上一次的选择
 

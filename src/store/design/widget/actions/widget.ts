@@ -3,7 +3,7 @@
  * @Date: 2024-03-28 21:00:00
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 18:49:09
+ * @LastEditTime: 2024-08-12 09:30:53
  */
 
 import { useCanvasStore, useHistoryStore } from '@/store'
@@ -17,13 +17,12 @@ export type TUpdateWidgetPayload = {
   uuid: string
   key: TUpdateWidgetKey
   value: number | string | boolean | Record<string, any>
-  pushHistory?: boolean
 }
 
 /** 更新组件数据 */
-export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHistory }: TUpdateWidgetPayload) {
+export function updateWidgetData(store: TWidgetStore, { uuid, key, value }: TUpdateWidgetPayload) {
   const widget = store.dWidgets.find((item) => item.uuid === uuid)
-  if (widget && (widget[key] !== value || pushHistory)) {
+  if (widget && widget[key] !== value) {
     switch (key) {
       case 'width':
         // const minWidth = widget.record.minWidth
@@ -58,14 +57,6 @@ export function updateWidgetData(store: TWidgetStore, { uuid, key, value, pushHi
         break
     }
     ;(widget[key] as TUpdateWidgetPayload['value']) = value
-    if (pushHistory) {
-      const historyStore = useHistoryStore()
-      setTimeout(() => {
-        historyStore.pushHistory('updateWidgetData')
-        // pushHistory && store.dispatch('pushHistory', 'updateWidgetData')
-      }, 100)
-    }
-    // store.dispatch('reChangeCanvas')
   }
 }
 
@@ -75,15 +66,14 @@ export type TUpdateWidgetMultiplePayload = {
     key: TUpdateWidgetKey
     value: number
   }[]
-  pushHistory?: boolean
 }
 
 /** 一次更新多个widget */
-export function updateWidgetMultiple(store: TWidgetStore, { uuid, data, pushHistory }: TUpdateWidgetMultiplePayload) {
+export function updateWidgetMultiple(store: TWidgetStore, { uuid, data }: TUpdateWidgetMultiplePayload) {
   for (const item of data) {
     const { key, value } = item
     const widget = store.dWidgets.find((item) => item.uuid === uuid)
-    if (widget && (widget[key] !== value || pushHistory)) {
+    if (widget && widget[key] !== value) {
       switch (key) {
         case 'left':
         case 'top':
@@ -110,11 +100,6 @@ export function updateWidgetMultiple(store: TWidgetStore, { uuid, data, pushHist
       ;(widget[key] as number | string) = value
     }
   }
-  setTimeout(() => {
-    const historyStore = useHistoryStore()
-    historyStore.pushHistory('updateWidgetMultiple')
-    // store.dispatch('pushHistory', 'updateWidgetMultiple')
-  }, 100)
 }
 
 /** 添加 Widget */
@@ -129,14 +114,7 @@ export function addWidget(store: TWidgetStore, setting: TdWidgetData) {
   store.selectWidget({
     uuid: store.dWidgets[len - 1].uuid,
   })
-  // store.dispatch('selectWidget', {
-  //   uuid: store.dWidgets[len - 1].uuid,
-  // })
-
-  historyStore.pushHistory('addWidget')
-  // store.dispatch('pushHistory', 'addWidget')
   canvasStore.reChangeCanvas()
-  // store.dispatch('reChangeCanvas')
 }
 
 /** 删除组件 */
@@ -215,21 +193,16 @@ export function deleteWidget(store: TWidgetStore) {
     store.updateGroupSize(store.dActiveElement.uuid)
     // store.dispatch('updateGroupSize', store.dActiveElement.uuid)
   }
-
-  historyStore.pushHistory('deleteWidget')
-  // store.dispatch('pushHistory', 'deleteWidget')
   canvasStore.reChangeCanvas()
-  // store.dispatch('reChangeCanvas')
 }
 
 export type TsetWidgetStyleData = {
   uuid: string
   key: keyof TdWidgetData
   value: any
-  pushHistory?: boolean
 }
 
-export function setWidgetStyle(state: TWidgetStore, { uuid, key, value, pushHistory }: TsetWidgetStyleData) {
+export function setWidgetStyle(state: TWidgetStore, { uuid, key, value }: TsetWidgetStyleData) {
   const widget = state.dWidgets.find((item) => item.uuid === uuid)
   if (!widget) return
   ;(widget[key] as Record<string, any>) = value
@@ -247,7 +220,7 @@ export function setDLayouts(state: TWidgetStore, data: any[]) {
   pageStore.setDPage(data[pageStore.dCurrentPage].global)
   setTimeout(() => {
     state.dActiveElement = pageStore.dPage
-  }, 150);
+  }, 150)
 }
 
 export function updateDWidgets(state: TWidgetStore) {

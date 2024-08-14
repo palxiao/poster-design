@@ -3,7 +3,7 @@
  * @Date: 2022-07-12 11:26:53
  * @Description: 上传用户模板
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-03 20:57:29
+ * @LastEditTime: 2024-08-12 14:11:57
 -->
 <template>
   <el-button v-show="isDone" type="primary" plain @click="prepare"><b>上传模板</b></el-button>
@@ -132,11 +132,11 @@ async function uploadImgs() {
 
     const uploadTemplate = async () => {
       emit('change', { downloadPercent: 95, downloadText: '正在处理封面', downloadMsg: '即将结束...' })
-      const cover = await draw()
-      const { id, stat, msg } = await api.home.saveWorks({ cover, title: '自设计模板', data: JSON.stringify({ page, widgets }), width: page.width, height: page.height })
-      stat !== 0 ? useNotification('保存成功', '可在"我的模板"中查看') : useNotification('保存失败', msg, { type: 'error' })
+      // const cover = await draw()
+      const { id, stat, msg } = await api.home.saveTemp({ title: '自设计模板', data: JSON.stringify({ page, widgets }), width: page.width, height: page.height })
+      stat !== 0 ? useNotification('保存成功', '') : useNotification('保存失败', msg, { type: 'error' })
       router.push({ path: '/psd', query: { id }, replace: true })
-      emit('change', { downloadPercent: 99.99, downloadText: '上传完成', cancelText: '点击查看作品' }) // 关闭弹窗
+      emit('change', { downloadPercent: 99.99, downloadText: '上传完成', cancelText: '' }) // 关闭弹窗
     }
 
 defineExpose({

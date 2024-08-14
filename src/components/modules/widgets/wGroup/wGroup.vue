@@ -3,7 +3,7 @@
  * @Date: 2021-08-02 09:41:41
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-16 17:19:15
+ * @LastEditTime: 2024-08-12 09:25:33
 -->
 <template>
   <div
@@ -203,8 +203,7 @@ function keyChange(uuid: string, key: keyof TParamsData, value: number) {
   widgetStore.updateWidgetData({
     uuid,
     key,
-    value,
-    pushHistory: false,
+    value
   })
   // store.dispatch('updateWidgetData', {
   //   uuid,

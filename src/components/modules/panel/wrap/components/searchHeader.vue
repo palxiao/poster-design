@@ -65,13 +65,14 @@ const state = reactive<TState>({
 })
 
 if (props.type != 'none') {
-  api.home.getCategories({ type: 1 }).then((list: any) => {
-    list.unshift({ id: 0, name: '全部' })
-    state.materialCates = list
-    const { cate } = route.query
-    cate && (state.currentIndex = cate as string)
-    cate && action('change', state.materialCates[Number(cate)], Number(cate))
-  })
+  state.materialCates = [{ id: 0, name: '示例模板' }]
+  // api.home.getCategories({ type: 1 }).then((list: any) => {
+  //   list.unshift({ id: 0, name: '全部' })
+  //   state.materialCates = list
+  //   const { cate } = route.query
+  //   cate && (state.currentIndex = cate as string)
+  //   cate && action('change', state.materialCates[Number(cate)], Number(cate))
+  // })
 }
 
 watch(

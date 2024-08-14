@@ -2,8 +2,8 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-28 21:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-28 14:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-12 09:29:31
  */
 
 import { useCanvasStore, useHistoryStore } from "@/store"
@@ -29,8 +29,6 @@ export function addGroup(store: TWidgetStore, group: TdWidgetData[]) {
   const len = store.dWidgets.length
   store.dActiveElement = store.dWidgets[len - 1]
 
-  historyStore.pushHistory("addGroup")
-  // store.dispatch('pushHistory', 'addGroup')
   canvasStore.reChangeCanvas()
   // store.dispatch('reChangeCanvas')
 }

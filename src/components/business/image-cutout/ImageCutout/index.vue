@@ -6,13 +6,14 @@
  * @Date: 2024-03-03 19:00:00
 -->
 <template>
-  <el-dialog v-model="state.show" title="AI 智能抠图" align-center width="650" @close="handleClose">
+  <el-dialog v-model="state.show" title="AI 抠图（模拟演示）" align-center width="650" @close="handleClose">
     <uploader v-if="!state.rawImage" :hold="true" :drag="true" :multiple="true" class="uploader" @load="handleUploaderLoad">
       <div class="uploader__box">
         <upload-filled style="width: 64px; height: 64px" />
-        <div class="el-upload__text">在此拖入或选择<em>上传图片</em></div>
+        <!-- <div class="el-upload__text">在此拖入或选择<em>上传图片</em></div> -->
+        <div class="el-upload__text">自动抠图目前依赖后端服务，需自行部署</div>
       </div>
-      <div class="el-upload__tip">服务器带宽小，为了更好的体验，请上传 2M 内的图片</div>
+      <div class="el-upload__tip el-upload__text"><em>体验前端效果演示以及修补编辑器，随便上传一张图片即可触发</em></div>
     </uploader>
     <el-progress v-if="!state.cutImage && state.progressText" :percentage="state.progress">
       <el-button text>
@@ -104,7 +105,8 @@ defineExpose({
 const handleUploaderLoad = (file: File) => {
   selectImageFile(state as TImageCutoutState, raw, file, (result, name) => {
     fileName = name
-    const resultImage = URL.createObjectURL(result)
+    // TODO: 模拟演示
+    const resultImage = 'https://pic.imgdb.cn/item/6522253ec458853aefb0b013.webp' // URL.createObjectURL(result)
     state.rawImage && (state.cutImage = resultImage)
     requestAnimationFrame(run)
   })

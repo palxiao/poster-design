@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-02-29 16:49:59
+ * @LastEditTime: 2024-08-14 18:48:34
 -->
 <template>
   <div class="wrap">
@@ -62,7 +62,7 @@ type TState = {
   sub: []
   list: TGetListData[]
   currentType: Number
-  currentCheck:number
+  currentCheck: number
   colors: string[]
   currentCategory: TCurrentCategory | null
   types: []
@@ -82,7 +82,6 @@ const dragHelper = new DragHelper()
 const props = defineProps<TProps>()
 
 const colors = ['#f8704b', '#5b89ff', '#2cc4cc', '#a8ba73', '#f8704b']
-
 
 const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
@@ -105,12 +104,15 @@ const pageOptions = { page: 0, pageSize: 20 }
 
 onMounted(async () => {
   if (state.types.length <= 0) {
-    const types = await api.material.getKinds({ type: 2 })
-    state.types = types
-    for (const iterator of types) {
+    // const types = await api.material.getKinds({ type: 2 })
+    state.types = [
+      { cate: 'png', name: '贴纸，图片类型' },
+      { cate: 'svg', name: 'SVG矢量元素，可编辑' },
+      { cate: 'mask', name: '容器Mask，图形遮罩' },
+    ]
+    for (const iterator of state.types) {
       const { list } = await api.material.getList({
-        cate: iterator.id,
-        pageSize: 3,
+        cate: iterator.cate,
       })
       state.showList.push(list)
     }
@@ -181,7 +183,6 @@ defineExpose({
   mouseup,
   mousemove,
 })
-
 
 // computed: {
 //   ...mapGetters(['dPage']),

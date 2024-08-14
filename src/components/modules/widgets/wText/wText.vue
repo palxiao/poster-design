@@ -45,13 +45,7 @@
         v-html="params.text"
       ></div>
     </template>
-    <div
-      ref="editWrap" :style="{ fontFamily: `'${params.fontClass.value}'` }"
-      class="edit-text" spellcheck="false" 
-      :contenteditable="state.editable ? 'plaintext-only' : false"
-      @input="writingText($event)"
-      @blur="writeDone($event)"
-      v-html="params.text"></div>
+    <div ref="editWrap" :style="{ fontFamily: `'${params.fontClass.value}'` }" class="edit-text" spellcheck="false" :contenteditable="state.editable ? 'plaintext-only' : false" @input="writingText($event)" @blur="writeDone($event)" v-html="params.text"></div>
   </div>
 </template>
 
@@ -147,14 +141,7 @@ watch(
       uuid: String(props.params.uuid),
       key: 'editable',
       value,
-      pushHistory: false,
     })
-    // store.dispatch('updateWidgetData', {
-    //   uuid: props.params.uuid,
-    //   key: 'editable',
-    //   value,
-    //   pushHistory: false,
-    // })
   },
 )
 
@@ -171,20 +158,13 @@ function updateRecord() {
 }
 
 function updateText(e?: Event) {
-  const value = e && e.target ? (e.target as HTMLElement).innerHTML : props.params.text//.replace(/\n/g, '<br/>')
+  const value = e && e.target ? (e.target as HTMLElement).innerHTML : props.params.text //.replace(/\n/g, '<br/>')
   if (value !== props.params.text) {
     widgetStore.updateWidgetData({
       uuid: String(props.params.uuid),
       key: 'text',
       value,
-      pushHistory: false,
     })
-    // store.dispatch('updateWidgetData', {
-    //   uuid: props.params.uuid,
-    //   key: 'text',
-    //   value,
-    //   pushHistory: false,
-    // })
   }
 }
 
@@ -197,24 +177,13 @@ function writingText(e?: Event) {
     uuid: String(props.params.uuid),
     key: 'height',
     value: el.offsetHeight,
-    pushHistory: false,
   })
-  // store.dispatch('updateWidgetData', {
-  //   uuid: props.params.uuid,
-  //   key: 'height',
-  //   value: el.offsetHeight,
-  //   pushHistory: false,
-  // })
   forceStore.setUpdateRect()
   // store.commit('updateRect')
 }
 
 function writeDone(e: Event) {
   state.editable = false
-  setTimeout(() => {
-    historyStore.pushHistory("文字修改")
-    // store.dispatch('pushHistory', '文字修改')
-  }, 100)
   updateText(e)
 }
 
@@ -231,9 +200,9 @@ function dblclickText(_: MouseEvent) {
       range.select()
     } else {
       const range = document.createRange()
-      range.selectNodeContents(el);
-      window.getSelection()?.removeAllRanges();
-      window.getSelection()?.addRange(range);
+      range.selectNodeContents(el)
+      window.getSelection()?.removeAllRanges()
+      window.getSelection()?.addRange(range)
     }
   }, 100)
 }

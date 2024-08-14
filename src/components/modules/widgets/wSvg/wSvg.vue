@@ -21,11 +21,11 @@
 // svg
 // const NAME = 'w-svg'
 
-import { useCanvasStore, useForceStore, useWidgetStore } from '@/store';
+import { useCanvasStore, useForceStore, useWidgetStore } from '@/store'
 import { TWSvgSetting } from './wSvgSetting'
-import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget';
+import { CSSProperties, computed, nextTick, onBeforeMount, onMounted, onUpdated, reactive, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { TUpdateWidgetPayload } from '@/store/design/widget/actions/widget'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters';
 
 type TProps = {
@@ -37,12 +37,12 @@ type TProps = {
 }
 
 type TState = {
-  position: CSSProperties['position'], // 'absolute'relative
-  editBoxStyle: CSSProperties,
-  editBoxs: Record<string, any>,
-  editingKey: string,
-  cropWidgetXY: Record<string, any>, // 裁剪框移动作用
-  attrRecord: Record<string, any>, // 记录可更改的属性
+  position: CSSProperties['position'] // 'absolute'relative
+  editBoxStyle: CSSProperties
+  editBoxs: Record<string, any>
+  editingKey: string
+  cropWidgetXY: Record<string, any> // 裁剪框移动作用
+  attrRecord: Record<string, any> // 记录可更改的属性
   svgImg: Record<string, any> | null
 }
 
@@ -56,7 +56,7 @@ const state = reactive<TState>({
   editingKey: '',
   cropWidgetXY: {}, // 裁剪框移动作用
   attrRecord: {}, // 记录可更改的属性
-  svgImg: null
+  svgImg: null,
 })
 
 const widgetStore = useWidgetStore()
@@ -88,7 +88,7 @@ watch(
   () => {
     attrsChange()
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 )
 
 watch(
@@ -96,7 +96,7 @@ watch(
   async () => {
     await nextTick()
     updateRecord()
-  }
+  },
 )
 
 watch(
@@ -106,7 +106,7 @@ watch(
     state.svgImg.attr({
       'xlink:href': props.params.imgUrl,
     })
-  }
+  },
 )
 
 watch(
@@ -118,7 +118,7 @@ watch(
     } else {
       el?.removeEventListener('mousedown', touchstart, false)
     }
-  }
+  },
 )
 
 onUpdated(() => {
@@ -195,16 +195,14 @@ function loadSvg() {
   // console.log(this.params)
   const Snap = (window as any).Snap
   return new Promise<void>((resolve) => {
-    Snap.load(
-      props.params.svgUrl,
-      function (svg: Record<string, any>) {
-        let svg2 = Snap(svg.node)
-        // let item = svg2.select('circle')
-        // item.attr({
-        //   fill: 'rgb(255, 0, 0)',
-        // })
-        // console.log(item.attr('fill'))
-
+    // Snap.load(
+    // props.params.svgUrl,
+    //   function (svg: Record<string, any>) {
+        // 链接加载方法
+    //   },
+    // )
+    const svg = Snap.parse(props.params.svgUrl)
+    let svg2 = Snap(svg.node)
         let items = svg2.node.childNodes
         svg2.node.removeAttribute('width')
         svg2.node.removeAttribute('height')
@@ -250,24 +248,12 @@ function loadSvg() {
           }
           // console.log(element.attributes, element.getAttribute('fill'), _this.params.colors)
         }
-
-        // _this.viewBox = svg2.node.viewBox.baseVal
-        // _this.svgImg = img
-
-        // img.attr({
-        //   width: '100%',
-        //   height: '100%',
-        //   transform: '',
-        //   'xlink:href': _this.params.imgUrl || '',
-        // })
+        
         if (widgetRef.value) {
           // svg.node.classList.add('svg__box')
           widgetRef.value.appendChild(svg.node)
         }
         resolve()
-      },
-      document.getElementById(props.params.uuid),
-    )
   })
 }
 
@@ -323,14 +309,7 @@ function changeFinish(key: string, value: number) {
     uuid: props.params.uuid,
     key: key as TUpdateWidgetPayload['key'],
     value: value,
-    pushHistory: true,
   })
-  // store.dispatch("updateWidgetData", {
-  //   uuid: props.params.uuid,
-  //   key: key,
-  //   value: value,
-  //   pushHistory: true,
-  // })
 }
 
 function move(payload: Record<string, any>) {

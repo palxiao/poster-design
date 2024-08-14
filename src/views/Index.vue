@@ -4,7 +4,7 @@
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastUpdateContent: Support typescript
- * @LastEditTime: 2024-05-19 05:19:03
+ * @LastEditTime: 2024-08-12 15:53:20
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
@@ -25,8 +25,8 @@
           <el-divider direction="vertical" />
         </div>
         <HeaderOptions ref="optionsRef" v-model="state.isContinue" @change="optionsChange">
-          <el-button size="large" class="primary-btn" @click="dealWith('save')">{{ $t('header.save') }}</el-button>
-          <el-button ref="ref4" size="large" class="primary-btn" plain type="primary" @click="dealWith('download')">{{ $t('header.download') }}</el-button>
+          <!-- <el-button size="large" class="primary-btn" @click="dealWith('save')">{{ $t('header.save') }}</el-button> -->
+          <el-button ref="ref4" size="large" class="primary-btn" type="primary" @click="dealWith('download')">{{ $t('header.download') }}</el-button>
         </HeaderOptions>
       </div>
     </div>

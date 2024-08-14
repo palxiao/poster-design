@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-09 11:41:53
  * @Description: 
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-04-15 11:08:36
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-12 09:26:17
 -->
 <template>
   <div id="w-image-style">
@@ -83,7 +83,7 @@ watch(
   () => {
     change()
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -91,7 +91,7 @@ watch(
   () => {
     changeValue()
   },
-  { deep: true }
+  { deep: true },
 )
 
 function created() {
@@ -118,13 +118,10 @@ function changeValue() {
   for (let key in state.innerElement) {
     const itemKey = key as keyof TWSvgSetting
     if (state.ingoreKeys.indexOf(itemKey) !== -1) {
-      (dActiveElement.value as Record<string, any>)[key] = state.innerElement[itemKey]
-    } else if (
-      itemKey !== 'setting' && itemKey !== 'record' &&
-      state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]
-    ) {
+      ;(dActiveElement.value as Record<string, any>)[key] = state.innerElement[itemKey]
+    } else if (itemKey !== 'setting' && itemKey !== 'record' && state.innerElement[itemKey] !== (dActiveElement.value as Record<string, any>)[itemKey]) {
       widgetStore.updateWidgetData({
-        uuid: dActiveElement.value?.uuid || "",
+        uuid: dActiveElement.value?.uuid || '',
         key: key as TUpdateWidgetPayload['key'],
         value: state.innerElement[itemKey] as TUpdateWidgetPayload['value'],
       })
@@ -146,14 +143,7 @@ function finish(key: string, value: any) {
     uuid: dActiveElement.value?.uuid || '',
     key: key as TUpdateWidgetPayload['key'],
     value: value,
-    pushHistory: true,
   })
-  // store.dispatch("updateWidgetData", {
-  //   uuid: dActiveElement.value.uuid,
-  //   key: key,
-  //   value: value,
-  //   pushHistory: true,
-  // })
 }
 
 function layerAction(item: TIconItemSelectData) {

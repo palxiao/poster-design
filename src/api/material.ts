@@ -3,9 +3,10 @@
  * @Date: 2021-08-27 14:42:15
  * @Description: 媒体相关接口
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-12-11 11:40:47
+ * @LastEditTime: 2024-08-11 19:27:41
  */
 import fetch from '@/utils/axios'
+import _config from '@/config'
 import { IGetTempListData } from './home'
 
 // 获取素材分类：
@@ -130,3 +131,20 @@ type TAddMyPhotoParam = {
 
 // 添加图片
 export const addMyPhoto = (params: TAddMyPhotoParam) => fetch<void>('design/user/add_image', params)
+
+// 上传接口
+export const upload = ({ file, folder = 'user' }: any, cb: Function) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('folder', folder)
+  const extra = {
+    responseType: 'application/json',
+    onUploadProgress: (progress: any) => {
+      cb(Math.floor((progress.loaded / progress.total) * 100), 0)
+    },
+    onDownloadProgress: (progress: any) => {
+      cb(100, Math.floor((progress.loaded / progress.total) * 100))
+    },
+  }
+  return fetch(`${_config.SCREEN_URL}/api/file/upload`, formData, 'post', {}, extra)
+}

@@ -3,7 +3,7 @@
  * @Date: 2024-04-05 06:23:23
  * @Description:  
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-05-06 11:59:28
+ * @LastEditTime: 2024-08-12 09:27:06
  */
 export type TScreeData = {
   /** 记录编辑界面的宽度 */
@@ -51,7 +51,7 @@ export type TStoreAction = {
   updatePageData<T extends keyof TPageState>(data: {
     key: T
     value: TPageState[T]
-    pushHistory?: boolean
+    // pushHistory?: boolean
   }): void
   getDPage(data: TPageState): () => TPageState
   /** 设置dPage */

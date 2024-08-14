@@ -249,8 +249,7 @@ function setTransform(attrName: string, value: string | number) {
   widgetStore.updateWidgetData({
     uuid: props.params.uuid,
     key: 'transform',
-    value: setValue,
-    pushHistory: false,
+    value: setValue
   })
   // store.dispatch("updateWidgetData", {
   //   uuid: props.params.uuid,

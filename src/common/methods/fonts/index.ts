@@ -3,7 +3,7 @@
  * @Date: 2022-01-08 09:43:37
  * @Description: 字体处理
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2023-10-13 01:30:33
+ * @LastEditTime: 2024-08-12 10:33:36
  */
 // import { isSupportFontFamily, blob2Base64 } from './utils'
 import { TGetFontItemData, getFonts } from '@/api/material'
@@ -11,7 +11,7 @@ import { TGetFontItemData, getFonts } from '@/api/material'
 const nowVersion = '2' // 当前字体文件版本更新，将刷新前端缓存
 
 /** 字体item类型 */
-export type TFontItemData = { url: string } & Omit<TGetFontItemData, "woff">
+export type TFontItemData = { url: string } & Omit<TGetFontItemData, 'woff'>
 
 const fontList: TFontItemData[] = []
 // const download: any = {}
@@ -27,11 +27,27 @@ export const useFontStore = {
     }
 
     if (this.list.length === 0) {
-      const res = await getFonts({ pageSize: 400 })
+      // TODO: 模拟
+      const res = {
+        list: [
+          {
+            id: 543,
+            alias: '站酷快乐体',
+            preview: '',
+            ttf: null,
+            woff: 'https://lib.baomitu.com/fonts/zcool-kuaile/zcool-kuaile-regular.woff2',
+            value: 'zcool-kuaile-regular',
+            font_family: '',
+            size: 0,
+            lang: 'zh',
+            woff_size: 0,
+          },
+        ],
+      }
       this.list.unshift(
         ...res.list.map((x) => {
-          const { id, alias, oid, value, preview, woff, lang } = x
-          return { id, oid, value, preview, alias, url: woff, lang }
+          const { id, alias, value, preview, woff, lang } = x
+          return { id, oid: 0, value, preview, alias, url: woff, lang }
         }),
       )
       localStorage.setItem('FONTS', JSON.stringify(this.list))

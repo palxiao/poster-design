@@ -3,7 +3,7 @@
  * @Date: 2021-08-27 15:16:07
  * @Description: 背景图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-09 22:29:51
+ * @LastEditTime: 2024-08-12 09:49:35
 -->
 <template>
   <div class="wrap">
@@ -100,7 +100,7 @@ const load = async (init: boolean = false) => {
     pageOptions.page = 1
   }
 
-  await api.material.getImagesList({ cate: 16, page: pageOptions.page }).then(({ list }) => {
+  await api.material.getImagesList({ cate: 3, page: pageOptions.page }).then(({ list }) => {
     if (list.length > 0) {
       state.bgList.push(...list)
     } else {
@@ -120,8 +120,7 @@ function setBGcolor(color: string) {
   })
   pageStore.updatePageData({
     key: 'backgroundColor',
-    value: color,
-    pushHistory: true
+    value: color
   })
   widgetStore.selectWidget({
     uuid: '-1'
@@ -139,8 +138,7 @@ async function selectItem(item: TGetImageListResult) {
   })
   pageStore.updatePageData({
     key: 'backgroundImage',
-    value: item.url,
-    pushHistory: true,
+    value: item.url
   })
   widgetStore.selectWidget({
     uuid: '-1'

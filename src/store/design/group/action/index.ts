@@ -2,8 +2,8 @@
  * @Author: Jeremy Yu
  * @Date: 2024-03-28 14:00:00
  * @Description:
- * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-28 14:00:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-12 09:28:15
  */
 
 import { customAlphabet } from 'nanoid/non-secure'
@@ -78,10 +78,6 @@ export function realCombined(store: TGroupStore) {
     group.height = Number(bottom - top)
     widgetStore.dActiveElement = group
     widgetStore.dSelectWidgets = []
-
-    historyStore.pushHistory('realCombined')
-    // store.dispatch('pushHistory', 'realCombined')
-    // store.dispatch('reChangeCanvas')
   }
 }
 
