@@ -1,18 +1,11 @@
-<!--
- * @Author: ShawnPhang
- * @Date: 2024-08-11 16:17:52
- * @Description:  
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-14 21:13:18
--->
-<h2>迅排设计 - Poster Design</h2>
+<h2 align="center">迅排设计 - Poster Design</h2>
 
-<p>
+<p align="center">
 <a href=""><img src="https://img.shields.io/github/stars/palxiao/poster-design?style=flat" alt="starts"></a>
 <a href="https://github.com/palxiao/poster-design?tab=MIT-1-ov-file"><img src="https://img.shields.io/github/license/palxiao/poster-design?style=flat" alt="License"></a>
 </p>
 
-<p>
+<p align="center">
 <a href="https://trendshift.io/repositories/8728" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8728" alt="palxiao%2Fposter-design | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </p>
 
@@ -101,4 +94,4 @@ npm run server
 
 ### `LICENSE`
 
-本项目遵循 MIT 开源协议，如有疑问，建议仔细阅读并保留此 [中文版开源许可证](https://github.com/palxiao/poster-design/blob/main/LICENSE-ZH)。
+本项目遵循 MIT 开源协议，如有疑问，建议仔细阅读并保留此 [中文版开源许可证](https://github.com/palxiao/poster-design?tab=License-2-ov-file)。
