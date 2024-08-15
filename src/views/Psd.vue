@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-11 15:37:38
+ * @LastEditTime: 2024-08-15 18:00:32
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -72,8 +72,9 @@ import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
 import { processPSD2Page } from '@/utils/plugins/psd'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
-import { useCanvasStore, useControlStore, useWidgetStore } from '@/store'
+import { useCanvasStore, useControlStore, useWidgetStore, useGroupStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { wGroupSetting } from '@/components/modules/widgets/wGroup/groupSetting'
 
 type TState = {
   isDone: boolean
@@ -97,6 +98,7 @@ const controlStore = useControlStore()
 const route = useRoute()
 
 // const { dZoom } = useSetupMapGetters(['dZoom'])
+const groupStore = useGroupStore()
 const pageStore = useCanvasStore()
 const { dPage } = storeToRefs(pageStore)
 const { dZoom } = storeToRefs(useCanvasStore())
@@ -107,6 +109,7 @@ let loading: ReturnType<typeof useLoading> | null = null
     // const myWorker = new MyWorker('loadPSD')
 
 onMounted(async () => {
+  groupStore.initGroupJson(JSON.stringify(wGroupSetting))
   await nextTick()
   if (zoomControlRef.value){
     zoomControlRef.value.screenChange()
