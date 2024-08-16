@@ -106,7 +106,8 @@ const handleUploaderLoad = (file: File) => {
   selectImageFile(state as TImageCutoutState, raw, file, (result, name) => {
     fileName = name
     // TODO: 模拟演示
-    const resultImage = 'https://pic.imgdb.cn/item/6522253ec458853aefb0b013.webp' // URL.createObjectURL(result)
+    // const resultImage = 'https://pic.imgdb.cn/item/6522253ec458853aefb0b013.webp' // URL.createObjectURL(result)
+    const resultImage = 'https://s2.loli.net/2024/08/16/fSxD9wlpiu3IKJv.png'
     state.rawImage && (state.cutImage = resultImage)
     requestAnimationFrame(run)
   })

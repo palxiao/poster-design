@@ -26,7 +26,8 @@ export const selectImageFile = async (state: TImageCutoutState, raw: Ref<HTMLEle
     state.offsetWidth = (raw.value as HTMLElement).offsetWidth
   })
   // TODO: 模拟演示
-  state.rawImage = 'https://pic.imgdb.cn/item/65222530c458853aefb0adeb.webp' // URL.createObjectURL(file)
+  // state.rawImage = 'https://pic.imgdb.cn/item/66be4c1ed9c307b7e9f00b16.jpg' // URL.createObjectURL(file)
+  state.rawImage = 'https://s2.loli.net/2024/08/16/45aIdYbhgSefEoc.jpg'
 
   // 返回抠图结果
   // const result = await api.ai.upload(file, (up: number, dp: number) => {
