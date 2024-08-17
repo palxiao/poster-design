@@ -3,7 +3,7 @@
  * @Date: 2020-07-22 20:13:14
  * @Description: 服务端截图
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-12 11:03:07
+ * @LastEditTime: 2024-08-17 11:23:58
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
 const uuid = require('../utils/uuid.ts')

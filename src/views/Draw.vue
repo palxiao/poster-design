@@ -54,12 +54,12 @@ async function load() {
     let content = JSON.parse(data)
     const isGroupTemplate = Number(type) == 1
 
-    if (Array.isArray(content)) {
+    if (Array.isArray(content) && !isGroupTemplate) {
       const { global, layers } = content[index]
       content = {page: global, widgets: layers}
     }
     const widgets = isGroupTemplate ? content : content.widgets
-
+    
     if (isGroupTemplate) {
       dPage.value.width = width
       dPage.value.height = height
