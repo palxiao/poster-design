@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-15 18:00:32
+ * @LastEditTime: 2024-08-17 18:53:35
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -27,13 +27,7 @@
       <design-board class="page-design-wrap" pageDesignCanvasId="page-design-canvas">
         <div v-if="state.isDone" class="shelter" :style="{ width: (dPage.width * dZoom) / 100 + 'px', height: (dPage.height * dZoom) / 100 + 'px' }"></div>
         <uploader v-else accept=".psd" :hold="true" :drag="true" class="uploader" @load="selectFile">
-          <div class="uploader__box">
-            <img
-              style="margin-right: 1rem"
-              src="https://cdn.dancf.com/design/svg/icon_psdimport.37e6f23e.svg"
-              alt="upload"
-            /> 在此拖入或选择 PSD 文件
-          </div>
+          <div class="uploader__box"><img style="margin-right: 1rem" src="https://cdn.dancf.com/design/svg/icon_psdimport.37e6f23e.svg" alt="upload" /> 在此拖入或选择 PSD 文件</div>
         </uploader>
       </design-board>
       <style-panel v-show="state.isDone"></style-panel>
@@ -45,11 +39,7 @@
     <!-- 旋转缩放组件 -->
     <Moveable />
     <!-- 遮罩百分比进度条 -->
-    <ProgressLoading
-      :percent="state.downloadPercent" :text="state.downloadText"
-      :cancelText="state.cancelText" :msg="state.downloadMsg"
-      @cancel="cancel" @done="state.downloadPercent = 0"
-    />
+    <ProgressLoading :percent="state.downloadPercent" :text="state.downloadText" :cancelText="state.cancelText" :msg="state.downloadMsg" @cancel="cancel" @done="state.downloadPercent = 0" />
   </div>
 </template>
 
@@ -68,8 +58,9 @@ import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import HeaderOptions, { TEmitChangeData } from './components/UploadTemplate.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
-// import MyWorker from '@/utils/plugins/webWorker'
-import { processPSD2Page } from '@/utils/plugins/psd'
+import MyWorker from '@/utils/plugins/webWorker'
+// import { processPSD2Page } from '@/utils/plugins/psd'
+import { createBase64 } from '@/utils/plugins/psd'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
 import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 import { useCanvasStore, useControlStore, useWidgetStore, useGroupStore } from '@/store'
@@ -106,22 +97,16 @@ const { dZoom } = storeToRefs(useCanvasStore())
 const zoomControlRef = ref<typeof zoomControl | null>()
 
 let loading: ReturnType<typeof useLoading> | null = null
-    // const myWorker = new MyWorker('loadPSD')
+const myWorker = new MyWorker('loadPSD')
 
 onMounted(async () => {
   groupStore.initGroupJson(JSON.stringify(wGroupSetting))
   await nextTick()
-  if (zoomControlRef.value){
+  if (zoomControlRef.value) {
     zoomControlRef.value.screenChange()
   }
   state.isDone = false
 })
-
-function loadJS() {
-  const link_element = document.createElement('script')
-  link_element.setAttribute('src', '/psd.js')
-  document.head.appendChild(link_element)
-}
 
 async function selectFile(file: File) {
   loading = useLoading()
@@ -130,38 +115,34 @@ async function selectFile(file: File) {
   state.isDone = true
 }
 
+const types: any = {
+  text: wTextSetting,
+  image: wImageSetting,
+}
+
 async function loadPSD(file: File) {
   // const { compositeBuffer, psdFile } = await myWorker.start(file)
-  const data = await processPSD2Page(file)
+  const { data }: any = await myWorker.start(file)
+  // const data = await processPSD2Page(file)
 
-  setTimeout(async () => {
-    const types: any = {
-      text: wTextSetting,
-      image: wImageSetting,
-    }
-    for (let i = 0; i < data.clouds.length; i++) {
-      const x: any = data.clouds[i]
-      const rawData = JSON.parse(JSON.stringify(types[x.type])) || {}
-      delete x.type
-      x.src && (x.imgUrl = x.src) && delete x.src
-      widgetStore.addWidget(Object.assign(rawData, x))
-      // store.dispatch('addWidget', Object.assign(rawData, x))
-    }
+  for (let i = 0; i < data.clouds.length; i++) {
+    const x: any = data.clouds[i]
+    const rawData = JSON.parse(JSON.stringify(types[x.type])) || {}
+    delete x.type
+    x.src && (x.imgUrl = createBase64(x.src, { width: x.width, height: x.height })) && delete x.src
+    widgetStore.addWidget(Object.assign(rawData, x))
+  }
 
-    const { width, height, background: bg } = data
-
-    pageStore.setDPage(Object.assign(pageStore.dPage, { width, height, backgroundColor: bg.color, backgroundImage: bg.image }))
-    // store.commit('setDPage', Object.assign(store.getters.dPage, { width, height, backgroundColor: bg.color, backgroundImage: bg.image }))
-    
-    await loadDone()
-  }, 10)
+  const { width, height, background: bg } = data
+  pageStore.setDPage(Object.assign(pageStore.dPage, { width, height, backgroundColor: bg.color, backgroundImage: createBase64(bg.image, { width, height }) }))
+  await loadDone()
 }
 
 async function clear() {
   widgetStore.setDWidgets([])
   pageStore.setDPage(Object.assign(pageStore.dPage, { width: 1920, height: 1080, backgroundColor: '#ffffff', backgroundImage: '' }))
   controlStore.setShowMoveable(false)
-  
+
   await nextTick()
   state.isDone = false
 }
@@ -178,7 +159,7 @@ const cancel = () => {
   window.open(`${window.location.protocol + '//' + window.location.host}/home?id=${route.query.id}`)
 }
 
-const {handleKeydowm, handleKeyup, dealCtrl} = shortcuts.methods
+const { handleKeydowm, handleKeyup, dealCtrl } = shortcuts.methods
 
 // ...mapGetters(['dPage', 'dZoom']),
 
@@ -188,7 +169,6 @@ onMounted(() => {
   const instance = getCurrentInstance()
   document.addEventListener('keydown', handleKeydowm(controlStore, checkCtrl, instance, dealCtrl), false)
   document.addEventListener('keyup', handleKeyup(controlStore, checkCtrl), false)
-  loadJS()
 })
 
 onBeforeMount(() => {
@@ -218,7 +198,6 @@ function jump2word() {
 }
 
 defineExpose({
-  loadJS,
   selectFile,
   clear,
   cancel,

@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2023-07-11 14:21:33
  * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-11 17:01:37
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-08-17 15:56:39
  */
 import Vue, { VNode } from 'vue'
 
@@ -41,6 +41,7 @@ declare module 'dayjs'
 declare module 'fontfaceobserver'
 declare module 'throttle-debounce'
 declare module 'html2canvas'
+declare module 'psd.js'
 
 declare module 'vue/types/vue' {
   interface Vue {

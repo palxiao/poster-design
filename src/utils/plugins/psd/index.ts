@@ -1,6 +1,9 @@
-// import { colorer } from './color'
+import PSD from 'psd.js'
 import { RGBA2HexA } from './color/color'
 const colorer = { RGBA2HexA }
+
+import * as helper from './helper'
+export const createBase64 = helper.createBase64
 
 export const CLOUD_TYPE = {
   text: 'text',
@@ -12,7 +15,7 @@ export const WRITING_MODE = {
 }
 
 export async function parsePSDFromURL(url: string) {
-  return await (window as any).PSD.fromURL(url)
+  return await PSD.fromURL(url)
 }
 
 function toRGBAColor(data: number[]) {
@@ -129,9 +132,9 @@ function toCloudTextConfig(data: any, layer: any) {
 function toCloudImageConfig(data: any, layer: any) {
   // const { type, b64 } = splitBase64(layer.image.toBase64());
   // const src = URL.createObjectURL(b64toBlob(b64, type));
-
   return {
-    src: layer?.image?.toBase64(),
+    src: layer?.image?.pixelData,
+    // src: layer?.image?.toBase64(),
     // src: layer.image.toPng(),
     type: CLOUD_TYPE.image,
     width: data.width,
@@ -152,7 +155,7 @@ function toCloud(data: any, layer: any) {
 
 export async function convertPSD2Page(psd: any) {
   const { children, document: doc } = psd.tree().export()
-  console.log(psd.tree().export())
+  console.log('PSD_tree_export', psd.tree().export())
 
   // const node = psd.tree().childrenAtPath('taylor-vick-M5tzZtFCOfs-unsplash')[0]
   // console.log(node)
@@ -221,31 +224,9 @@ export async function convertPSD2Page(psd: any) {
   return page
 }
 
-function file2Base64(file: any) {
-  return new Promise((resolve) => {
-    // const blob = new Blob(file)
-    // resolve(URL.createObjectURL(blob))
-    // const reader = new FileReader()
-    // reader.onload = function(e: any) {
-    //   resolve(e.target.result)
-    // }
-    // reader.readAsDataURL(blob)
-    let binary = ''
-    const bytes = new Uint8Array(file)
-    const len = bytes.byteLength
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i])
-    }
-    resolve('data:image/png;base64,' + window.btoa(binary))
-    // resolve('data:image/png;base64,' + btoa(new Uint8Array(file).reduce((data, byte) => data + String.fromCharCode(byte), '')))
-  })
-}
-
 export async function processPSD2Page(file: File) {
   const url = URL.createObjectURL(file)
   const psd = await parsePSDFromURL(url)
-
   URL.revokeObjectURL(url)
-
   return convertPSD2Page(psd)
 }
