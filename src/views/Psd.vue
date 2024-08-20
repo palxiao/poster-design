@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-18 21:06:05
+ * @LastEditTime: 2024-08-20 16:14:18
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -58,7 +58,8 @@ import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import HeaderOptions, { TEmitChangeData } from './components/UploadTemplate.vue'
 import ProgressLoading from '@/components/common/ProgressLoading/index.vue'
-import MyWorker from '@/utils/plugins/webWorker'
+import useWorker from '@/utils/plugins/webWorker'
+import psdWorker from '../utils/plugins/worker/loadPSD.worker.ts?worker'
 // import { processPSD2Page } from '@/utils/plugins/psd'
 import { createBase64 } from '@/utils/plugins/psd'
 // import { useSetupMapGetters } from '@/common/hooks/mapGetters'
@@ -97,7 +98,7 @@ const { dZoom } = storeToRefs(useCanvasStore())
 const zoomControlRef = ref<typeof zoomControl | null>()
 
 let loading: ReturnType<typeof useLoading> | null = null
-const myWorker = new MyWorker('loadPSD')
+const myWorker = new useWorker(psdWorker)
 
 onMounted(async () => {
   groupStore.initGroupJson(JSON.stringify(wGroupSetting))
