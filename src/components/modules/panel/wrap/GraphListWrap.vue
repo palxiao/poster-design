@@ -1,9 +1,9 @@
 <!--
- * @Author: ShawnPhang
+ * @Author: ShawnPhang <https://m.palxp.cn>
  * @Date: 2021-08-27 15:16:07
  * @Description: 素材列表
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-14 18:48:34
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-09-25 00:39:00
 -->
 <template>
   <div class="wrap">
@@ -65,7 +65,7 @@ type TState = {
   currentCheck: number
   colors: string[]
   currentCategory: TCurrentCategory | null
-  types: []
+  types: { cate: string, name: string }[]
   showList: TGetListData[][]
   searchKeyword: string
 }
