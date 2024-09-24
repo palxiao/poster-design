@@ -1,10 +1,10 @@
 
 /*
- * @Author: Jeremy Yu
+ * @Author: Jeremy Yu <https://github.com/JeremyYu-cn>
  * @Date: 2024-03-18 21:00:00
  * @Description: 画布全局配置
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-12 09:27:22
+ * @LastEditTime: 2024-09-25 00:39:00
  */
 
 import { Store, defineStore } from 'pinia'
@@ -95,6 +95,10 @@ const CanvasStore = defineStore<"canvasStore", TCanvasState, {}, TStoreAction>("
     /** 设置底部工具栏高度 */
     setBottomHeight(h: number) {
       this.dBottomHeight = h
+    },
+    /** 更新当前页面下标 */
+    setDCurrentPage(n: number) {
+      this.dCurrentPage = n
     }
   }
 })

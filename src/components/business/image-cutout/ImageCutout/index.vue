@@ -13,7 +13,7 @@
         <!-- <div class="el-upload__text">在此拖入或选择<em>上传图片</em></div> -->
         <div class="el-upload__text">自动抠图目前依赖后端服务，需自行部署</div>
       </div>
-      <div class="el-upload__tip el-upload__text"><em>体验前端效果演示以及修补编辑器，随便上传一张图片即可触发</em></div>
+      <div class="el-upload__tip el-upload__text"><em>体验前端效果演示以及修补编辑器，任意上传一张图片即可触发</em></div>
     </uploader>
     <el-progress v-if="!state.cutImage && state.progressText" :percentage="state.progress">
       <el-button text>

@@ -1,9 +1,9 @@
 /*
- * @Author: ShawnPhang
+ * @Author: ShawnPhang <https://m.palxp.cn>
  * @Date: 2021-08-27 14:42:15
  * @Description: 媒体相关接口
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-11 19:27:41
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-09-25 00:39:00
  */
 import fetch from '@/utils/axios'
 import _config from '@/config'
@@ -15,7 +15,7 @@ export const getKinds = (params: Type.Object = {}) => fetch('design/cate', param
 type TGetListParam = {
   first_id?: number
   second_id?: string
-  cate?: number
+  cate?: string | number
   pageSize?: number
 }
 

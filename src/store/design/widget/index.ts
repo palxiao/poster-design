@@ -20,6 +20,7 @@ import { TUpdateAlignData, updateAlign } from "./actions/align";
 // import { TWidgetJsonData, widgetJsonData } from "./getter";
 import { TupdateLayerIndexData, ungroup, updateLayerIndex } from "./actions/layer";
 import pageDefault from "../canvas/page-default";
+import { TCanvasStore } from "../canvas";
 
 export type TdWidgetData = TPageState & Partial<TCommonItemData> & {
   parent?: string
@@ -125,7 +126,7 @@ type TAction = {
   resize: (data: TSize) => void
   setWidgetStyle: (data: TsetWidgetStyleData) => void
   setDWidgets: (data: TdWidgetData[]) => void
-  setDLayouts: (data: TdLayout) => void
+  setDLayouts: (data: TdLayout[]) => void
   updateDWidgets: () => void
   lockWidgets: () => void
   setMouseEvent: (e: MouseEvent | null) => void
@@ -201,8 +202,10 @@ const WidgetStore = defineStore<"widgetStore", TWidgetState, TGetter, TAction>("
     autoResizeAll(data) { autoResizeAll(this, data) },
     setDLayouts(data) { setDLayouts(this, data) },
     getWidgets() {
-      const pageStore = useCanvasStore()
-      !this.dLayouts[pageStore.dCurrentPage] && pageStore.dCurrentPage--
+      const pageStore = useCanvasStore() as TCanvasStore
+      !this.dLayouts[pageStore.dCurrentPage] && pageStore.setDCurrentPage(pageStore.dCurrentPage - 1)
+      // !this.dLayouts[pageStore.dCurrentPage] && pageStore.dCurrentPage--
+
       return this.dLayouts[pageStore.dCurrentPage].layers
     }
   }

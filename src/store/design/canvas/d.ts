@@ -1,9 +1,9 @@
 /*
- * @Author: ShawnPhang
+ * @Author: ShawnPhang <https://m.palxp.cn>
  * @Date: 2024-04-05 06:23:23
  * @Description:  
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-12 09:27:06
+ * @LastEditors: Jeremy Yu <https://github.com/JeremyYu-cn>
+ * @LastEditTime: 2024-09-25 00:39:00
  */
 export type TScreeData = {
   /** 记录编辑界面的宽度 */
@@ -53,13 +53,15 @@ export type TStoreAction = {
     value: TPageState[T]
     // pushHistory?: boolean
   }): void
-  getDPage(data: TPageState): () => TPageState
+  getDPage(data: TPageState): TPageState
   /** 设置dPage */
   setDPage(data: TPageState): void
   /** 更新 Page（从layouts获取）*/
   updateDPage(): void
   /** 设置底部工具栏高度 */
   setBottomHeight(h: number): void
+  /** 更新当前页面下标 */
+  setDCurrentPage(n: number): void
 }
 
 export type TPageState = {
