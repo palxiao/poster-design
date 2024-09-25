@@ -96,7 +96,7 @@ type TGetCompListParam = {
   search?: string
   page?: number
   type?: number
-  pageSize: number
+  pageSize?: number
   cate?: number | string
 }
 
@@ -109,6 +109,7 @@ export type TGetCompListResult = {
   title: string
   width: number
   name?: string
+  cate?: string
 }
 
 type getCompListReturn = TPageRequestResult<TGetCompListResult[]>

@@ -55,7 +55,7 @@ type TState = {
   list: TGetCompListResult[]
   searchValue: string
   currentCategory: TGetCompListResult | null
-  types: []
+  types: {cate: string, name: string}[]
   showList: TGetCompListResult[][]
 }
 
@@ -129,7 +129,7 @@ const load = async (init: boolean = false) => {
 
   const res = await api.home.getCompList({
     ...pageOptions,
-    cate: state.currentCategory?.id,
+    cate: state.currentCategory?.id || state.currentCategory?.cate,
   })
   if (init) {
     state.list = res?.list
