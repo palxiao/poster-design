@@ -72,6 +72,7 @@ type TState = {
 
 type TCurrentCategory = {
   name: string
+  cate?: string | number
   id?: number
 }
 
@@ -149,7 +150,7 @@ const load = async (init: boolean = false) => {
   state.loading = true
   pageOptions.page += 1
   const list = await api.material.getList({
-    ...{ cate: state.currentCategory?.id, search: state.searchKeyword, ...pageOptions },
+    ...{ cate: state.currentCategory?.id || state.currentCategory?.cate, search: state.searchKeyword, ...pageOptions },
   })
   if (init) {
     state.list = list?.list
@@ -168,6 +169,7 @@ const searchChange = (_: Event) => {
 }
 
 const selectTypes = (item: TCurrentCategory) => {
+  console.log(item)
   state.currentCategory = item
   load(true)
 }
