@@ -3,6 +3,7 @@ node_modules
 /dist
 config.json
 /.vite
+yarn.lock
 
 screenshot/node_modules/
 screenshot/dist/

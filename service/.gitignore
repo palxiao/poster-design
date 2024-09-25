@@ -11,6 +11,7 @@ yarn-error.log*
 static
 config.json
 config.js
+yarn.lock
 
 # Runtime data
 pids
