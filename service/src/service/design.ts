@@ -55,7 +55,9 @@ module.exports = {
     try {
       const detail = fs.readFileSync(path.resolve(__dirname, `../mock/materials/${cate}.json`), 'utf8')
       send.success(res, { list: JSON.parse(detail) })
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   },
   // design/imgs 获取照片素材（虚拟）
   async getPhotos(req: any, res: any) {
