@@ -7,11 +7,9 @@
     "prepared": "npm i && cd service && npm i",
     "serve": "npm run dev & cd service && npm run dev",
     "dev": "cross-env NODE_ENV=development vite",
+    "build": "cross-env NODE_ENV=production && vite build",
     "v-build": "cross-env NODE_ENV=production && vite build",
-    "v-build-hard": "cross-env NODE_ENV=production vue-tsc --noEmit && vite build",
-    "build": "node script/set config.json && npm run v-build && sh script/reverse.sh",
-    "publish": "sh script/publish.sh",
-    "publish-fast": "git add . && git commit -m 'build: auto publish' && sh script/publish.sh"
+    "v-build-hard": "cross-env NODE_ENV=production vue-tsc --noEmit && vite build"
   },
   "dependencies": {
     "@palxp/color-picker": "workspace:*",
