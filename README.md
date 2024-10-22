@@ -40,7 +40,7 @@
 git clone https://github.com/palxiao/poster-design.git
 cd poster-design
 npm run prepared
-npm run server
+npm run serve
 ```
 
 输入网址 http://127.0.0.1:5173/ 访问站点，更多参阅[详细说明文档](https://xp.palxp.cn/#/articles/1689319644311)。
