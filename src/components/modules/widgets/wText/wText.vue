@@ -55,7 +55,7 @@
 
 import { reactive, toRefs, computed, onUpdated, watch, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { fontWithDraw } from '@/utils/widgets/loadFontRule'
+// import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg'
 import { wTextSetting } from './wTextSetting'
 import { useForceStore, useHistoryStore, useWidgetStore } from '@/store'
@@ -89,7 +89,7 @@ const widget = ref<HTMLElement | null>(null)
 const editWrap = ref<HTMLElement | null>(null)
 
 const dActiveElement = computed(() => widgetStore.dActiveElement)
-const isDraw = computed(() => route.name === 'Draw' && fontWithDraw)
+const isDraw = computed(() => route.name === 'Draw')
 
 onUpdated(() => {
   updateRecord()
