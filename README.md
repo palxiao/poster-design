@@ -13,7 +13,7 @@
 <a href="https://trendshift.io/repositories/8728" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8728" alt="palxiao%2Fposter-design | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </p>
 
-一款漂亮易用且功能强大的创意图片编辑器，类似稿定设计、创客贴、Canva 等产品，开源、强大、好玩是我们的关键词。
+漂亮易用的在线创意图片编辑器、海报设计器，仿造稿定设计等产品，开源、强大、好玩是我们的关键词。
 
 适用于多种场景：海报图片生成、电商分享图、文章长图、视频/公众号封面等，轻松实现创意，迅速完成图文排版，设计如此简单！
 
