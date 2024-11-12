@@ -3,7 +3,7 @@
  * @Date: 2021-08-02 09:41:41
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-12 09:25:33
+ * @LastEditTime: 2024-11-12 13:47:21
 -->
 <template>
   <div
@@ -85,7 +85,9 @@ onMounted(async () => {
   document.addEventListener('mousedown', touchstart, false)
   document.addEventListener('mouseup', touchend, false)
   if (props.params?.rotate && widget.value) {
-    (widget.value.style.transform += `rotate(${props.params.rotate})`)
+    // TODO: 设置原点是为了暂时解决组合旋转后缩放保存数据错位问题
+    widget.value.style.transformOrigin = 'left top'
+    widget.value.style.transform += `rotate(${props.params.rotate})`
   }
 })
 
