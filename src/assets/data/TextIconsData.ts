@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2021-08-02 18:27:27
  * @Description:
- * @LastEditors: ShawnPhang, Jeremy Yu <https://github.com/JeremyYu-cn>
- * @LastEditTime: 2024-03-01 20:55:51
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-11-14 16:41:19
  */
 
 import { AlignListData } from "./AlignListData"
@@ -89,6 +89,13 @@ export const styleIconList2 = [
     key: 'textAlign',
     icon: 'icon-align-justify-text',
     tip: '两端对齐',
+    value: 'justify',
+    select: false,
+  },
+  {
+    key: 'textAlignLast',
+    icon: 'icon-align-justify-text',
+    tip: '分散对齐',
     value: 'justify',
     select: false,
   },

@@ -17,6 +17,7 @@
       fontSize: params.fontSize + 'px',
       color: params.color,
       textAlign: params.textAlign,
+      textAlignLast: params.textAlignLast,
       fontWeight: params.fontWeight,
       fontStyle: params.fontStyle,
       textDecoration: params.textDecoration,
@@ -188,7 +189,7 @@ function writeDone(e: Event) {
 }
 
 function dblclickText(_: MouseEvent) {
-  // store.commit('setShowMoveable', false)
+  if (state.editable) return
   state.editable = true
   const el = editWrap.value || widget.value
   setTimeout(() => {

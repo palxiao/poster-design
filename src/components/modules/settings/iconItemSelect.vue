@@ -3,12 +3,12 @@
  * @Date: 2021-07-29 18:31:27
  * @Description: 
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-10 07:36:58
+ * @LastEditTime: 2024-11-14 16:48:06
 -->
 <template>
   <div class="icon-item-select">
     <span v-if="label" class="label">{{ label }}</span>
-    <ul class="list btn__bar flex">
+    <ul v-if="data" class="list btn__bar flex">
       <el-tooltip v-for="(item, index) in data" :key="index" class="item" effect="dark" :content="item.tip" placement="top" :show-after="300" >
         <li :class="{ 'list-item': true, active: item.select }" @click="selectItem(item)">
           <i :class="`${item.extraIcon ? 'icon' : 'iconfont'} ${item.icon}`"></i>
@@ -52,6 +52,8 @@ function selectItem(item: TIconItemSelectData) {
     item.select = !item.select
   }
   emit('finish', item)
+  // text-align非独立选项，恢复选中状态
+  item.key === 'textAlign' && (item.select = true)
 }
 
 </script>

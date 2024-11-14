@@ -15,8 +15,8 @@
         <value-select v-model="state.innerElement.fontSize" label="大小" suffix="px" :data="state.fontSizeList" @finish="(value) => finish('fontSize', value)" />
       </div>
 
-      <icon-item-select class="style-item" :data="styleIconList1" @finish="textStyleAction" />
-      <icon-item-select class="style-item" :data="styleIconList2" @finish="textStyleAction" />
+      <icon-item-select class="style-item" :data="state.styleIconList1" @finish="textStyleAction" />
+      <icon-item-select class="style-item" :data="state.styleIconList2" @finish="textStyleAction" />
 
       <!-- <div style="flex-wrap: nowrap" class="line-layout style-item">
         <value-select v-model="innerElement.lineHeight" label="行距" suffix="倍" :data="lineHeightList" @finish="(value) => finish('lineHeight', value)" />
@@ -213,13 +213,16 @@ function layerAction(item: TIconItemSelectData) {
 }
 
 async function textStyleAction(item: TIconItemSelectData) {
-  let value = item.key === 'textAlign' ? item.value : (item.value as number[])[item.select ? 1 : 0]
-  ;(state.innerElement as Record<string, any>)[item.key || ''] = value
-  // TODO: 对竖版文字的特殊处理
+  const innerText = state.innerElement as Record<string, any>
+  let value = ['textAlign', 'textAlignLast'].includes(item.key || '') ? item.value : (item.value as number[])[item.select ? 1 : 0]
+  // 分散对齐判断是否选中，选中时则为抹去属性
+  item.key === 'textAlignLast' && innerText[item.key] === value && (value = undefined)
+  // 设置属性
+  item.key && (innerText[item.key] = value)
+  // 对竖版文字特殊处理
   item.key === 'writingMode' && relationChange()
   await nextTick()
   forceStore.setUpdateRect()
-  // store.commit('updateRect')
 }
 
 async function alignAction(item: TIconItemSelectData) {
@@ -259,7 +262,7 @@ function changeStyleIconList() {
   for (let i = 0; i < state.styleIconList2.length; i++) {
     let key = state.styleIconList2[i].key
     state.styleIconList2[i].select = false
-    if (key === 'textAlign' && state.innerElement[key] === state.styleIconList2[i].value) {
+    if (['textAlign', 'textAlignLast'].includes(key || '') && state.innerElement[key] === state.styleIconList2[i].value) {
       state.styleIconList2[i].select = true
       continue
     }
