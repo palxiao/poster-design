@@ -3,7 +3,7 @@
  * @Date: 2022-02-01 13:41:59
  * @Description:
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-12 06:18:56
+ * @LastEditTime: 2024-11-14 17:36:17
  */
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -35,6 +35,9 @@ app.all('*', (req: any, res: any, next: any) => {
 })
 
 app.use('/static', setUploadContentType, express.static(process.cwd() + `/static/`))
+if (process.env.NODE_ENV === 'development') {
+  app.use('/store', setUploadContentType, express.static(process.cwd() + `/src/mock/assets`))
+}
 
 app.use(handleTimeout)
 
