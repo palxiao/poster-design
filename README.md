@@ -10,7 +10,8 @@
 </p>
 
 <p align="center">
-<a href="https://trendshift.io/repositories/8728" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8728" alt="palxiao%2Fposter-design | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/8728" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8728" alt="poster-design | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+  <a href="https://hellogithub.com/repository/56a75cfc34da43549d2bb46dab305ba2" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=56a75cfc34da43549d2bb46dab305ba2" alt="Featured｜HelloGitHub" style="width: 250px; height: 55px;" width="250" height="55" /></a>
 </p>
 
 漂亮易用的在线创意图片编辑器、海报设计器，仿造稿定设计等产品，开源、强大、好玩是我们的关键词。
