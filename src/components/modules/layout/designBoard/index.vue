@@ -3,7 +3,7 @@
  * @Date: 2024-04-10 23:02:46
  * @Description: 主画布
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-20 16:16:10
+ * @LastEditTime: 2024-11-26 13:42:18
 -->
 <template>
   <div id="main">
@@ -110,7 +110,7 @@ onMounted(() => {
   const pageDesignEl = document.getElementById('page-design')
   if (!pageDesignEl) return
   pageDesignEl.addEventListener('mousedown', handleSelection, false)
-  pageDesignEl.addEventListener('mousemove', debounce(100, false, handleMouseMove), false)
+  // pageDesignEl.addEventListener('mousemove', debounce(100, false, handleMouseMove), false)
   // 绑定空格事件
   const scrollContainer: any = document.querySelector('#main')
   const dragContainer: any = pageDesignEl
