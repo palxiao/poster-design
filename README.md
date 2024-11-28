@@ -168,6 +168,12 @@ npm run serve
 | --- | --- |
 | <a href="https://dooring.vip/"> <img style="height: 90px" src="https://github.com/palxiao/poster-design/assets/21021314/2240801f-8484-4fd2-8505-8205daa6d53c" /></a> | <a href="https://www.drawon.cn?useSource=hb1"> <img style="height: 120px" src="https://github.com/palxiao/poster-design/assets/21021314/258bb6ec-4e1e-4c86-b45c-22946213f209" /></a> |
 
+### 社区合作伙伴
+
+| LeaferJS |
+| --- |
+| <a href="https://www.leaferjs.com/"> <img style="height: 64px" src="https://github.com/user-attachments/assets/def32ec0-67ff-486e-a5ca-16f95dab290b" /></a> |
+
 ### `LICENSE`
 
 本项目遵循 MIT 开源协议，如有疑问，建议仔细阅读并保留此 [中文版开源许可证](https://github.com/palxiao/poster-design?tab=License-2-ov-file)。
