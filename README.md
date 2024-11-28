@@ -1,10 +1,10 @@
-<h2 align="center">迅排设计 - Poster Design</h2>
-
 <p align="center">
-<a href=""><img src="https://img.shields.io/github/stars/palxiao/poster-design?style=flat" alt="starts"></a>
+<img style="height: 90px" src="https://github.com/user-attachments/assets/e2b8c788-aded-4b1a-83ee-9bde124f5808" alt="迅排设计 - Poster Design">
+</p>
+<p align="center">
+  <a href=""><img src="https://img.shields.io/github/stars/palxiao/poster-design?style=flat" alt="starts"></a>
 <a href="https://github.com/palxiao/poster-design?tab=MIT-1-ov-file"><img src="https://img.shields.io/github/license/palxiao/poster-design?style=flat" alt="License"></a>
 </p>
-
 <p align="center">
 <a href="https://design.palxp.cn/">迅排官方网站</a> | <a href="https://xp.palxp.cn/">在线文档</a> | <a href="https://xp.palxp.cn/#/articles/1689323321667">常见问题</a> | <a href="https://juejin.cn/post/7348288810722869300">性能压测</a>
 </p>
