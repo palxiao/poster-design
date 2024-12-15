@@ -67,7 +67,7 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
       devices && (await page.emulate(devices))
     }
     // 自动模式下页面加载完毕立即截图
-    if (prevent === false) {
+    if (!prevent) {
       page.on('load', async () => {
         await autoScroll()
         await sleep(wait)
