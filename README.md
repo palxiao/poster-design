@@ -47,6 +47,25 @@ npm run serve
 
 关于部署等说明请前往项目中查看，后端项目代码位于根目录 [/service](https://github.com/palxiao/poster-design/tree/main/service) 下。
 
+### 快速启动
+使用[docker-compose.yml](docker/docker-compose.yaml) 文件快速启动。在运行安装命令之前，请确保您的机器上安装了 [Docker](https://docs.docker.com/get-docker/) 和 [Docker Compose](https://docs.docker.com/compose/install/)：
+> 特别注意⚠️：由于`ghcr.io/puppeteer/puppeteer`镜像，暂不支持Arm64架构。请在Amd64架构下运行。
+```
+docker compose up -d
+```
+运行后，可以在浏览器上访问[http://localhost](http://localhost) 直接访问
+
+#### 自定义镜像构建
+- 前端构建
+```
+docker build -t heimanba/poster-web -f ./docker/web/Dockerfile .
+```
+
+- 服务端构建
+```
+docker build -t heimanba/poster-api -f ./docker/api/Dockerfile ./service
+```
+
 ### 付费技术支持
 
 支持基于开源版定制有限功能，帮助开发者节省研发时间和成本，并提供全方位技术指导与答疑。了解/获取技术支持请访问：[迅排 Plus 服务](https://plus.palxp.cn/)。

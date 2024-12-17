@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  poster-web:
+    image: heimanba/poster-web
+    ports:
+      - "80:80"
+    depends_on:
+      - poster-api
+    network_mode: host
+
+  poster-api:
+    image: heimanba/poster-api
+    ports:
+      - "7001:7001"
+    network_mode: host
