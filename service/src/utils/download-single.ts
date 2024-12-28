@@ -15,7 +15,7 @@ const forceTimeOut = 60 // 强制超时时间，单位：秒
 const maxPXs = 4211840 // 超出此规格会触发限制器降低dpr，节省服务器资源
 const maximum = 5000 // 最大宽高限制，超过截断以防止服务崩溃
 
-const saveScreenshot = async (url: string, { path, width, height, thumbPath, size = 0, quality = 0, prevent, ua, devices, scale, wait }: any) => {
+export const saveScreenshot = async (url: string, { path, width, height, thumbPath, size = 0, quality = 0, prevent, ua, devices, scale, wait }: any) => {
   return new Promise(async (resolve: Function, reject: Function) => {
     let isPageLoad = false
     let browser: any = null
@@ -154,6 +154,5 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
   })
 }
 
-module.exports = { saveScreenshot }
+export default { saveScreenshot }
 
-export {}

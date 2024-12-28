@@ -7,7 +7,7 @@
  */
 let path = '/api'
 
-module.exports = {
+export default {
   SCREENGHOT: path + '/screenshots',
   PRINTSCREEN: path + '/printscreen',
   // 后端示例

@@ -5,13 +5,13 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2024-11-14 17:36:17
  */
-const express = require('express')
-const bodyParser = require('body-parser')
-const fs = require('fs')
-// const path = require('path')
-const router = require('./control/router.ts')
-const { filePath, servicePort } = require('./configs.ts')
-const handleTimeout = require('./utils/timeout.ts')
+
+import express from 'express'
+import bodyParser from 'body-parser'
+import fs from 'fs'
+import router from './control/router'
+import { filePath, servicePort } from './configs'
+import handleTimeout from './utils/timeout'
 
 const port = process.env.PORT || servicePort
 const app = express()
