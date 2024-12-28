@@ -2,8 +2,8 @@
  * @Author: Jeremy Yu
  * @Date: 2024-12-27 00:02:46
  * @Description: 图片生成HTML页面
- * @LastEditors: Jeremy Yu <https://book.yzmblog.top>
- * @LastEditTime: 2024-12-28 12:28:00
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2024-12-28 19:54:55
 -->
 
 <template>
@@ -28,7 +28,7 @@ import { onMounted, nextTick, ref, onUnmounted } from 'vue'
 import api from '@/api'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
-import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
+import { fontMinWithDraw, font2style } from '@/utils/widgets/loadFontRule'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import { useRoute } from 'vue-router'
 import { TPageState } from '@/store/design/canvas/d'
@@ -119,7 +119,7 @@ async function load() {
         await preloadBg.imgs()
       }
       try {
-        fontWithDraw && (await font2style(fontContent, fontData))
+        fontMinWithDraw && (await font2style(fontContent, fontData))
         // console.log('1. base64 yes')
         const preload = new Preload(imgsData)
         await preload.doms()

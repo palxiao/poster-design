@@ -56,7 +56,7 @@
 
 import { reactive, toRefs, computed, onUpdated, watch, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-// import { fontWithDraw } from '@/utils/widgets/loadFontRule'
+import { fontMinWithDraw } from '@/utils/widgets/loadFontRule'
 import getGradientOrImg from './getGradientOrImg'
 import { wTextSetting } from './wTextSetting'
 import { useForceStore, useHistoryStore, useWidgetStore } from '@/store'
@@ -117,9 +117,9 @@ watch(
 
     if (font.url && !isDone) {
       if (font.id && isDraw.value) {
-        // 如果为绘制模式，且开启了字体抽取，那么会跳过加载字体url的逻辑
-        // 此前该功能在demo中存在换行bug，实际上是由于抽取字体时忽略了空格导致的
         state.loading = false
+      }
+      if (fontMinWithDraw) {
         return
       }
       state.loading = !isDraw.value

@@ -13,7 +13,7 @@ import { StyleValue, onMounted, reactive, nextTick } from 'vue'
 import api from '@/api'
 import Preload from '@/utils/plugins/preload'
 import FontFaceObserver from 'fontfaceobserver'
-import { fontWithDraw, font2style } from '@/utils/widgets/loadFontRule'
+import { fontMinWithDraw, font2style } from '@/utils/widgets/loadFontRule'
 import designBoard from '@/components/modules/layout/designBoard/index.vue'
 import zoomControl from '@/components/modules/layout/zoomControl/index.vue'
 import { useRoute } from 'vue-router'
@@ -120,7 +120,7 @@ async function load() {
       // store.commit('setDPage', {...content.page, ...{backgroundImage}})
     }
     try {
-      fontWithDraw && (await font2style(fontContent, fontData))
+      fontMinWithDraw && (await font2style(fontContent, fontData))
       // console.log('1. base64 yes')
       const preload = new Preload(imgsData)
       await preload.doms()
