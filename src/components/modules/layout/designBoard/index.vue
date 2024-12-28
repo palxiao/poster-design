@@ -3,7 +3,7 @@
  * @Date: 2024-04-10 23:02:46
  * @Description: 主画布
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-11-26 13:42:18
+ * @LastEditTime: 2024-12-28 14:12:33
 -->
 <template>
   <div id="main">
@@ -19,7 +19,7 @@
         }"
       >
         <slot />
-        <resize-page :width="(dPage.width * dZoom) / 100" :height="(dPage.height * dZoom) / 100" />
+        <resize-page v-if="needTools" :width="(dPage.width * dZoom) / 100" :height="(dPage.height * dZoom) / 100" />
         <watermark :customStyle="{ height: (dPage.height * dZoom) / 100 + 'px' }">
           <div
             :id="props.pageDesignCanvasId"
@@ -43,7 +43,7 @@
             @mouseup="drop($event)"
           >
             <!-- <grid-size /> -->
-            <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
+            <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="[{ 'layer':needTools }, { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement?.parent === layer.uuid, 'layer-no-hover': dActiveElement?.uuid === layer.uuid }]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
               <template v-if="layer.isContainer">
                 <!-- :class="{
                   layer: true,
@@ -51,7 +51,7 @@
                   'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent,
                   'layer-hover': widget.uuid === dHoverUuid,
                 }" -->
-                <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="['layer', { 'layer-no-hover': dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
+                <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="[{ 'layer':needTools }, { 'layer-no-hover': dActiveElement?.uuid !== widget.parent && dActiveElement?.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
               </template>
             </component>
 
@@ -79,6 +79,8 @@ import { TPageState } from '@/store/design/canvas/d'
 import resizePage from './comps/resize.vue'
 import watermark from './comps/pageWatermark.vue'
 import { TdWidgetData } from '@/store/design/widget'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
 // 页面设计组件
 type TProps = {
@@ -104,6 +106,7 @@ const canvasStore = useCanvasStore()
 
 const props = defineProps<TProps>()
 
+const needTools = computed(() => route.name !== 'Draw' && route.name !== 'Html')
 const { dPage: curDPage } = storeToRefs(useCanvasStore())
 const { dZoom: curZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
 const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlStore)
