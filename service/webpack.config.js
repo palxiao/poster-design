@@ -39,6 +39,12 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],  // 解析的文件类型
+    alias: {
+      '@': path.resolve(__dirname, 'src')  // 配置路径别名，指向 src 目录
+    }
+  },
   // plugins: [new BundleAnalyzerPlugin()],
   plugins: [ new buildPlugin() ]
 }

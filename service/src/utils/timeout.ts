@@ -6,7 +6,7 @@
  * @LastEditTime: 2023-07-05 20:17:00
  */
 
-module.exports = async (req: any, res: any, next: any) => {
+export default async (req: any, res: any, next: any) => {
   const { queueList } = require('../utils/node-queue.ts')
   const time = 30000 // 设置所有HTTP请求的服务器响应超时时间
   res.setTimeout(time, () => {

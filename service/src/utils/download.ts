@@ -13,7 +13,7 @@ const forceTimeOut = 60 // 强制超时时间，单位：秒
 let browser: typeof puppeteer = null
 let release: any = null
 
-const saveScreenshot = async (url: string, { path, width, height, thumbPath, size = 0, quality = 0, prevent, ua, devices, scale, wait }: any) => {
+export const saveScreenshot = async (url: string, { path, width, height, thumbPath, size = 0, quality = 0, prevent, ua, devices, scale, wait }: any) => {
   return new Promise(async (resolve: Function) => {
     // 启动浏览器
     if (!browser) {
@@ -123,6 +123,4 @@ async function autoScroll(page: any) {
   })
 }
 
-module.exports = { saveScreenshot }
-
-export {}
+export default { saveScreenshot }

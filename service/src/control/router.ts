@@ -5,12 +5,12 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2024-08-12 13:40:13
  */
-const rExpress = require('express')
-const screenshots = require('../service/screenshots.ts')
-const fileService = require('../service/files.ts')
-const userService = require('../service/user.ts')
-const designService = require('../service/design.ts')
-const api = require('./api.ts')
+import rExpress from 'express'
+import screenshots from '../service/screenshots'
+import fileService from '../service/files'
+import userService from '../service/user'
+import designService from '../service/design'
+import api from './api'
 const rRouter = rExpress.Router()
 
 rRouter.get(api.SCREENGHOT, screenshots.screenshots)
@@ -23,4 +23,4 @@ rRouter.get(api.GET_MATERIAL, designService.getMaterial)
 rRouter.get(api.GET_PHOTOS, designService.getPhotos)
 rRouter.post(api.UPDATE_TEMPLATE, designService.saveTemplate)
 
-module.exports = rRouter
+export default rRouter

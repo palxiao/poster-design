@@ -10,7 +10,7 @@ interface Queue {
   sign?: string | number
 }
 
-const { maxNum } = require('../configs.ts')
+import { maxNum } from '../configs'
 const queueList: any = [] // 任务队列
 let curNum = 0 // 当前执行的任务数
 
@@ -38,4 +38,4 @@ function run(Fn: Function) {
   })
 }
 
-module.exports = { queueRun, queueList }
+export { queueRun, queueList }

@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/multiparty": "^4.2.1",
     "@types/node": "^16.18.105",
     "cross-env": "^7.0.3",
     "ts-loader": "^6.0.4",

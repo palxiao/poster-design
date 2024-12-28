@@ -12,7 +12,7 @@ const { checkCreateFolder, filesReader, send } = require('../utils/tools.ts')
 
 const FileUrl = 'http://localhost:7001/static/'
 
-module.exports = {
+export default {
   // design/user/image 获取用户上传列表（虚拟）
   async getUserImages(req: Request, res: Response) {
     /**
@@ -24,5 +24,3 @@ module.exports = {
     send.success(res, { list })
   },
 }
-
-export {}
