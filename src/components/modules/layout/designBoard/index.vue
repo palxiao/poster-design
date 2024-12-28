@@ -7,14 +7,14 @@
 -->
 <template>
   <div id="main">
-    <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px' }">
+    <div id="page-design" ref="page_design" :style="{ paddingTop: dPaddingTop + 'px', minWidth:  (dPage.width * dZoom) / 100 + (padding ?? dPresetPadding) * 2 + 'px' }">
       <div
         id="out-page"
         class="out-page"
         :style="{
-          padding: dPresetPadding + 'px',
-          width: (dPage.width * dZoom) / 100 + dPresetPadding * 2 + 'px',
-          height: (dPage.height * dZoom) / 100 + dPresetPadding * 2 + 'px',
+          padding: padding ?? dPresetPadding + 'px',
+          width: (dPage.width * dZoom) / 100 + (padding ?? dPresetPadding) * 2 + 'px',
+          height: (dPage.height * dZoom) / 100 + (padding ?? dPresetPadding) * 2 + 'px',
           opacity: 1 - (dZoom < 100 ? dPage.tag : 0),
         }"
       >
@@ -22,7 +22,7 @@
         <resize-page :width="(dPage.width * dZoom) / 100" :height="(dPage.height * dZoom) / 100" />
         <watermark :customStyle="{ height: (dPage.height * dZoom) / 100 + 'px' }">
           <div
-            :id="pageDesignCanvasId"
+            :id="props.pageDesignCanvasId"
             class="design-canvas"
             :data-type="dPage.type"
             :data-uuid="dPage.uuid"
@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { getTarget } from '@/common/methods/target'
 import setWidgetData from '@/common/methods/DesignFeatures/setWidgetData'
 import PointImg from '@/utils/plugins/pointImg'
@@ -78,10 +78,17 @@ import { storeToRefs } from 'pinia'
 import { TPageState } from '@/store/design/canvas/d'
 import resizePage from './comps/resize.vue'
 import watermark from './comps/pageWatermark.vue'
+import { TdWidgetData } from '@/store/design/widget'
 
 // 页面设计组件
 type TProps = {
   pageDesignCanvasId: string
+  /** 以下参数仅用于图片渲染html */
+  padding?: number
+  /** 用于生成渲染图片 */
+  renderDPage?: TPageState
+  renderDWdigets?: TdWidgetData[]
+  zoom?: number
 }
 
 type TParentData = {
@@ -95,12 +102,16 @@ const controlStore = useControlStore()
 const widgetStore = useWidgetStore()
 const canvasStore = useCanvasStore()
 
-const { pageDesignCanvasId } = defineProps<TProps>()
+const props = defineProps<TProps>()
 
-const { dPage } = storeToRefs(useCanvasStore())
-const { dZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
+const { dPage: curDPage } = storeToRefs(useCanvasStore())
+const { dZoom: curZoom, dPresetPadding, dPaddingTop, dScreen } = storeToRefs(canvasStore)
 const { dDraging, showRotatable, dAltDown, dSpaceDown } = storeToRefs(controlStore)
-const { dWidgets, dActiveElement, dSelectWidgets, dHoverUuid } = storeToRefs(widgetStore)
+const { dWidgets: curWidgets, dActiveElement, dSelectWidgets, dHoverUuid } = storeToRefs(widgetStore)
+
+const dPage = computed(() => props.renderDPage ?? curDPage.value)
+const dWidgets = computed(() => props.renderDWdigets ?? curWidgets.value)
+const dZoom = computed(() => props.zoom ?? curZoom.value)
 
 let _dropIn: string | null = ''
 let _srcCache: string | null = ''
