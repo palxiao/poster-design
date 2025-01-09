@@ -3,7 +3,7 @@
  * @Date: 2021-08-04 11:46:39
  * @Description: 原版movable插件
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-12 09:24:51
+ * @LastEditTime: 2025-01-10 03:38:49
 -->
 <template>
   <div id="empty" class="moveable__remove-item zk-moveable-style"></div>
@@ -352,8 +352,8 @@ onMounted(() => {
   // })
   .on('rotate', ({ target, beforeDist, dist, transform }: any) => {
     // console.log('onRotate', Number(this.dActiveElement.rotate) + Number(beforeDist + dist))
-    // target.style.transform = transform
-    console.log(target.style.transform)
+    target.style.transform = transform
+    target.style.height = dActiveElement.value?.height + 'px' // 修正文字高度变化
   })
   .on('rotateEnd', (e: any) => {
     const tf = e.target.style.transform
@@ -401,7 +401,6 @@ onMounted(() => {
   })
   .on('resize', (args: any) => {
     const { target, width, height, dist, delta, clientX, clientY, direction } = args
-    console.log(2, args)
     if (dActiveElement.value?.type === 'w-text') {
       if (String(direction) === '1,1') {
         resetRatio = width / resizeStartWidth
