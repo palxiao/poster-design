@@ -3,7 +3,7 @@
  * @Date: 2022-01-10 14:57:53
  * @Description: Psd文件解析
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-08-20 16:14:18
+ * @LastEditTime: 2025-01-15 22:05:57
 -->
 <template>
   <div id="page-design-index" ref="pageDesignIndex">
@@ -13,7 +13,7 @@
           <div class="name" style="font-size: 15px">在线PSD解析</div>
         </div>
         <div style="flex: 1">
-          <el-button plain type="primary" @click="jump2word">说明文档及 PSD 规范</el-button>
+          <el-button plain type="primary" @click="jump2word">设计 PSD 规范</el-button>
         </div>
         <el-button v-show="state.isDone" @click="clear">清空模板</el-button>
         <div class="v-tips">
@@ -194,8 +194,7 @@ async function loadDone() {
   }, 100)
 }
 function jump2word() {
-  window.open('https://xp.palxp.cn/#/articles/1687855172725')
-  // window.open('https://kdocs.cn/l/clmBsIkhve8d')
+  window.open('https://kdocs.cn/l/clmBsIkhve8d')
 }
 
 defineExpose({
