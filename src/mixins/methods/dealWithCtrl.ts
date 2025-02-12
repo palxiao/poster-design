@@ -3,7 +3,7 @@
  * @Date: 2022-03-09 16:29:54
  * @Description: 处理和ctrl建相关的操作
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-04-18 17:35:57
+ * @LastEditTime: 2025-02-12 18:52:35
  */
 // import store from '@/store'
 import handlePaste from './handlePaste'
@@ -84,15 +84,12 @@ function paste() {
  * 撤销
  */
 function undo(shiftKey: any) {
+  const widgetStore = useWidgetStore()
   const historyStore = useHistoryStore()
-  shiftKey ? historyStore.handleHistory("redo") : historyStore.handleHistory('undo')
-  
-  // if (shiftKey) {
-  //   if (!(historyStore.dHistoryParams.index === historyStore.dHistoryParams.length - 1)) {
-  //     historyStore.handleHistory("redo")
-  //   }
-  // } else if (historyStore.dHistoryParams.index !== -1) {
-  //   // this.handleHistory('undo')
-  //   historyStore.handleHistory('undo')
-  // }
+
+  const { type, editable }: any = widgetStore.dActiveElement
+  if (type === 'w-text') {
+    // 不在编辑状态则执行撤销操作
+    !editable && (shiftKey ? historyStore.handleHistory('redo') : historyStore.handleHistory('undo'))
+  } else shiftKey ? historyStore.handleHistory('redo') : historyStore.handleHistory('undo')
 }
