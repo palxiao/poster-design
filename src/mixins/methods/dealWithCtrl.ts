@@ -3,7 +3,7 @@
  * @Date: 2022-03-09 16:29:54
  * @Description: 处理和ctrl建相关的操作
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2025-02-12 18:52:35
+ * @LastEditTime: 2025-03-22 12:56:29
  */
 // import store from '@/store'
 import handlePaste from './handlePaste'
@@ -69,16 +69,23 @@ function copy() {
 /**
  * 粘贴
  */
-function paste() {
-  handlePaste().then(() => {
-    const widgetStore = useWidgetStore()
-    if (widgetStore.dCopyElement.length === 0) {
-      return
-    } else if (widgetStore.dActiveElement?.isContainer && checkGroupChild(widgetStore.dActiveElement?.uuid, 'editable')) {
-      return
-    }
-    !widgetStore.dActiveElement?.editable && widgetStore.pasteWidget()
-  })
+let pasteImageFile: any = null
+document.addEventListener('paste', async (e: any) => {
+  const file = e.clipboardData.files[0]
+  pasteImageFile = file && file.type.startsWith('image') ? file : null
+})
+async function paste() {
+  setTimeout(() => {
+    handlePaste(pasteImageFile).then(() => {
+      const widgetStore = useWidgetStore()
+      if (widgetStore.dCopyElement.length === 0) {
+        return
+      } else if (widgetStore.dActiveElement?.isContainer && checkGroupChild(widgetStore.dActiveElement?.uuid, 'editable')) {
+        return
+      }
+      !widgetStore.dActiveElement?.editable && widgetStore.pasteWidget()
+    })
+  }, 10)
 }
 /**
  * 撤销

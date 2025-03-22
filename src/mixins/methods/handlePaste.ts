@@ -3,7 +3,7 @@
  * @Date: 2023-10-09 09:47:40
  * @Description: 处理剪贴板
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-03-15 17:35:18
+ * @LastEditTime: 2025-03-22 13:09:08
  */
 
 // window.addEventListener('paste', (e: any) => {
@@ -23,7 +23,7 @@ import eventBus from '@/utils/plugins/eventBus'
 import { useControlStore, useCanvasStore, useWidgetStore } from '@/store'
 // import wText from '@/components/modules/widgets/wText/wText.vue'
 
-export default () => {
+export default (pasteImageFile?: any) => {
   return new Promise<void>((resolve) => {
     const pageStore = useCanvasStore()
     const widgetStore = useWidgetStore()
@@ -35,55 +35,24 @@ export default () => {
         if (widgetStore.dActiveElement?.editable) {
           return
         }
+        if (pasteImageFile) {
+          uploadParseImage(pasteImageFile, { controlStore, pageStore, widgetStore })
+          return
+        }
         for (let i = 0; i < dataTransfer.length; i++) {
           const item = dataTransfer[i]
           if (item.types.toString().indexOf('image') !== -1) {
             const imageBlob = await item.getType(item.types[0])
             const file = new File([imageBlob], 'screenshot.png', { type: 'image/png' })
-            // 上传图片
-            const qnOptions = { bucket: 'xp-design', prePath: 'user' }
-            const result = await Qiniu.upload(file, qnOptions)
-            const { width, height } = await getImage(file)
-            const url = _config.IMG_URL + result.key
-            await api.material.addMyPhoto({ width, height, url })
-            // 刷新用户列表
-            eventBus.emit('refreshUserImages')
-            // 添加图片到画布中
-            // store.commit('setShowMoveable', false) // 清理掉上一次的选择
-            controlStore.setShowMoveable(false) // 清理掉上一次的选择
-
-            const setting = JSON.parse(JSON.stringify(wImageSetting))
-            setting.width = width
-            setting.height = height
-            setting.imgUrl = url
-            const { width: pW, height: pH } = pageStore.dPage
-            setting.left = pW / 2 - width / 2
-            setting.top = pH / 2 - height / 2
-
-            widgetStore.addWidget(setting)
-            // store.dispatch('addWidget', setting)
-
-            // 清空剪贴板，防止多次上传图片
-            navigator.clipboard.write([
-              new ClipboardItem({
-                'text/plain': new Blob([''], {type: 'text/plain'})
-              })
-            ])
-            // 最后尝试复制，将图片替换为图片组件
-            setTimeout(() => {
-              widgetStore.copyWidget()
-              // store.dispatch('copyWidget')
-            }, 100)
+            uploadParseImage(file, { controlStore, pageStore, widgetStore })
             break
           } else if (item.types.toString().indexOf('text') !== -1) {
-            // store.commit('setShowMoveable', false) // 清理掉上一次的选择
             controlStore.setShowMoveable(false) // 清理掉上一次的选择
-            
+
             const setting = JSON.parse(JSON.stringify(wTextSetting))
             setting.text = await navigator.clipboard.readText()
 
             widgetStore.addWidget(setting)
-            // store.dispatch('addWidget', setting)
             break
           } else resolve()
         }
@@ -93,4 +62,36 @@ export default () => {
         resolve()
       })
   })
+}
+async function uploadParseImage(file: File, { controlStore, pageStore, widgetStore }: any) {
+  // 上传图片
+  const resp = await api.material.upload({ file }, (up: any, dp: any) => {
+    console.log(up, dp)
+  })
+  const { width, height } = await getImage(file)
+  try {
+    await api.material.addMyPhoto({ ...resp, width, height })
+  } catch (error) {}
+  // 刷新用户列表
+  eventBus.emit('refreshUserImages')
+  // 添加图片到画布中
+  controlStore.setShowMoveable(false) // 清理掉上一次的选择
+  const setting = JSON.parse(JSON.stringify(wImageSetting))
+  setting.width = width
+  setting.height = height
+  setting.imgUrl = resp?.url
+  const { width: pW, height: pH } = pageStore.dPage
+  setting.left = pW / 2 - width / 2
+  setting.top = pH / 2 - height / 2
+  widgetStore.addWidget(setting)
+  // 清空剪贴板，防止多次上传图片
+  navigator.clipboard.write([
+    new ClipboardItem({
+      'text/plain': new Blob([''], { type: 'text/plain' }),
+    }),
+  ])
+  // 最后尝试复制，将图片替换为图片组件
+  setTimeout(() => {
+    widgetStore.copyWidget()
+  }, 100)
 }
