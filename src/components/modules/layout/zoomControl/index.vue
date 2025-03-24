@@ -1,3 +1,10 @@
+<!--
+ * @Author: ShawnPhang
+ * @Date: 2024-06-20 15:01:39
+ * @Description: 缩放画板
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2025-03-24 14:47:12
+-->
 <template>
   <div id="zoom-control">
     <ul v-show="show" class="zoom-selecter">
@@ -27,6 +34,7 @@ import { OtherList, TZoomData, ZoomList } from './data';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useCanvasStore, useForceStore } from '@/store';
+import { findClosestNumber } from '@/utils/utils';
 
 const route = useRoute()
 
@@ -216,10 +224,12 @@ function sub() {
 function mousewheelZoom(down: boolean) {
   const value = Number(dZoom.value.toFixed(0))
   if (down && value <= 1) return
-  canvasStore.updateZoom(down ? value - 1 : value + 1)
+  canvasStore.updateZoom(down ? value - 2 : value + 2)
   zoom.value.text = (value + '%') as any
+  zoom.value.value = value
   autoFixTop()
-  activezoomIndex.value = -99
+  const closest = findClosestNumber(value, zoomList.value.map(x => x.value))
+  activezoomIndex.value = zoomList.value.findIndex(x => x.value === closest)
 }
 
 function nearZoom(add?: boolean) {

@@ -3,42 +3,6 @@ export const config = app_config
 
 type TComObj = Record<string,any>
 
-/**
- * 星期换算
- * @param {String} 'YYYY-MM-DD'
- */
-// export const transformDate = (date: string) => {
-//   const weekDay = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-//   const myDate = new Date(date.replace(/-/g, '/'))
-//   if (weekDay[myDate.getDay()]) {
-//     return weekDay[myDate.getDay()]
-//   } else {
-//     return ''
-//   }
-// }
-/**
- * 返回正确时间
- */
-// export const getDate = (date: string) => {
-//   const reDate = new Date(date.replace(/-/g, '/'))
-//   return reDate
-// }
-/**
- * 短日期
- */
-// export const getMinDate = (d: string, type: string) => {
-//   const mydate = new Date(d.replace(/-/g, '/'))
-//   if (isNaN(mydate.getDate())) {
-//     return d
-//   }
-//   if (type === 'ym') {
-//     return mydate.getFullYear() + ' - ' + (mydate.getMonth() + 1)
-//   } else if (type === 'md') {
-//     return mydate.getMonth() + 1 + '-' + mydate.getDate()
-//   } else {
-//     return String(mydate.getMonth() + 1).padStart(2, '0')
-//   }
-// }
 // 判断是否在数组中并返回下标
 export const isInArray = (arr: (string | number)[], value: (string | number)) => {
   const index = arr.indexOf(value)
@@ -65,48 +29,28 @@ export const pickSome = <R extends TComObj, T extends TComObj = TComObj>(obj: T,
   return newObj as R extends T ? R : Partial<T>
 }
 
-/** String长度 */
-// export const getBLen = (str: string | any) => {
-//   if (str === null) {
-//     return 0
-//   }
-//   return String(str).replace(/[^\x00-\xff]/g, '01').length
-// }
-/** 随机 */
+/** 随机数 */
 export const rndNum = (n: number, m: number) => {
   const random = Math.floor(Math.random() * (m - n + 1) + n)
   return random
 }
 
-/** Proxy 转 Object */
-// export const proxyToObject = <P extends Record<string, any>>(proxy: P, seen = new WeakMap()): P => {
-//   if (proxy === null || typeof proxy !== 'object') {
-//     return proxy;
-//   }
-
-//   // 检查是否已经处理过该对象
-//   if (seen.has(proxy)) {
-//     return '[Circular Reference]' as any;
-//   }
-
-//   let obj: Record<string, any>;
-
-//   if (Array.isArray(proxy)) {
-//     obj = proxy.map(val => proxyToObject(val, seen)) as any;
-//   } else {
-//     obj = {};
-//     // 将当前对象添加到已处理对象集合
-//     seen.set(proxy, obj);
-//     for (const key in proxy) {
-//       if (Object.prototype.hasOwnProperty.call(proxy, key)) {
-//         const value = proxyToObject(proxy[key], seen);
-//         if (value !== '[Circular Reference]') {
-//           obj[key] = value;
-//         }
-//       }
-//     }
-//   }
-//   return obj as P;
-// };
+/** 计算差值 */
+export const findClosestNumber = (target: number, numbers: number[]) => {
+  if (!Array.isArray(numbers) || numbers.length === 0) {
+    throw new Error('数组不能为空')
+  }
+  let closestNumber = numbers[0]
+  let minDifference = Math.abs(target - closestNumber)
+  for (let i = 1; i < numbers.length; i++) {
+    const currentNumber = numbers[i]
+    const currentDifference = Math.abs(target - currentNumber)
+    if (currentDifference < minDifference) {
+      closestNumber = currentNumber
+      minDifference = currentDifference
+    }
+  }
+  return closestNumber
+}
 
 export default {}
