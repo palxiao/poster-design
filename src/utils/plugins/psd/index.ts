@@ -130,12 +130,17 @@ function toCloudTextConfig(data: any, layer: any) {
 }
 
 function toCloudImageConfig(data: any, layer: any) {
-  // const { type, b64 } = splitBase64(layer.image.toBase64());
-  // const src = URL.createObjectURL(b64toBlob(b64, type));
+  let src = []
+  try {
+    src = layer?.image?.pixelData
+  } catch (error: any) {
+    if (error.message.includes('layer mask')) {
+      console.warn('图层蒙版不支持，尝试降级处理或简化PSD文件(逐步删除图层)定位问题元素')
+    } else console.error(error)
+  }
   return {
-    src: layer?.image?.pixelData,
-    // src: layer?.image?.toBase64(),
-    // src: layer.image.toPng(),
+    // src: layer?.image?.pixelData,
+    src,
     type: CLOUD_TYPE.image,
     width: data.width,
     height: data.height,
