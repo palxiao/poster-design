@@ -1,12 +1,12 @@
 <template>
   <div id="style-panel">
     <div class="style-tab">
-      <span :class="['tab', { 'active-tab': activeTab === 0 }]" @click="activeTab = 0">设置</span>
-      <span :class="['tab', { 'active-tab': activeTab === 1 }]" @click="activeTab = 1">图层</span>
+      <span :class="['tab', { 'active-tab': activeTab === 0 }]" @click="activeTab = 0">{{ $t('editor.panel.settings') }}</span>
+      <span :class="['tab', { 'active-tab': activeTab === 1 }]" @click="activeTab = 1">{{ $t('editor.panel.layers') }}</span>
     </div>
     <div v-show="activeTab === 0" class="style-wrap">
       <div v-show="showGroupCombined" style="padding: 2rem 0">
-        <el-button plain type="primary" class="gounp__btn" @click="handleCombine">成组</el-button>
+        <el-button plain type="primary" class="gounp__btn" @click="handleCombine">{{ $t('editor.panel.group') }}</el-button>
         <icon-item-select label="" :data="iconList" @finish="alignAction" />
       </div>
       <component :is="dActiveElement?.type + '-style'" v-show="!showGroupCombined" v-if="dActiveElement?.type" />

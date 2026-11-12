@@ -14,14 +14,14 @@
  * (at your option) any later version.
 -->
 <template>
-  <el-dialog v-model="state.show" title="AI 抠图" align-center width="650" @close="handleClose">
+  <el-dialog v-model="state.show" :title="$t('business.cutout.title')" align-center width="650" @close="handleClose">
     <uploader v-if="!state.rawImage" :hold="true" :drag="true" :multiple="true" class="uploader" @load="handleUploaderLoad">
       <div class="uploader__box">
         <upload-filled style="width: 64px; height: 64px" />
         <!-- <div class="el-upload__text">在此拖入或选择<em>上传图片</em></div> -->
-        <div class="el-upload__text">自动抠图在浏览器本地完成，无需后端服务</div>
+        <div class="el-upload__text">{{ $t('business.cutout.local') }}</div>
       </div>
-      <div class="el-upload__tip el-upload__text"><em>首次使用需下载约 4.4MB 本地模型，之后浏览器会缓存复用</em></div>
+      <div class="el-upload__tip el-upload__text"><em>{{ $t('business.cutout.firstUse') }}</em></div>
     </uploader>
     <el-progress v-if="!state.cutImage && state.progressText" :percentage="state.progress">
       <el-button text>
@@ -31,17 +31,17 @@
     <div class="content">
       <div v-show="state.rawImage" v-loading="!state.cutImage" :style="{ width: state.offsetWidth ? state.offsetWidth + 'px' : '100%' }" class="scan-effect transparent-bg">
         <img ref="raw" :style="{ 'clip-path': 'inset(0 0 0 ' + state.percent + '%)' }" :src="state.rawImage" alt="" />
-        <img v-show="state.cutImage" :src="state.cutImage" alt="结果图像" @mousemove="mousemove" />
+        <img v-show="state.cutImage" :src="state.cutImage" :alt="$t('business.cutout.resultAlt')" @mousemove="mousemove" />
         <div v-show="state.cutImage" :style="{ left: state.percent + '%' }" class="scan-line"></div>
       </div>
     </div>
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button v-show="state.cutImage && state.toolModel" @click="clear">清除重选</el-button>
-        <el-button v-show="state.cutImage" type="primary" plain @click="edit">进入编辑模式</el-button>
-        <el-button v-show="state.cutImage && state.toolModel" type="primary" @click="download"> 下载 </el-button>
-        <el-button v-show="state.cutImage && !state.toolModel" v-loading="state.loading" type="primary" @click="cutDone"> {{ state.loading ? '上传中..' : '完成抠图' }} </el-button>
+        <el-button v-show="state.cutImage && state.toolModel" @click="clear">{{ $t('business.cutout.reselect') }}</el-button>
+        <el-button v-show="state.cutImage" type="primary" plain @click="edit">{{ $t('business.cutout.edit') }}</el-button>
+        <el-button v-show="state.cutImage && state.toolModel" type="primary" @click="download"> {{ $t('business.cutout.download') }} </el-button>
+        <el-button v-show="state.cutImage && !state.toolModel" v-loading="state.loading" type="primary" @click="cutDone"> {{ state.loading ? $t('business.cutout.uploading') : $t('business.cutout.done') }} </el-button>
       </span>
     </template>
     <ImageExtraction ref="matting" />

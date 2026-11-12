@@ -56,7 +56,7 @@ export const saveScreenshot = async (url: string, { path, width, height, thumbPa
       browser && browser.close()
       browser = null
       console.log('超时强制释放浏览器')
-      reject(new Error('截图超时，页面未完成渲染'))
+      reject(new Error('Chụp ảnh quá thời gian, trang chưa render xong'))
     }, forceTimeOut * 1000)
 
     // 打开页面

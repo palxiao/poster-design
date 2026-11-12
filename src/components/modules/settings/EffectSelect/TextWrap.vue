@@ -38,7 +38,7 @@
           </div>
           A
         </div>
-        <span class="title">文字特效</span>
+        <span class="title">{{ $t('editor.effect.title') }}</span>
         <!-- <el-popover :visible="state.visiable" placement="left" :width="220" trigger="click">
           <div class="select__box">
             <div class="select__box__select-item" @click="selectEffect()">无</div>
@@ -58,12 +58,12 @@
         <el-button
           class="add-layer" size="small" type="primary" link
           @click="addLayer">
-           + 新建特效层
+           {{ $t('editor.effect.addLayer') }}
         </el-button>
         <el-button
           v-show="state.layers && state.layers.length > 0" class="add-layer" size="small"
           type="primary" link @click="state.unfold = !state.unfold">
-          {{ state.unfold ? '收起' : '展开' }}全部
+          {{ state.unfold ? $t('editor.effect.collapseAll') : $t('editor.effect.expandAll') }}
         </el-button>
       </div>
       <div class="line"></div>
@@ -71,25 +71,25 @@
         <template #item="{ element, index }">
           <div class="feature__grab-wrap">
             <div class="layer__title">
-              <i class="icon sd-yidong" /><span style="font-size: 12px"><b>特效层</b> {{ index + 1 }}</span>
+              <i class="icon sd-yidong" /><span style="font-size: 12px"><b>{{ $t('editor.effect.layer') }}</b> {{ index + 1 }}</span>
               <i class="icon sd-delete" @click="removeLayer(index)" />
             </div>
             <div v-if="element.filling && [0, 2, '0', '2'].includes(element.filling.type)" v-show="state.unfold" class="feature__item">
-              <el-checkbox v-model="element.filling.enable" label="填充" class="feature__header" />
-              <color-select v-model="element.filling.color" width="28px" :modes="['纯色', '渐变']" label="" @change="colorChange($event, element.filling)" />
+              <el-checkbox v-model="element.filling.enable" :label="$t('editor.effect.fill')" class="feature__header" />
+              <color-select v-model="element.filling.color" width="28px" :modes="['solid', 'gradient']" label="" @change="colorChange($event, element.filling)" />
             </div>
             <div v-if="element.stroke" v-show="state.unfold" class="feature__item">
-              <el-checkbox v-model="element.stroke.enable" label="描边" class="feature__header" />
+              <el-checkbox v-model="element.stroke.enable" :label="$t('editor.effect.stroke')" class="feature__header" />
               <el-input-number v-model="element.stroke.width" style="width: 65px; margin-right: 0.5rem" :min="0" size="small" controls-position="right" />
               <color-select v-model="element.stroke.color" width="28px" label="" @finish="(value) => finish('color', value)" />
             </div>
             <div v-if="element.offset" v-show="state.unfold" class="feature__item">
-              <el-checkbox v-model="element.offset.enable" label="偏移" class="feature__header" />
+              <el-checkbox v-model="element.offset.enable" :label="$t('editor.effect.offset')" class="feature__header" />
               <numberInput v-model="element.offset.x" style="width: 49.5px; margin-right: 2px" prepend="x" type="simple" />
               <numberInput v-model="element.offset.y" style="width: 49.5px" prepend="y" type="simple" />
             </div>
             <div v-if="element.shadow" v-show="state.unfold" class="feature__item">
-              <el-checkbox v-model="element.shadow.enable" label="阴影" class="feature__header" />
+              <el-checkbox v-model="element.shadow.enable" :label="$t('editor.effect.shadow')" class="feature__header" />
               <numberInput v-model="element.shadow.blur" prepend="blur" :minValue="0" style="width: 30px; margin-right: 2px" type="simple" />
               <numberInput v-model="element.shadow.offsetX" prepend="x" style="width: 30px; margin-right: 2px" type="simple" />
               <numberInput v-model="element.shadow.offsetY" prepend="y" style="width: 30px; margin-right: 0.5rem" type="simple" />
@@ -227,8 +227,8 @@ const finish = (type?: string, value?: string) => {}
 
 const colorChange = (e: Record<string, any>, item: Record<string, any>) => {
   const modeStr: Record<string, number> = {
-    渐变: 2,
-    纯色: 0,
+    gradient: 2,
+    solid: 0,
   }
   item.gradient = {
     angle: e.angle,

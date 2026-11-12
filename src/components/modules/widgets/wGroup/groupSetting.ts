@@ -1,7 +1,8 @@
+import i18n from '@/languages'
 
 
 export const wGroupSetting = {
-  name: '组合',
+  name: i18n.global.t('editor.widget.group'),
   type: 'w-group',
   uuid: -1,
   width: 0,

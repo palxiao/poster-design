@@ -23,13 +23,14 @@
 
     <ul ref="listRef" v-infinite-scroll="load" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
       <img-water-fall :listData="state.list" @select="selectItem" />
-      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
-      <div v-show="state.loadDone" class="loading">全部加载完毕</div>
+      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> {{ $t('common.loadingMore') }}</div>
+      <div v-show="state.loadDone" class="loading">{{ $t('common.allLoaded') }}</div>
     </ul>
   </div>
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import { reactive, ref } from 'vue'
 import api from '@/api'
 
@@ -73,7 +74,7 @@ const state = reactive<TState>({
   loading: false,
   loadDone: false,
   list: [],
-  title: '示例模板',
+  title: i18n.global.t('editor.panel.sampleTemplates'),
   searchKeyword: '',
 })
 
@@ -138,7 +139,7 @@ let hideReplacePrompt: any = localStorage.getItem('hide_replace_prompt')
 async function selectItem(item: IGetTempListData) {
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
   if (!hideReplacePrompt && dHistoryParams.value.length > 0) {
-    const doNotPrompt = await useConfirm('添加到作品', '模板内容将替换页面内容', 'warning', { confirmButtonText: '知道了', cancelButtonText: '不再提示' })
+    const doNotPrompt = await useConfirm(i18n.global.t('editor.panel.addToDesign'), i18n.global.t('editor.panel.templateReplaces'), 'warning', { confirmButtonText: i18n.global.t('editor.panel.gotIt'), cancelButtonText: i18n.global.t('editor.panel.dontRemind') })
     if (!doNotPrompt) {
       localStorage.setItem('hide_replace_prompt', '1')
       hideReplacePrompt = true

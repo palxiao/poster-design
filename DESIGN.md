@@ -44,8 +44,8 @@ colors:
   transparent-checker-size: "16px"
 
 typography:
-  family-ui: "Hiragino Sans GB, 'Hiragino Sans GB W3', Arial, 'Microsoft YaHei', STHeiti, sans-serif"
-  family-brand: "'TitleFont', 'PingFangSC-Semibold', 'PingFang SC', sans-serif"
+  family-ui: "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif"
+  family-brand: "'TitleFont', system-ui, -apple-system, 'Segoe UI', 'PingFangSC-Semibold', 'PingFang SC', sans-serif"
   family-mono: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 
   ui-brand:
@@ -500,7 +500,7 @@ components:
 
 ### 字体族
 
-- **UI** — `{typography.family-ui}`：`Hiragino Sans GB, Hiragino Sans GB W3, Arial, Microsoft YaHei, STHeiti, sans-serif`。全局正文，无第三方字体。
+- **UI** — `{typography.family-ui}`：`system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, Hiragino Sans GB, Microsoft YaHei, sans-serif`。全局正文，无第三方字体。Latin 系统字体在前以保证越南语声调符号正确渲染，CJK 字体仅作兜底。
 - **Brand** — `{typography.family-brand}`：`TitleFont`（本地子集 `xpsj.subset.woff2`）→ `PingFang SC` 兜底。**只用于 22px 的 logo 一处**，不参与任何 UI 层级。
 - **Mono** — `{typography.family-mono}`：`ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`。用于 px 数值、尺寸标注、坐标读数。**新增**，系统字栈，无需下载。
 

@@ -14,11 +14,11 @@
  * @LastEditTime: 2026-08-31 21:36:33
 -->
 <template>
-  <div class="top-title"><el-input v-model="state.title" placeholder="未命名的设计" class="input-wrap" /></div>
+  <div class="top-title"><el-input v-model="state.title" :placeholder="$t('editor.header.untitledDesign')" class="input-wrap" /></div>
   <div class="top-icon-wrap">
     <template v-if="tempEditing">
-      <el-button plain type="primary" :loading="state.loading" :disabled="state.loading" @click="saveTemp">保存模板</el-button>
-      <el-button @click="userStore.managerEdit(false)">取消</el-button>
+      <el-button plain type="primary" :loading="state.loading" :disabled="state.loading" @click="saveTemp">{{ $t('editor.header.saveTemplate') }}</el-button>
+      <el-button @click="userStore.managerEdit(false)">{{ $t('common.cancel') }}</el-button>
       <div class="divide__line">|</div>
     </template>
     <watermark-option style="margin-right: 0.5rem" />
@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import api from '@/api'
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -87,7 +88,7 @@ async function save(silent: boolean = false) {
     return
   }
   if (!localStorage.getItem('xp_token')) {
-    useNotification('保存失败', '请先登录后再保存作品', { type: 'warning' })
+    useNotification(i18n.global.t('editor.header.saveFailed'), i18n.global.t('editor.header.needLoginSave'), { type: 'warning' })
     return
   }
   const { id, tempid } = route.query
@@ -95,18 +96,18 @@ async function save(silent: boolean = false) {
   const templateId = typeof tempid === 'string' ? tempid : undefined
   const res: any = await api.home.saveWorks({
     id: designId,
-    title: state.title || '未命名设计',
+    title: state.title || i18n.global.t('editor.header.untitledDesign'),
     data: JSON.stringify(dLayouts.value),
     temp_id: templateId,
     width: Number(dPage.value.width),
     height: Number(dPage.value.height),
   })
   if (res?.id) {
-    if (!silent) useNotification('保存成功', '作品已保存')
+    if (!silent) useNotification(i18n.global.t('editor.header.saveSuccess'), i18n.global.t('editor.header.designSaved'))
     if (!designId) router.replace({ path: '/home', query: { ...route.query, id: String(res.id) } })
     return res.id
   } else {
-    useNotification('保存失败', res?.msg || '作品保存失败', { type: 'error' })
+    useNotification(i18n.global.t('editor.header.saveFailed'), res?.msg || i18n.global.t('editor.header.designSaveFailed'), { type: 'error' })
   }
 }
 
@@ -130,18 +131,18 @@ async function saveTemp() {
       }
       // TODO：如果保存组件不存在组合，则添加组合。该功能待优化
       if (!dWidgets.value.some((x: Record<string, any>) => x.type === 'w-group')) {
-        alert('提交组件必须为组合！')
+        alert(i18n.global.t('editor.header.groupRequired'))
         return
       }
-      res = await api.home.saveTemp({ id: tempid, type, title: state.title || '未命名组件', data: JSON.stringify(dWidgets.value), width: dPage.value.width, height: dPage.value.height })
-    } else res = await api.home.saveTemp({ id: tempid, title: state.title || '未命名模板', data: JSON.stringify(data), width: dPage.value.width, height: dPage.value.height })
+      res = await api.home.saveTemp({ id: tempid, type, title: state.title || i18n.global.t('editor.header.untitledComponent'), data: JSON.stringify(dWidgets.value), width: dPage.value.width, height: dPage.value.height })
+    } else res = await api.home.saveTemp({ id: tempid, title: state.title || i18n.global.t('editor.header.untitledTemplate'), data: JSON.stringify(data), width: dPage.value.width, height: dPage.value.height })
     if (res?.id || res?.result?.id || res?.stat) {
-      useNotification('保存成功', '模板内容已变更')
+      useNotification(i18n.global.t('editor.header.saveSuccess'), i18n.global.t('editor.header.templateUpdated'))
     } else {
-      useNotification('保存失败', res?.msg || '模板保存失败', { type: 'error' })
+      useNotification(i18n.global.t('editor.header.saveFailed'), res?.msg || i18n.global.t('editor.header.templateSaveFailed'), { type: 'error' })
     }
   } catch (error: any) {
-    useNotification('保存失败', error?.message || '模板保存失败', { type: 'error' })
+    useNotification(i18n.global.t('editor.header.saveFailed'), error?.message || i18n.global.t('editor.header.templateSaveFailed'), { type: 'error' })
   } finally {
     state.loading = false
   }
@@ -151,17 +152,17 @@ async function saveTemp() {
 async function stateChange(e: string | number | boolean) {
   const { tempid, tempType: type } = route.query
   const { stat } = await api.home.saveTemp({ id: tempid, type, state: e ? 1 : 0 })
-  stat != 0 && useNotification('保存成功', '模板内容已变更')
+  stat != 0 && useNotification(i18n.global.t('editor.header.saveSuccess'), i18n.global.t('editor.header.templateUpdated'))
 }
 async function download() {
   if (state.loading === true) {
-    useNotification('作品导出中', '当前有作品正在导出，请稍候再试')
+    useNotification(i18n.global.t('editor.header.exporting'), i18n.global.t('editor.header.exportingWait'))
     return
   }
   state.loading = true
   const currentRecord = pageStore.dCurrentPage
   const backEndCapture: boolean = checkDownloadPoster(dLayouts.value[currentRecord])
-  const fileName = `${state.title || '未命名作品'}.png`
+  const fileName = `${state.title || i18n.global.t('editor.header.untitledWork')}.png`
   if (!backEndCapture) {
     // 无特殊条件命中则直接从前端出图，无需登录保存
     const { blob } = await canvasImage.value?.createPoster()
@@ -179,12 +180,12 @@ async function download() {
   const screenshotId = route.query.edit === '1' && tempid ? undefined : (savedId || id)
   const screenshotToken = screenshotId ? localStorage.getItem('xp_token') || '' : ''
   emit('update:modelValue', true)
-  emit('change', { downloadPercent: 1, downloadText: '正在处理数据...' })
+  emit('change', { downloadPercent: 1, downloadText: i18n.global.t('editor.header.processing') })
   let timerCount = 0
   const animation = setInterval(() => {
     if (props.modelValue && timerCount < 75) {
       timerCount += RandomNumber(1, 10)
-      emit('change', { downloadPercent: 1 + timerCount, downloadText: '正在合成图片' })
+      emit('change', { downloadPercent: 1 + timerCount, downloadText: i18n.global.t('editor.header.composing') })
     } else {
       clearInterval(animation)
     }
@@ -194,7 +195,7 @@ async function download() {
     (progress: number, xhr: any) => {
       if (props.modelValue) {
         clearInterval(animation)
-        progress >= timerCount && emit('change', { downloadPercent: Number(progress.toFixed(0)), downloadText: '图片生成中' })
+        progress >= timerCount && emit('change', { downloadPercent: Number(progress.toFixed(0)), downloadText: i18n.global.t('editor.header.generating') })
       } else {
         xhr.abort()
         state.loading = false
@@ -202,7 +203,7 @@ async function download() {
     },
     fileName,
   )
-  emit('change', { downloadPercent: 100, downloadText: '作品下载成功', downloadMsg: '' })
+  emit('change', { downloadPercent: 100, downloadText: i18n.global.t('editor.header.downloadDone'), downloadMsg: '' })
   state.loading = false
 }
 function RandomNumber(min: number, max: number) {

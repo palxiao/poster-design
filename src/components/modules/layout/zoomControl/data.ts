@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 
 export type TZoomData = {
   text: string
@@ -34,7 +35,7 @@ export const ZoomList: TZoomData[] = [
     value: 200,
   },
   {
-    text: '适应屏幕',
+    get text() { return i18n.global.t('editor.panel.fitScreen') },
     value: -1,
     // icon: 'icon-best-size',
   },

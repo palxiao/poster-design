@@ -1,11 +1,10 @@
-/*
- * @Author: ShawnPhang
- * @Date: 2024-05-19 04:14:31
- * @Description:  
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-05-19 05:17:29
- */
-import header from "./header"
+import admin from './admin'
+import business from './business'
+import common from './common'
+import editor from './editor'
+import header from './header'
+import settings from './settings'
+
 export default {
   home: {
     welcome: 'Welcome',
@@ -13,5 +12,10 @@ export default {
   tabs: {
     refresh: 'Refresh',
   },
-  header
+  admin,
+  business,
+  common,
+  editor,
+  header,
+  settings,
 }

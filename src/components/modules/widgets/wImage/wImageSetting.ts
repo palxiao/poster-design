@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 /*
  * SPDX-License-Identifier: AGPL-3.0-or-later
  * Copyright (C) 2026 palxiao https://xpai.design
@@ -43,7 +44,7 @@ export type TImageSetting = {
 }
 
 const setting: TImageSetting = {
-  name: '图片',
+  name: i18n.global.t('editor.widget.image'),
   type: 'w-image',
   uuid: '-1',
   width: 300,

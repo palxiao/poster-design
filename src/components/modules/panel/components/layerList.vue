@@ -22,7 +22,7 @@
           <img v-if="element.imgUrl" class="widget-type widget-type__img" :src="element.imgUrl" />
           <img v-else-if="element.svgUrl" class="widget-type widget-type__img" :src="element.svgUrl" />
           <span v-else :class="['widget-type icon', `sd-${element.type}`, element.type]"></span>
-          <span :class="['widget-name', 'line-clamp-1', `${element.type}`]">{{ element.text || element.name }} {{ element.mask ? '(容器)' : '' }}</span>
+          <span :class="['widget-name', 'line-clamp-1', `${element.type}`]">{{ element.text || element.name }} {{ element.mask ? $t('editor.panel.container') : '' }}</span>
           <div class="widget-out" :data-type="element.type" :data-uuid="element.uuid">
             <i :class="['icon', element.lock ? 'sd-suoding' : 'sd-jiesuo']" @click.stop="lockLayer(element)" />
           </div>

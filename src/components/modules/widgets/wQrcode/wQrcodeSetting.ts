@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 import { DotType } from "qr-code-styling"
 
 export type TWQrcodeSetting = {
@@ -32,7 +33,7 @@ export type TWQrcodeSetting = {
 }
 
 export const wQrcodeSetting: TWQrcodeSetting = {
-  name: '二维码',
+  name: i18n.global.t('editor.widget.qrcode'),
   type: 'w-qrcode',
   uuid: -1,
   width: 300,

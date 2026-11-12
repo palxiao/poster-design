@@ -21,7 +21,7 @@ let instance: any = null
 
 export function getDB(): any {
   if (!instance) {
-    throw new Error('数据库尚未初始化，请先调用 initDB()')
+    throw new Error('Cơ sở dữ liệu chưa được khởi tạo, hãy gọi initDB() trước')
   }
   return instance
 }

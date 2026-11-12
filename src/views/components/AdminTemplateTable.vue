@@ -10,17 +10,17 @@
 <template>
   <el-table class="admin-table" :data="rows" size="small" stripe v-loading="loading">
     <el-table-column prop="id" label="ID" width="70" />
-    <el-table-column label="封面" width="90">
+    <el-table-column :label="$t('admin.templateTable.cover')" width="90">
       <template #default="{ row }">
         <el-image v-if="row.cover" :src="row.cover" :preview-src-list="[row.cover]" fit="cover" style="width: 64px; height: 36px" preview-teleported />
-        <span v-else class="empty-cover">暂无</span>
+        <span v-else class="empty-cover">{{ $t('admin.templateTable.noCover') }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="title" label="标题" min-width="180" show-overflow-tooltip />
-    <el-table-column label="尺寸" width="110"><template #default="{ row }">{{ row.width }} × {{ row.height }}</template></el-table-column>
-    <el-table-column label="分类" width="160" show-overflow-tooltip><template #default="{ row }"><span>{{ row.cate || '未分类' }}</span><el-button type="primary" size="small" link @click="$emit('category', row)">修改</el-button></template></el-table-column>
-    <el-table-column label="状态" width="80"><template #default="{ row }"><el-tag :type="row.state === 1 ? 'success' : 'info'" size="small">{{ row.state === 1 ? '正常' : '已下架' }}</el-tag></template></el-table-column>
-    <el-table-column label="操作" width="170" fixed="right"><template #default="{ row }"><el-button type="primary" size="small" link @click="$emit('edit', row)">编辑</el-button><el-button v-if="row.state === 1" type="warning" size="small" link @click="$emit('delete', row)">下架</el-button><el-button type="danger" size="small" link @click="$emit('remove', row)">删除</el-button></template></el-table-column>
+    <el-table-column prop="title" :label="$t('admin.templateTable.title')" min-width="180" show-overflow-tooltip />
+    <el-table-column :label="$t('admin.templateTable.size')" width="110"><template #default="{ row }">{{ row.width }} × {{ row.height }}</template></el-table-column>
+    <el-table-column :label="$t('admin.templateTable.category')" width="160" show-overflow-tooltip><template #default="{ row }"><span>{{ row.cate || $t('admin.templateTable.uncategorized') }}</span><el-button type="primary" size="small" link @click="$emit('category', row)">{{ $t('common.modify') }}</el-button></template></el-table-column>
+    <el-table-column :label="$t('admin.templateTable.status')" width="80"><template #default="{ row }"><el-tag :type="row.state === 1 ? 'success' : 'info'" size="small">{{ row.state === 1 ? $t('admin.templateTable.active') : $t('admin.templateTable.offline') }}</el-tag></template></el-table-column>
+    <el-table-column :label="$t('admin.templateTable.actions')" width="170" fixed="right"><template #default="{ row }"><el-button type="primary" size="small" link @click="$emit('edit', row)">{{ $t('common.edit') }}</el-button><el-button v-if="row.state === 1" type="warning" size="small" link @click="$emit('delete', row)">{{ $t('admin.templateTable.unpublish') }}</el-button><el-button type="danger" size="small" link @click="$emit('remove', row)">{{ $t('common.delete') }}</el-button></template></el-table-column>
   </el-table>
 </template>
 

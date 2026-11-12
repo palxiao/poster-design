@@ -25,10 +25,10 @@
             <div :class="['operation-item', { disable: !redoable }]" @click="redoable ? handleHistory('redo') : ''"><i class="iconfont icon-redo" /></div>
           </div>
           <el-divider direction="vertical" />
-          <Folder @select="dealWith" ref="ref1"> <div class="operation-item"><i class="icon sd-wenjian" /> <span class="text" >文件</span></div> </Folder>
-          <Helper @select="dealWith"> <div class="operation-item"><i class="icon sd-bangzhu" /> <span class="text" >帮助</span></div> </Helper>
+          <Folder @select="dealWith" ref="ref1"> <div class="operation-item"><i class="icon sd-wenjian" /> <span class="text" >{{ $t('editor.top.file') }}</span></div> </Folder>
+          <Helper @select="dealWith"> <div class="operation-item"><i class="icon sd-bangzhu" /> <span class="text" >{{ $t('editor.top.help') }}</span></div> </Helper>
           <el-divider direction="vertical" />
-          <div class="operation-item" @click="openAiAssistant"><i class="icon sd-AIkoutu" /> <span class="text">AI 助手</span></div>
+          <div class="operation-item" @click="openAiAssistant"><i class="icon sd-AIkoutu" /> <span class="text">{{ $t('editor.top.aiAssistant') }}</span></div>
           <!-- <el-tooltip effect="dark" :show-after="300" :offset="0" content="标尺" placement="bottom">
             <i style="font-size: 20px" class="icon sd-biaochi operation-item" @click="changeLineGuides" />
           </el-tooltip> -->
@@ -40,13 +40,13 @@
           <template v-if="loginUser">
             <span class="user-name">{{ loginUser.account }}</span>
             <el-divider direction="vertical" />
-            <div class="operation-item" @click="openChangePassword"><span class="text">修改密码</span></div>
+            <div class="operation-item" @click="openChangePassword"><span class="text">{{ $t('editor.top.changePassword') }}</span></div>
             <el-divider direction="vertical" />
-            <div v-if="loginUser.role === 1" class="operation-item" @click="jump2admin"><span class="text">后台管理</span></div>
+            <div v-if="loginUser.role === 1" class="operation-item" @click="jump2admin"><span class="text">{{ $t('editor.top.admin') }}</span></div>
             <el-divider v-if="loginUser.role === 1" direction="vertical" />
-            <div class="operation-item" @click="logout"><span class="text">退出</span></div>
+            <div class="operation-item" @click="logout"><span class="text">{{ $t('editor.top.logout') }}</span></div>
           </template>
-          <el-button v-else size="large" type="primary" plain @click="openLogin">登录 / 注册</el-button>
+          <el-button v-else size="large" type="primary" plain @click="openLogin">{{ $t('editor.top.signIn') }}</el-button>
         </HeaderOptions>
       </div>
     </div>
@@ -75,7 +75,7 @@
       :percent="state.downloadPercent"
       :text="state.downloadText"
       :msg="state.downloadMsg"
-      cancelText="取消"
+      :cancelText="$t('common.cancel')"
       @cancel="downloadCancel"
       @done="state.downloadPercent = 0"
     />
@@ -93,6 +93,7 @@
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import _config from '../config'
 import {
   CSSProperties, computed, nextTick,
@@ -201,7 +202,7 @@ function openAiAssistant() {
 
 const beforeUnload = function (e: Event): any {
   if (dHistoryStack.value.changes.length > 0) {
-    const confirmationMessage: string = '系统不会自动保存您未修改的内容';
+    const confirmationMessage: string = i18n.global.t('editor.top.unsavedWarning');
     (e || window.event).returnValue = (confirmationMessage as any) // Gecko and Trident
     return confirmationMessage // Gecko and WebKit
   } else return false

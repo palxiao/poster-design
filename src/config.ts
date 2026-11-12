@@ -15,7 +15,7 @@ export default {
   isDev,
   BASE_URL: isDev ? '/' : './',
   VERSION: version,
-  APP_NAME: '迅排设计',
+  APP_NAME: 'TinixPoster',
   COPYRIGHT: 'ShawnPhang - Design.pPalxp.cn',
   // 后端地址：优先读构建时的 VITE_API_URL 环境变量；生产默认空串（同源部署，由 Nginx 等反代 /api、/design、/static 到后端）
   API_URL: prefix.VITE_API_URL || (isDev ? 'http://localhost:7001' : ''),

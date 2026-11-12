@@ -8,12 +8,13 @@
 <template>
   <el-upload action="" accept="image/*" :http-request="upload" :show-file-list="false" multiple>
     <slot>
-      <el-button size="small">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+      <el-button size="small">{{ $t('business.uploader.uploadImage') }}<i class="el-icon-upload el-icon--right"></i></el-button>
     </slot>
   </el-upload>
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import { withDefaults } from 'vue'
 import { ElUpload, UploadRequestOptions } from 'element-plus'
 import api from '@/api'
@@ -83,9 +84,9 @@ const uploadQueue = async () => {
       if (file.size <= 1024 * 1024) {
         tempSimpleRes = await qiNiuUpload(file) // 队列有文件，执行上传
         const { width, height } = await getImage(file)
-        useNotification('上传成功', '', { position: 'bottom-left' })
+        useNotification(i18n.global.t('business.uploader.success'), '', { position: 'bottom-left' })
         emit('done', { width, height, url: tempSimpleRes?.url }) // 单个文件进行响应
-      } else useNotification('爱护小水管', '请上传小于 1M 的图片哦!', { type: 'error', position: 'bottom-left' })
+      } else useNotification(i18n.global.t('business.uploader.tooBigTitle'), i18n.global.t('business.uploader.tooBig'), { type: 'error', position: 'bottom-left' })
       uploading = false
       handleRemove() // 移除已上传文件
       index++

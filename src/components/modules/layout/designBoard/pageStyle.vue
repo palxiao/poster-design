@@ -1,37 +1,37 @@
 <template>
   <div id="page-style">
     <div v-if="state.showBgLib" style="width: 256px; height: 100%">
-      <span class="header-back" @click="state.showBgLib = false"> <i class="iconfont icon-right"></i> 选择背景 </span>
+      <span class="header-back" @click="state.showBgLib = false"> <i class="iconfont icon-right"></i> {{ $t('settings.pageStyle.chooseBackground') }} </span>
       <bg-img-list-wrap style="padding-top: 2rem" model="stylePanel" />
     </div>
     <el-collapse v-else v-model="state.activeNames">
-      <el-collapse-item title="画布尺寸" name="1">
+      <el-collapse-item :title="$t('settings.pageStyle.canvasSize')" name="1">
         <sizeEditor :params="state.innerElement">
           <i @click="openSizeEdit" class="icon sd-edit"></i>
         </sizeEditor>
       </el-collapse-item>
-      <el-collapse-item title="背景设置" name="2">
-        <el-button style="width: 100%; margin: 0 0 1rem 0" type="primary" link @click="state.showBgLib = true">在背景库中选择</el-button>
+      <el-collapse-item :title="$t('settings.pageStyle.background')" name="2">
+        <el-button style="width: 100%; margin: 0 0 1rem 0" type="primary" link @click="state.showBgLib = true">{{ $t('settings.pageStyle.pickFromLibrary') }}</el-button>
         <Tabs :value="state.mode" @update:value="onChangeMode">
-          <TabPanel v-for="label in state.modes" :key="label" :label="label"></TabPanel>
+          <TabPanel v-for="m in state.modes" :key="m" :name="m" :label="$t(`settings.pageStyle.mode.${m}`)"></TabPanel>
         </Tabs>
-        <color-select v-show="state.mode === '颜色'" v-model="state.innerElement.backgroundColor" :modes="['纯色', '渐变']" @change="colorChange" />
-        <div v-if="state.mode === '图片' && state.innerElement.backgroundImage" style="margin-top: 1.2rem">
+        <color-select v-show="state.mode === 'color'" v-model="state.innerElement.backgroundColor" :modes="['solid', 'gradient']" @change="colorChange" />
+        <div v-if="state.mode === 'image' && state.innerElement.backgroundImage" style="margin-top: 1.2rem">
           <div class="backgroud-wrap">
             <el-image style="height: 100%" :src="state.innerElement.backgroundImage" fit="contain"></el-image>
             <div class="bg-control">
               <div class="btns">
                 <uploader style="width: 47%" @done="uploadImgDone">
-                  <el-button style="width: 100%" plain>上传图片</el-button>
+                  <el-button style="width: 100%" plain>{{ $t('settings.pageStyle.uploadImage') }}</el-button>
                 </uploader>
-                <el-button style="width: 47%" @click="state.showBgLib = true" plain>背景库</el-button>
+                <el-button style="width: 47%" @click="state.showBgLib = true" plain>{{ $t('settings.pageStyle.library') }}</el-button>
               </div>
             </div>
             <div class="bg-options">
-              <el-tooltip :show-after="300" :hide-after="0" effect="dark" content="下载图片" placement="top">
+              <el-tooltip :show-after="300" :hide-after="0" effect="dark" :content="$t('settings.pageStyle.downloadImage')" placement="top">
                 <div @click="downloadBG" class="btn-item"><icon-download width="16" /></div>
               </el-tooltip>
-              <el-tooltip :show-after="300" :hide-after="0" effect="dark" content="删除" placement="top">
+              <el-tooltip :show-after="300" :hide-after="0" effect="dark" :content="$t('common.delete')" placement="top">
                 <div @click="deleteBg" class="btn-item"><icon-delete width="16" /></div>
               </el-tooltip>
             </div>
@@ -39,11 +39,11 @@
           <!-- <el-image style="max-height: 428px" :src="state.innerElement.backgroundImage" fit="contain"></el-image> -->
           <!-- <el-button class="btn-wrap" size="small" @click="deleteBg">删除</el-button> -->
         </div>
-        <uploader v-show="state.mode === '图片' && !state.innerElement.backgroundImage" class="btn-wrap" @done="uploadImgDone">
-          <el-button style="width: 100%" plain>上传背景图</el-button>
+        <uploader v-show="state.mode === 'image' && !state.innerElement.backgroundImage" class="btn-wrap" @done="uploadImgDone">
+          <el-button style="width: 100%" plain>{{ $t('settings.pageStyle.uploadBackground') }}</el-button>
         </uploader>
-        <!-- <el-button v-show="state.mode === '图片' && state.innerElement.backgroundImage" class="btn-wrap" size="small" @click="downloadBG">{{ state.downP ? state.downP + ' %' : '下载背景图' }}</el-button> -->
-        <el-button v-show="state.mode === '图片' && state.innerElement.backgroundImage" class="btn-wrap" @click="shiftOut">将背景分离为图层</el-button>
+        <!-- <el-button v-show="state.mode === 'image' && state.innerElement.backgroundImage" class="btn-wrap" size="small" @click="downloadBG">{{ state.downP ? state.downP + ' %' : '下载背景图' }}</el-button> -->
+        <el-button v-show="state.mode === 'image' && state.innerElement.backgroundImage" class="btn-wrap" @click="shiftOut">{{ $t('settings.pageStyle.detachToLayer') }}</el-button>
       </el-collapse-item>
     </el-collapse>
     <createDesign ref="sizeEditRef" :params="state.innerElement" />
@@ -68,14 +68,16 @@ import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import sizeEditor from '@/components/business/create-design/sizeEditor.vue'
 import createDesign from '@/components/business/create-design'
 
+type TBgMode = 'color' | 'image'
+
 type TState = {
   activeNames: string[]
   innerElement: Record<string, any>
   tag: boolean
   ingoreKeys: string[]
   downP: number
-  mode: string
-  modes: string[]
+  mode: TBgMode
+  modes: TBgMode[]
   showBgLib: boolean
 }
 
@@ -87,8 +89,8 @@ const state = reactive<TState>({
   tag: false,
   ingoreKeys: ['backgroundColor', 'name', 'width', 'height'],
   downP: 0,
-  mode: '颜色',
-  modes: ['颜色', '图片'],
+  mode: 'color',
+  modes: ['color', 'image'],
   showBgLib: false,
 })
 const sizeEditRef: Ref<typeof createDesign | null> = ref(null)
@@ -117,13 +119,13 @@ onMounted(() => {
 })
 
 function colorChange(e: colorChangeData) {
-  if (e.mode === '渐变') {
+  if (e.mode === 'gradient') {
     state.innerElement.backgroundGradient = e.color
   } else state.innerElement.backgroundGradient = ''
 }
-function onChangeMode(value: string) {
+function onChangeMode(value: TBgMode) {
   state.mode = value
-  if (value === '颜色') {
+  if (value === 'color') {
     _localTempBG = state.innerElement.backgroundImage
     finish('backgroundImage', '')
   } else {

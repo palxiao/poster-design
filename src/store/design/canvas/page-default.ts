@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 /*
  * @Author: ShawnPhang
  * @Date: 2024-04-16 10:06:23
@@ -6,7 +7,7 @@
  * @LastEditTime: 2024-04-19 15:42:40
  */
 export default {
-  name: '新画板',
+  name: i18n.global.t('editor.widget.artboard'),
   type: 'page',
   uuid: '-1',
   left: 0,

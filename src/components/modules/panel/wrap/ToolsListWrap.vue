@@ -7,15 +7,15 @@
 -->
 <template>
   <div class="wrap">
-    <div class="header">组件</div>
+    <div class="header">{{ $t('editor.panel.components') }}</div>
     <div class="item" @click="addQrcode">
       <i class="icon sd-w-qrcode" />
-      <div class="text"><span>二维码</span><span class="desc">在设计中使用风格化二维码</span></div>
+      <div class="text"><span>{{ $t('editor.panel.qrcode') }}</span><span class="desc">{{ $t('editor.panel.qrcodeDesc') }}</span></div>
     </div>
-    <div class="header">其它</div>
+    <div class="header">{{ $t('editor.panel.others') }}</div>
     <div class="item" @click="openImageCutout">
       <i class="icon sd-AI_zhineng" />
-      <div class="text"><span>智能抠图</span> <span class="desc">上传图像一键去除背景</span></div>
+      <div class="text"><span>{{ $t('editor.panel.cutout') }}</span> <span class="desc">{{ $t('editor.panel.cutoutDesc') }}</span></div>
     </div>
     <imageCutout ref="imageCutoutRef" />
   </div>

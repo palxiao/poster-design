@@ -60,6 +60,7 @@
 <script lang="ts" setup>
 // 下拉选择框
 const NAME = 'value-input'
+import i18n from '@/languages'
 import { ElTabPane, ElTabs } from 'element-plus'
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 
@@ -105,7 +106,7 @@ const state = reactive<TState>({
   width: '0',
   innerValue: '',
   innerPreview: '',
-  activeTab: '中文',
+  activeTab: i18n.global.t('editor.text.groupLatin'),
 })
 const selectRef = ref<HTMLElement | null>(null)
 

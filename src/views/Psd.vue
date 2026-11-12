@@ -10,12 +10,12 @@
     <div class="top-nav">
       <div class="top-nav-wrap">
         <div class="top-left">
-          <div class="name" style="font-size: 15px">在线PSD解析</div>
+          <div class="name" style="font-size: 15px">{{ $t('business.psd.title') }}</div>
         </div>
         <div style="flex: 1">
-          <el-button plain type="primary" @click="jump2word">设计 PSD 规范</el-button>
+          <el-button plain type="primary" @click="jump2word">{{ $t('business.psd.spec') }}</el-button>
         </div>
-        <el-button v-show="state.isDone" @click="clear">清空模板</el-button>
+        <el-button v-show="state.isDone" @click="clear">{{ $t('business.psd.clear') }}</el-button>
         <div class="v-tips">
           <HeaderOptions :isDone="state.isDone" @change="optionsChange" />
         </div>
@@ -27,7 +27,7 @@
       <design-board class="page-design-wrap" pageDesignCanvasId="page-design-canvas">
         <div v-if="state.isDone" class="shelter" :style="{ width: (dPage.width * dZoom) / 100 + 'px', height: (dPage.height * dZoom) / 100 + 'px' }"></div>
         <uploader v-else accept=".psd" :hold="true" :drag="true" class="uploader" @load="selectFile">
-          <div class="uploader__box"><img style="margin-right: 1rem" src="https://cdn.dancf.com/design/svg/icon_psdimport.37e6f23e.svg" alt="upload" /> 在此拖入或选择 PSD 文件</div>
+          <div class="uploader__box"><img style="margin-right: 1rem" src="https://cdn.dancf.com/design/svg/icon_psdimport.37e6f23e.svg" alt="upload" /> {{ $t('business.psd.drop') }}</div>
         </uploader>
       </design-board>
       <style-panel v-show="state.isDone"></style-panel>
@@ -44,6 +44,7 @@
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import { reactive, onMounted, nextTick, onBeforeMount, ref, getCurrentInstance } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
@@ -102,7 +103,7 @@ const zoomControlRef = ref<typeof zoomControl | null>()
 try {
   const user = JSON.parse(localStorage.getItem('xp_user') || 'null')
   if (!user || user.role !== 1) {
-    ElMessage.warning('导入 PSD 仅对管理员开放，请使用管理员账号登录')
+    ElMessage.warning(i18n.global.t('business.psd.adminOnly'))
     setTimeout(() => (window.location.href = './'), 600)
   }
 } catch (e) {

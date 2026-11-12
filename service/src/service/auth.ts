@@ -21,12 +21,12 @@ export default {
   async register(req: any, res: Response) {
     const { account, password } = req.body || {}
     if (typeof account !== 'string' || !account.trim() || typeof password !== 'string' || password.length < 6) {
-      send.error(res, '账号不能为空，密码至少 6 位')
+      send.error(res, 'Tài khoản không được để trống, mật khẩu tối thiểu 6 ký tự')
       return
     }
     const result = register(account.trim(), password)
     if (!result) {
-      send.error(res, '账号已存在')
+      send.error(res, 'Tài khoản đã tồn tại')
       return
     }
     send.success(res, result)
@@ -37,7 +37,7 @@ export default {
     const { account, password } = req.body || {}
     const result = login(String(account || ''), String(password || ''))
     if (!result) {
-      send.error(res, '账号或密码错误')
+      send.error(res, 'Sai tài khoản hoặc mật khẩu')
       return
     }
     send.success(res, result)
@@ -47,17 +47,17 @@ export default {
   async changePassword(req: any, res: Response) {
     const user = getRequestUser(req)
     if (!user) {
-      send.error(res, '请先登录')
+      send.error(res, 'Vui lòng đăng nhập')
       return
     }
     const { oldPassword, newPassword } = req.body || {}
     if (typeof oldPassword !== 'string' || !oldPassword || typeof newPassword !== 'string' || newPassword.length < 6) {
-      send.error(res, '原密码不能为空，新密码至少 6 位')
+      send.error(res, 'Mật khẩu cũ không được để trống, mật khẩu mới tối thiểu 6 ký tự')
       return
     }
     const row = findUserById(user.id)
     if (!row || hashPassword(oldPassword, row.salt) !== row.password) {
-      send.error(res, '原密码错误')
+      send.error(res, 'Mật khẩu cũ không đúng')
       return
     }
     const salt = createSalt()

@@ -8,23 +8,23 @@
 <template>
   <div id="w-group-style">
     <el-collapse v-model="state.activeNames">
-      <el-collapse-item title="位置尺寸" name="1">
+      <el-collapse-item :title="$t('editor.prop.positionSize')" name="1">
         <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
-          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
-          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
+          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" :label="$t('editor.prop.width')" @finish="(value) => finish('width', value)" />
+          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" :label="$t('editor.prop.height')" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
-      <el-collapse-item title="样式设置" name="2">
+      <el-collapse-item :title="$t('editor.prop.style')" name="2">
         <!-- <el-button plain type="primary" class="block-btn" @click="store.dispatch('ungroup', state.innerElement.uuid)">取消组合</el-button> -->
         <div
           class="ungroup style-item"
           @click="widgetStore.ungroup(String(state.innerElement.uuid))"
         >
-          取消组合
+          {{ $t('editor.prop.ungroup') }}
         </div>
-        <number-slider v-model="state.innerElement.opacity" class="style-item" label="不透明" :step="0.05" :maxValue="1" @finish="(value) => finish('opacity', value)" />
+        <number-slider v-model="state.innerElement.opacity" class="style-item" :label="$t('editor.prop.opacity')" :step="0.05" :maxValue="1" @finish="(value) => finish('opacity', value)" />
         <br />
         <icon-item-select class="style-item" label="" :data="layerIconList" @finish="layerAction" />
         <icon-item-select label="" :data="alignIconList" @finish="alignAction" />

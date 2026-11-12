@@ -2,7 +2,7 @@
   <div class="my-tabs">
     <div class="my-tabs__header p-0.5 mb-3 rounded bg-gray-100 cursor-pointers">
       <div class="my-tabs__header-shell relative flex justify-between">
-        <div v-for="(tab, index) in tabs" :key="tab.props.label" class="my-tab__title relative flex-auto py-1 text-center" :class="{ 'my-active': tab.props.label === value }" @click="onClickTab(tab, index)">
+        <div v-for="(tab, index) in tabs" :key="tabName(tab)" class="my-tab__title relative flex-auto py-1 text-center" :class="{ 'my-active': tabName(tab) === value }" @click="onClickTab(tab, index)">
           {{ tab.props.label }}
         </div>
 
@@ -41,6 +41,7 @@ watch(
 )
 
 const tabs = ref([])
+const tabName = (tab) => tab.props.name || tab.props.label
 const sliderStyle = reactive({ width: 0, left: 0 })
 let tabWidth = 0
 onMounted(() => {
@@ -54,7 +55,7 @@ onMounted(() => {
 let preActiveTabVM = null
 async function changeTab(index = -1) {
   if (index < 0) {
-    index = tabs.value.findIndex((vm) => vm.props.label === props.value)
+    index = tabs.value.findIndex((vm) => tabName(vm) === props.value)
   }
   sliderStyle.left = `${tabWidth * index}%`
 
@@ -68,7 +69,7 @@ async function changeTab(index = -1) {
 }
 
 function onClickTab(tab, index) {
-  emit('update:value', tab.props.label)
+  emit('update:value', tabName(tab))
   changeTab(index)
 }
 

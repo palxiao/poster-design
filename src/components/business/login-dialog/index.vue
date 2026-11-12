@@ -8,20 +8,20 @@
  * (at your option) any later version.
 -->
 <template>
-  <el-dialog v-model="visible" title="账号登录" width="360px" :append-to-body="true" @closed="reset">
+  <el-dialog v-model="visible" :title="$t('business.login.title')" width="360px" :append-to-body="true" @closed="reset">
     <el-tabs v-model="mode">
-      <el-tab-pane label="登录" name="login" />
-      <el-tab-pane label="注册" name="register" />
+      <el-tab-pane :label="$t('business.login.login')" name="login" />
+      <el-tab-pane :label="$t('business.login.register')" name="register" />
     </el-tabs>
     <el-form @submit.prevent>
       <el-form-item>
-        <el-input v-model="form.account" placeholder="账号" @keyup.enter="submit" />
+        <el-input v-model="form.account" :placeholder="$t('business.login.account')" @keyup.enter="submit" />
       </el-form-item>
       <el-form-item>
-        <el-input v-model="form.password" type="password" placeholder="密码（注册至少 6 位）" show-password @keyup.enter="submit" />
+        <el-input v-model="form.password" type="password" :placeholder="$t('business.login.password')" show-password @keyup.enter="submit" />
       </el-form-item>
       <el-button type="primary" style="width: 100%" :loading="loading" @click="submit">
-        {{ mode === 'login' ? '登录' : '注册并登录' }}
+        {{ mode === 'login' ? $t('business.login.login') : $t('business.login.registerAndLogin') }}
       </el-button>
     </el-form>
   </el-dialog>
@@ -37,6 +37,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+import i18n from '@/languages'
 import { reactive, ref } from 'vue'
 // ElDialog / ElInput / ElButton 已全局注册（见 elementConfig.ts），此处仅需补未注册的
 import { ElMessage, ElTabs, ElTabPane, ElForm, ElFormItem } from 'element-plus'
@@ -77,7 +78,7 @@ function settle(result: LoginResult) {
 
 async function submit() {
   if (!form.account || !form.password) {
-    ElMessage.warning('请填写账号和密码')
+    ElMessage.warning(i18n.global.t('business.login.fillAll'))
     return
   }
   loading.value = true
@@ -89,10 +90,10 @@ async function submit() {
       localStorage.setItem(LocalStorageKey.tokenKey, res.token)
       settle({ account: res.account, role: res.role })
     } else {
-      ElMessage.error(res?.msg || '操作失败')
+      ElMessage.error(res?.msg || i18n.global.t('business.login.failed'))
     }
   } catch (e: any) {
-    ElMessage.error(e?.message || '网络错误')
+    ElMessage.error(e?.message || i18n.global.t('business.login.network'))
   } finally {
     loading.value = false
   }

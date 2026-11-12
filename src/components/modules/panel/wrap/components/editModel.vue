@@ -22,6 +22,7 @@
 </template>
 
 <script lang="ts">
+import i18n from '@/languages'
 import { defineComponent } from 'vue'
 import { ElDropdown, ElDropdownItem, ElDropdownMenu } from 'element-plus'
 import useConfirm from '@/common/methods/confirm'
@@ -38,7 +39,7 @@ export default defineComponent({
   setup(props, context) {
     async function action(name: string, value: any) {
       if (name === 'del') {
-        const isDel = await useConfirm('警告', '删除后不可恢复,是否继续', 'warning')
+        const isDel = await useConfirm(i18n.global.t('common.warning'), i18n.global.t('editor.panel.confirmDelete2'), 'warning')
         if (!isDel) {
           return false
         }

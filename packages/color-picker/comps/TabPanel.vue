@@ -22,6 +22,11 @@ defineProps({
     type: String,
     required: true,
   },
+  // Giá trị định danh tab; bỏ trống thì dùng label
+  name: {
+    type: String,
+    default: '',
+  },
 })
 
 const active = ref(false)

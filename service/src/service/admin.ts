@@ -39,16 +39,16 @@ export default {
   async deleteTemplate(req: any, res: Response) {
     const id = Number(req.body?.id)
     if (!isNumber(id) || id <= 0) {
-      send.error(res, '参数错误')
+      send.error(res, 'Tham số không hợp lệ')
       return
     }
-    softDeleteTemplate(id) ? send.success(res, undefined) : send.error(res, '记录不存在')
+    softDeleteTemplate(id) ? send.success(res, undefined) : send.error(res, 'Bản ghi không tồn tại')
   },
 
   async removeTemplate(req: any, res: Response) {
     const id = Number(req.body?.id)
-    if (!Number.isInteger(id) || id <= 0) return send.error(res, '参数错误')
-    deleteTemplateRow(id) ? send.success(res, undefined) : send.error(res, '模板不存在')
+    if (!Number.isInteger(id) || id <= 0) return send.error(res, 'Tham số không hợp lệ')
+    deleteTemplateRow(id) ? send.success(res, undefined) : send.error(res, 'Mẫu không tồn tại')
   },
 
   // 管理员保存模板（PSD 导入创建模板/组合），与原 /design/edit 等价但强制 admin 鉴权
@@ -58,7 +58,7 @@ export default {
     const w = Number(width)
     const h = Number(height)
     if (typeof data !== 'string' || !data || !(w > 0) || !(h > 0)) {
-      return send.error(res, '参数不完整或无效')
+      return send.error(res, 'Tham số thiếu hoặc không hợp lệ')
     }
     const tid = Number(id)
     const isAdd = !Number.isInteger(tid) || tid <= 0
@@ -73,7 +73,7 @@ export default {
 
     const savedId = isAdd ? templatesRepo.createTemplate(params) : tid
     if (!isAdd && !templatesRepo.updateTemplate(tid, params)) {
-      return send.error(res, '模板不存在')
+      return send.error(res, 'Mẫu không tồn tại')
     }
 
     // 生成封面：调用截图服务，成功后回填 cover（失败不阻塞主流程）
@@ -96,9 +96,9 @@ export default {
     const id = Number(req.body?.id)
     const type = req.body?.type == 1 ? 1 : 0
     const cate = typeof req.body?.cate === 'string' ? req.body.cate.trim() : ''
-    if (!Number.isInteger(id) || id <= 0) return send.error(res, '参数错误')
-    if (cate && !templateCategoriesRepo.listCategories(type).some((item) => item.name === cate)) return send.error(res, '分类不存在')
-    templatesRepo.updateTemplateCategory(id, type, cate) ? send.success(res, undefined) : send.error(res, '模板不存在')
+    if (!Number.isInteger(id) || id <= 0) return send.error(res, 'Tham số không hợp lệ')
+    if (cate && !templateCategoriesRepo.listCategories(type).some((item) => item.name === cate)) return send.error(res, 'Danh mục không tồn tại')
+    templatesRepo.updateTemplateCategory(id, type, cate) ? send.success(res, undefined) : send.error(res, 'Mẫu không tồn tại')
   },
 
   // 用户上传图片列表
@@ -117,8 +117,8 @@ export default {
 
   async deleteDesign(req: any, res: Response) {
     const id = Number(req.body?.id)
-    if (!Number.isInteger(id) || id <= 0) return send.error(res, '参数错误')
-    designsRepo.deleteDesignByAdmin(id) ? send.success(res, undefined) : send.error(res, '作品不存在')
+    if (!Number.isInteger(id) || id <= 0) return send.error(res, 'Tham số không hợp lệ')
+    designsRepo.deleteDesignByAdmin(id) ? send.success(res, undefined) : send.error(res, 'Thiết kế không tồn tại')
   },
 
   // 仅允许删除普通用户，管理员账号不可通过该接口删除
@@ -126,20 +126,20 @@ export default {
     const id = Number(req.body?.id)
     const currentUserId = Number(req.user?.id)
     if (!Number.isInteger(id) || id <= 0 || id === currentUserId) {
-      send.error(res, '参数错误或不能删除当前账号')
+      send.error(res, 'Tham số không hợp lệ hoặc không thể xóa tài khoản hiện tại')
       return
     }
-    usersRepo.deleteUser(id) ? send.success(res, undefined) : send.error(res, '用户不存在或管理员账号不可删除')
+    usersRepo.deleteUser(id) ? send.success(res, undefined) : send.error(res, 'Người dùng không tồn tại hoặc tài khoản quản trị không thể bị xóa')
   },
 
   // 删除用户图片记录
   async deleteUserImage(req: any, res: Response) {
     const id = Number(req.body?.id)
     if (!isNumber(id) || id <= 0) {
-      send.error(res, '参数错误')
+      send.error(res, 'Tham số không hợp lệ')
       return
     }
-    deleteUserImage(id) ? send.success(res, undefined) : send.error(res, '记录不存在')
+    deleteUserImage(id) ? send.success(res, undefined) : send.error(res, 'Bản ghi không tồn tại')
   },
 
   // 素材 / 照片分类列表
@@ -157,8 +157,8 @@ export default {
     const table = req.body?.type === 'photos' ? 'photos' : 'materials'
     const cate = typeof req.body?.cate === 'string' ? req.body.cate.trim() : ''
     const asset = req.body?.asset && { ...req.body.asset, type: req.body.asset.type === 'png' ? 'image' : req.body.asset.type, ...(req.body.asset.type === 'mask' ? { isContainer: true } : {}) }
-    if (!cate || !asset || typeof asset.url !== 'string' || !asset.url.trim() || (table === 'materials' && !['image', 'svg', 'mask'].includes(asset.type))) return send.error(res, '参数错误')
-    addAssetRow(table, cate, asset) ? send.success(res, undefined) : send.error(res, '分类不存在')
+    if (!cate || !asset || typeof asset.url !== 'string' || !asset.url.trim() || (table === 'materials' && !['image', 'svg', 'mask'].includes(asset.type))) return send.error(res, 'Tham số không hợp lệ')
+    addAssetRow(table, cate, asset) ? send.success(res, undefined) : send.error(res, 'Danh mục không tồn tại')
   },
 
   async updateAsset(req: any, res: Response) {
@@ -167,18 +167,18 @@ export default {
     const fromCate = typeof req.body?.fromCate === 'string' ? req.body.fromCate.trim() : cate
     const index = Number(req.body?.index)
     const asset = req.body?.asset && { ...req.body.asset, type: req.body.asset.type === 'png' ? 'image' : req.body.asset.type, ...(req.body.asset.type === 'mask' ? { isContainer: true } : {}) }
-    if (!cate || !Number.isInteger(index) || !asset || typeof asset.url !== 'string' || !asset.url.trim() || (table === 'materials' && !['image', 'svg', 'mask'].includes(asset.type))) return send.error(res, '参数错误')
+    if (!cate || !Number.isInteger(index) || !asset || typeof asset.url !== 'string' || !asset.url.trim() || (table === 'materials' && !['image', 'svg', 'mask'].includes(asset.type))) return send.error(res, 'Tham số không hợp lệ')
     const updated = fromCate !== cate ? moveAsset(table, fromCate, cate, index, asset) : saveAsset(table, cate, index, asset)
     if (updated) send.success(res, undefined)
-    else send.error(res, '素材不存在')
+    else send.error(res, 'Tư liệu không tồn tại')
   },
 
   async deleteAsset(req: any, res: Response) {
     const table = req.body?.type === 'photos' ? 'photos' : 'materials'
     const cate = typeof req.body?.cate === 'string' ? req.body.cate.trim() : ''
     const index = Number(req.body?.index)
-    if (!cate || !Number.isInteger(index) || index < 0) return send.error(res, '参数错误')
-    deleteAssetRow(table, cate, index) ? send.success(res, undefined) : send.error(res, '资源不存在')
+    if (!cate || !Number.isInteger(index) || index < 0) return send.error(res, 'Tham số không hợp lệ')
+    deleteAssetRow(table, cate, index) ? send.success(res, undefined) : send.error(res, 'Tài nguyên không tồn tại')
   },
 
   async getTemplateCategories(req: any, res: Response) {
@@ -189,30 +189,30 @@ export default {
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : ''
     const type = req.body?.type == 1 ? 1 : 0
     const sort = Number(req.body?.sort)
-    if (!name) return send.error(res, '分类名称不能为空')
+    if (!name) return send.error(res, 'Tên danh mục không được để trống')
     try {
       const id = templateCategoriesRepo.addCategory(name, type, Number.isFinite(sort) ? sort : 0)
       send.success(res, { id })
     } catch (error) {
-      send.error(res, error?.code === 'SQLITE_CONSTRAINT_UNIQUE' ? '分类名称已存在' : '分类创建失败')
+      send.error(res, error?.code === 'SQLITE_CONSTRAINT_UNIQUE' ? 'Tên danh mục đã tồn tại' : 'Tạo danh mục thất bại')
     }
   },
 
   async deleteTemplateCategory(req: any, res: Response) {
     const id = Number(req.body?.id)
-    if (!Number.isInteger(id) || id <= 0) return send.error(res, '参数错误')
-    if (templateCategoriesRepo.countTemplateUsage(id) > 0) return send.error(res, '该分类仍被模板使用，请先修改模板分类')
-    templateCategoriesRepo.deleteCategory(id) ? send.success(res, undefined) : send.error(res, '分类不存在')
+    if (!Number.isInteger(id) || id <= 0) return send.error(res, 'Tham số không hợp lệ')
+    if (templateCategoriesRepo.countTemplateUsage(id) > 0) return send.error(res, 'Danh mục này vẫn đang được mẫu sử dụng, vui lòng đổi danh mục của mẫu trước')
+    templateCategoriesRepo.deleteCategory(id) ? send.success(res, undefined) : send.error(res, 'Danh mục không tồn tại')
   },
 
   async renameTemplateCategory(req: any, res: Response) {
     const id = Number(req.body?.id)
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : ''
-    if (!Number.isInteger(id) || id <= 0 || !name) return send.error(res, '参数错误')
+    if (!Number.isInteger(id) || id <= 0 || !name) return send.error(res, 'Tham số không hợp lệ')
     try {
-      templateCategoriesRepo.renameCategory(id, name) ? send.success(res, undefined) : send.error(res, '分类不存在')
+      templateCategoriesRepo.renameCategory(id, name) ? send.success(res, undefined) : send.error(res, 'Danh mục không tồn tại')
     } catch (error) {
-      send.error(res, '分类名称已存在')
+      send.error(res, 'Tên danh mục đã tồn tại')
     }
   },
 
@@ -221,20 +221,20 @@ export default {
     const table = req.body?.type === 'photos' ? 'photos' : 'materials'
     const cate = req.body?.cate
     if (typeof cate !== 'string' || !cate) {
-      send.error(res, '参数错误')
+      send.error(res, 'Tham số không hợp lệ')
       return
     }
-    deleteCategory(table, cate) ? send.success(res, undefined) : send.error(res, '分类不存在')
+    deleteCategory(table, cate) ? send.success(res, undefined) : send.error(res, 'Danh mục không tồn tại')
   },
 
   async addCategory(req: any, res: Response) {
     const table = req.body?.type === 'photos' ? 'photos' : 'materials'
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : ''
-    if (!name) return send.error(res, '分类名不能为空')
+    if (!name) return send.error(res, 'Tên danh mục không được để trống')
     try {
-      addCategory(table, name) ? send.success(res, undefined) : send.error(res, '分类创建失败')
+      addCategory(table, name) ? send.success(res, undefined) : send.error(res, 'Tạo danh mục thất bại')
     } catch (error) {
-      send.error(res, '分类已存在')
+      send.error(res, 'Danh mục đã tồn tại')
     }
   },
 
@@ -242,11 +242,11 @@ export default {
     const table = req.body?.type === 'photos' ? 'photos' : 'materials'
     const cate = typeof req.body?.cate === 'string' ? req.body.cate.trim() : ''
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : ''
-    if (!cate || !name) return send.error(res, '分类名不能为空')
+    if (!cate || !name) return send.error(res, 'Tên danh mục không được để trống')
     try {
-      renameCategory(table, cate, name) ? send.success(res, undefined) : send.error(res, '分类不存在')
+      renameCategory(table, cate, name) ? send.success(res, undefined) : send.error(res, 'Danh mục không tồn tại')
     } catch (error) {
-      send.error(res, '分类已存在')
+      send.error(res, 'Danh mục đã tồn tại')
     }
   },
 
@@ -262,9 +262,9 @@ export default {
   async addFont(req: any, res: Response) {
     const { alias, value, woff, lang, preview, ttf, font_family, size, woff_size } = req.body || {}
     // 必填：alias（显示名）、value（CSS family slug）、woff（字体 woff 链接）
-    if (typeof alias !== 'string' || !alias.trim()) return send.error(res, '字体名称不能为空')
-    if (typeof value !== 'string' || !value.trim()) return send.error(res, '字体 value 不能为空')
-    if (typeof woff !== 'string' || !woff.trim()) return send.error(res, 'woff 链接不能为空')
+    if (typeof alias !== 'string' || !alias.trim()) return send.error(res, 'Tên font không được để trống')
+    if (typeof value !== 'string' || !value.trim()) return send.error(res, 'Giá trị value của font không được để trống')
+    if (typeof woff !== 'string' || !woff.trim()) return send.error(res, 'Liên kết woff không được để trống')
     // lang 兜底为 'zh'，非字符串则视为 'zh'
     const langValue = lang === 'en' ? 'en' : 'zh'
     // 数值字段：上游可能给空串 / null，统一安全降级为 0
@@ -289,26 +289,26 @@ export default {
   // 编辑字体基础信息，不修改文件大小统计
   async updateFont(req: any, res: Response) {
     const { id, alias, value, woff, lang, preview, ttf, font_family } = req.body || {}
-    if (!isNumber(Number(id)) || Number(id) <= 0) return send.error(res, '参数错误')
-    if (typeof alias !== 'string' || !alias.trim()) return send.error(res, '字体名称不能为空')
-    if (typeof value !== 'string' || !value.trim()) return send.error(res, '字体 value 不能为空')
-    if (typeof woff !== 'string' || !woff.trim()) return send.error(res, 'woff 链接不能为空')
+    if (!isNumber(Number(id)) || Number(id) <= 0) return send.error(res, 'Tham số không hợp lệ')
+    if (typeof alias !== 'string' || !alias.trim()) return send.error(res, 'Tên font không được để trống')
+    if (typeof value !== 'string' || !value.trim()) return send.error(res, 'Giá trị value của font không được để trống')
+    if (typeof woff !== 'string' || !woff.trim()) return send.error(res, 'Liên kết woff không được để trống')
     const updated = fontsRepo.updateFont(Number(id), {
       alias: alias.trim(), value: value.trim(), woff: woff.trim(),
       preview: typeof preview === 'string' ? preview : '',
       ttf: typeof ttf === 'string' ? ttf : '', lang: lang === 'en' ? 'en' : 'zh',
       font_family: typeof font_family === 'string' ? font_family : '',
     })
-    updated ? send.success(res, undefined) : send.error(res, '记录不存在')
+    updated ? send.success(res, undefined) : send.error(res, 'Bản ghi không tồn tại')
   },
 
   // 删除字体
   async deleteFont(req: any, res: Response) {
     const id = Number(req.body?.id)
     if (!isNumber(id) || id <= 0) {
-      send.error(res, '参数错误')
+      send.error(res, 'Tham số không hợp lệ')
       return
     }
-    fontsRepo.deleteFont(id) ? send.success(res, undefined) : send.error(res, '记录不存在')
+    fontsRepo.deleteFont(id) ? send.success(res, undefined) : send.error(res, 'Bản ghi không tồn tại')
   },
 }

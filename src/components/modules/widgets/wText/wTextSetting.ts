@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 import { StyleValue } from "vue"
 
 export type TwTextData = {
@@ -67,7 +68,7 @@ export type TwTextData = {
 }
 
 export const wTextSetting: TwTextData = {
-  name: '文本',
+  name: i18n.global.t('editor.widget.text'),
   type: 'w-text',
   uuid: -1,
   editable: false,
@@ -79,12 +80,13 @@ export const wTextSetting: TwTextData = {
   fontSize: 24,
   zoom: 1,
   fontClass: {
-    alias: '站酷快乐体',
-    id: 543,
-    value: 'zcool-kuaile-regular',
-    url: 'https://lib.baomitu.com/fonts/zcool-kuaile/zcool-kuaile-regular.woff2',
+    // Font mặc định hỗ trợ đầy đủ dấu tiếng Việt; id khớp với bản ghi được seed trong service/src/db/bootstrap.ts
+    alias: 'Be Vietnam Pro',
+    id: 100,
+    value: 'be-vietnam-pro',
+    url: '/static/fonts/be-vietnam-pro-400.woff2',
   },
-  fontFamily: 'SourceHanSansSC-Regular',
+  fontFamily: 'be-vietnam-pro',
   fontWeight: 'normal',
   fontStyle: 'normal',
   writingMode: 'horizontal-tb',

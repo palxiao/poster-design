@@ -6,7 +6,7 @@
     <div class="content">
       <el-popover placement="left-end" trigger="click" width="auto" @after-enter="enter" @before-leave="hide">
         <!-- eslint-disable-next-line vue/no-v-model-argument -->
-        <color-picker v-model:value="state.innerColor" :modes="modes" @change="colorChange" @nativePick="dropColor" />
+        <color-picker v-model:value="state.innerColor" :modes="modes" :labels="pickerLabels" @change="colorChange" @nativePick="dropColor" />
         <template #reference>
           <div class="color__bar" :style="{ background: state.innerColor }"></div>
         </template>
@@ -16,7 +16,8 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, onMounted, watch } from 'vue'
+import { computed, reactive, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import colorPicker from '@palxp/color-picker'
 import { useControlStore } from '@/store';
@@ -25,8 +26,10 @@ type TProps = {
   label?: string
   modelValue?: string
   width?: string
-  modes?: string[]
+  modes?: ColorMode[]
 }
+
+export type ColorMode = 'solid' | 'gradient' | 'pattern'
 
 type TEmits = {
   (event: 'finish', data: string): void
@@ -41,17 +44,25 @@ type TState = {
 export type colorChangeData = {
   angle: number
   color: string
-  mode: string
+  mode: ColorMode
 }
 
 const props = withDefaults(defineProps<TProps>(), {
   label: '',
   modelValue: '',
   width: '100%',
-  modes: () => (['纯色'])
+  modes: () => ['solid'],
 })
 
 const emit = defineEmits<TEmits>()
+
+const { t } = useI18n()
+const pickerLabels = computed(() => ({
+  solid: t('settings.colorPicker.solid'),
+  gradient: t('settings.colorPicker.gradient'),
+  pattern: t('settings.colorPicker.pattern'),
+  eyeDropperTip: t('settings.colorPicker.eyeDropperTip'),
+}))
 
 
 const controlStore = useControlStore()

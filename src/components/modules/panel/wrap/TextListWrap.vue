@@ -24,6 +24,7 @@
 <script lang="ts" setup>
 // const NAME = 'text-list-wrap'
 
+import i18n from '@/languages'
 import { storeToRefs } from 'pinia';
 // import wText from '../../widgets/wText/wText.vue'
 import { wTextSetting } from '../../widgets/wText/wTextSetting'
@@ -47,7 +48,7 @@ const selectBasicText = (item: TBasicTextData) => {
   controlStore.setShowMoveable(false) // 清理掉上一次的选择
 
   let setting = JSON.parse(JSON.stringify(wTextSetting))
-  setting.text = '双击编辑文字' // item.text
+  setting.text = i18n.global.t('editor.panel.defaultText') // item.text
   setting.width = item.fontSize * setting.text.length
   setting.fontSize = item.fontSize
   setting.fontWeight = item.fontWeight
@@ -71,12 +72,12 @@ const basicTextList: TBasicTextData[] = [
   //   fontWeight: 'bold',
   // },
   {
-    text: '+ 添加文字',
+    text: i18n.global.t('editor.panel.addText'),
     fontSize: 60,
     fontWeight: 'normal',
   },
   // {
-  //   text: '+ 添加文字',
+  //   text: i18n.global.t('editor.panel.addText'),
   //   fontSize: 40,
   //   fontWeight: 'normal',
   // },

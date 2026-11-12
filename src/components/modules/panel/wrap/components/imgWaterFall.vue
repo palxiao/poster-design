@@ -15,7 +15,7 @@
     >
       <edit-model v-if="edit" :options="props.edit" :data="{ item, i }">
         {{ item.isDelect }}
-        <div v-if="item.isDelect" class="list__mask">已删除</div>
+        <div v-if="item.isDelect" class="list__mask">{{ $t('common.deleted') }}</div>
         <el-image v-if="!item.fail" class="img" :src="item.cover" lazy loading="lazy" @error="loadError(item)" />
         <div v-else class="fail_img">{{ item.title }}</div>
       </edit-model>

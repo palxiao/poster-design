@@ -1,39 +1,24 @@
 /*
- * @Author: ShawnPhang
- * @Date: 2024-05-19 04:14:02
- * @Description: i18n 示例
- * @LastEditors: ShawnPhang <https://m.palxp.cn>
- * @LastEditTime: 2024-05-19 05:19:57
+ * i18n: tiếng Việt luôn là mặc định (không tự nhận theo trình duyệt, vì nhiều người dùng Việt
+ * cài trình duyệt/OS tiếng Anh); tiếng Anh là ngôn ngữ dự phòng khi thiếu key.
+ * Bản `zh` giữ lại từ upstream nhưng không bổ sung key mới.
  */
 import { createI18n } from 'vue-i18n'
 
-import zh from './modules/zh'
+import vi from './modules/vi'
 import en from './modules/en'
+import zh from './modules/zh'
 
 const i18n = createI18n({
-  // Use Composition API, Set to false
   allowComposition: true,
   legacy: false,
-  locale: getBrowserLang(),
+  locale: 'vi',
+  fallbackLocale: 'en',
   messages: {
-    zh,
+    vi,
     en,
+    zh,
   },
 })
-
-/**
- * @description 获取浏览器默认语言
- * @returns {String}
- */
-export function getBrowserLang() {
-  let browserLang = navigator.language ? navigator.language : navigator.browserLanguage
-  let defaultBrowserLang = ''
-  if (['cn', 'zh', 'zh-cn'].includes(browserLang.toLowerCase())) {
-    defaultBrowserLang = 'zh'
-  } else {
-    defaultBrowserLang = 'en'
-  }
-  return defaultBrowserLang
-}
 
 export default i18n

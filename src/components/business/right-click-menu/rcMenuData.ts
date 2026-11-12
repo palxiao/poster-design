@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 /*
  * @Author: ShawnPhang
  * @Date: 2021-07-30 17:38:50
@@ -26,29 +27,29 @@ export type TWidgetItemData = {
 export const widgetMenu: TWidgetItemData[] = [
   {
     type: 'copy',
-    text: '复制',
+    text: i18n.global.t('business.menu.copy'),
   },
   {
     type: 'paste',
-    text: '粘贴',
+    text: i18n.global.t('business.menu.paste'),
   },
   {
     type: 'index-up',
-    text: '上移一层',
+    text: i18n.global.t('business.menu.up'),
   },
   {
     type: 'index-down',
-    text: '下移一层',
+    text: i18n.global.t('business.menu.down'),
   },
   {
     type: 'del',
-    text: '删除',
+    text: i18n.global.t('business.menu.delete'),
   },
 ]
 
 export const pageMenu: TWidgetItemData[] = [
   {
     type: 'paste',
-    text: '粘贴',
+    text: i18n.global.t('business.menu.paste'),
   },
 ]

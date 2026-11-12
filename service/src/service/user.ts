@@ -22,11 +22,11 @@ import { serviceLink, staticLink } from '../configs'
 export default {
   async saveDesign(req: any, res: Response) {
     const user = getRequestUser(req)
-    if (!user) return send.error(res, '请先登录')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
     const { id, title, data, temp_id, width, height } = req.body || {}
     const w = Number(width); const h = Number(height)
-    if (typeof data !== 'string' || !data || !(w > 0) || !(h > 0)) return send.error(res, '作品数据不完整或无效')
-    const values = { title: String(title || '未命名设计'), data, template_id: Number(temp_id) || 0, cover: '', width: w, height: h }
+    if (typeof data !== 'string' || !data || !(w > 0) || !(h > 0)) return send.error(res, 'Dữ liệu thiết kế thiếu hoặc không hợp lệ')
+    const values = { title: String(title || 'Thiết kế chưa đặt tên'), data, template_id: Number(temp_id) || 0, cover: '', width: w, height: h }
     const designId = Number(id)
     const generateCover = async (savedId: number) => {
       const size = w > h ? 640 : 320
@@ -58,20 +58,20 @@ export default {
   },
   async getMyDesigns(req: any, res: Response) {
     const user = getRequestUser(req)
-    if (!user) return send.error(res, '请先登录')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
     const page = Math.max(1, Number(req.query?.page) || 1); const pageSize = Math.min(100, Math.max(1, Number(req.query?.pageSize) || 20))
     send.success(res, designsRepo.listDesigns(user.id, page, pageSize))
   },
   async getDesign(req: any, res: Response) {
     const user = getRequestUser(req); const id = Number(req.query?.id)
-    if (!user) return send.error(res, '请先登录')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
     const design = Number.isInteger(id) && id > 0 ? designsRepo.getDesign(id, user.id) : undefined
-    design ? send.success(res, design) : send.error(res, '作品不存在')
+    design ? send.success(res, design) : send.error(res, 'Thiết kế không tồn tại')
   },
   async deleteDesign(req: any, res: Response) {
     const user = getRequestUser(req); const id = Number(req.body?.id)
-    if (!user) return send.error(res, '请先登录')
-    designsRepo.deleteDesign(id, user.id) ? send.success(res, undefined) : send.error(res, '作品不存在')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
+    designsRepo.deleteDesign(id, user.id) ? send.success(res, undefined) : send.error(res, 'Thiết kế không tồn tại')
   },
   // design/user/image 获取用户上传图片列表
   async getUserImages(req: any, res: Response) {
@@ -87,8 +87,8 @@ export default {
   // design/user/image/del 删除用户上传图片记录
   async deleteUserImage(req: any, res: Response) {
     const user = getRequestUser(req)
-    if (!user) return send.error(res, '请先登录')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
     const id = Number(req.body?.id)
-    deleteUserImage(id, user.id) ? send.success(res, undefined) : send.error(res, '图片不存在')
+    deleteUserImage(id, user.id) ? send.success(res, undefined) : send.error(res, 'Ảnh không tồn tại')
   },
 }

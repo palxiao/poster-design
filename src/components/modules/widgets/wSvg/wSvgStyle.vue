@@ -8,21 +8,21 @@
 <template>
   <div id="w-image-style">
     <el-collapse v-model="state.activeNames">
-      <el-collapse-item title="位置尺寸" name="1">
+      <el-collapse-item :title="$t('editor.prop.positionSize')" name="1">
         <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
-          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
-          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
+          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" :label="$t('editor.prop.width')" @finish="(value) => finish('width', value)" />
+          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" :label="$t('editor.prop.height')" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
-      <el-collapse-item title="设置颜色" name="2">
+      <el-collapse-item :title="$t('editor.svg.colors')" name="2">
         <div v-for="(c, ci) in state.innerElement.colors" :key="ci + 'c'">
           <color-select v-model="state.innerElement.colors[ci]" @finish="(value) => colorFinish('colors')" />
         </div>
         <br />
         <div class="slide-wrap">
-          <number-slider v-model="state.innerElement.opacity" label="不透明" :step="0.01" :maxValue="1" @finish="(value) => finish('opacity', value)" />
+          <number-slider v-model="state.innerElement.opacity" :label="$t('editor.prop.opacity')" :step="0.01" :maxValue="1" @finish="(value) => finish('opacity', value)" />
         </div>
       </el-collapse-item>
       <br />

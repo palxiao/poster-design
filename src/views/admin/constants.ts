@@ -8,6 +8,7 @@
  * (at your option) any later version.
  */
 
+import i18n from '@/languages'
 import {
   Odometer,
   Grid,
@@ -25,50 +26,50 @@ import type { TNavGroup } from './types'
 /** 侧边栏导航结构。key 必须与 Admin.vue 各 pane 的激活键完全一致 */
 export const NAV_GROUPS: TNavGroup[] = [
   {
-    title: '概览',
-    items: [{ key: 'overview', label: '总览', icon: Odometer }],
+    title: i18n.global.t('admin.nav.overviewGroup'),
+    items: [{ key: 'overview', label: i18n.global.t('admin.nav.overview'), icon: Odometer }],
   },
   {
-    title: '内容与资源',
+    title: i18n.global.t('admin.nav.contentGroup'),
     items: [
-      { key: 'templates', label: '模板与组件', icon: Grid },
-      { key: 'materials', label: '素材管理', icon: Picture },
-      { key: 'photos', label: '照片管理', icon: Camera },
-      { key: 'categories', label: '分类管理', icon: CollectionTag },
-      { key: 'fonts', label: '字体管理', icon: Document },
+      { key: 'templates', label: i18n.global.t('admin.nav.templates'), icon: Grid },
+      { key: 'materials', label: i18n.global.t('admin.nav.materials'), icon: Picture },
+      { key: 'photos', label: i18n.global.t('admin.nav.photos'), icon: Camera },
+      { key: 'categories', label: i18n.global.t('admin.nav.categories'), icon: CollectionTag },
+      { key: 'fonts', label: i18n.global.t('admin.nav.fonts'), icon: Document },
     ],
   },
   {
-    title: '用户',
+    title: i18n.global.t('admin.v.userLabel'),
     items: [
-      { key: 'user-images', label: '用户图片', icon: PictureFilled },
-      { key: 'users', label: '用户管理', icon: User },
-      { key: 'designs', label: '用户作品', icon: Star },
+      { key: 'user-images', label: i18n.global.t('admin.stat.userImages'), icon: PictureFilled },
+      { key: 'users', label: i18n.global.t('admin.nav.users'), icon: User },
+      { key: 'designs', label: i18n.global.t('admin.nav.designs'), icon: Star },
     ],
   },
   {
-    title: '系统',
-    items: [{ key: 'ai-settings', label: 'AI 设置', icon: Setting }],
+    title: i18n.global.t('admin.nav.systemGroup'),
+    items: [{ key: 'ai-settings', label: i18n.global.t('admin.nav.ai'), icon: Setting }],
   },
 ]
 
 /** 各页顶部栏文案：标题 + 一句职责说明 */
 export const PAGE_META: Record<string, { title: string; description: string }> = {
-  overview: { title: '总览', description: '平台内容规模与常用管理操作入口' },
-  templates: { title: '模板与组件', description: '管理可直接使用的完整设计模板，以及可组合到画布中的设计组件' },
-  materials: { title: '素材管理', description: '管理素材库中的图片、SVG 矢量元素与 Mask 容器资源' },
-  photos: { title: '照片管理', description: '管理照片库资源，可按分组组织与检索' },
-  categories: { title: '分类管理', description: '统一管理模板分类、素材分类与照片分类' },
-  fonts: { title: '字体管理', description: '维护编辑器可用的字体资源，支持直接上传 woff 文件' },
-  'user-images': { title: '用户图片', description: '用户上传的图片记录，删除仅移除记录，不删除文件本体' },
-  users: { title: '用户管理', description: '仅展示账号基本信息，密码等敏感字段不会返回' },
-  designs: { title: '用户作品', description: '查看用户保存的作品，不展示作品编辑数据' },
-  'ai-settings': { title: 'AI 设置', description: '配置后登录用户即可在编辑器中使用文案生成、文生图与智能配色' },
+  overview: { title: i18n.global.t('admin.nav.overview'), description: i18n.global.t('admin.desc.overview') },
+  templates: { title: i18n.global.t('admin.nav.templates'), description: i18n.global.t('admin.desc.templates') },
+  materials: { title: i18n.global.t('admin.nav.materials'), description: i18n.global.t('admin.desc.materials') },
+  photos: { title: i18n.global.t('admin.nav.photos'), description: i18n.global.t('admin.desc.photos') },
+  categories: { title: i18n.global.t('admin.nav.categories'), description: i18n.global.t('admin.desc.categories') },
+  fonts: { title: i18n.global.t('admin.nav.fonts'), description: i18n.global.t('admin.desc.fonts') },
+  'user-images': { title: i18n.global.t('admin.stat.userImages'), description: i18n.global.t('admin.desc.userImages') },
+  users: { title: i18n.global.t('admin.nav.users'), description: i18n.global.t('admin.desc.users') },
+  designs: { title: i18n.global.t('admin.nav.designs'), description: i18n.global.t('admin.desc.designs') },
+  'ai-settings': { title: i18n.global.t('admin.nav.ai'), description: i18n.global.t('admin.desc.ai') },
 }
 
 /** AI 生图尺寸模式：不同供应商可接受的 size 档位不同，需按供应商选择映射 */
 export const AI_SIZE_MODE_OPTIONS: { value: string; label: string }[] = [
-  { value: 'zhipu', label: '智谱档位' },
-  { value: 'openai', label: 'OpenAI 标准' },
-  { value: '1024', label: '统一 1024' },
+  { value: 'zhipu', label: i18n.global.t('admin.size.zhipu') },
+  { value: 'openai', label: i18n.global.t('admin.size.openai') },
+  { value: '1024', label: i18n.global.t('admin.size.unified') },
 ]

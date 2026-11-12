@@ -62,7 +62,7 @@ export default defineConfig({
     // 上传/生成文件 URL 以相对路径 /static 返回，开发环境下转发到后端服务
     proxy: {
       '/static': {
-        target: 'http://127.0.0.1:7001',
+        target: process.env.VITE_API_URL || 'http://127.0.0.1:7001',
         changeOrigin: true,
       },
     },

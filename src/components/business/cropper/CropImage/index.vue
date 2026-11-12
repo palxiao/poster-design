@@ -6,14 +6,14 @@
  * @LastEditTime: 2024-03-02 13:32:00
 -->
 <template>
-  <el-dialog v-model="dialogVisible" title="裁剪图片" width="80%" :before-close="handleClose" @close="cancel">
+  <el-dialog v-model="dialogVisible" :title="$t('business.crop.title')" width="80%" :before-close="handleClose" @close="cancel">
     <div id="wrap" v-loading="state.loading" style="height: 50vh">
       <img v-show="state.url" ref="imgBox" style="visibility: hidden" alt="imgBox" :src="state.url" />
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="cancel">取消</el-button>
-        <el-button :loading="state.loading" plain type="primary" @click="ok">确认</el-button>
+        <el-button @click="cancel">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="state.loading" plain type="primary" @click="ok">{{ $t('business.crop.ok') }}</el-button>
       </span>
     </template>
   </el-dialog>

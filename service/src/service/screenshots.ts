@@ -46,7 +46,7 @@ export async function screenshots(req: any, res: any) {
 
   if (id && width && height) {
     if (queueList.length > upperLimit) {
-      res.json({ code: 200, msg: '服务器表示顶不住啊，等等再来吧~' })
+      res.json({ code: 200, msg: 'Máy chủ đang quá tải, vui lòng thử lại sau~' })
       return
     }
     const renderToken = typeof req.query.token === 'string' ? `&token=${encodeURIComponent(req.query.token)}` : ''
@@ -62,10 +62,10 @@ export async function screenshots(req: any, res: any) {
         type === 'file' || !thumbPath ? res.sendFile(path) : res.sendFile(thumbPath)
       })
       .catch((e: any) => {
-        res.json({ code: 500, msg: '图片生成错误' })
+        res.json({ code: 500, msg: 'Lỗi khi tạo ảnh' })
       })
   } else {
-    res.json({ code: 500, msg: '缺少参数，请检查' })
+    res.json({ code: 500, msg: 'Thiếu tham số, vui lòng kiểm tra' })
   }
 }
 
@@ -97,7 +97,7 @@ export async function printscreen(req: any, res: any) {
     req._queueSign = sign
     // console.log(url + id, path, thumbPath);
     if (queueList.length > upperLimit) {
-      res.json({ code: 200, msg: '业务繁忙，等等再来吧~' })
+      res.json({ code: 200, msg: 'Hệ thống đang bận, vui lòng thử lại sau~' })
       return
     }
     queueRun(saveScreenshot, url, { width, height, path, thumbPath, size, quality, prevent, ua, devices, scale, wait }, sign)
@@ -106,16 +106,16 @@ export async function printscreen(req: any, res: any) {
           // res.setHeader('Content-Type', 'image/jpg')
           // const stats = fs.statSync(path)
           // res.setHeader('Cache-Control', stats.size)
-          res.json({ code: 200, msg: '截图成功', data: { path, thumbPath } })
+          res.json({ code: 200, msg: 'Chụp ảnh thành công', data: { path, thumbPath } })
         } else {
           res.json({ code: 200, msg: 'ok' })
         }
       })
       .catch((e: any) => {
-        res.json({ code: 500, msg: '图片生成错误!' })
+        res.json({ code: 500, msg: 'Lỗi khi tạo ảnh!' })
       })
   } else {
-    res.json({ code: 500, msg: '缺少参数，请检查' })
+    res.json({ code: 500, msg: 'Thiếu tham số, vui lòng kiểm tra' })
   }
 }
 

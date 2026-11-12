@@ -35,7 +35,7 @@
       <img v-else ref="targetRef" class="target" style="transform-origin: center" :src="params.imgUrl" />
     </div>
     <div v-if="isMask" class="drop__mask">
-      <div putIn="true" :style="{ fontSize: params.width / 12 + 'px' }" class="drop__btn">拖入</div>
+      <div putIn="true" :style="{ fontSize: params.width / 12 + 'px' }" class="drop__btn">{{ $t('editor.image.dropHere') }}</div>
     </div>
   </div>
 </template>

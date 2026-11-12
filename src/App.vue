@@ -7,23 +7,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { ElConfigProvider } from 'element-plus'
 import en from 'element-plus/es/locale/lang/en'
+import vi from 'element-plus/es/locale/lang/vi'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { useI18n } from 'vue-i18n'
-import { getBrowserLang } from './languages'
-
-const lang = getBrowserLang()
 
 const i18n = useI18n()
-onMounted(() => {
-  i18n.locale.value = lang
-})
 
-// 配置语言,否则element默认是英语
-const locale = computed(() => {
-  return lang == 'zh' ? zhCn : en
+// Element Plus mặc định là tiếng Anh, phải truyền locale theo ngôn ngữ app
+const elementLocales = { vi, en, zh: zhCn }
+const locale = computed(() => elementLocales[i18n.locale.value as keyof typeof elementLocales] ?? vi)
+
+watchEffect(() => {
+  document.documentElement.lang = i18n.locale.value
 })
 </script>
 

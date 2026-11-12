@@ -6,6 +6,7 @@
  * @LastEditTime: 2024-11-14 16:41:19
  */
 
+import i18n from '@/languages'
 import { AlignListData } from "./AlignListData"
 
 export type TStyleIconData = {
@@ -21,35 +22,35 @@ export const styleIconList1 = [
   {
     key: 'fontWeight',
     icon: 'icon-bold',
-    tip: '加粗',
+    tip: i18n.global.t('editor.tip.bold'),
     value: ['normal', 'bold'],
     select: false,
   },
   {
     key: 'fontStyle',
     icon: 'icon-italic',
-    tip: '斜体',
+    tip: i18n.global.t('editor.tip.italic'),
     value: ['normal', 'italic'],
     select: false,
   },
   {
     key: 'textDecoration',
     icon: 'icon-underline',
-    tip: '下划线',
+    tip: i18n.global.t('editor.tip.underline'),
     value: ['none', 'underline'],
     select: false,
   },
   {
     key: 'textDecoration',
     icon: 'icon-strikethrough',
-    tip: '删除线',
+    tip: i18n.global.t('editor.tip.strike'),
     value: ['none', 'line-through'],
     select: false,
   },
   {
     key: 'writingMode',
     icon: 'icon-textorientation',
-    tip: '竖版文字',
+    tip: i18n.global.t('editor.tip.vertical'),
     value: ['horizontal-tb', 'vertical-rl'], // tb-rl
     select: false,
   },
@@ -67,35 +68,35 @@ export const styleIconList2 = [
   {
     key: 'textAlign',
     icon: 'icon-align-left-text',
-    tip: '左对齐',
+    tip: i18n.global.t('editor.tip.alignLeft'),
     value: 'left',
     select: false,
   },
   {
     key: 'textAlign',
     icon: 'icon-align-center-text',
-    tip: '居中对齐',
+    tip: i18n.global.t('editor.tip.alignCenter'),
     value: 'center',
     select: false,
   },
   {
     key: 'textAlign',
     icon: 'icon-align-right-text',
-    tip: '右对齐',
+    tip: i18n.global.t('editor.tip.alignRight'),
     value: 'right',
     select: false,
   },
   {
     key: 'textAlign',
     icon: 'icon-align-justify-text',
-    tip: '两端对齐',
+    tip: i18n.global.t('editor.tip.justify'),
     value: 'justify',
     select: false,
   },
   {
     key: 'textAlignLast',
     icon: 'icon-align-justify-text',
-    tip: '分散对齐',
+    tip: i18n.global.t('editor.tip.distribute'),
     value: 'justify',
     select: false,
   },
@@ -105,37 +106,37 @@ export const alignIconList = [
   {
     key: 'align',
     icon: 'icon-align-left',
-    tip: '左对齐',
+    tip: i18n.global.t('editor.tip.alignLeft'),
     value: 'left',
   },
   {
     key: 'align',
     icon: 'icon-align-center-horiz',
-    tip: '水平居中对齐',
+    tip: i18n.global.t('editor.tip.alignHCenter'),
     value: 'ch',
   },
   {
     key: 'align',
     icon: 'icon-align-right',
-    tip: '右对齐',
+    tip: i18n.global.t('editor.tip.alignRight'),
     value: 'right',
   },
   {
     key: 'align',
     icon: 'icon-align-top',
-    tip: '上对齐',
+    tip: i18n.global.t('editor.tip.alignTop'),
     value: 'top',
   },
   {
     key: 'align',
     icon: 'icon-align-center-verti',
-    tip: '垂直居中对齐',
+    tip: i18n.global.t('editor.tip.alignVCenter'),
     value: 'cv',
   },
   {
     key: 'align',
     icon: 'icon-align-bottom',
-    tip: '下对齐',
+    tip: i18n.global.t('editor.tip.alignBottom'),
     value: 'bottom',
   },
 ] as AlignListData[]

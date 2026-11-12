@@ -13,7 +13,7 @@
     <template #dropdown>
       <div v-show="type === 'shortkey'" class="help-list">
         <div @click="type = 'menu'" class="back">
-          <span class="icon-box"><i class="iconfont icon-right"></i></span> <b>快捷键</b>
+          <span class="icon-box"><i class="iconfont icon-right"></i></span> <b>{{ $t('editor.menu.shortcuts') }}</b>
         </div>
         <el-divider />
         <div v-for="(sc, si) in scKeyCodes" :key="'sc' + si" class="item">
@@ -22,9 +22,9 @@
         </div>
       </div>
       <el-dropdown-menu v-show="type === 'menu'">
-        <el-dropdown-item @click="type = 'shortkey'">快捷键</el-dropdown-item>
-        <el-dropdown-item @click="openTour">新手引导</el-dropdown-item>
-        <el-dropdown-item @click="openIssues"><div class="menu-item">反馈或建议</div></el-dropdown-item>
+        <el-dropdown-item @click="type = 'shortkey'">{{ $t('editor.menu.shortcuts') }}</el-dropdown-item>
+        <el-dropdown-item @click="openTour">{{ $t('editor.menu.tour') }}</el-dropdown-item>
+        <el-dropdown-item @click="openIssues"><div class="menu-item">{{ $t('editor.menu.feedback') }}</div></el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>

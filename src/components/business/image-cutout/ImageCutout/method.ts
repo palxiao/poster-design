@@ -14,6 +14,7 @@
  * (at your option) any later version.
  */
 
+import i18n from '@/languages'
 import { TImageCutoutState } from './index.vue'
 import api from '@/api'
 import { Ref } from 'vue'
@@ -41,7 +42,7 @@ export const selectImageFile = async (state: TImageCutoutState, raw: Ref<HTMLEle
     successCb(URL.createObjectURL(blob), file.name)
   } else {
     state.progressText = ''
-    alert('自动抠图失败，请稍候重新尝试~')
+    alert(i18n.global.t('business.cutout.failed'))
   }
 }
 

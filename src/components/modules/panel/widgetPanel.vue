@@ -18,7 +18,7 @@
           <p>{{ item.name }}</p>
         </li>
       </ul>
-      <a href="https://github.com/palxiao/poster-design" target="_blank" class="github"><img src="https://fe-doc.palxp.cn/images/github.svg" alt="Github" title="Github" /> 源码</a>
+      <a href="https://github.com/palxiao/poster-design" target="_blank" class="github"><img src="https://fe-doc.palxp.cn/images/github.svg" alt="Github" title="Github" /> {{ $t('editor.panel.source') }}</a>
     </div>
     <div v-show="state.active" class="widget-wrap">
       <keep-alive>
@@ -27,7 +27,7 @@
     </div>
     <!-- <div v-show="active" class="side-wrap"><div class="pack__up" @click="active = false">&lt;</div></div> -->
     <div v-show="state.active" class="side-wrap">
-      <el-tooltip :show-after="300" :hide-after="0" effect="dark" content="关闭侧边栏" placement="right">
+      <el-tooltip :show-after="300" :hide-after="0" effect="dark" :content="$t('editor.panel.closeSidebar')" placement="right">
         <div class="pack__up" @click="state.active = false"></div>
       </el-tooltip>
     </div>

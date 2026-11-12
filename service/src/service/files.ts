@@ -34,11 +34,11 @@ export async function upload(req: Request, res: Response) {
   form.parse(req as any, async function (err: any, fields: any, files: any) {
     if (err) {
       console.error('上传文件出错！')
-      return send.error(res, '上传文件出错')
+      return send.error(res, 'Lỗi khi tải tệp lên')
     }
     const file = files && files.file ? files.file[0] : null
     if (!file || !file.path) {
-      return send.error(res, '缺少文件')
+      return send.error(res, 'Thiếu tệp')
     }
     const { headers, originalFilename } = file
     const fileType = (headers['content-type'] || '').split('/')[1]
@@ -54,7 +54,7 @@ export async function upload(req: Request, res: Response) {
       await copyFile(file.path, targetPath)
     } catch (e) {
       console.error('上传异常', e)
-      return send.error(res, '文件保存失败')
+      return send.error(res, 'Lưu tệp thất bại')
     }
 
     const url = `${staticLink}${folder ? folder + '/' : ''}${name}`

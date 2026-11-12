@@ -16,8 +16,8 @@
           <el-image class="list__img" :src="item.thumb" fit="cover" lazy loading="lazy" @click.stop="selectItem(item)" @dragstart="dragStart($event, item)"></el-image>
         </imageTip>
       </div>
-      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
-      <div v-show="state.loadDone" class="loading">全部加载完毕</div>
+      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> {{ $t('common.loadingMore') }}</div>
+      <div v-show="state.loadDone" class="loading">{{ $t('common.allLoaded') }}</div>
     </ul>
   </div>
 </template>

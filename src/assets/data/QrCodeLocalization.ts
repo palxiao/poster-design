@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 /*
  * @Author: ShawnPhang
  * @Date: 2022-03-16 11:38:48
@@ -21,37 +22,37 @@ export default {
   dotColorTypes: [
     {
       key: 'single',
-      value: '单色',
+      value: i18n.global.t('editor.qr.single'),
     },
     {
       key: 'gradient',
-      value: '渐变色',
+      value: i18n.global.t('editor.qr.gradient'),
     },
   ],
   dotTypes: [
     {
       key: 'dots',
-      value: '圆点风格',
+      value: i18n.global.t('editor.qr.dots'),
     },
     {
       key: 'rounded',
-      value: '圆润风格',
+      value: i18n.global.t('editor.qr.rounded'),
     },
     {
       key: 'classy',
-      value: '经典风格',
+      value: i18n.global.t('editor.qr.classy'),
     },
     {
       key: 'classy-rounded',
-      value: '圆角风格',
+      value: i18n.global.t('editor.qr.classyRounded'),
     },
     {
       key: 'square',
-      value: '方形风格',
+      value: i18n.global.t('editor.qr.square'),
     },
     {
       key: 'extra-rounded',
-      value: '特殊风格',
+      value: i18n.global.t('editor.qr.extra'),
     },
   ],
 } as QrCodeLocalizationData

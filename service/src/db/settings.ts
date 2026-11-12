@@ -138,5 +138,5 @@ export function getAiSettings(): AiSettings {
 /** 导出给后台表单渲染的尺寸模式选项 */
 export const AI_SIZE_MODE_OPTIONS: { value: AiImageSizeMode; label: string }[] = AI_IMAGE_SIZE_MODES.map((mode) => ({
   value: mode,
-  label: mode === 'zhipu' ? '智谱档位' : mode === 'openai' ? 'OpenAI 标准' : '统一 1024',
+  label: mode === 'zhipu' ? 'Khung Zhipu' : mode === 'openai' ? 'OpenAI chuẩn' : 'Thống nhất 1024',
 }))

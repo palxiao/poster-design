@@ -8,12 +8,12 @@
 <template>
   <div class="wrap">
     <el-tabs v-model="state.tabActiveName" :stretch="true" class="tabs" @tab-change="tabChange">
-      <el-tab-pane label="资源管理" name="pics"> </el-tab-pane>
-      <el-tab-pane label="我的作品" name="design"> </el-tab-pane>
+      <el-tab-pane :label="$t('editor.panel.resources')" name="pics"> </el-tab-pane>
+      <el-tab-pane :label="$t('editor.panel.myDesigns')" name="design"> </el-tab-pane>
     </el-tabs>
     <div v-show="state.tabActiveName === 'pics'">
       <uploader v-model="state.percent" class="upload" @done="uploadDone">
-        <el-button class="upload-btn" plain><i class="iconfont icon-upload" /> 上传图片</el-button>
+        <el-button class="upload-btn" plain><i class="iconfont icon-upload" /> {{ $t('editor.panel.uploadImage') }}</el-button>
       </uploader>
       <div style="margin: 1rem; height: 100vh">
         <photo-list ref="imgListRef" :edit="state.editOptions.photo" :isDone="state.isDone" :listData="state.imgList" @load="load" @drag="dragStart" @select="selectImg" />
@@ -23,13 +23,14 @@
       <ul ref="listRef" v-infinite-scroll="loadDesign" class="infinite-list" :infinite-scroll-distance="150" style="overflow: auto">
         <img-water-fall :edit="state.editOptions.works" :listData="state.designList" @select="selectDesign" />
         <!-- <div v-show="loading" class="loading"><i class="el-icon-loading"></i>拼命加载中..</div> -->
-        <div v-show="state.isDone" class="loading">全部加载完毕</div>
+        <div v-show="state.isDone" class="loading">{{ $t('common.allLoaded') }}</div>
       </ul>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import { reactive, toRefs, watch, nextTick, ref, onMounted } from 'vue'
 import { ElTabPane, ElTabs, TabPaneName } from 'element-plus'
 import { useRouter } from 'vue-router'
@@ -184,7 +185,7 @@ const deleteImg = async ({ i, item }: controlImgParam) => {
   // store.commit('setShowMoveable', false) // 清理掉上一次的选择框
   controlStore.setShowMoveable(false) // 清理掉上一次的选择框
 
-  const isPass = await useConfirm('警告', '删除后不可找回，已引用资源将会失效，请谨慎操作', 'warning')
+  const isPass = await useConfirm(i18n.global.t('common.warning'), i18n.global.t('editor.panel.confirmDeleteAsset'), 'warning')
   if (!isPass) {
     return false
   }
@@ -193,7 +194,7 @@ const deleteImg = async ({ i, item }: controlImgParam) => {
   imgListRef.value.delItem(i) // 通知标记
 }
 const deleteWorks = async ({ i, item }: controlImgParam) => {
-  const isPass = await useConfirm('警告', '删除后不可找回，请确认操作', 'warning')
+  const isPass = await useConfirm(i18n.global.t('common.warning'), i18n.global.t('editor.panel.confirmDelete'), 'warning')
   if (isPass) {
     await api.material.deleteMyWorks({ id: item.id })
     setTimeout(() => {
@@ -206,13 +207,13 @@ const deleteWorks = async ({ i, item }: controlImgParam) => {
 state.editOptions = {
   photo: [
     {
-      name: '删除',
+      name: i18n.global.t('common.delete'),
       fn: deleteImg,
     },
   ],
   works: [
     {
-      name: '删除',
+      name: i18n.global.t('common.delete'),
       fn: deleteWorks,
     },
   ],

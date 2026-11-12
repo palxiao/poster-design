@@ -56,12 +56,12 @@ export function getRequestUser(req: any): { id: number; account: string } | null
   return verifyToken(String(req.headers.authorization || ''))
 }
 
-/** 管理员鉴权中间件：未登录 / 非管理员一律 401 */
+/** 管理员鉴权中间件：未登录 / 非管理员一律 401；reason 供前端区分两种情况，不要依赖 msg 文案 */
 export function requireAdmin(req: any, res: any, next: () => void) {
   const user = getRequestUser(req)
   const row = user && findUserById(user.id)
   if (!row || row.role !== 1) {
-    res.json({ code: 401, msg: user ? '无管理员权限' : '请先登录' })
+    res.json({ code: 401, reason: user ? 'forbidden' : 'unauthenticated', msg: user ? 'Bạn không có quyền quản trị' : 'Vui lòng đăng nhập' })
     return
   }
   req.user = user

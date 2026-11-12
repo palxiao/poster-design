@@ -3,23 +3,23 @@
     <slot>
       <div class="default-wrap">
         <div class="option">
-          <label for="image">选择图片：</label>
+          <label for="image">Chọn ảnh:</label>
           <input id="image" type="file" accept=".jpg,.png,.gif,.webp" @change="onFileChange" />
         </div>
         <div class="option">
-          <span>画笔类型：</span>
-          <label for="fix">修补</label>
+          <span>Loại cọ:</span>
+          <label for="fix">Vá</label>
           <input id="fix" v-model="isErasing" type="radio" :value="false" />
-          <label for="matting">擦除</label>
+          <label for="matting">Xóa</label>
           <input id="matting" v-model="isErasing" :value="true" type="radio" />
         </div>
         <div class="option">
-          <label for="radius">画笔尺寸：</label>
+          <label for="radius">Cỡ cọ:</label>
           <input id="radius" v-model="radius" class="range-input" type="range" :max="RADIUS_SLIDER_MAX" :min="RADIUS_SLIDER_MIN" :step="RADIUS_SLIDER_STEP" />
           <span>{{ brushSize }}</span>
         </div>
         <div class="option">
-          <label for="hardness">画笔硬度：</label>
+          <label for="hardness">Độ cứng cọ:</label>
           <input id="hardness" v-model="hardness" class="range-input" type="range" :max="HARDNESS_SLIDER_MAX" :min="HARDNESS_SLIDER_MIN" :step="HARDNESS_SLIDER_STEP" />
           <span>{{ hardnessText }}</span>
         </div>
@@ -75,14 +75,14 @@ export default defineComponent({
     const downloadFileName = computed(() => (picFile.value ? `matting_${picFile.value.name}` : 'null'))
     const cantSave = computed(() => generating.value || !initialized.value)
     const saveBtnClass = computed(() => ({ 'save-btn': true, disabled: cantSave.value }))
-    const saveBtnText = computed(() => (generating.value ? '保存中...' : '保存'))
+    const saveBtnText = computed(() => (generating.value ? 'Đang lưu...' : 'Lưu'))
 
     const onFileChange = (ev: Event) => {
       const { files } = ev.target as HTMLInputElement
       if (files && files[0] && /.+\.(jpg|jpeg|png|gif|webp)/.test(files[0].name)) {
         picFile.value = files[0]
       } else {
-        alert('未选择图片或图片格式不正确(只支持jpg、png、gif、webp), 请重新选择')
+        alert('Chưa chọn ảnh hoặc định dạng không đúng (chỉ hỗ trợ jpg, png, gif, webp), vui lòng chọn lại')
       }
     }
 

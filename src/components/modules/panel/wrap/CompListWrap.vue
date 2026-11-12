@@ -42,8 +42,8 @@
           <!-- </edit-model> -->
         </div>
       </el-space>
-      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> 拼命加载中</div>
-      <div v-show="state.loadDone" class="loading">全部加载完毕</div>
+      <div v-show="state.loading" class="loading"><i class="el-icon-loading"></i> {{ $t('common.loadingMore') }}</div>
+      <div v-show="state.loadDone" class="loading">{{ $t('common.allLoaded') }}</div>
     </ul>
   </div>
 </template>

@@ -54,11 +54,11 @@ export async function getDetail(req: any, res: Response) {
   const { type, id } = req.query
   const tid = Number(id)
   if (!Number.isInteger(tid) || tid <= 0) {
-    return send.error(res, '参数 id 无效')
+    return send.error(res, 'Tham số id không hợp lệ')
   }
   const detail = templatesRepo.getDetail(tid, type == 1 ? 1 : 0)
   if (!detail) {
-    return send.error(res, '模板不存在')
+    return send.error(res, 'Mẫu không tồn tại')
   }
   send.success(res, detail)
 }
@@ -126,7 +126,7 @@ export async function saveTemplate(req: any, res: Response) {
   const w = Number(width)
   const h = Number(height)
   if (typeof data !== 'string' || !data || !(w > 0) || !(h > 0)) {
-    return send.error(res, '参数不完整或无效')
+    return send.error(res, 'Tham số thiếu hoặc không hợp lệ')
   }
   const tid = Number(id)
   const isAdd = !Number.isInteger(tid) || tid <= 0 // 是否新增模板
@@ -141,7 +141,7 @@ export async function saveTemplate(req: any, res: Response) {
 
   const savedId = isAdd ? templatesRepo.createTemplate(params) : tid
   if (!isAdd && !templatesRepo.updateTemplate(tid, params)) {
-    return send.error(res, '模板不存在')
+    return send.error(res, 'Mẫu không tồn tại')
   }
 
   // 生成封面（调用截图服务，成功后回填 cover）

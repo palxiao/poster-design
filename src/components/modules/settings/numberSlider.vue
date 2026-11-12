@@ -103,6 +103,8 @@ function changeValue(value: number | number[]) {
   display: flex;
   .label {
     user-select: none;
+    flex-shrink: 0;
+    white-space: nowrap;
     margin-right: 4px;
   }
 }

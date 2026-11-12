@@ -333,6 +333,7 @@ defineExpose({
       }
     }
     .zoom-text {
+      white-space: nowrap;
       user-select: none;
       align-items: center;
       background-color: @color2;

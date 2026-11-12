@@ -14,6 +14,7 @@
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import { computed, onMounted, ref, toRaw } from 'vue'
 import { 
   widgetMenu as widget, 
@@ -83,7 +84,7 @@ function showMenu(e: MouseEvent) {
     let ungroup: TWidgetItemData[] = [
       {
         type: 'ungroup',
-        text: '取消组合',
+        text: i18n.global.t('business.menu.ungroup'),
       },
     ]
     menuListData.value.list = ungroup.concat(menuListData.value.list)

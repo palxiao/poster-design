@@ -10,7 +10,7 @@
     <div v-for="(t, ti) in types" :key="ti + 't'">
       <div class="types__header" @click="select(t)">
         <span style="flex: 1">{{ t.name }}</span>
-        <span class="types__header-more">全部<i class="iconfont icon-right"></i></span>
+        <span class="types__header-more">{{ $t('common.all') }}<i class="iconfont icon-right"></i></span>
       </div>
       <slot :index="ti" />
     </div>

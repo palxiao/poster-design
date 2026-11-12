@@ -13,7 +13,7 @@
       <div class="brand-mark"><el-icon><Brush /></el-icon></div>
       <div class="brand-text">
         <div class="brand-name">{{ APP_NAME }}</div>
-        <div class="brand-sub">管理后台</div>
+        <div class="brand-sub">{{ $t('admin.brand.sub') }}</div>
       </div>
     </div>
 
@@ -37,7 +37,7 @@
       <div class="user-avatar">{{ avatarChar }}</div>
       <div class="user-meta">
         <div class="user-name">{{ user.account }}</div>
-        <div class="user-role">管理员</div>
+        <div class="user-role">{{ $t('admin.v.admin') }}</div>
       </div>
       <el-button class="logout-btn" type="primary" link @click="$emit('logout')">
         <el-icon><SwitchButton /></el-icon>

@@ -17,7 +17,7 @@ export default async (req: any, res: any, next: any) => {
       if (!res.headersSent) {
         res.status(statusCode).json({
           statusCode,
-          message: '响应超时，任务已取消，请重试',
+          message: 'Quá thời gian phản hồi, tác vụ đã bị hủy, vui lòng thử lại',
         })
       }
     }

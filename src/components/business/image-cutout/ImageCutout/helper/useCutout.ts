@@ -8,6 +8,7 @@
  * (at your option) any later version.
  */
 
+import i18n from '@/languages'
 import type { BaseSession } from '@bunnio/rembg-web'
 
 /** 抠图进度信息 */
@@ -18,9 +19,9 @@ export type TCutoutProgress = {
 
 /** 进度步骤文案映射 */
 const stepText: Record<string, string> = {
-  downloading: '下载本地模型中..',
-  processing: '正在抠图，请稍候..',
-  postprocessing: '正在处理，请稍候..',
+  downloading: i18n.global.t('business.cutout.modelDownloading'),
+  processing: i18n.global.t('business.cutout.processing'),
+  postprocessing: i18n.global.t('business.cutout.postprocessing'),
   complete: '',
 }
 

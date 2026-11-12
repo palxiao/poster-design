@@ -1,0 +1,22 @@
+// Nút và thao tác dùng chung toàn app
+export default {
+  confirm: 'Xác nhận',
+  cancel: 'Hủy',
+  save: 'Lưu',
+  delete: 'Xóa',
+  edit: 'Sửa',
+  close: 'Đóng',
+  search: 'Tìm kiếm',
+  upload: 'Tải lên',
+  loading: 'Đang tải…',
+  noData: 'Chưa có dữ liệu',
+  loadingMore: 'Đang tải…',
+  allLoaded: 'Đã tải hết',
+  deleted: 'Đã xóa',
+  all: 'Tất cả',
+  warning: 'Cảnh báo',
+  modify: 'Sửa',
+  notice: 'Thông báo',
+  ok: 'Xác nhận',
+  emptyArray: 'Mảng không được rỗng',
+}

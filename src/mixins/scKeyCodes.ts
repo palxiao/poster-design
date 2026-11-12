@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 /*
  * @Author: ShawnPhang
  * @Date: 2024-04-04 00:36:13
@@ -12,59 +13,59 @@ function isMacOS() {
 
 export default [
   {
-    feat: `拖拽画布`,
-    info: `空格 + 鼠标拖拽`,
+    feat: i18n.global.t('editor.shortcut.drag'),
+    info: i18n.global.t('editor.shortcut.dragInfo'),
   },
   {
-    feat: `画布缩小`,
-    info: `${ctrlKey} - / ${ctrlKey} + 滚轮`,
+    feat: i18n.global.t('editor.shortcut.zoomOut'),
+    info: `${ctrlKey} - / ${ctrlKey} + ${i18n.global.t('editor.shortcut.wheel')}`,
   },
   {
-    feat: `画布放大`,
-    info: `${ctrlKey} + / ${ctrlKey} + 滚轮`,
+    feat: i18n.global.t('editor.shortcut.zoomIn'),
+    info: `${ctrlKey} + / ${ctrlKey} + ${i18n.global.t('editor.shortcut.wheel')}`,
   },
   {
-    feat: `保存`,
+    feat: i18n.global.t('editor.shortcut.save'),
     info: `${ctrlKey} + S`,
   },
   {
-    feat: `撤销`,
+    feat: i18n.global.t('editor.shortcut.undo'),
     info: `${ctrlKey} + Z`,
   },
   {
-    feat: `重做`,
+    feat: i18n.global.t('editor.shortcut.redo'),
     info: `${ctrlKey} + Shift + Z`,
   },
   {
-    feat: `复制`,
+    feat: i18n.global.t('editor.shortcut.copy'),
     info: `${ctrlKey} + C`,
   },
   {
-    feat: `粘贴`,
+    feat: i18n.global.t('editor.shortcut.paste'),
     info: `${ctrlKey} + V`,
   },
   {
-    feat: `删除`,
+    feat: i18n.global.t('editor.shortcut.delete'),
     info: `Delete / Backspace`,
   },
   {
-    feat: `元素移动`,
+    feat: i18n.global.t('editor.shortcut.move'),
     info: `← ↑ → ↓`,
   },
   {
-    feat: `快速移动`,
+    feat: i18n.global.t('editor.shortcut.fastMove'),
     info: `Shift + ← ↑ → ↓`,
   },
   {
-    feat: `多选`,
-    info: `${ctrlKey} / Shift + 点选`,
+    feat: i18n.global.t('editor.shortcut.multi'),
+    info: `${ctrlKey} / Shift + ${i18n.global.t('editor.shortcut.click')}`,
   },
   {
-    feat: `成组`,
+    feat: i18n.global.t('editor.shortcut.group'),
     info: `${ctrlKey} + G`,
   },
   {
-    feat: `取消选中`,
+    feat: i18n.global.t('editor.shortcut.deselect'),
     info: `ESC`,
   },
 ]

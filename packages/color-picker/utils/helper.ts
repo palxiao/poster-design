@@ -5,10 +5,13 @@
  * @LastEditors: ShawnPhang <https://m.palxp.cn>
  * @LastEditTime: 2023-11-28 11:03:14
  */
-export const parseBackgroundValue = (value: string): string => {
-  if (value.startsWith('#')) return '纯色'
-  if (value.startsWith('linear-gradient')) return '渐变'
-  return '图案'
+/** Mã chế độ màu ổn định — nhãn hiển thị truyền riêng qua prop `labels`, không dùng làm giá trị logic */
+export type ColorMode = 'solid' | 'gradient' | 'pattern'
+
+export const parseBackgroundValue = (value: string): ColorMode => {
+  if (value.startsWith('#')) return 'solid'
+  if (value.startsWith('linear-gradient')) return 'gradient'
+  return 'pattern'
 }
 
 interface Stop {

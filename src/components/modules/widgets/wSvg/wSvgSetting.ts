@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 
 export type TWSvgSetting = {
   name: string,
@@ -30,7 +31,7 @@ export type TWSvgSetting = {
 }
 
 export const wSvgSetting = {
-  name: '矢量图形',
+  name: i18n.global.t('editor.widget.svg'),
   type: "w-svg",
   uuid: `-1`,
   width: 100,

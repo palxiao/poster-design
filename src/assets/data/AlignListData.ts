@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 /*
  * @Author: ShawnPhang
  * @Date: 2022-02-12 11:08:57
@@ -17,37 +18,37 @@ export default [
   {
     key: 'align',
     icon: 'icon-align-left',
-    tip: '左对齐',
+    tip: i18n.global.t('editor.tip.alignLeft'),
     value: 'left',
   },
   {
     key: 'align',
     icon: 'icon-align-center-horiz',
-    tip: '水平居中对齐',
+    tip: i18n.global.t('editor.tip.alignHCenter'),
     value: 'ch',
   },
   {
     key: 'align',
     icon: 'icon-align-right',
-    tip: '右对齐',
+    tip: i18n.global.t('editor.tip.alignRight'),
     value: 'right',
   },
   {
     key: 'align',
     icon: 'icon-align-top',
-    tip: '上对齐',
+    tip: i18n.global.t('editor.tip.alignTop'),
     value: 'top',
   },
   {
     key: 'align',
     icon: 'icon-align-center-verti',
-    tip: '垂直居中对齐',
+    tip: i18n.global.t('editor.tip.alignVCenter'),
     value: 'cv',
   },
   {
     key: 'align',
     icon: 'icon-align-bottom',
-    tip: '下对齐',
+    tip: i18n.global.t('editor.tip.alignBottom'),
     value: 'bottom',
   },
 ] as AlignListData[]

@@ -8,15 +8,15 @@
 <template>
   <div id="w-image-style">
     <el-collapse v-model="state.activeNames">
-      <el-collapse-item title="位置尺寸" name="1">
+      <el-collapse-item :title="$t('editor.prop.positionSize')" name="1">
         <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
-          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
-          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
+          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" :label="$t('editor.prop.width')" @finish="(value) => finish('width', value)" />
+          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" :label="$t('editor.prop.height')" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
-      <el-collapse-item title="样式设计" name="2">
+      <el-collapse-item :title="$t('editor.qrcode.design')" name="2">
         <div style="flex-wrap: nowrap" class="line-layout">
           <el-select v-model="state.innerElement.dotColorType">
             <el-option v-for="ctype in localization.dotColorTypes" :key="ctype.key" :label="ctype.value" :value="ctype.key" />
@@ -29,21 +29,21 @@
           <color-select v-model="state.innerElement.dotColor" @finish="(value) => finish('dotColor', value)" />
           <color-select v-show="state.innerElement.dotColorType !== 'single'" v-model="state.innerElement.dotColor2" @finish="(value) => finish('dotColor2', value)" />
         </div>
-        <number-slider v-show="state.innerElement.dotColorType !== 'single'" v-model="state.innerElement.dotRotation" style="margin-top: 8px" label="渐变角度" :step="1" :minValue="0" :maxValue="360" @finish="(value) => finish('dotRotation', value)" />
+        <number-slider v-show="state.innerElement.dotColorType !== 'single'" v-model="state.innerElement.dotRotation" style="margin-top: 8px" :label="$t('editor.qrcode.gradientAngle')" :step="1" :minValue="0" :maxValue="360" @finish="(value) => finish('dotRotation', value)" />
       </el-collapse-item>
-      <el-collapse-item title="内容设置" name="3">
+      <el-collapse-item :title="$t('editor.qrcode.content')" name="3">
         <text-input-area v-model="state.innerElement.value" :max="40" label="" @finish="(value) => finish('value', value)" />
         <br />
         <div class="slide-wrap logo__layout">
           <img v-show="state.innerElement.url" :src="state.innerElement.url" class="logo" />
           <uploader class="options__upload" @done="uploadImgDone">
-            <el-button size="small" plain>{{ state.innerElement.url ? '替换图片' : '上传 Logo' }}</el-button>
+            <el-button size="small" plain>{{ state.innerElement.url ? $t('editor.qrcode.replaceImage') : $t('editor.qrcode.uploadLogo') }}</el-button>
           </uploader>
-          <el-button v-show="state.innerElement.url" size="small" link @click="finish('url', '')">删除</el-button>
+          <el-button v-show="state.innerElement.url" size="small" link @click="finish('url', '')">{{ $t('editor.prop.delete') }}</el-button>
         </div>
         <br />
         <div class="slide-wrap">
-          <number-slider v-model="state.innerElement.opacity" label="不透明" :step="0.01" :maxValue="1" @finish="(value) => finish('opacity', value)" />
+          <number-slider v-model="state.innerElement.opacity" :label="$t('editor.prop.opacity')" :step="0.01" :maxValue="1" @finish="(value) => finish('opacity', value)" />
         </div>
       </el-collapse-item>
       <br />

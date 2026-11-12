@@ -18,7 +18,7 @@
         @click.stop="select(i)"
       >
         <edit-model v-if="props.edit" :options="props.edit" :data="{ item, i }">
-          <div v-if="item.isDelect" class="list__mask">已删除</div>
+          <div v-if="item.isDelect" class="list__mask">{{ $t('common.deleted') }}</div>
           <el-image class="img transparent-bg" :src="item.thumb || item.url" :style="{ height: getInnerHeight(item) + 'px' }" lazy loading="lazy" />
         </edit-model>
         <template v-else>
@@ -32,8 +32,8 @@
         </template>
       </div>
     </div>
-    <div v-if="!props.isDone" v-show="state.loading" class="loading"><i class="el-icon-loading" /> 拼命加载中</div>
-    <div v-else class="loading">全部加载完毕</div>
+    <div v-if="!props.isDone" v-show="state.loading" class="loading"><i class="el-icon-loading" /> {{ $t('common.loadingMore') }}</div>
+    <div v-else class="loading">{{ $t('common.allLoaded') }}</div>
   </ul>
 </template>
 

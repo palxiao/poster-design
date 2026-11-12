@@ -36,10 +36,10 @@ const IMAGE_SIZE_MAPS: Record<AiImageSizeMode, Record<string, string>> = {
 function requireAiEnabled(): AiSettings {
   const config = getAiSettings()
   if (!config.enabled) {
-    throw new Error('AI 功能未启用，请联系管理员在后台开启')
+    throw new Error('Tính năng AI chưa được bật, vui lòng liên hệ quản trị viên để bật trong trang quản trị')
   }
   if (!config.api_key) {
-    throw new Error('AI 服务未配置密钥，请联系管理员')
+    throw new Error('Dịch vụ AI chưa được cấu hình API Key, vui lòng liên hệ quản trị viên')
   }
   return config
 }
@@ -65,7 +65,7 @@ function extractApiErrorMessage(e: any): string {
     const message = data.error && typeof data.error.message === 'string' ? data.error.message : typeof data.message === 'string' ? data.message : typeof data.msg === 'string' ? data.msg : ''
     if (message) return message
   }
-  return (e && e.message) || '未知错误'
+  return (e && e.message) || 'Lỗi không xác định'
 }
 
 /** 调用 OpenAI 兼容的对话接口，返回首个候选文本 */
@@ -192,41 +192,41 @@ export default {
   // AI 文案生成：POST /api/ai/text
   async textGenerate(req: any, res: Response) {
     const user = getRequestUser(req)
-    if (!user) return send.error(res, '请先登录')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
     let config: AiSettings
     try {
       config = requireAiEnabled()
     } catch (e) {
-      return send.error(res, e?.message || 'AI 服务未配置')
+      return send.error(res, e?.message || 'Dịch vụ AI chưa được cấu hình')
     }
     const prompt = typeof req.body?.prompt === 'string' ? req.body.prompt.trim() : ''
-    const style = typeof req.body?.style === 'string' && req.body.style.trim() ? req.body.style.trim() : '营销'
-    if (!prompt) return send.error(res, '请输入主题')
+    const style = typeof req.body?.style === 'string' && req.body.style.trim() ? req.body.style.trim() : 'Quảng cáo'
+    if (!prompt) return send.error(res, 'Vui lòng nhập chủ đề')
     try {
-      const system = `你是一个专业的海报文案策划。请围绕用户给出的主题，生成 4 条不同风格的海报文案，整体符合【${style}】风格。要求：每条文案语言简洁有感染力，不出现占位符。仅输出 JSON 字符串数组，如 ["文案一", "文案二", "文案三", "文案四"]，数组元素必须是纯字符串，不要输出其他任何内容。`
+      const system = `Bạn là chuyên gia viết nội dung poster. Hãy viết 4 mẫu nội dung poster với các phong cách khác nhau xoay quanh chủ đề người dùng đưa ra, tổng thể theo phong cách "${style}". Yêu cầu: mỗi nội dung ngắn gọn, truyền cảm hứng, không chứa placeholder, viết bằng tiếng Việt. Chỉ xuất ra một mảng JSON các chuỗi, ví dụ ["Nội dung một", "Nội dung hai", "Nội dung ba", "Nội dung bốn"], các phần tử phải là chuỗi thuần, không xuất thêm bất cứ nội dung nào khác.`
       const content = await chatCompletion(config.api_key, config.base_url, config.text_model, system, prompt)
       const list = parseTextList(content)
-      if (!list.length) return send.error(res, 'AI 暂未生成有效文案，请稍后重试')
+      if (!list.length) return send.error(res, 'AI chưa tạo được nội dung hợp lệ, vui lòng thử lại sau')
       send.success(res, { list })
     } catch (e) {
       console.error('[ai] 文案生成失败:', e?.message)
-      send.error(res, 'AI 文案生成失败，请稍后重试')
+      send.error(res, 'Tạo nội dung bằng AI thất bại, vui lòng thử lại sau')
     }
   },
 
   // AI 文生图：POST /api/ai/image
   async imageGenerate(req: any, res: Response) {
     const user = getRequestUser(req)
-    if (!user) return send.error(res, '请先登录')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
     let config: AiSettings
     try {
       config = requireAiEnabled()
     } catch (e) {
-      return send.error(res, e?.message || 'AI 服务未配置')
+      return send.error(res, e?.message || 'Dịch vụ AI chưa được cấu hình')
     }
     const prompt = typeof req.body?.prompt === 'string' ? req.body.prompt.trim() : ''
     const ratio = typeof req.body?.ratio === 'string' ? req.body.ratio.trim() : '1:1'
-    if (!prompt) return send.error(res, '请输入图片描述')
+    if (!prompt) return send.error(res, 'Vui lòng nhập mô tả ảnh')
     const size = resolveImageSize(ratio, config.image_size_mode)
     try {
       // 注意：utils/http 的 axios 拦截器已将响应解包为 body，类型断言绕开 AxiosResponse 类型
@@ -236,38 +236,38 @@ export default {
         { headers: { Authorization: `Bearer ${config.api_key}` }, timeout: 60000 }
       )
       const buffer = await resolveImageBuffer(body)
-      if (!buffer || !buffer.length) return send.error(res, 'AI 图片生成失败，请稍后重试')
+      if (!buffer || !buffer.length) return send.error(res, 'Tạo ảnh bằng AI thất bại, vui lòng thử lại sau')
       const saved = saveGeneratedImage(buffer)
-      if (!saved) return send.error(res, 'AI 生成图片无效，请重试')
+      if (!saved) return send.error(res, 'Ảnh do AI tạo không hợp lệ, vui lòng thử lại')
       addUserImage(user.id, saved.url, saved.width, saved.height)
       send.success(res, saved)
     } catch (e) {
       console.error('[ai] 文生图失败:', e?.message)
-      send.error(res, 'AI 图片生成失败，请稍后重试')
+      send.error(res, 'Tạo ảnh bằng AI thất bại, vui lòng thử lại sau')
     }
   },
 
   // AI 智能配色：POST /api/ai/color
   async colorSuggest(req: any, res: Response) {
     const user = getRequestUser(req)
-    if (!user) return send.error(res, '请先登录')
+    if (!user) return send.error(res, 'Vui lòng đăng nhập')
     let config: AiSettings
     try {
       config = requireAiEnabled()
     } catch (e) {
-      return send.error(res, e?.message || 'AI 服务未配置')
+      return send.error(res, e?.message || 'Dịch vụ AI chưa được cấu hình')
     }
     const prompt = typeof req.body?.prompt === 'string' ? req.body.prompt.trim() : ''
-    if (!prompt) return send.error(res, '请输入配色主题')
+    if (!prompt) return send.error(res, 'Vui lòng nhập chủ đề phối màu')
     try {
-      const system = `你是专业的配色设计师。请根据用户给出的主题，输出 5 个搭配和谐的颜色，包含一个主色。仅输出 JSON 数组，每个元素格式 {"name":"颜色名","value":"#RRGGBB"}，不要输出其他内容。`
+      const system = `Bạn là nhà thiết kế phối màu chuyên nghiệp. Dựa trên chủ đề người dùng đưa ra, hãy xuất 5 màu hài hòa với nhau, trong đó có một màu chính. Chỉ xuất ra mảng JSON, mỗi phần tử có dạng {"name":"tên màu bằng tiếng Việt","value":"#RRGGBB"}, không xuất thêm nội dung nào khác.`
       const content = await chatCompletion(config.api_key, config.base_url, config.text_model, system, prompt, 0.7)
       const colors = parseColorList(content)
-      if (!colors.length) return send.error(res, 'AI 暂未生成有效配色，请稍后重试')
+      if (!colors.length) return send.error(res, 'AI chưa tạo được bảng màu hợp lệ, vui lòng thử lại sau')
       send.success(res, { colors })
     } catch (e) {
       console.error('[ai] 配色失败:', e?.message)
-      send.error(res, 'AI 配色生成失败，请稍后重试')
+      send.error(res, 'Tạo bảng màu bằng AI thất bại, vui lòng thử lại sau')
     }
   },
 
@@ -303,14 +303,14 @@ export default {
   // 鉴权失败 / 模型不存在 / 网络不通都会在请求层抛错，能拿到响应即视为连接成功
   async testConnection(req: any, res: Response) {
     const config = getAiSettings()
-    if (!config.enabled) return send.error(res, 'AI 功能未启用')
-    if (!config.api_key) return send.error(res, '未配置密钥')
+    if (!config.enabled) return send.error(res, 'Tính năng AI chưa được bật')
+    if (!config.api_key) return send.error(res, 'Chưa cấu hình API Key')
     try {
-      const content = await chatCompletion(config.api_key, config.base_url, config.text_model, '你是一个连通性测试助手，请直接回复两个字：ok', 'ping', 0.2)
+      const content = await chatCompletion(config.api_key, config.base_url, config.text_model, 'You are a connectivity test assistant. Reply with just the word: ok', 'ping', 0.2)
       send.success(res, { content: String(content || '').slice(0, 100) })
     } catch (e) {
       console.error('[ai] 测试连接失败:', e?.message)
-      send.error(res, `连接失败：${extractApiErrorMessage(e)}`)
+      send.error(res, `Kết nối thất bại: ${extractApiErrorMessage(e)}`)
     }
   },
 }

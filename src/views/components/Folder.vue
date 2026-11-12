@@ -20,13 +20,13 @@
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item><div @click="$emit('select', 'newDesign')" class="item">创建设计</div></el-dropdown-item>
+        <el-dropdown-item><div @click="$emit('select', 'newDesign')" class="item">{{ $t('editor.menu.newDesign') }}</div></el-dropdown-item>
         <!-- <el-dropdown-item @click="openPSD">导入文件</el-dropdown-item> -->
-        <el-dropdown-item @click="$emit('select', 'save')" divided>保存</el-dropdown-item>
-        <el-dropdown-item @click="$emit('select', 'download')">下载图片</el-dropdown-item>
+        <el-dropdown-item @click="$emit('select', 'save')" divided>{{ $t('editor.menu.save') }}</el-dropdown-item>
+        <el-dropdown-item @click="$emit('select', 'download')">{{ $t('editor.menu.download') }}</el-dropdown-item>
         <!-- <el-dropdown-item disabled>版本记录</el-dropdown-item> -->
         <!-- <el-dropdown-item disabled>批量套模板</el-dropdown-item> -->
-        <el-dropdown-item @click="$emit('select', 'changeLineGuides')" divided>标尺与参考线</el-dropdown-item>
+        <el-dropdown-item @click="$emit('select', 'changeLineGuides')" divided>{{ $t('editor.menu.guides') }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>

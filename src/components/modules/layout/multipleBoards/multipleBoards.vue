@@ -8,7 +8,7 @@
 <template>
   <div :style="{ position, bottom: -1 * st + 'px', left: sl + 'px' }" :class="['artboards', isFold ? 'fold' : 'unfold']">
     <div ref="listRef" class="wrap">
-      <div v-if="isFold" v-show="dLayouts.length > 0" class="btn" @click="isFold = !isFold">画板 {{ index + 1 }}/{{ dLayouts.length }} <i class="icon sd-zhankai" /></div>
+      <div v-if="isFold" v-show="dLayouts.length > 0" class="btn" @click="isFold = !isFold">{{ $t('editor.panel.artboard') }} {{ index + 1 }}/{{ dLayouts.length }} <i class="icon sd-zhankai" /></div>
       <div class="list" v-else>
         <span @click="isFold = !isFold" class="icon-btn"><i class="icon sd-zhankai" /></span>
         <div v-for="(l, li) in dLayouts" :key="'l' + li" :style="{ width: getPW(l.global) + 'px' }" @click="selectPoster(li)" :class="['item-box', index == li ? 'item-select' : 'item-default']">
@@ -41,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import i18n from '@/languages'
 import { ref, Ref, onMounted, nextTick, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCanvasStore, useWidgetStore, useForceStore, useControlStore } from '@/store'
@@ -147,7 +148,7 @@ function removePoster(removeIndex: number) {
   if (index.value === removeIndex) {
     // 当前画布下，清空画布内容而非删除
     widgetStore.dLayouts[removeIndex].layers.length = 0
-    ElMessage('画布已清空')
+    ElMessage(i18n.global.t('editor.panel.canvasCleared'))
     widgetStore.setDWidgets([]) // 清除画布图层
     // widgetStore.updateDWidgets()
     // widgetStore.dLayouts[removeIndex].global = getInitPage()
@@ -299,6 +300,7 @@ function removePoster(removeIndex: number) {
     margin-left: 4px;
   }
   .btn {
+    white-space: nowrap;
     padding: 0 20px;
     display: flex;
     width: 100%;

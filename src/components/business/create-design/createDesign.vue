@@ -7,13 +7,13 @@
 -->
 <template>
   <div>
-    <el-dialog v-model="dialogVisible" center destroy-on-close :align-center="false" :title="params ? '编辑尺寸' : '新建空白设计'" width="380" draggable>
+    <el-dialog v-model="dialogVisible" center destroy-on-close :align-center="false" :title="params ? $t('business.create.editSize') : $t('business.create.newBlank')" width="380" draggable>
       <!-- <el-divider content-position="left">自定义尺寸</el-divider> -->
-      <el-checkbox v-if="params" v-model="isAdaptive" label="自动调整元素大小位置" size="large" />
+      <el-checkbox v-if="params" v-model="isAdaptive" :label="$t('business.create.adaptive')" size="large" />
       <sizeEditor :params="page" :class="params ? 'editor-mode' : 'add-mode'">
-        <el-button @click="finish" plain size="large" type="primary">{{ params ? '应用' : '创建' }}</el-button>
+        <el-button @click="finish" plain size="large" type="primary">{{ params ? $t('business.create.apply') : $t('business.create.create') }}</el-button>
       </sizeEditor>
-      <el-divider content-position="left">使用推荐尺寸</el-divider>
+      <el-divider content-position="left">{{ $t('business.create.recommended') }}</el-divider>
       <ul class="pre-list">
         <li @click="applySize(s)" class="item" v-for="(s, si) in sizes" :key="'s' + si">
           <i :class="['icon', s.icon]" /> {{ s.name }} <span class="info">{{ s.width }} × {{ s.height }} px</span>

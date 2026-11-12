@@ -10,53 +10,53 @@
  * @Description: AI 助手面板：文案生成 / 文生图 / 智能配色
 -->
 <template>
-  <el-dialog v-model="state.show" title="AI 助手" align-center width="680" :append-to-body="true" destroy-on-close @close="handleClose">
+  <el-dialog v-model="state.show" :title="$t('business.ai.title')" align-center width="680" :append-to-body="true" destroy-on-close @close="handleClose">
     <el-tabs v-model="state.activeTab" class="ai-tabs">
       <!-- 文案生成 -->
-      <el-tab-pane label="生成文案" name="text">
+      <el-tab-pane :label="$t('business.ai.tabText')" name="text">
         <div class="ai-row">
-          <el-input v-model="state.textPrompt" type="textarea" :rows="3" placeholder="输入海报主题，如：夏季冰饮新品上市" />
+          <el-input v-model="state.textPrompt" type="textarea" :rows="3" :placeholder="$t('business.ai.textPlaceholder')" />
         </div>
         <div class="ai-row ai-options">
-          <span class="ai-label">风格</span>
+          <span class="ai-label">{{ $t('business.ai.style') }}</span>
           <el-select v-model="state.textStyle" size="small" style="width: 160px">
             <el-option v-for="s in styleList" :key="s" :label="s" :value="s" />
           </el-select>
-          <el-button size="small" type="primary" :loading="state.textLoading" @click="generateText">{{ state.textLoading ? '生成中..' : '生成文案' }}</el-button>
+          <el-button size="small" type="primary" :loading="state.textLoading" @click="generateText">{{ state.textLoading ? $t('business.ai.generating') : $t('business.ai.generateText') }}</el-button>
         </div>
         <div v-if="state.textList.length" class="ai-result">
           <div v-for="(item, index) in state.textList" :key="'t' + index" class="ai-result-item">
             <div class="ai-result-text">{{ item }}</div>
-            <el-button size="small" type="primary" plain @click="insertText(item)">插入画布</el-button>
+            <el-button size="small" type="primary" plain @click="insertText(item)">{{ $t('business.ai.insert') }}</el-button>
           </div>
         </div>
       </el-tab-pane>
 
       <!-- 文生图 -->
-      <el-tab-pane label="生成图片" name="image">
+      <el-tab-pane :label="$t('business.ai.tabImage')" name="image">
         <div class="ai-row">
-          <el-input v-model="state.imagePrompt" type="textarea" :rows="3" placeholder="输入图片描述，如：简约风格的夏日饮品促销背景，蓝绿色调" />
+          <el-input v-model="state.imagePrompt" type="textarea" :rows="3" :placeholder="$t('business.ai.imagePlaceholder')" />
         </div>
         <div class="ai-row ai-options">
-          <span class="ai-label">比例</span>
+          <span class="ai-label">{{ $t('business.ai.ratio') }}</span>
           <el-select v-model="state.imageRatio" size="small" style="width: 160px">
             <el-option v-for="r in ratioList" :key="r" :label="r" :value="r" />
           </el-select>
-          <el-button size="small" type="primary" :loading="state.imageLoading" @click="generateImage">{{ state.imageLoading ? '生成中(请等待约5-20s)..' : '生成图片' }}</el-button>
+          <el-button size="small" type="primary" :loading="state.imageLoading" @click="generateImage">{{ state.imageLoading ? $t('business.ai.generatingImage') : $t('business.ai.generateImage') }}</el-button>
         </div>
         <div v-if="state.imageUrl" class="ai-result image-preview">
-          <img :src="state.imageUrl" alt="AI 生成图" />
-          <el-button size="small" type="primary" @click="insertImage">插入画布</el-button>
+          <img :src="state.imageUrl" :alt="$t('business.ai.imageAlt')" />
+          <el-button size="small" type="primary" @click="insertImage">{{ $t('business.ai.insert') }}</el-button>
         </div>
       </el-tab-pane>
 
       <!-- 智能配色 -->
-      <el-tab-pane label="生成配色" name="color">
+      <el-tab-pane :label="$t('business.ai.tabColor')" name="color">
         <div class="ai-row">
-          <el-input v-model="state.colorPrompt" type="textarea" :rows="2" placeholder="输入配色主题，如：清爽的夏日感 / 复古国潮风" />
+          <el-input v-model="state.colorPrompt" type="textarea" :rows="2" :placeholder="$t('business.ai.colorPlaceholder')" />
         </div>
         <div class="ai-row ai-options">
-          <el-button size="small" type="primary" :loading="state.colorLoading" @click="generateColor">{{ state.colorLoading ? '生成中..' : '生成配色' }}</el-button>
+          <el-button size="small" type="primary" :loading="state.colorLoading" @click="generateColor">{{ state.colorLoading ? $t('business.ai.generating') : $t('business.ai.generateColor') }}</el-button>
         </div>
         <div v-if="state.colorList.length" class="ai-result">
           <div class="ai-color-list">
@@ -69,8 +69,8 @@
             </div>
           </div>
           <div class="ai-color-footer">
-            <el-button size="small" plain @click="copyAllColors">复制全部色值</el-button>
-            <el-button size="small" type="primary" @click="applyBackground">应用到画布背景</el-button>
+            <el-button size="small" plain @click="copyAllColors">{{ $t('business.ai.copyAll') }}</el-button>
+            <el-button size="small" type="primary" @click="applyBackground">{{ $t('business.ai.applyBg') }}</el-button>
           </div>
         </div>
       </el-tab-pane>
@@ -79,6 +79,7 @@
 </template>
 
 <script lang="ts" setup>
+import i18n from '@/languages'
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { ElTabs, ElTabPane, ElSelect, ElOption } from 'element-plus'
@@ -89,7 +90,7 @@ import { wTextSetting } from '@/components/modules/widgets/wText/wTextSetting'
 import wImageSetting from '@/components/modules/widgets/wImage/wImageSetting'
 import { TAiColorItem } from '@/api/ai'
 
-const styleList = ['营销', '简约', '文艺', '科技', '国潮']
+const styleList = [i18n.global.t('business.ai.styleMarketing'), i18n.global.t('business.ai.styleMinimal'), i18n.global.t('business.ai.styleArtistic'), i18n.global.t('business.ai.styleTech'), i18n.global.t('business.ai.styleEastern')]
 const ratioList = ['1:1', '3:4', '4:3', '9:16', '16:9']
 
 const state = reactive({
@@ -97,7 +98,7 @@ const state = reactive({
   activeTab: 'text',
   // 文案
   textPrompt: '',
-  textStyle: '营销',
+  textStyle: i18n.global.t('business.ai.styleMarketing'),
   textLoading: false,
   textList: [] as string[],
   // 图片
@@ -119,7 +120,7 @@ const { dPage } = storeToRefs(canvasStore)
 
 function checkLogin(): boolean {
   if (userStore.online) return true
-  ElMessage.warning('请先登录后再使用 AI 功能')
+  ElMessage.warning(i18n.global.t('business.ai.needLogin'))
   return false
 }
 
@@ -139,16 +140,16 @@ function handleClose() {
 async function generateText() {
   if (!checkLogin()) return
   const prompt = state.textPrompt.trim()
-  if (!prompt) return ElMessage.warning('请输入海报主题')
+  if (!prompt) return ElMessage.warning(i18n.global.t('business.ai.needTopic'))
   state.textLoading = true
   try {
     const res: any = await api.ai.textGenerate({ prompt, style: state.textStyle })
     // 接口异常（如未配置密钥）时透传真实提示
-    if (res?.code !== 200) { ElMessage.warning(res?.msg || '文案生成失败'); return }
+    if (res?.code !== 200) { ElMessage.warning(res?.msg || i18n.global.t('business.ai.textFailed')); return }
     state.textList = res?.list || []
-    if (!state.textList.length) ElMessage.warning('AI 暂未生成有效文案，请换个主题试试')
+    if (!state.textList.length) ElMessage.warning(i18n.global.t('business.ai.textEmpty'))
   } catch (e: any) {
-    ElMessage.error(e?.message || '文案生成失败')
+    ElMessage.error(e?.message || i18n.global.t('business.ai.textFailed'))
   } finally {
     state.textLoading = false
   }
@@ -163,24 +164,24 @@ function insertText(text: string) {
   setting.left = pW / 2 - setting.width / 2
   setting.top = pH / 2 - setting.fontSize / 2
   widgetStore.addWidget(setting)
-  ElMessage.success('已插入画布')
+  ElMessage.success(i18n.global.t('business.ai.inserted'))
 }
 
 // ---------- 文生图 ----------
 async function generateImage() {
   if (!checkLogin()) return
   const prompt = state.imagePrompt.trim()
-  if (!prompt) return ElMessage.warning('请输入图片描述')
+  if (!prompt) return ElMessage.warning(i18n.global.t('business.ai.needImagePrompt'))
   state.imageLoading = true
   state.imageUrl = ''
   try {
     const res: any = await api.ai.imageGenerate({ prompt, ratio: state.imageRatio }, { _noLoading: true, timeout: 90000 })
     // 接口异常（如未配置密钥）时透传真实提示
-    if (res?.code !== 200) { ElMessage.warning(res?.msg || '图片生成失败'); return }
+    if (res?.code !== 200) { ElMessage.warning(res?.msg || i18n.global.t('business.ai.imageFailed')); return }
     state.imageUrl = res.url
     state.imageSize = { width: Number(res.width) || 0, height: Number(res.height) || 0 }
   } catch (e: any) {
-    ElMessage.error(e?.message || '图片生成失败')
+    ElMessage.error(e?.message || i18n.global.t('business.ai.imageFailed'))
   } finally {
     state.imageLoading = false
   }
@@ -199,23 +200,23 @@ async function insertImage() {
   setting.left = pW / 2 - setting.width / 2
   setting.top = pH / 2 - setting.height / 2
   widgetStore.addWidget(setting)
-  ElMessage.success('已插入画布')
+  ElMessage.success(i18n.global.t('business.ai.inserted'))
 }
 
 // ---------- 智能配色 ----------
 async function generateColor() {
   if (!checkLogin()) return
   const prompt = state.colorPrompt.trim()
-  if (!prompt) return ElMessage.warning('请输入配色主题')
+  if (!prompt) return ElMessage.warning(i18n.global.t('business.ai.needColorTheme'))
   state.colorLoading = true
   try {
     const res: any = await api.ai.colorSuggest({ prompt })
     // 接口异常（如未配置密钥）时透传真实提示
-    if (res?.code !== 200) { ElMessage.warning(res?.msg || '配色生成失败'); return }
+    if (res?.code !== 200) { ElMessage.warning(res?.msg || i18n.global.t('business.ai.colorFailed')); return }
     state.colorList = res.colors || []
-    if (!state.colorList.length) ElMessage.warning('AI 暂未生成有效配色，请换个主题试试')
+    if (!state.colorList.length) ElMessage.warning(i18n.global.t('business.ai.colorEmpty'))
   } catch (e: any) {
-    ElMessage.error(e?.message || '配色生成失败')
+    ElMessage.error(e?.message || i18n.global.t('business.ai.colorFailed'))
   } finally {
     state.colorLoading = false
   }
@@ -223,20 +224,20 @@ async function generateColor() {
 
 function copyColor(value: string) {
   navigator.clipboard?.writeText(value)
-  ElMessage.success(`已复制 ${value}`)
+  ElMessage.success(`${i18n.global.t('business.ai.copied')} ${value}`)
 }
 
 function copyAllColors() {
   const values = state.colorList.map((item) => item.value).join(' ')
   navigator.clipboard?.writeText(values)
-  ElMessage.success('已复制全部色值')
+  ElMessage.success(i18n.global.t('business.ai.copiedAll'))
 }
 
 function applyBackground() {
   const main = state.colorList[0]
   if (!main) return
   dPage.value.backgroundColor = main.value
-  ElMessage.success(`已将主色 ${main.value} 应用到画布背景`)
+  ElMessage.success(`${i18n.global.t('business.ai.appliedBg')} ${main.value} ${i18n.global.t('business.ai.toBg')}`)
 }
 
 defineExpose({ open })

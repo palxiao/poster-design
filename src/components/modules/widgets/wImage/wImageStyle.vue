@@ -8,37 +8,37 @@
 <template>
   <div id="w-image-style">
     <el-collapse v-model="state.activeNames">
-      <el-collapse-item title="位置尺寸" name="1">
+      <el-collapse-item :title="$t('editor.prop.positionSize')" name="1">
         <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
-          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" @finish="(value) => finish('width', value)" />
-          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" @finish="(value) => finish('height', value)" />
+          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" :label="$t('editor.prop.width')" @finish="(value) => finish('width', value)" />
+          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" :label="$t('editor.prop.height')" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
-      <el-collapse-item title="设置" name="2">
+      <el-collapse-item :title="$t('editor.prop.settings')" name="2">
         <!-- <el-button size="mini" style="width: 100%; margin-top: 0.5rem" plain @click="openCropper">替换图片</el-button> -->
-        <el-button style="width: 100%; margin-bottom: 12px" plain @click="openPicBox">替换图片</el-button>
+        <el-button style="width: 100%; margin-bottom: 12px" plain @click="openPicBox">{{ $t('editor.image.replace') }}</el-button>
         <div class="options">
-          <el-button v-if="state.innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">完成</el-button>
-          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> 裁剪</el-button>
-          <el-button plain @click="openImageCutout"><i class="icon sd-AIkoutu" /> 抠图</el-button>
+          <el-button v-if="state.innerElement.cropEdit" plain type="primary" @click="imgCrop(false)">{{ $t('editor.image.done') }}</el-button>
+          <el-button v-else plain type="primary" @click="imgCrop(true)"><i class="icon sd-caijian" /> {{ $t('editor.image.crop') }}</el-button>
+          <el-button plain @click="openImageCutout"><i class="icon sd-AIkoutu" /> {{ $t('editor.image.cutout') }}</el-button>
           <!-- <uploader class="options__upload" @done="uploadImgDone">
-            <el-button size="small" plain>替换图片</el-button>
+            <el-button size="small" plain>{{ $t('editor.image.replace') }}</el-button>
           </uploader> -->
-          <el-button size="small" disabled plain @click="openCropper">美化</el-button>
+          <el-button size="small" disabled plain @click="openCropper">{{ $t('editor.image.beautify') }}</el-button>
         </div>
         <container-wrap @change="changeContainer" />
         <div class="slide-wrap">
-          <number-slider v-model="state.innerElement.opacity" style="font-size: 14px" label="不透明" :step="0.05" :maxValue="1" @finish="(value) => finish('opacity', value)" />
-          <number-slider v-model="state.innerElement.radius" style="font-size: 14px" label="圆角" :maxValue="Math.min(Number(state.innerElement.record?.width), Number(state.innerElement.record?.height))" @finish="(value) => finish('radius', value)" />
+          <number-slider v-model="state.innerElement.opacity" style="font-size: 14px" :label="$t('editor.prop.opacity')" :step="0.05" :maxValue="1" @finish="(value) => finish('opacity', value)" />
+          <number-slider v-model="state.innerElement.radius" style="font-size: 14px" :label="$t('editor.prop.radius')" :maxValue="Math.min(Number(state.innerElement.record?.width), Number(state.innerElement.record?.height))" @finish="(value) => finish('radius', value)" />
           <!-- <number-slider v-model="innerElement.letterSpacing" style="font-size: 14px" label="字距" labelWidth="40px" :step="0.05" :minValue="-50" :maxValue="innerElement.fontSize" @finish="(value) => finish('letterSpacing', value)" />
         <number-slider v-model="innerElement.lineHeight" style="font-size: 14px" label="行距" labelWidth="40px" :step="0.05" :minValue="0" :maxValue="2.5" @finish="(value) => finish('lineHeight', value)" /> -->
         </div>
       </el-collapse-item>
-      <el-collapse-item v-if="state.innerElement.isNinePatch" title="点九图设置" name="3">
-        <number-slider v-model="state.innerElement.sliceData.ratio" :step="0.01" label="比率" :maxValue="10" @finish="(value) => finishSliceData('ratio', value)" />
-        <number-slider v-model="state.innerElement.sliceData.left" :step="0.5" label="大小" @finish="(value) => finishSliceData('left', value)" />
+      <el-collapse-item v-if="state.innerElement.isNinePatch" :title="$t('editor.image.ninePatch')" name="3">
+        <number-slider v-model="state.innerElement.sliceData.ratio" :step="0.01" :label="$t('editor.image.ratio')" :maxValue="10" @finish="(value) => finishSliceData('ratio', value)" />
+        <number-slider v-model="state.innerElement.sliceData.left" :step="0.5" :label="$t('editor.image.size')" @finish="(value) => finishSliceData('left', value)" />
       </el-collapse-item>
       <br />
       <icon-item-select class="style-item" label="" :data="layerIconList" @finish="layerAction" />
@@ -47,7 +47,7 @@
     </el-collapse>
     <!-- <CropImage ref="crop" @done="cropDone" /> -->
     <inner-tool-bar v-show="state.innerElement.cropEdit" :style="toolBarStyle">
-      <number-slider v-model="state.innerElement.zoom" class="inner-bar" label="缩放" labelWidth="40px" :step="0.01" :minValue="1" :maxValue="3" />
+      <number-slider v-model="state.innerElement.zoom" class="inner-bar" :label="$t('editor.prop.zoom')" labelWidth="76px" :step="0.01" :minValue="1" :maxValue="3" />
       <i style="padding: 0 8px; cursor: pointer" class="icon sd-queren" @click="imgCrop(false)" />
     </inner-tool-bar>
     <picBox ref="picBoxRef" @select="selectDone" />
@@ -58,6 +58,7 @@
 <script lang="ts" setup>
 // 图片组件样式
 // const NAME = 'w-image-style'
+import i18n from '@/languages'
 import { nextTick, reactive, ref, watch, onBeforeUnmount } from 'vue'
 
 import numberInput from '../../settings/numberInput.vue'
@@ -104,14 +105,14 @@ const state = reactive<TState>({
       key: 'flip',
       icon: 'sd-zuoyoufanzhuan',
       extraIcon: true,
-      tip: '水平翻转',
+      tip: i18n.global.t('editor.image.flipH'),
       value: 'Y',
     },
     {
       key: 'flip',
       icon: 'sd-shangxiafanzhuan',
       extraIcon: true,
-      tip: '垂直翻转',
+      tip: i18n.global.t('editor.image.flipV'),
       value: 'X',
     },
   ]),

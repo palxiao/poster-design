@@ -6,19 +6,20 @@
  * @LastEditTime: 2024-03-01 20:55:51
  */
 
+import i18n from '@/languages'
 import { TIconItemSelectData } from "@/components/modules/settings/iconItemSelect.vue"
 
 export default [
   {
     key: 'zIndex',
     icon: 'icon-layer-up',
-    tip: '上一层',
+    tip: i18n.global.t('editor.tip.layerUp'),
     value: 1,
   },
   {
     key: 'zIndex',
     icon: 'icon-layer-down',
-    tip: '下一层',
+    tip: i18n.global.t('editor.tip.layerDown'),
     value: -1,
   },
 ] as TIconItemSelectData[]

@@ -16,7 +16,7 @@
     <div class="topbar-actions">
       <el-button type="primary" plain @click="$emit('home')">
         <el-icon class="action-icon"><Promotion /></el-icon>
-        打开编辑器
+        {{ $t('admin.topbar.openEditor') }}
       </el-button>
     </div>
   </header>

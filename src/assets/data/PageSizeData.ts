@@ -1,3 +1,4 @@
+import i18n from '@/languages'
 /*
  * @Author: ShawnPhang
  * @Date: 2024-04-07 17:49:06
@@ -7,67 +8,67 @@
  */
 export default [
   {
-    name: '手机海报',
+    name: i18n.global.t('editor.size.phone'),
     width: 1242,
     height: 2208,
     icon: 'sd-shouji'
   },
   {
-    name: '横版海报',
+    name: i18n.global.t('editor.size.landscape'),
     width: 900,
     height: 500,
     icon: 'sd-wangye'
   },
   {
-    name: '公众号首图',
+    name: i18n.global.t('editor.size.wxCover'),
     width: 900,
     height: 383,
     icon: 'sd-weixin'
   },
   {
-    name: '公众号次图',
+    name: i18n.global.t('editor.size.wxSecond'),
     width: 500,
     height: 500,
     icon: 'sd-weixin'
   },
   {
-    name: '小红书配图',
+    name: i18n.global.t('editor.size.xhs'),
     width: 1242,
     height: 1660,
     icon: 'sd-shouji'
   },
   {
-    name: '商品主图',
+    name: i18n.global.t('editor.size.product'),
     width: 800,
     height: 800,
     icon: 'sd-wangye'
   },
   {
-    name: '电商详情页',
+    name: i18n.global.t('editor.size.detail'),
     width: 750,
     height: 1000,
     icon: 'sd-wangye'
   },
   {
-    name: '电商竖版海报',
+    name: i18n.global.t('editor.size.ecPortrait'),
     width: 750,
     height: 950,
     icon: 'sd-shouji'
   },
   {
-    name: '电商横版海报',
+    name: i18n.global.t('editor.size.ecLandscape'),
     width: 750,
     height: 390,
     icon: 'sd-wangye'
   },
   {
-    name: '小程序封面',
+    name: i18n.global.t('editor.size.mini'),
     width: 520,
     height: 416,
     icon: 'sd-weixin'
   },
   {
-    name: '壁纸 / PPT(16:9)',
+    name: i18n.global.t('editor.size.wallpaper'),
     width: 1920,
     height: 1080,
     icon: 'sd-wangye'

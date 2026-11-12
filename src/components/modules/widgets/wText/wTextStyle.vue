@@ -1,18 +1,18 @@
 <template>
   <div id="w-text-style">
     <el-collapse v-model="state.activeNames">
-      <el-collapse-item title="位置尺寸" name="1">
+      <el-collapse-item :title="$t('editor.prop.positionSize')" name="1">
         <div class="line-layout">
           <number-input v-model="state.innerElement.left" label="X" @finish="(value) => finish('left', value)" />
           <number-input v-model="state.innerElement.top" label="Y" @finish="(value) => finish('top', value)" />
-          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" label="宽" :editable="true" @finish="(value) => finish('width', value)" />
-          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" label="高" :editable="true" @finish="(value) => finish('height', value)" />
+          <number-input v-model="state.innerElement.width" style="margin-top: 0.5rem" :label="$t('editor.prop.width')" :editable="true" @finish="(value) => finish('width', value)" />
+          <number-input v-model="state.innerElement.height" style="margin-top: 0.5rem" :label="$t('editor.prop.height')" :editable="true" @finish="(value) => finish('height', value)" />
         </div>
       </el-collapse-item>
       <!-- <el-collapse-item title="样式设置" name="2"> -->
       <div class="line-layout style-item">
-        <value-select v-model="state.innerElement.fontClass" label="文字" :data="state.fontClassList" inputWidth="152px" :readonly="true" @finish="(font) => finish('fontClass', font)" />
-        <value-select v-model="state.innerElement.fontSize" label="大小" suffix="px" :data="state.fontSizeList" @finish="(value) => finish('fontSize', value)" />
+        <value-select v-model="state.innerElement.fontClass" :label="$t('editor.text.font')" :data="state.fontClassList" inputWidth="152px" :readonly="true" @finish="(font) => finish('fontClass', font)" />
+        <value-select v-model="state.innerElement.fontSize" :label="$t('editor.text.size')" suffix="px" :data="state.fontSizeList" @finish="(value) => finish('fontSize', value)" />
       </div>
 
       <icon-item-select class="style-item" :data="state.styleIconList1" @finish="textStyleAction" />
@@ -24,13 +24,13 @@
       </div> -->
       <!-- <el-collapse-item title="位置尺寸" name="1"> -->
       <div class="style-item slide-wrap">
-        <number-slider v-model="state.innerElement.letterSpacing" style="font-size: 14px" label="字距" labelWidth="40px" :step="0.05" :minValue="-state.innerElement.fontSize" :maxValue="state.innerElement.fontSize * 2" @finish="(value) => finish('letterSpacing', value)" />
-        <number-slider v-model="state.innerElement.lineHeight" style="font-size: 14px" label="行距" labelWidth="40px" :step="0.05" :minValue="0" :maxValue="2.5" @finish="(value) => finish('lineHeight', value)" />
+        <number-slider v-model="state.innerElement.letterSpacing" style="font-size: 14px" :label="$t('editor.text.letterSpacing')" labelWidth="76px" :step="0.05" :minValue="-state.innerElement.fontSize" :maxValue="state.innerElement.fontSize * 2" @finish="(value) => finish('letterSpacing', value)" />
+        <number-slider v-model="state.innerElement.lineHeight" style="font-size: 14px" :label="$t('editor.text.lineHeight')" labelWidth="76px" :step="0.05" :minValue="0" :maxValue="2.5" @finish="(value) => finish('lineHeight', value)" />
       </div>
       <!-- </el-collapse-item> -->
 
       <div style="flex-wrap: nowrap" class="line-layout style-item">
-        <color-select v-model="state.innerElement.color" label="颜色" @finish="(value) => finish('color', value)" />
+        <color-select v-model="state.innerElement.color" :label="$t('editor.prop.color')" @finish="(value) => finish('color', value)" />
         <!-- <color-select v-model="innerElement.backgroundColor" label="背景颜色" @finish="(value) => finish('backgroundColor', value)" /> -->
       </div>
       <div class="line-layout style-item">
@@ -51,6 +51,7 @@
 <script lang="ts" setup>
 // 文本组件样式
 const NAME = 'w-text-style'
+import i18n from '@/languages'
 import { defineComponent, reactive, toRefs, computed, watch, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { styleIconList1, styleIconList2, alignIconList, TStyleIconData, TStyleIconData2 } from '@/assets/data/TextIconsData'
@@ -180,13 +181,13 @@ function selectTextEffect({ key, value, style }: any) {
 
 function loadFonts() {
   const localFonts = useFontStore.list
-  const fontLists: Record<string, any> = { 当前页面: [], 中文: [], 英文: [] }
+  const fontLists: Record<string, any> = { [i18n.global.t('editor.text.groupCurrent')]: [], [i18n.global.t('editor.text.groupZh')]: [], [i18n.global.t('editor.text.groupLatin')]: [] }
   for (const font of localFonts) {
     const { id, oid, value, url, alias, preview, lang } = font
     const item = { id, oid, value, url, alias, preview }
-    lang === 'zh' ? fontLists['中文'].unshift(item) : fontLists['英文'].unshift(item)
+    lang === 'zh' ? fontLists[i18n.global.t('editor.text.groupZh')].unshift(item) : fontLists[i18n.global.t('editor.text.groupLatin')].unshift(item)
   }
-  fontLists['当前页面'] = usePageFontsFilter()
+  fontLists[i18n.global.t('editor.text.groupCurrent')] = usePageFontsFilter()
   state.fontClassList = fontLists
 }
 
@@ -197,7 +198,7 @@ function finish(key: string, value: number | Record<string, any> | string) {
     value,
   })
   setTimeout(() => {
-    key === 'fontClass' && (state.fontClassList['当前页面'] = usePageFontsFilter())
+    key === 'fontClass' && (state.fontClassList[i18n.global.t('editor.text.groupCurrent')] = usePageFontsFilter())
   }, 300)
 }
 
