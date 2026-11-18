@@ -239,6 +239,12 @@ npm run serve
 | --- |
 | <a href="https://www.leaferjs.com/"> <img style="height: 64px" src="https://github.com/user-attachments/assets/def32ec0-67ff-486e-a5ca-16f95dab290b" /></a> |
 
+### 友情链接
+
+| APIMart |
+| --- |
+| <a href="https://go.apimart.ai/tw-poster-design"> <img style="height: 92px" alt="image" src="https://github.com/user-attachments/assets/731a2d96-f42d-405d-999e-67b9f246c9ed" /></a> |
+
 ### `LICENSE`
 
 本项目遵循 [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.zh-cn.html) 开源协议，[中文版开源许可说明](https://github.com/palxiao/poster-design/blob/main/LICENSE-ZH)。
